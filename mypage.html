@@ -99,6 +99,11 @@
     .user-badge.free { background: rgba(139, 107, 27, 0.15); color: var(--color-gold-dark); border: 1px solid rgba(139, 107, 27, 0.4); }
     .user-badge.paid { background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%); color: #FFFDF9; }
 
+    .btn-logout {
+      font-size: 0.75rem; color: #8B6B1B; text-decoration: underline; cursor: pointer; margin-left: 10px;
+    }
+    .btn-logout:hover { color: #5A4E48; }
+
     .card-box {
       background: rgba(255, 252, 245, 0.85);
       border: 1px solid rgba(139, 107, 27, 0.35); border-radius: 10px;
@@ -206,7 +211,10 @@
       <div class="status-bar">
         <div style="text-align:left;">
           <div style="font-size:0.75rem; color:#7a6a58; font-family:var(--font-en);">MEMBERSHIP PORTAL</div>
-          <div id="user-display-email" style="font-weight:600; font-size:0.95rem; color:var(--color-text-dark);">未ログイン（ゲスト）</div>
+          <div style="display:flex; align-items:center;">
+            <span id="user-display-email" style="font-weight:600; font-size:0.95rem; color:var(--color-text-dark);">未ログイン（ゲスト）</span>
+            <span id="btn-logout" class="btn-logout" style="display:none;" onclick="logout()">ログアウト</span>
+          </div>
         </div>
         <span id="user-status-badge" class="user-badge free">無料プラン</span>
       </div>
@@ -287,7 +295,6 @@
   </footer>
 
   <script>
-    // 実機の Make シナリオ (アプリ向け月星座診断フロー / ID: 5825344) の Webhook URL
     const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/huqp37moaxv9y3zerpag7wdn3r1evm4p';
     const TALLY_FORM_ID = 'jaXr71';
 
@@ -298,20 +305,13 @@
         setLoggedInState(savedEmail);
         fetchUserDataAndRender(savedEmail);
       } else {
-        document.getElementById('today-transit-text').textContent = 'ログインすると、あなたの出生データに基づいた本日の運勢が表示されます。';
+        setLoggedOutState();
       }
 
       document.getElementById('btn-upgrade-tally').addEventListener('click', () => {
         const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
-        
         if (typeof Tally !== 'undefined') {
-          Tally.openPopup(TALLY_FORM_ID, {
-            layout: 'modal',
-            width: 600,
-            hiddenFields: {
-              email: email
-            }
-          });
+          Tally.openPopup(TALLY_FORM_ID, { layout: 'modal', width: 600, hiddenFields: { email: email } });
         } else {
           window.open(`https://tally.so/r/${TALLY_FORM_ID}?email=${encodeURIComponent(email)}`, '_blank');
         }
@@ -320,7 +320,6 @@
       document.getElementById('btn-send-code').addEventListener('click', async () => {
         const email = document.getElementById('login-email').value.trim();
         if (!email) { alert('メールアドレスを入力してください。'); return; }
-        
         try {
           await fetch(MAKE_WEBHOOK_URL, {
             method: 'POST',
@@ -338,7 +337,6 @@
         const email = document.getElementById('login-email').value.trim();
         const code = document.getElementById('login-code').value.trim();
         if (!code) { alert('コードを入力してください。'); return; }
-        
         completeLogin(email);
       });
     });
@@ -351,7 +349,21 @@
 
     function setLoggedInState(email) {
       document.getElementById('user-display-email').textContent = email;
+      document.getElementById('btn-logout').style.display = 'inline';
       document.getElementById('auth-box').style.display = 'none';
+    }
+
+    function setLoggedOutState() {
+      document.getElementById('user-display-email').textContent = '未ログイン（ゲスト）';
+      document.getElementById('btn-logout').style.display = 'none';
+      document.getElementById('auth-box').style.display = 'block';
+      document.getElementById('today-transit-text').textContent = 'ログインすると、あなたの出生データに基づいた本日の運勢が表示されます。';
+    }
+
+    function logout() {
+      localStorage.removeItem('lj_user_email');
+      localStorage.removeItem('email');
+      setLoggedOutState();
     }
 
     function getJstIsoString() {
@@ -377,11 +389,7 @@
                         localStorage.getItem('lj_user_city') || 
                         localStorage.getItem('lj_city') ||
                         localStorage.getItem('address') ||
-                        localStorage.getItem('user_city');
-
-      if (!userAddress || userAddress === 'null' || userAddress === 'undefined') {
-        userAddress = '東京都';
-      }
+                        localStorage.getItem('user_city') || '東京都';
 
       const userDob = localStorage.getItem('dob') || localStorage.getItem('lj_dob') || '1970-01-01';
       const userTob = localStorage.getItem('tob') || localStorage.getItem('lj_tob') || '12:00';
@@ -442,8 +450,6 @@
       } catch (err) {
         console.error('Fetch Error:', err);
         document.getElementById('today-transit-text').textContent = '⚠️ データの取得に失敗しました。通信環境をご確認のうえ、再読み込みをお試しください。';
-        document.getElementById('dasha-period-title').textContent = '取得エラー';
-        document.getElementById('dasha-description').textContent = 'データを正常に読み込めませんでした。';
       }
     }
 
@@ -451,10 +457,7 @@
       document.getElementById('user-status-badge').textContent = 'プレミアム会員';
       document.getElementById('user-status-badge').className = 'user-badge paid';
       document.getElementById('lock-overlay').style.display = 'none';
-      
-      document.querySelectorAll('.blur-content').forEach(el => {
-        el.classList.remove('blur-content');
-      });
+      document.querySelectorAll('.blur-content').forEach(el => el.classList.remove('blur-content'));
     }
 
     function renderPlanetTable(planets) {
