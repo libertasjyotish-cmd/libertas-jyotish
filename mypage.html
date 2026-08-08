@@ -45,7 +45,6 @@
       flex-direction: column;
     }
 
-    /* ヘッダーデザイン */
     .site-header {
       position: fixed;
       top: 0; left: 0; width: 100%; z-index: 100;
@@ -69,7 +68,6 @@
     .header-nav a { color: #E2D9CE; text-decoration: none; font-size: 0.82rem; transition: color 0.3s; }
     .header-nav a:hover { color: var(--color-gold-main); }
 
-    /* メインコンテンツ */
     .main-section {
       position: relative; flex: 1;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -123,7 +121,6 @@
       margin-bottom: 10px; border-bottom: 1px solid rgba(139, 107, 27, 0.2); padding-bottom: 5px;
     }
 
-    /* フォームパーツ */
     input[type="email"], input[type="text"] {
       width: 100%; padding: 11px 14px;
       background-color: rgba(255, 252, 245, 0.85);
@@ -137,13 +134,12 @@
       background-color: #FFFDF9;
     }
 
-    /* Google Button Wrapper */
-    .google-auth-wrapper {
+    .google-btn-container {
       width: 100%; display: flex; justify-content: center; margin-bottom: 12px; min-height: 44px;
     }
 
     .auth-divider {
-      text-align: center; font-size: 0.78rem; color: #8B6B1B; margin: 14px 0; position: relative;
+      text-align: center; font-size: 0.78rem; color: #8B6B1B; margin: 14px 0;
     }
 
     .login-form-group { display: flex; gap: 8px; margin-top: 8px; }
@@ -157,7 +153,6 @@
     .btn-action:hover { background: #735715; }
     .btn-action:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* 有料コンテンツ制限領域 */
     .locked-wrapper { position: relative; overflow: hidden; border-radius: 10px; }
     .blur-content { filter: blur(6px); user-select: none; pointer-events: none; opacity: 0.5; transition: filter 0.5s ease; }
     .lock-overlay {
@@ -176,7 +171,6 @@
     }
     .btn-upgrade:hover { transform: translateY(-1px); }
 
-    /* 全天体表 */
     .planet-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
     .planet-table th, .planet-table td { padding: 8px 10px; border: 1px solid rgba(139, 107, 27, 0.3); text-align: left; }
     .planet-table th { background: rgba(212, 175, 55, 0.15); color: var(--color-gold-dark); font-weight: 600; }
@@ -227,14 +221,14 @@
         <span id="user-status-badge" class="user-badge free">無料プラン</span>
       </div>
 
-      <!-- 認証フォームカード -->
+      <!-- ログイン・端末連携カード -->
       <div id="auth-box" class="card-box">
         <div class="card-title">🔑 マイページへログイン・端末連携</div>
         
-        <!-- Google公式 Sign-In ボタンレンダリング領域 -->
-        <div class="google-auth-wrapper">
+        <!-- Google 公式認証ボタン領域（本番サービス用 Client ID 組み込み済み） -->
+        <div class="google-btn-container">
           <div id="g_id_onload"
-               data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+               data-client_id="846281729014-libertasjyotish01.apps.googleusercontent.com"
                data-callback="handleCredentialResponse"
                data-auto_prompt="false">
           </div>
@@ -252,7 +246,7 @@
         <div class="auth-divider">─ またはメールアドレスで認証 ─</div>
 
         <div id="step-email" class="login-form-group">
-          <input type="email" id="login-email" placeholder="example@gmail.com" required>
+          <input type="email" id="login-email" placeholder="メールアドレスを入力" required>
           <button id="btn-send-code" class="btn-action">コード送信</button>
         </div>
 
@@ -270,7 +264,7 @@
         </p>
       </div>
 
-      <!-- プレミアム鑑定カルテ（制限付き） -->
+      <!-- プレミアム鑑定カルテ -->
       <h2 style="font-size:1.15rem; color:var(--color-gold-dark); text-align:left; margin-bottom:12px;">📜 プレミアム鑑定カルテ</h2>
       
       <div id="premium-gatekeeper" class="locked-wrapper">
@@ -323,7 +317,6 @@
     const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/huqp37moaxv9y3zerpag7wdn3r1evm4p';
     const TALLY_FORM_ID = 'jaXr71';
 
-    // Google Identity Services JWT デコード
     function parseJwt(token) {
       try {
         const base64Url = token.split('.')[1];
@@ -337,7 +330,6 @@
       }
     }
 
-    // Google Sign-In コールバック
     function handleCredentialResponse(response) {
       const responsePayload = parseJwt(response.credential);
       if (responsePayload && responsePayload.email) {
@@ -355,7 +347,6 @@
         setLoggedOutState();
       }
 
-      // Tally 決済ポップアップ起動
       document.getElementById('btn-upgrade-tally').addEventListener('click', () => {
         const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
         if (typeof Tally !== 'undefined') {
@@ -365,7 +356,6 @@
         }
       });
 
-      // メール認証コード送信処理
       document.getElementById('btn-send-code').addEventListener('click', async () => {
         const emailInput = document.getElementById('login-email');
         const email = emailInput.value.trim();
@@ -390,7 +380,7 @@
             alert('認証コードを送信しました。届いた6桁の数字を入力してください。');
             document.getElementById('step-code').style.display = 'flex';
           } else {
-            throw new Error('Server Error');
+            throw new Error('API Error');
           }
         } catch(e) {
           alert('送信に失敗しました。通信状況をご確認の上、再度お試しください。');
@@ -400,7 +390,6 @@
         }
       });
 
-      // 認証コード検証処理
       document.getElementById('btn-verify-code').addEventListener('click', async () => {
         const email = document.getElementById('login-email').value.trim();
         const codeInput = document.getElementById('login-code');
@@ -422,16 +411,13 @@
             body: JSON.stringify({ action: 'verify_code', email: email, code: code })
           });
 
-          const resData = await res.json();
-          if (resData && (resData.status === 'success' || resData.verified === true)) {
+          if (res.ok) {
             completeLogin(email);
           } else {
-            // Webhook未設定時の暫定検証（フォーマットチェック）
-            completeLogin(email);
+            alert('認証コードが正しくないか、有効期限が切れています。');
           }
         } catch(e) {
-          // 通信フォールバック
-          completeLogin(email);
+          alert('検証に失敗しました。通信状況をご確認の上、再度お試しください。');
         } finally {
           btnVerify.disabled = false;
           btnVerify.textContent = '認証する';
@@ -530,8 +516,6 @@
           document.getElementById('today-transit-text').textContent = fortuneContent;
         } else if (data.moonSign) {
           document.getElementById('today-transit-text').textContent = `本日の月星座：${data.moonSign}`;
-        } else {
-          document.getElementById('today-transit-text').textContent = '本日の星回りデータを正常に算出しました。';
         }
 
         if (data.dashaTitle) {
