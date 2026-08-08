@@ -271,7 +271,7 @@
           <div style="font-size:1.8rem; margin-bottom:6px;">🔒</div>
           <div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:8px;">有料会員限定コンテンツ</div>
           <p style="font-size:0.82rem; color:#5A4E48; margin-bottom:15px;">全天体配置・ダシャー周期の解読にはプラン登録が必要です。</p>
-          <a href="https://tally.so/r/YOUR_FORM_ID" class="btn-upgrade">有料プランに登録する</a>
+          <a id="btn-upgrade-tally" href="https://tally.so/r/jaXr71" target="_blank" rel="noopener noreferrer" class="btn-upgrade">有料プランに登録する</a>
         </div>
       </div>
 
@@ -285,6 +285,7 @@
 
   <script>
     const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/huqp37moaxv9y3zerpag7wdn3r1evm4p';
+    const TALLY_BASE_URL = 'https://tally.so/r/jaXr71';
 
     document.addEventListener('DOMContentLoaded', () => {
       const savedEmail = localStorage.getItem('lj_user_email');
@@ -292,6 +293,8 @@
       if (savedEmail) {
         setLoggedInState(savedEmail);
         fetchUserDataAndRender(savedEmail);
+      } else {
+        updateTallyUrl('');
       }
 
       document.getElementById('btn-send-code').addEventListener('click', async () => {
@@ -329,6 +332,17 @@
     function setLoggedInState(email) {
       document.getElementById('user-display-email').textContent = email;
       document.getElementById('auth-box').style.display = 'none';
+      updateTallyUrl(email);
+    }
+
+    function updateTallyUrl(email) {
+      const upgradeBtn = document.getElementById('btn-upgrade-tally');
+      if (!upgradeBtn) return;
+      if (email) {
+        upgradeBtn.href = `${TALLY_BASE_URL}?email=${encodeURIComponent(email)}`;
+      } else {
+        upgradeBtn.href = TALLY_BASE_URL;
+      }
     }
 
     async function fetchUserDataAndRender(email) {
