@@ -311,7 +311,6 @@
             }
           });
         } else {
-          // 万が一スクリプト未読込時のフォールバック
           window.open(`https://tally.so/r/${TALLY_FORM_ID}?email=${encodeURIComponent(email)}`, '_blank');
         }
       });
@@ -353,12 +352,45 @@
       document.getElementById('auth-box').style.display = 'none';
     }
 
+    // 日本時間 (+09:00) の ISO8601 文字列を生成するヘルパー関数
+    function getJstIsoString() {
+      const now = new Date();
+      const jstOffset = 9 * 60; // 分単位
+      const localTime = now.getTime();
+      const localOffset = now.getTimezoneOffset() * 60000;
+      const utc = localTime + localOffset;
+      const jstTime = new Date(utc + (jstOffset * 60000));
+
+      const YYYY = jstTime.getFullYear();
+      const MM = String(jstTime.getMonth() + 1).padStart(2, '0');
+      const DD = String(jstTime.getDate()).padStart(2, '0');
+      const hh = String(jstTime.getHours()).padStart(2, '0');
+      const mm = String(jstTime.getMinutes()).padStart(2, '0');
+      const ss = String(jstTime.getSeconds()).padStart(2, '0');
+
+      return `${YYYY}-${MM}-${DD}T${hh}:${mm}:${ss}+09:00`;
+    }
+
     async function fetchUserDataAndRender(email) {
+      const userAddress = localStorage.getItem('lj_user_city');
+      
+      // 出生都市が保存されていない場合は送信を行わずユーザーへ案内する
+      if (!userAddress) {
+        document.getElementById('today-transit-text').textContent = '⚠️ 出生都市が設定されていません。無料診断フォームより情報を登録してください。';
+        return;
+      }
+
+      const currentJstISO = getJstIsoString();
+
       try {
         const response = await fetch(MAKE_WEBHOOK_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'fetch_profile', email: email })
+          body: JSON.stringify({ 
+            address: userAddress, 
+            datetime: currentJstISO,
+            email: email
+          })
         });
 
         if (!response.ok) throw new Error('通信エラー');
@@ -368,8 +400,8 @@
           unlockPaidContent();
         }
 
-        if (data.dailyMessage) {
-          document.getElementById('today-transit-text').textContent = data.dailyMessage;
+        if (data.fortune || data.dailyMessage || data.text) {
+          document.getElementById('today-transit-text').textContent = data.fortune || data.dailyMessage || data.text;
         } else {
           document.getElementById('today-transit-text').textContent = '本日の運勢データを取得できませんでした。';
         }
