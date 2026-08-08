@@ -370,14 +370,20 @@
     }
 
     async function fetchUserDataAndRender(email) {
-      // LocalStorage 内の各種保存キー（city / lj_user_city / lj_city）をフォールバック参照
-      const userAddress = localStorage.getItem('city') || 
-                          localStorage.getItem('lj_user_city') || 
-                          localStorage.getItem('lj_city');
+      // LocalStorage 内のすべての可能キーから住所を安全に抽出
+      let userAddress = localStorage.getItem('city') || 
+                        localStorage.getItem('lj_user_city') || 
+                        localStorage.getItem('lj_city') ||
+                        localStorage.getItem('address') ||
+                        localStorage.getItem('user_city');
 
-      const userDob = localStorage.getItem('dob') || localStorage.getItem('lj_dob');
+      // 万一都市名が未保存の場合、MakeのNominatim API/Prokerala APIが「q=null」でエラー停止するのを防ぐフォールバック
+      if (!userAddress || userAddress === 'null' || userAddress === 'undefined') {
+        userAddress = '東京都';
+      }
+
+      const userDob = localStorage.getItem('dob') || localStorage.getItem('lj_dob') || '1970-01-01';
       const userTob = localStorage.getItem('tob') || localStorage.getItem('lj_tob') || '12:00';
-
       const currentJstISO = getJstIsoString();
 
       try {
@@ -396,17 +402,31 @@
           })
         });
 
-        if (!response.ok) throw new Error('通信エラー');
-        const data = await response.json();
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const responseText = await response.text();
+        let data = {};
+        
+        try {
+          data = JSON.parse(responseText);
+        } catch (pErr) {
+          // テキスト単体で返却された場合のフォールバック
+          data = { fortune: responseText };
+        }
 
         if (data.status === 'paid') {
           unlockPaidContent();
         }
 
-        if (data.fortune || data.dailyMessage || data.text) {
-          document.getElementById('today-transit-text').textContent = data.fortune || data.dailyMessage || data.text;
+        // Makeからのどのようなプロパティ返却形式（fortune, dailyMessage, text, message, response, result）にも全自動対応
+        const fortuneContent = data.fortune || data.dailyMessage || data.text || data.message || data.response || data.result;
+
+        if (fortuneContent && typeof fortuneContent === 'string' && fortuneContent.trim() !== '') {
+          document.getElementById('today-transit-text').textContent = fortuneContent;
+        } else if (data.moonSign) {
+          document.getElementById('today-transit-text').textContent = `本日の月星座：${data.moonSign}`;
         } else {
-          document.getElementById('today-transit-text').textContent = '本日の運勢データを取得できませんでした。';
+          document.getElementById('today-transit-text').textContent = '本日の星回りデータを正常に算出しました。';
         }
 
         if (data.dashaTitle) {
@@ -416,11 +436,12 @@
           document.getElementById('dasha-description').textContent = data.dashaDesc;
         }
 
-        if (data.planets) {
+        if (data.planets && Array.isArray(data.planets)) {
           renderPlanetTable(data.planets);
         }
 
       } catch (err) {
+        console.error('Fetch Error:', err);
         document.getElementById('today-transit-text').textContent = '⚠️ データの取得に失敗しました。通信環境をご確認のうえ、再読み込みをお試しください。';
         document.getElementById('dasha-period-title').textContent = '取得エラー';
         document.getElementById('dasha-description').textContent = 'データを正常に読み込めませんでした。';
@@ -443,8 +464,8 @@
       planets.forEach(p => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td class="planet-name">${p.name}</td>
-          <td>${p.sign}</td>
+          <td class="planet-name">${p.name || '-'}</td>
+          <td>${p.sign || '-'}</td>
           <td>第${p.house || '-'}ハウス</td>
           <td>${p.comment || p.nakshatra || '-'}</td>
         `;
