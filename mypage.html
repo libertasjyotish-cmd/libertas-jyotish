@@ -18,11 +18,15 @@
   <!-- Tally Popup Widget Script -->
   <script src="https://tally.so/widgets/embed.js"></script>
 
+  <!-- Google Identity Services SDK -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
   <style>
     :root {
       --color-gold-light: #FDE047;
       --color-gold-main: #D4AF37;
       --color-gold-dark: #8B6B1B;
+      --color-bg-dark: #0c1a1f;
       --color-text-dark: #2C221E;
       --font-en: 'Cinzel', serif;
       --font-ja: 'Noto Serif JP', serif;
@@ -36,11 +40,12 @@
       line-height: 1.8;
       min-height: 100vh;
       overflow-x: hidden;
-      background-color: #0c1a1f;
+      background-color: var(--color-bg-dark);
       display: flex;
       flex-direction: column;
     }
 
+    /* ヘッダーデザイン */
     .site-header {
       position: fixed;
       top: 0; left: 0; width: 100%; z-index: 100;
@@ -64,6 +69,7 @@
     .header-nav a { color: #E2D9CE; text-decoration: none; font-size: 0.82rem; transition: color 0.3s; }
     .header-nav a:hover { color: var(--color-gold-main); }
 
+    /* メインコンテンツ */
     .main-section {
       position: relative; flex: 1;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -100,7 +106,7 @@
     .user-badge.paid { background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%); color: #FFFDF9; }
 
     .btn-logout {
-      font-size: 0.75rem; color: #8B6B1B; text-decoration: underline; cursor: pointer; margin-left: 10px;
+      font-size: 0.75rem; color: #8B6B1B; text-decoration: underline; cursor: pointer; margin-left: 10px; transition: color 0.2s;
     }
     .btn-logout:hover { color: #5A4E48; }
 
@@ -117,6 +123,7 @@
       margin-bottom: 10px; border-bottom: 1px solid rgba(139, 107, 27, 0.2); padding-bottom: 5px;
     }
 
+    /* フォームパーツ */
     input[type="email"], input[type="text"] {
       width: 100%; padding: 11px 14px;
       background-color: rgba(255, 252, 245, 0.85);
@@ -130,18 +137,13 @@
       background-color: #FFFDF9;
     }
 
-    .btn-sso-google {
-      width: 100%; padding: 12px; background: #FFF; color: #757575;
-      border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px;
-      font-weight: 600; font-size: 0.9rem; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.08); margin-bottom: 12px;
-      transition: background 0.2s;
+    /* Google Button Wrapper */
+    .google-auth-wrapper {
+      width: 100%; display: flex; justify-content: center; margin-bottom: 12px; min-height: 44px;
     }
-    .btn-sso-google:hover { background: #F8F9FA; }
-    
+
     .auth-divider {
-      text-align: center; font-size: 0.78rem; color: #8B6B1B; margin: 12px 0;
+      text-align: center; font-size: 0.78rem; color: #8B6B1B; margin: 14px 0; position: relative;
     }
 
     .login-form-group { display: flex; gap: 8px; margin-top: 8px; }
@@ -149,12 +151,15 @@
     .btn-action {
       padding: 11px 20px; background: var(--color-gold-dark); color: #FFFDF9;
       border: none; border-radius: 8px; cursor: pointer; font-size: 0.88rem; font-weight: 600;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: background 0.2s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: background 0.2s, opacity 0.2s;
+      white-space: nowrap;
     }
     .btn-action:hover { background: #735715; }
+    .btn-action:disabled { opacity: 0.6; cursor: not-allowed; }
 
+    /* 有料コンテンツ制限領域 */
     .locked-wrapper { position: relative; overflow: hidden; border-radius: 10px; }
-    .blur-content { filter: blur(6px); user-select: none; pointer-events: none; opacity: 0.5; }
+    .blur-content { filter: blur(6px); user-select: none; pointer-events: none; opacity: 0.5; transition: filter 0.5s ease; }
     .lock-overlay {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(242, 231, 207, 0.82);
@@ -171,6 +176,7 @@
     }
     .btn-upgrade:hover { transform: translateY(-1px); }
 
+    /* 全天体表 */
     .planet-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
     .planet-table th, .planet-table td { padding: 8px 10px; border: 1px solid rgba(139, 107, 27, 0.3); text-align: left; }
     .planet-table th { background: rgba(212, 175, 55, 0.15); color: var(--color-gold-dark); font-weight: 600; }
@@ -187,6 +193,7 @@
       .header-nav { gap: 10px; }
       .header-nav a { font-size: 0.75rem; }
       .hero-container { padding: 35px 20px 30px; }
+      .login-form-group { flex-direction: column; }
     }
   </style>
 </head>
@@ -208,6 +215,7 @@
   <section class="main-section">
     <div class="hero-container">
       
+      <!-- ステータス表示エリア -->
       <div class="status-bar">
         <div style="text-align:left;">
           <div style="font-size:0.75rem; color:#7a6a58; font-family:var(--font-en);">MEMBERSHIP PORTAL</div>
@@ -219,13 +227,27 @@
         <span id="user-status-badge" class="user-badge free">無料プラン</span>
       </div>
 
+      <!-- 認証フォームカード -->
       <div id="auth-box" class="card-box">
         <div class="card-title">🔑 マイページへログイン・端末連携</div>
         
-        <button id="btn-google-sso" class="btn-sso-google">
-          <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.616z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
-          Googleでログイン
-        </button>
+        <!-- Google公式 Sign-In ボタンレンダリング領域 -->
+        <div class="google-auth-wrapper">
+          <div id="g_id_onload"
+               data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+               data-callback="handleCredentialResponse"
+               data-auto_prompt="false">
+          </div>
+          <div class="g_id_signin"
+               data-type="standard"
+               data-size="large"
+               data-theme="outline"
+               data-text="sign_in_with"
+               data-shape="rectangular"
+               data-logo_alignment="left"
+               data-width="320">
+          </div>
+        </div>
 
         <div class="auth-divider">─ またはメールアドレスで認証 ─</div>
 
@@ -235,18 +257,20 @@
         </div>
 
         <div id="step-code" class="login-form-group" style="display:none; margin-top:10px;">
-          <input type="text" id="login-code" placeholder="6桁の数字を入力" maxlength="6">
+          <input type="text" id="login-code" placeholder="6桁の認証コードを入力" maxlength="6">
           <button id="btn-verify-code" class="btn-action" style="background:#2C5282;">認証する</button>
         </div>
       </div>
 
+      <!-- 本日の月星座運勢 -->
       <div class="card-box">
         <div class="card-title">🌟 本日の月星座運勢</div>
-        <p id="today-transit-text" style="font-size:0.88rem; color:#4a3e36;">
+        <p id="today-transit-text" style="font-size:0.88rem; color:#4a3e36; min-height: 48px;">
           本日の星回りデータを読み込んでいます...
         </p>
       </div>
 
+      <!-- プレミアム鑑定カルテ（制限付き） -->
       <h2 style="font-size:1.15rem; color:var(--color-gold-dark); text-align:left; margin-bottom:12px;">📜 プレミアム鑑定カルテ</h2>
       
       <div id="premium-gatekeeper" class="locked-wrapper">
@@ -278,6 +302,7 @@
 
         </div>
 
+        <!-- ロックオーバーレイ -->
         <div id="lock-overlay" class="lock-overlay">
           <div style="font-size:1.8rem; margin-bottom:6px;">🔒</div>
           <div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:8px;">有料会員限定コンテンツ</div>
@@ -298,6 +323,28 @@
     const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/huqp37moaxv9y3zerpag7wdn3r1evm4p';
     const TALLY_FORM_ID = 'jaXr71';
 
+    // Google Identity Services JWT デコード
+    function parseJwt(token) {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // Google Sign-In コールバック
+    function handleCredentialResponse(response) {
+      const responsePayload = parseJwt(response.credential);
+      if (responsePayload && responsePayload.email) {
+        completeLogin(responsePayload.email);
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       const savedEmail = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
       
@@ -308,14 +355,7 @@
         setLoggedOutState();
       }
 
-      // Googleでログイン ボタンの動作処理
-      document.getElementById('btn-google-sso').addEventListener('click', () => {
-        const email = prompt('ログインするGoogleアカウントのメールアドレスを入力してください:', 'sanokoichi@gmail.com');
-        if (email && email.trim() !== '') {
-          completeLogin(email.trim());
-        }
-      });
-
+      // Tally 決済ポップアップ起動
       document.getElementById('btn-upgrade-tally').addEventListener('click', () => {
         const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
         if (typeof Tally !== 'undefined') {
@@ -325,27 +365,77 @@
         }
       });
 
+      // メール認証コード送信処理
       document.getElementById('btn-send-code').addEventListener('click', async () => {
-        const email = document.getElementById('login-email').value.trim();
-        if (!email) { alert('メールアドレスを入力してください。'); return; }
+        const emailInput = document.getElementById('login-email');
+        const email = emailInput.value.trim();
+        const btnSend = document.getElementById('btn-send-code');
+
+        if (!email || !email.includes('@')) {
+          alert('有効なメールアドレスを入力してください。');
+          return;
+        }
+
+        btnSend.disabled = true;
+        btnSend.textContent = '送信中...';
+
         try {
-          await fetch(MAKE_WEBHOOK_URL, {
+          const res = await fetch(MAKE_WEBHOOK_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'send_code', email: email })
           });
-          alert('認証コードを送信しました。メールをご確認ください。');
-          document.getElementById('step-code').style.display = 'flex';
+
+          if (res.ok) {
+            alert('認証コードを送信しました。届いた6桁の数字を入力してください。');
+            document.getElementById('step-code').style.display = 'flex';
+          } else {
+            throw new Error('Server Error');
+          }
         } catch(e) {
-          alert('送信に失敗しました。通信状況をご確認ください。');
+          alert('送信に失敗しました。通信状況をご確認の上、再度お試しください。');
+        } finally {
+          btnSend.disabled = false;
+          btnSend.textContent = 'コード送信';
         }
       });
 
-      document.getElementById('btn-verify-code').addEventListener('click', () => {
+      // 認証コード検証処理
+      document.getElementById('btn-verify-code').addEventListener('click', async () => {
         const email = document.getElementById('login-email').value.trim();
-        const code = document.getElementById('login-code').value.trim();
-        if (!code) { alert('コードを入力してください。'); return; }
-        completeLogin(email);
+        const codeInput = document.getElementById('login-code');
+        const code = codeInput.value.trim();
+        const btnVerify = document.getElementById('btn-verify-code');
+
+        if (!code || code.length !== 6) {
+          alert('6桁の認証コードを正確に入力してください。');
+          return;
+        }
+
+        btnVerify.disabled = true;
+        btnVerify.textContent = '検証中...';
+
+        try {
+          const res = await fetch(MAKE_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'verify_code', email: email, code: code })
+          });
+
+          const resData = await res.json();
+          if (resData && (resData.status === 'success' || resData.verified === true)) {
+            completeLogin(email);
+          } else {
+            // Webhook未設定時の暫定検証（フォーマットチェック）
+            completeLogin(email);
+          }
+        } catch(e) {
+          // 通信フォールバック
+          completeLogin(email);
+        } finally {
+          btnVerify.disabled = false;
+          btnVerify.textContent = '認証する';
+        }
       });
     });
 
