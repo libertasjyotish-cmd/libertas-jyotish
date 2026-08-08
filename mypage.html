@@ -291,16 +291,15 @@
     const TALLY_FORM_ID = 'jaXr71';
 
     document.addEventListener('DOMContentLoaded', () => {
-      const savedEmail = localStorage.getItem('lj_user_email');
+      const savedEmail = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
       
       if (savedEmail) {
         setLoggedInState(savedEmail);
         fetchUserDataAndRender(savedEmail);
       }
 
-      // 「有料プランに登録する」ボタンのポップアップ起動処理
       document.getElementById('btn-upgrade-tally').addEventListener('click', () => {
-        const email = localStorage.getItem('lj_user_email') || '';
+        const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
         
         if (typeof Tally !== 'undefined') {
           Tally.openPopup(TALLY_FORM_ID, {
@@ -352,10 +351,9 @@
       document.getElementById('auth-box').style.display = 'none';
     }
 
-    // 日本時間 (+09:00) の ISO8601 文字列を生成するヘルパー関数
     function getJstIsoString() {
       const now = new Date();
-      const jstOffset = 9 * 60; // 分単位
+      const jstOffset = 9 * 60;
       const localTime = now.getTime();
       const localOffset = now.getTimezoneOffset() * 60000;
       const utc = localTime + localOffset;
@@ -372,13 +370,13 @@
     }
 
     async function fetchUserDataAndRender(email) {
-      const userAddress = localStorage.getItem('lj_user_city');
-      
-      // 出生都市が保存されていない場合は送信を行わずユーザーへ案内する
-      if (!userAddress) {
-        document.getElementById('today-transit-text').textContent = '⚠️ 出生都市が設定されていません。無料診断フォームより情報を登録してください。';
-        return;
-      }
+      // LocalStorage 内の各種保存キー（city / lj_user_city / lj_city）をフォールバック参照
+      const userAddress = localStorage.getItem('city') || 
+                          localStorage.getItem('lj_user_city') || 
+                          localStorage.getItem('lj_city');
+
+      const userDob = localStorage.getItem('dob') || localStorage.getItem('lj_dob');
+      const userTob = localStorage.getItem('tob') || localStorage.getItem('lj_tob') || '12:00';
 
       const currentJstISO = getJstIsoString();
 
@@ -387,9 +385,14 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
+            action: 'fetch_profile',
+            email: email,
             address: userAddress, 
+            city: userAddress,
+            dob: userDob,
+            tob: userTob,
             datetime: currentJstISO,
-            email: email
+            language: 'ja'
           })
         });
 
