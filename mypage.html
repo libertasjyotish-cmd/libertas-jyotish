@@ -225,10 +225,10 @@
       <div id="auth-box" class="card-box">
         <div class="card-title">🔑 マイページへログイン・端末連携</div>
         
-        <!-- Google 公式認証ボタン領域（本番サービス用 Client ID 組み込み済み） -->
+        <!-- Google 公式認証ボタン領域（取得済みクライアントID指定） -->
         <div class="google-btn-container">
           <div id="g_id_onload"
-               data-client_id="846281729014-libertasjyotish01.apps.googleusercontent.com"
+               data-client_id="789459066589-2tla7ubk127eic0g5aekql75ohdejnto.apps.googleusercontent.com"
                data-callback="handleCredentialResponse"
                data-auto_prompt="false">
           </div>
@@ -317,6 +317,7 @@
     const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/huqp37moaxv9y3zerpag7wdn3r1evm4p';
     const TALLY_FORM_ID = 'jaXr71';
 
+    // Google Identity Services JWT デコード関数
     function parseJwt(token) {
       try {
         const base64Url = token.split('.')[1];
@@ -330,6 +331,7 @@
       }
     }
 
+    // Google Sign-In 成功時の自動コールバック
     function handleCredentialResponse(response) {
       const responsePayload = parseJwt(response.credential);
       if (responsePayload && responsePayload.email) {
@@ -347,6 +349,7 @@
         setLoggedOutState();
       }
 
+      // Tally 決済モーダル呼び出し
       document.getElementById('btn-upgrade-tally').addEventListener('click', () => {
         const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
         if (typeof Tally !== 'undefined') {
@@ -356,6 +359,7 @@
         }
       });
 
+      // メール認証コード送信処理
       document.getElementById('btn-send-code').addEventListener('click', async () => {
         const emailInput = document.getElementById('login-email');
         const email = emailInput.value.trim();
@@ -390,6 +394,7 @@
         }
       });
 
+      // 認証コード検証処理
       document.getElementById('btn-verify-code').addEventListener('click', async () => {
         const email = document.getElementById('login-email').value.trim();
         const codeInput = document.getElementById('login-code');
