@@ -15,6 +15,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
   
+  <!-- Tally Popup Widget Script -->
+  <script src="https://tally.so/widgets/embed.js"></script>
+
   <style>
     :root {
       --color-gold-light: #FDE047;
@@ -157,7 +160,7 @@
     .btn-upgrade {
       display: inline-block; padding: 12px 24px; font-size: 0.95rem; font-weight: 600;
       color: #FFFDF9; background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%);
-      border-radius: 8px; text-decoration: none;
+      border: none; border-radius: 8px; cursor: pointer; text-decoration: none;
       box-shadow: 0 8px 20px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255, 255, 255, 0.4);
       transition: transform 0.2s;
     }
@@ -271,7 +274,7 @@
           <div style="font-size:1.8rem; margin-bottom:6px;">🔒</div>
           <div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:8px;">有料会員限定コンテンツ</div>
           <p style="font-size:0.82rem; color:#5A4E48; margin-bottom:15px;">全天体配置・ダシャー周期の解読にはプラン登録が必要です。</p>
-          <a id="btn-upgrade-tally" href="https://tally.so/r/jaXr71" target="_blank" rel="noopener noreferrer" class="btn-upgrade">有料プランに登録する</a>
+          <button id="btn-upgrade-tally" class="btn-upgrade">有料プランに登録する</button>
         </div>
       </div>
 
@@ -285,7 +288,7 @@
 
   <script>
     const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/huqp37moaxv9y3zerpag7wdn3r1evm4p';
-    const TALLY_BASE_URL = 'https://tally.so/r/jaXr71';
+    const TALLY_FORM_ID = 'jaXr71';
 
     document.addEventListener('DOMContentLoaded', () => {
       const savedEmail = localStorage.getItem('lj_user_email');
@@ -293,9 +296,25 @@
       if (savedEmail) {
         setLoggedInState(savedEmail);
         fetchUserDataAndRender(savedEmail);
-      } else {
-        updateTallyUrl('');
       }
+
+      // 「有料プランに登録する」ボタンのポップアップ起動処理
+      document.getElementById('btn-upgrade-tally').addEventListener('click', () => {
+        const email = localStorage.getItem('lj_user_email') || '';
+        
+        if (typeof Tally !== 'undefined') {
+          Tally.openPopup(TALLY_FORM_ID, {
+            layout: 'modal',
+            width: 600,
+            hiddenFields: {
+              email: email
+            }
+          });
+        } else {
+          // 万が一スクリプト未読込時のフォールバック
+          window.open(`https://tally.so/r/${TALLY_FORM_ID}?email=${encodeURIComponent(email)}`, '_blank');
+        }
+      });
 
       document.getElementById('btn-send-code').addEventListener('click', async () => {
         const email = document.getElementById('login-email').value.trim();
@@ -332,17 +351,6 @@
     function setLoggedInState(email) {
       document.getElementById('user-display-email').textContent = email;
       document.getElementById('auth-box').style.display = 'none';
-      updateTallyUrl(email);
-    }
-
-    function updateTallyUrl(email) {
-      const upgradeBtn = document.getElementById('btn-upgrade-tally');
-      if (!upgradeBtn) return;
-      if (email) {
-        upgradeBtn.href = `${TALLY_BASE_URL}?email=${encodeURIComponent(email)}`;
-      } else {
-        upgradeBtn.href = TALLY_BASE_URL;
-      }
     }
 
     async function fetchUserDataAndRender(email) {
