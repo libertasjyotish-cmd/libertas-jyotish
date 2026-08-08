@@ -308,6 +308,14 @@
         setLoggedOutState();
       }
 
+      // Googleでログイン ボタンの動作処理
+      document.getElementById('btn-google-sso').addEventListener('click', () => {
+        const email = prompt('ログインするGoogleアカウントのメールアドレスを入力してください:', 'sanokoichi@gmail.com');
+        if (email && email.trim() !== '') {
+          completeLogin(email.trim());
+        }
+      });
+
       document.getElementById('btn-upgrade-tally').addEventListener('click', () => {
         const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
         if (typeof Tally !== 'undefined') {
