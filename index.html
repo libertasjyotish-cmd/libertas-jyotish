@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- 💡 Google 審査必須: アプリ名「Libertas Jyotish」を完全一致で配置 -->
   <title>Libertas Jyotish - インド占星術ポータル</title>
-  <meta name="description" content="Libertas Jyotish（リベルタス・ジョーティシュ）は、古代インドの叡智「サイデリアル式」に基づいた月星座診断および個人鑑定を提供するWebサービスです。">
+  <meta name="description" content="Libertas Jyotish（リベルタス・ジューティシュ）は、古代インドの叡智「サイデリアル式」に基づいた月星座診断および個人鑑定を提供するWebサービスです。">
 
   <!-- PWA & Theme Settings -->
   <link rel="manifest" href="manifest.json">
@@ -15,7 +15,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
   
   <style>
     :root {
@@ -76,7 +76,7 @@
 
     /* 羊皮紙カード質感 */
     .hero-container {
-      position: relative; z-index: 2; width: 100%; max-width: 620px;
+      position: relative; z-index: 2; width: 100%; max-width: 680px;
       background-image: 
         radial-gradient(circle at 50% 25%, rgba(255, 253, 245, 0.98) 0%, rgba(245, 233, 208, 0.95) 55%, rgba(220, 200, 162, 0.96) 100%),
         linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.05) 100%);
@@ -142,25 +142,50 @@
     .member-links { display: flex; justify-content: center; gap: 15px; font-size: 0.8rem; }
     .member-links a { color: var(--color-gold-dark); text-decoration: underline; font-weight: 600; }
 
+    /* サイト詳細・説明セクション */
     .about-section {
-      width: 100%; max-width: 620px;
-      background-image: radial-gradient(circle at 50% 30%, rgba(255, 253, 248, 0.96) 0%, rgba(243, 234, 214, 0.94) 100%);
-      border-radius: 14px; border: 1px solid rgba(184, 142, 60, 0.45); outline: 1px solid rgba(212, 175, 55, 0.25); outline-offset: -6px;
+      width: 100%; max-width: 680px;
+      background-image: radial-gradient(circle at 50% 30%, rgba(255, 253, 248, 0.97) 0%, rgba(243, 234, 214, 0.95) 100%);
+      border-radius: 14px; border: 1px solid rgba(184, 142, 60, 0.5); outline: 1px solid rgba(212, 175, 55, 0.3); outline-offset: -6px;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 0 25px rgba(139, 90, 43, 0.2);
-      padding: 35px 30px; margin-bottom: 20px; color: var(--color-text-dark);
+      padding: 40px 35px; margin-bottom: 30px; color: var(--color-text-dark);
     }
-    .about-title { font-size: 1.25rem; color: var(--color-gold-dark); margin-bottom: 15px; text-align: center; border-bottom: 1px solid rgba(139, 107, 27, 0.3); padding-bottom: 10px; }
-    .about-content p { font-size: 0.88rem; line-height: 1.85; margin-bottom: 14px; color: #4a3e36; }
+    .about-header { text-align: center; border-bottom: 1px solid rgba(139, 107, 27, 0.3); padding-bottom: 18px; margin-bottom: 25px; }
+    .about-header-sub { font-family: var(--font-en); font-size: 0.82rem; letter-spacing: 0.2em; color: var(--color-gold-dark); text-transform: uppercase; margin-bottom: 6px; }
+    .about-title { font-size: 1.35rem; font-weight: 700; color: var(--color-gold-dark); line-height: 1.4; }
+    
+    .about-lead {
+      font-size: 0.95rem; font-weight: 600; color: #3D322C; line-height: 1.8; margin-bottom: 20px;
+      text-align: center; background: rgba(212, 175, 55, 0.08); padding: 15px 18px; border-radius: 8px;
+      border: 1px solid rgba(139, 107, 27, 0.2);
+    }
 
-    /* 💡 Google OAuth 審査適合用 スタイル追加 */
-    .auth-explanation-box {
-      margin-top: 20px; padding: 15px;
-      background: rgba(212, 175, 55, 0.08);
-      border: 1px solid rgba(139, 107, 27, 0.3);
-      border-radius: 8px; font-size: 0.8rem; text-align: left; color: #5A4E48;
+    .about-content p { font-size: 0.88rem; line-height: 1.9; margin-bottom: 16px; color: #4a3e36; text-align: justify; }
+
+    .about-h3 {
+      font-size: 1.05rem; font-weight: 700; color: var(--color-gold-dark);
+      margin: 28px 0 12px; padding-left: 12px; border-left: 3px solid var(--color-gold-dark);
+      line-height: 1.5;
     }
-    .auth-explanation-title { font-weight: 600; color: var(--color-gold-dark); margin-bottom: 6px; }
-    .auth-explanation-list { margin-left: 18px; line-height: 1.6; }
+
+    .about-card {
+      background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(139, 107, 27, 0.25);
+      border-radius: 8px; padding: 16px; margin-bottom: 16px; font-size: 0.88rem;
+    }
+    .about-card-title { font-weight: 700; color: #3D322C; margin-bottom: 6px; }
+
+    .about-list { margin-left: 20px; margin-bottom: 16px; font-size: 0.88rem; color: #4a3e36; }
+    .about-list li { margin-bottom: 6px; line-height: 1.7; }
+
+    /* 💡 Google OAuth 審査適合用 スタイル */
+    .auth-explanation-box {
+      margin-top: 30px; padding: 18px;
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px dashed rgba(139, 107, 27, 0.4);
+      border-radius: 8px; font-size: 0.82rem; text-align: left; color: #5A4E48;
+    }
+    .auth-explanation-title { font-weight: 700; color: var(--color-gold-dark); margin-bottom: 8px; }
+    .auth-explanation-list { margin-left: 18px; line-height: 1.7; }
 
     .site-footer {
       width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3);
@@ -173,6 +198,7 @@
     @media (max-width: 640px) {
       .form-grid { grid-template-columns: 1fr; }
       .form-group.full-width { grid-column: span 1; }
+      .about-section { padding: 28px 20px; }
     }
   </style>
 </head>
@@ -231,11 +257,69 @@
       </div>
     </div>
 
+    <!-- サイト詳細・説明セクション -->
     <div class="about-section" id="about">
-      <h2 class="about-title">Libertas Jyotish について</h2>
+      <div class="about-header">
+        <div class="about-header-sub">LIBERTAS JYOTISH</div>
+        <h2 class="about-title">運命に縛られるのではなく、自らの人生を自由にデザインするために。</h2>
+      </div>
+
       <div class="about-content">
-        <p><strong>「なぜ、一般的な占星術ではしっくりこないのか？」</strong><br>西洋占星術（トロピカル式）とインド占星術（サイデリアル式）では、星の位置の計算方法が約24度異なります。</p>
-        <p><strong>Libertas Jyotish</strong> では、実際の天体位置に基づいた「サイデリアル算術」を採用。一般的な星占いとは異なる、あなたの『真の月星座』と『魂の宿命（ナクシャトラ）』を正確に導き出します。</p>
+        <div class="about-lead">
+          最高峰の天文学的精度が明かす、あなただけの宇宙的設計図
+        </div>
+
+        <p>西洋占星術で語られる「太陽星座」だけで、あなたの複雑な人生のすべてを解き明かすことはできたでしょうか？<br>
+        もしあなたが従来の星占いにどこか漠然とした物足りなさを感じていたなら、その理由は明確です。一般的な星占いは、いま実際の夜空に存在する本物の天体配置を反映していないからです。</p>
+
+        <p><strong>LIBERTAS JYOTISH（リベルタス・ジューティシュ）</strong>は、5,000年以上の歴史を誇る古代インドの聖典『ヴェーダ』の知恵と、現代天文学の精密な計算ロジックを融合させた最高峰の宇宙知性プラットフォームです。「Libertas（自由）」の名が示す通り、当サイトはあなたを運命論で縛るためではなく、本物の星の知恵によって自らの人生の主権を取り戻し、未来を自由に切り拓くために作られました。</p>
+
+        <h3 class="about-h3">1. 西洋占星術との決定的な違い：実際の宇宙空間と同調する「サイデリアル方式」</h3>
+        <p>西洋占星術とインド占星術（Jyotish）の最大の相違点は、黄道（星の通り道）の計算方法にあります。</p>
+
+        <div class="about-card">
+          <div class="about-card-title">■ 西洋占星術（トロピカル方式）</div>
+          <p style="margin-bottom:0;">約2,000年前の春分点（季節のサイクル）に固定された計算。</p>
+        </div>
+
+        <div class="about-card">
+          <div class="about-card-title">■ インド占星術（サイデリアル方式）</div>
+          <p style="margin-bottom:0;">地球の軸の傾き（歳差運動）によるズレをミリ単位で補正し、「いま実際の夜空に存在する本物の天体位置」に基づく計算。</p>
+        </div>
+
+        <p>地球の歳差運動により、実際の星空と暦の上での星座には約24度のズレが生じています（この精密な補正数値をアヤナムシャ / Ayanamsaと呼びます）。</p>
+        <p>LIBERTAS JYOTISHでは、天文学的なアヤナムシャ数値を極めて緻密に算出。今夜見上げた空に実際に滞在している「本物の星座と天体度数」から、気休めではない、あなただけのありのままの宇宙的設計図（ホロスコープ / ラーシ・チャクラ）を立ち上げます。</p>
+
+        <h3 class="about-h3">2. 緻密さを生み出す3つの専門的解釈体系</h3>
+        <p>当サイトが「世界で最も精緻な占術」と確信を持って提示する理由は、多層的な計算とロジックの厚みにあります。</p>
+
+        <div class="about-card">
+          <div class="about-card-title">① 27の星宿「ナクシャトラ（Nakshatra）」</div>
+          <p style="margin-bottom:0;">西洋占星術の12星座（30度ずつの大雑把な分割）を超え、月が辿る軌道をさらに細かく27の領域に分けた「ナクシャトラ（月宿）」を使用します。ひとつの星座の奥深くに秘められたあなたの深層心理、潜在意識の癖、人間関係のパターン、そして魂の真の目的をミクロの精度で浮き彫りにします。</p>
+        </div>
+
+        <div class="about-card">
+          <div class="about-card-title">② 精密な人生のタイムライン「ヴィムショッタリ・ダシャー（Vimshottari Dasha）」</div>
+          <p style="margin-bottom:0;">「人生の転機がいつ訪れるのか」を圧倒的な精度で特定するのが、インド占星術独自の時期予測システム「ダシャー」です。あなたが生まれた瞬間の「月のナクシャトラ」を起点に、どの惑星の影響を受けるかを階層的に算出。「いつ攻めるべきか」「いつ整えるべきか」という人生の決定的瞬間と戦略を割り出します。</p>
+        </div>
+
+        <div class="about-card">
+          <div class="about-card-title">③ 魂の器を定義する「ラグナ（Lagna）」</div>
+          <p style="margin-bottom:0;">生年月日だけでなく、「確定的な出生時間」と「出生地の詳細な緯度経度」から、あなたが生まれた瞬間に東の地平線が指していた方位＝ラグナ（アセンダント / 第1ハウス）を厳密に算出します。ラグナを軸とすることで、9つの惑星（ナヴァグラハ）と12のハウスが織りなす真の人間構造を立体的に解析します。</p>
+        </div>
+
+        <h3 class="about-h3">3. レメディ（処方）と調和：あなたを自由にする真の知恵</h3>
+        <p>古代インドにおいて「光の科学」と称されたJyotishは、単なる未来の予知ではありません。</p>
+        <p>当サイトでは、星の負荷を和らげる「ヴェーダのレメディ（Upaya：処方）」を標準的に組み込んでいます。あなたに最適化されたマントラ（特定の音の周波数）、色の調整、アーユルヴェーダ的な体質改善（ドーシャ調整）を通して、星のエネルギーを調和させ、潜在能力を最大限に引き出す「具体的な解決策」を提供します。</p>
+
+        <h3 class="about-h3">4. 妥協なき数学的・天文学的精度へのこだわり</h3>
+        <p>LIBERTAS JYOTISHの計算エンジンは、世界最高峰の天文学ライブラリ（Swiss Ephemeris準拠）を搭載。歴史上の複雑なタイムゾーン変更、サマータイムの微差、正確な緯度経度データをリアルタイムで補正します。</p>
+        <p>抽象的なポエムや、万人にあてはまる使い回しの診断テキストは一切出力しません。宇宙があなたに与えた数学的かつ天文学的な事実だけを抽出し、あなたの人生を照らす「真実の光」としてお届けします。</p>
+
+        <div style="text-align: center; margin-top: 30px; font-weight: 700; color: var(--color-gold-dark); font-size: 1.05rem;">
+          あなたの「真の星回り」を解読する準備はできましたか？<br>
+          出生データを入力し、LIBERTAS JYOTISHが明かす、あなただけの本物のロードマップをお受け取りください。
+        </div>
 
         <!-- 💡 Google OAuth 審査必須: アカウント連携およびデータ利用目的の明記 -->
         <div class="auth-explanation-box">
