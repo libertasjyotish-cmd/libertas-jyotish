@@ -16,6 +16,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
   
+  <!-- Tally Popup Widget Script -->
+  <script src="https://tally.so/widgets/embed.js"></script>
+
   <style>
     :root {
       --color-gold-light: #FDE047;
@@ -133,7 +136,7 @@
     }
     .submit-btn:hover { transform: translateY(-1px); }
 
-    /* 有料会員登録枠（Stripe導線） */
+    /* 有料会員登録枠（Stripe/Tally導線） */
     .paid-member-box {
       margin-top: 30px; padding: 22px 18px;
       background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(139, 107, 27, 0.08) 100%);
@@ -151,7 +154,7 @@
       display: inline-block; width: 100%; max-width: 380px; padding: 13px 20px;
       background: linear-gradient(135deg, #8B6B1B 0%, #5C450E 100%);
       color: #FFFDF9; text-decoration: none; font-weight: 600; font-size: 0.92rem;
-      border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.2s;
+      border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.2s; cursor: pointer; border: none;
     }
     .paid-member-btn:hover { background: linear-gradient(135deg, #A37E20 0%, #6E5311 100%); transform: translateY(-1px); }
 
@@ -257,11 +260,11 @@
         </button>
       </form>
 
-      <!-- 有料プレミアム会員登録枠（上部） -->
+      <!-- 有料プレミアム会員登録枠（上部・1箇所目） -->
       <div class="paid-member-box">
         <div class="paid-member-title">🌟 有料プレミアムプランのご案内</div>
         <p class="paid-member-desc">詳細なダシャー時期予測・精密ホロスコープ・レメディ処方など、すべての本格鑑定機能を開放します。</p>
-        <a href="https://buy.stripe.com/test_00geWBbsD8Jbf6w000" class="paid-member-btn" target="_blank" rel="noopener">有料プレミアム会員に登録する（Stripe決済へ）</a>
+        <button type="button" class="paid-member-btn btn-upgrade-tally">有料プレミアム会員に登録する（お申し込み・決済）</button>
       </div>
 
       <div class="member-portal-box">
@@ -340,7 +343,7 @@
         <div class="paid-member-box bottom-box">
           <div class="paid-member-title">🌟 本格鑑定を開放するプレミアム会員登録</div>
           <p class="paid-member-desc">説明をお読みいただきありがとうございます。あなただけの精密なホロスコープ・ダシャー時期予測・各種レメディを今すぐ手に入れましょう。</p>
-          <a href="https://buy.stripe.com/test_00geWBbsD8Jbf6w000" class="paid-member-btn" target="_blank" rel="noopener">有料プレミアム会員に登録する（Stripe決済へ）</a>
+          <button type="button" class="paid-member-btn btn-upgrade-tally">有料プレミアム会員に登録する（お申し込み・決済）</button>
         </div>
       </div>
     </div>
@@ -352,6 +355,25 @@
   </footer>
 
   <script>
+    const TALLY_FORM_ID = 'jaXr71';
+
+    // Tally 決済ポップアップ表示処理
+    function openTallyPopup() {
+      const email = document.getElementById('user-email')?.value.trim() || 
+                    localStorage.getItem('lj_user_email') || 
+                    localStorage.getItem('email') || '';
+
+      if (typeof Tally !== 'undefined') {
+        Tally.openPopup(TALLY_FORM_ID, { layout: 'modal', width: 600, hiddenFields: { email: email } });
+      } else {
+        window.open(`https://tally.so/r/${TALLY_FORM_ID}?email=${encodeURIComponent(email)}`, '_blank');
+      }
+    }
+
+    document.querySelectorAll('.btn-upgrade-tally').forEach(btn => {
+      btn.addEventListener('click', openTallyPopup);
+    });
+
     const form = document.getElementById('jyotish-form');
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
