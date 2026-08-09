@@ -134,8 +134,25 @@
     }
     .submit-btn:hover { transform: translateY(-1px); }
 
+    /* 有料会員登録枠（Stripe導線） */
+    .paid-member-box {
+      margin-top: 30px; padding: 20px 18px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(139, 107, 27, 0.08) 100%);
+      border: 1px solid rgba(139, 107, 27, 0.4);
+      border-radius: 10px; text-align: center;
+    }
+    .paid-member-title { font-size: 0.95rem; font-weight: 700; color: var(--color-gold-dark); margin-bottom: 6px; }
+    .paid-member-desc { font-size: 0.8rem; color: #5A4E48; margin-bottom: 14px; line-height: 1.6; }
+    .paid-member-btn {
+      display: inline-block; width: 100%; max-width: 380px; padding: 12px 20px;
+      background: linear-gradient(135deg, #8B6B1B 0%, #5C450E 100%);
+      color: #FFFDF9; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.2s;
+    }
+    .paid-member-btn:hover { background: linear-gradient(135deg, #A37E20 0%, #6E5311 100%); transform: translateY(-1px); }
+
     .member-portal-box {
-      margin-top: 25px; padding-top: 20px;
+      margin-top: 20px; padding-top: 18px;
       border-top: 1px dashed rgba(139, 107, 27, 0.35); text-align: center;
     }
     .member-portal-title { font-size: 0.88rem; font-weight: 600; color: var(--color-gold-dark); margin-bottom: 8px; }
@@ -173,9 +190,6 @@
       border-radius: 8px; padding: 16px; margin-bottom: 16px; font-size: 0.88rem;
     }
     .about-card-title { font-weight: 700; color: #3D322C; margin-bottom: 6px; }
-
-    .about-list { margin-left: 20px; margin-bottom: 16px; font-size: 0.88rem; color: #4a3e36; }
-    .about-list li { margin-bottom: 6px; line-height: 1.7; }
 
     /* 💡 Google OAuth 審査適合用 スタイル */
     .auth-explanation-box {
@@ -248,6 +262,13 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </button>
       </form>
+
+      <!-- 有料プレミアム会員登録枠 -->
+      <div class="paid-member-box">
+        <div class="paid-member-title">🌟 有料プレミアムプランのご案内</div>
+        <p class="paid-member-desc">詳細なダシャー時期予測・精密ホロスコープ・レメディ処方など、すべての本格鑑定機能を開放します。</p>
+        <a href="https://buy.stripe.com/test_00geWBbsD8Jbf6w000" class="paid-member-btn" target="_blank" rel="noopener">有料プレミアム会員に登録する（Stripe決済へ）</a>
+      </div>
 
       <div class="member-portal-box">
         <div class="member-portal-title">🔑 すでに診断した方・有料会員の方</div>
