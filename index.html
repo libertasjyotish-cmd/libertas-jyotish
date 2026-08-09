@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- 💡 Google 審査必須: アプリ名「Libertas Jyotish」を完全一致で配置 -->
   <title>Libertas Jyotish - インド占星術ポータル</title>
   <meta name="description" content="Libertas Jyotish（リベルタス・ジューティシュ）は、古代インドの叡智「サイデリアル式」に基づいた月星座診断および個人鑑定を提供するWebサービスです。">
 
@@ -136,17 +135,22 @@
 
     /* 有料会員登録枠（Stripe導線） */
     .paid-member-box {
-      margin-top: 30px; padding: 20px 18px;
+      margin-top: 30px; padding: 22px 18px;
       background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(139, 107, 27, 0.08) 100%);
       border: 1px solid rgba(139, 107, 27, 0.4);
       border-radius: 10px; text-align: center;
     }
-    .paid-member-title { font-size: 0.95rem; font-weight: 700; color: var(--color-gold-dark); margin-bottom: 6px; }
-    .paid-member-desc { font-size: 0.8rem; color: #5A4E48; margin-bottom: 14px; line-height: 1.6; }
+    .paid-member-box.bottom-box {
+      margin-top: 35px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(139, 107, 27, 0.12) 100%);
+      border: 1px solid rgba(139, 107, 27, 0.5);
+    }
+    .paid-member-title { font-size: 1rem; font-weight: 700; color: var(--color-gold-dark); margin-bottom: 6px; }
+    .paid-member-desc { font-size: 0.82rem; color: #5A4E48; margin-bottom: 14px; line-height: 1.6; }
     .paid-member-btn {
-      display: inline-block; width: 100%; max-width: 380px; padding: 12px 20px;
+      display: inline-block; width: 100%; max-width: 380px; padding: 13px 20px;
       background: linear-gradient(135deg, #8B6B1B 0%, #5C450E 100%);
-      color: #FFFDF9; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      color: #FFFDF9; text-decoration: none; font-weight: 600; font-size: 0.92rem;
       border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.2s;
     }
     .paid-member-btn:hover { background: linear-gradient(135deg, #A37E20 0%, #6E5311 100%); transform: translateY(-1px); }
@@ -191,16 +195,6 @@
     }
     .about-card-title { font-weight: 700; color: #3D322C; margin-bottom: 6px; }
 
-    /* 💡 Google OAuth 審査適合用 スタイル */
-    .auth-explanation-box {
-      margin-top: 30px; padding: 18px;
-      background: rgba(212, 175, 55, 0.12);
-      border: 1px dashed rgba(139, 107, 27, 0.4);
-      border-radius: 8px; font-size: 0.82rem; text-align: left; color: #5A4E48;
-    }
-    .auth-explanation-title { font-weight: 700; color: var(--color-gold-dark); margin-bottom: 8px; }
-    .auth-explanation-list { margin-left: 18px; line-height: 1.7; }
-
     .site-footer {
       width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3);
       padding: 24px 20px; text-align: center; position: relative; z-index: 10;
@@ -228,11 +222,11 @@
   </header>
 
   <section class="hero-section">
+    <!-- 上部：診断フォーム ＆ 有料会員入口（1箇所目） -->
     <div class="hero-container" id="form-area">
       <div class="logo-wrapper"><img src="./img/libertas-logo.png" alt="Logo" class="logo-img"></div>
 
       <span class="badge">Libertas Jyotish</span>
-      <!-- 💡 Google 審査必須: アプリ名「Libertas Jyotish」をメイン見出しに明確化 -->
       <h1 class="main-title">Libertas Jyotish<br><span style="font-size: 1.4rem;">星の宿命を紐解き、本当のあなたを解き放つ</span></h1>
       <p class="main-description">古代インドの叡智「サイデリアル式」で、あなたの魂の設計図（クンダリー）を算術・分析する本格個人鑑定サービスです。</p>
 
@@ -263,7 +257,7 @@
         </button>
       </form>
 
-      <!-- 有料プレミアム会員登録枠 -->
+      <!-- 有料プレミアム会員登録枠（上部） -->
       <div class="paid-member-box">
         <div class="paid-member-title">🌟 有料プレミアムプランのご案内</div>
         <p class="paid-member-desc">詳細なダシャー時期予測・精密ホロスコープ・レメディ処方など、すべての本格鑑定機能を開放します。</p>
@@ -278,7 +272,7 @@
       </div>
     </div>
 
-    <!-- サイト詳細・説明セクション -->
+    <!-- 中部：サイト詳細・説明セクション -->
     <div class="about-section" id="about">
       <div class="about-header">
         <div class="about-header-sub">LIBERTAS JYOTISH</div>
@@ -342,13 +336,11 @@
           出生データを入力し、LIBERTAS JYOTISHが明かす、あなただけの本物のロードマップをお受け取りください。
         </div>
 
-        <!-- 💡 Google OAuth 審査必須: アカウント連携およびデータ利用目的の明記 -->
-        <div class="auth-explanation-box">
-          <div class="auth-explanation-title">【当サービスにおける Google アカウント連携の目的】</div>
-          <ul class="auth-explanation-list">
-            <li>会員登録およびマイページ（診断結果・チャート保存機能）へのセキュアなログイン認証</li>
-            <li>診断完了通知およびパーソナライズされた鑑定結果メールの自動配信（`gmail.send` 権限の利用）</li>
-          </ul>
+        <!-- 有料プレミアム会員登録枠（下部・2箇所目） -->
+        <div class="paid-member-box bottom-box">
+          <div class="paid-member-title">🌟 本格鑑定を開放するプレミアム会員登録</div>
+          <p class="paid-member-desc">説明をお読みいただきありがとうございます。あなただけの精密なホロスコープ・ダシャー時期予測・各種レメディを今すぐ手に入れましょう。</p>
+          <a href="https://buy.stripe.com/test_00geWBbsD8Jbf6w000" class="paid-member-btn" target="_blank" rel="noopener">有料プレミアム会員に登録する（Stripe決済へ）</a>
         </div>
       </div>
     </div>
