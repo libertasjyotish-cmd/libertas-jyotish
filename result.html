@@ -112,15 +112,29 @@ padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
 
 <script>
 // ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
-const LJ_APP_VERSION = 'v11'
+const LJ_APP_VERSION = 'v12';
 const currentVersion = localStorage.getItem('lj_app_version');
 if (currentVersion !== LJ_APP_VERSION) {
-const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
-localStorage.clear();
-sessionStorage.clear();
-if (email) localStorage.setItem('lj_user_email', email);
-localStorage.setItem('lj_app_version', LJ_APP_VERSION);
-location.reload();
+  console.log("App upgrade detected. Self-healing database caches but protecting active session inputs...");
+  const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
+  
+  // 💥 セッションに入っている貴重な入力データを一時メモリにレスキュー退避！
+  const savedInput = sessionStorage.getItem('lj_user_input');
+  const backupInput = localStorage.getItem('lj_user_input_backup');
+  
+  localStorage.clear();
+  sessionStorage.clear();
+  
+  // クリア後にデータを美しく復元
+  if (email) localStorage.setItem('lj_user_email', email);
+  if (savedInput) sessionStorage.setItem('lj_user_input', savedInput);
+  if (backupInput) {
+    localStorage.setItem('lj_user_input_backup', backupInput);
+    sessionStorage.setItem('lj_user_input', backupInput);
+  }
+  
+  localStorage.setItem('lj_app_version', LJ_APP_VERSION);
+  location.reload();
 }
 
 if ('serviceWorker' in navigator) {
@@ -137,7 +151,16 @@ const PREMIUM_UPGRADE_URL = "https://tally.so/r/YOUR_FORM_ID";
 
 document.addEventListener('DOMContentLoaded', async () => {
 const contentArea = document.getElementById('content-area');
-const savedInput = sessionStorage.getItem('lj_user_input');
+let savedInput = sessionStorage.getItem('lj_user_input');
+if (!savedInput) {
+  // ★バックアップからの自動引き継ぎレスキューロジック
+  const backupInput = localStorage.getItem('lj_user_input_backup');
+  if (backupInput) {
+    console.log("[RECOVERY] sessionStorage was lost, but localStorage backup was restored successfully!");
+    sessionStorage.setItem('lj_user_input', backupInput);
+    savedInput = backupInput;
+  }
+}
 const savedResult = sessionStorage.getItem('lj_diagnosis_result');
 
 // ★自己修復：キャッシュデータ内に未展開 of バグ文字列がないか自動検査して破棄
@@ -207,7 +230,18 @@ contentArea.innerHTML = `
 `;
 }
 } else {
-window.location.href = './index.html';
+  // ★強制送還をブロックして、画面上に丁寧な再入力を促すUIを自動描画！
+  console.error("[CRITICAL] Birth data input not found in sessionStorage or backup.");
+  contentArea.innerHTML = `
+    <div style="text-align:center; padding:30px 10px;">
+      <div style="font-size:2.5rem; margin-bottom:15px;">🔍💎</div>
+      <p style="color:#c0392b; font-weight:bold; font-size:1.1rem; margin-bottom:10px;">出生データが読み取れませんでした</p>
+      <p style="font-size:0.85rem; color:#5A4E48; line-height:1.6; margin-bottom:20px;">
+        ブラウザのセキュリティ設定、プライベートモードの利用、またはキャッシュの更新により、入力した一時データが消去された可能性があります。
+      </p>
+      <a href="./index.html" class="btn-primary" style="display:inline-block; text-decoration:none; padding:12px 24px; font-weight:600; border-radius:8px; width:auto; max-width:260px;">もう一度TOPから入力する</a>
+    </div>
+  `;
 }
 });
 
