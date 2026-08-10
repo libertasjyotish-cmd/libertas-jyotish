@@ -355,6 +355,27 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 </footer>
 
 <script>
+    // ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
+    const LJ_APP_VERSION = 'v6';
+    const currentVersion = localStorage.getItem('lj_app_version');
+    if (currentVersion !== LJ_APP_VERSION) {
+      const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
+      localStorage.clear();
+      sessionStorage.clear();
+      if (email) localStorage.setItem('lj_user_email', email);
+      localStorage.setItem('lj_app_version', LJ_APP_VERSION);
+      location.reload();
+    }
+
+    if ('serviceWorker' in navigator) {
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        refreshing = true;
+        window.location.reload();
+      });
+    }
+
 const TALLY_FORM_ID = 'jaXr71';
 
 // Tally 決済ポップアップ表示処理
