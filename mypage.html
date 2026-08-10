@@ -340,7 +340,7 @@ data-width="320">
 
 <script>
 // ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
-const LJ_APP_VERSION = 'v7';
+const LJ_APP_VERSION = 'v8';
 const currentVersion = localStorage.getItem('lj_app_version');
 if (currentVersion !== LJ_APP_VERSION) {
   const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
@@ -656,7 +656,12 @@ function showBirthSetupUI() {
   if (premiumTitle) premiumTitle.style.display = 'none';
 }
 
-async function fetchUserDataAndRender(email) {
+let makeRetryCount = 0; // 同期失敗時のリトライ回数
+
+async function fetchUserDataAndRender(email, isRetry = false) {
+  if (!isRetry) {
+    makeRetryCount = 0; // 通常の呼び出し時はリトライをリセット
+  }
   // ★ハイブリッド・ローカルストレージパース
   const savedUserStr = localStorage.getItem('jyotish_user');
   let userAddress = '';
@@ -728,8 +733,28 @@ async function fetchUserDataAndRender(email) {
     } catch (pErr) {
       if (responseText.trim() === "Accepted") {
         console.warn("Make returned 'Accepted' plain text response. This means the Webhook router did not find the database record yet.");
-        // 静的な仮置きエラーにせず、キャッシュがあればそのまま生かし、なければ親切なローディングメッセージに留める
-        data = { status: "free", fortune: "宇宙の星々の配置をデータベース（会員DB）と照合・同期しています。約10秒ほどで自動更新されますので、このまましばらくお待ちください..." };
+        
+        if (makeRetryCount < 5) {
+          makeRetryCount++;
+          const delay = 6000; // Sheets書き込み完了まで約6秒待って自動再同期フェッチを実行
+          console.log(`Database record sync pending. Retrying in ${delay}ms... (Attempt ${makeRetryCount}/5)`);
+          
+          data = { 
+            status: "free", 
+            fortune: `宇宙の星々の配置をデータベース（会員DB）と照合・同期しています。約10秒ほどで自動更新されますので、このまましばらくお待ちください...（同期チェック中：試行 ${makeRetryCount}/5）` 
+          };
+          
+          // 自動ポーリングタイマーをセット
+          setTimeout(() => {
+            fetchUserDataAndRender(email, true);
+          }, delay);
+        } else {
+          console.error("Max database sync retries reached. Sync failed or timed out.");
+          data = {
+            status: "free",
+            fortune: "⚠️ 会員データベースとの同期がタイムアウトしました。Googleスプレッドシートの登録状況、またはMakeシナリオ（Add Rowモジュール手前のフィルター）の設定をご確認の上、再度リロードをお試しください。"
+          };
+        }
       } else {
         data = { fortune: responseText };
       }
