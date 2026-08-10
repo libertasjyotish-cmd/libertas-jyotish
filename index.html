@@ -3,414 +3,978 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Libertas Jyotish - インド占星術ポータル</title>
-  <meta name="description" content="Libertas Jyotish（リベルタス・ジューティシュ）は、古代インドの叡智「サイデリアル式」に基づいた月星座診断および個人鑑定を提供するWebサービスです。">
+  <title>Libertas Jyotish - インド占星術</title>
   
-  <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
-  <link rel="canonical" href="https://libertas-jyotish.com/">
-  
-  <!-- PWA & Theme Settings -->
+  <!-- PWA Support -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0c1a1f">
-  <link rel="apple-touch-icon" href="./img/libertas-logo.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="https://storage.googleapis.com/studio-design-asset-files/projects/VG0K6BPGWn/s-512x512_webp_1febdca2-cb42-4ffd-b236-a8c700216dcb.png">
 
-  <!-- Google Fonts -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Tally Popup Widget Script -->
-  <script src="https://tally.so/widgets/embed.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
+    /* ==========================================================================
+       V6.1 重厚夜空×羊皮紙デザイン システム
+       ========================================================================== */
     :root {
-      --color-gold-light: #FDE047;
-      --color-gold-main: #D4AF37;
-      --color-gold-dark: #8B6B1B;
-      --color-text-dark: #2C221E;
-      --font-en: 'Cinzel', serif;
-      --font-ja: 'Noto Serif JP', serif;
+      --color-night: #0c1a1f;
+      --color-parchment-light: rgba(255, 253, 245, 0.98);
+      --color-parchment-mid: rgba(245, 233, 208, 0.95);
+      --color-parchment-dark: rgba(220, 200, 162, 0.96);
+      --color-gold-border: rgba(184, 142, 60, 0.65);
+      --color-gold-outline: rgba(212, 175, 55, 0.35);
+      --color-dark-brown: #2C221E;
+      --color-gold-text: #8B6B1B;
+      --color-gold-bright: #D4AF37;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
-      font-family: var(--font-ja);
-      color: var(--color-text-dark);
-      line-height: 1.8;
-      min-height: 100vh;
-      overflow-x: hidden;
-      background-color: #0c1a1f;
-      display: flex; flex-direction: column;
-    }
-
-    .site-header {
-      position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
-      background: rgba(12, 26, 31, 0.92);
-      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(139, 107, 27, 0.3);
-      padding: 12px 20px;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-
-    .header-logo {
-      display: flex; align-items: center; gap: 10px;
-      text-decoration: none; color: var(--color-gold-main);
-      font-family: var(--font-en); font-weight: 600; font-size: 1.05rem;
-    }
-    .header-logo img { width: 32px; height: 32px; }
-
-    .header-nav { display: flex; gap: 18px; align-items: center; }
-    .header-nav a { color: #E2D9CE; text-decoration: none; font-size: 0.82rem; transition: color 0.3s; }
-    .header-nav a:hover { color: var(--color-gold-main); }
-
-    .nav-btn-member {
-      border: 1px solid var(--color-gold-main);
-      color: var(--color-gold-main) !important;
-      padding: 4px 12px; border-radius: 4px;
-      background: rgba(212, 175, 55, 0.1);
-    }
-
-    .hero-section {
-      position: relative; flex: 1;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 100px 20px 60px;
-      background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("./img/bg-jyotish.jpg");
-      background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed;
-    }
-
-    /* 羊皮紙カード質感 */
-    .hero-container {
-      position: relative; z-index: 2; width: 100%; max-width: 680px;
+      background-color: var(--color-night);
+      /* フォールバックとしての星空CSSグラデーション */
       background-image: 
-        radial-gradient(circle at 50% 25%, rgba(255, 253, 245, 0.98) 0%, rgba(245, 233, 208, 0.95) 55%, rgba(220, 200, 162, 0.96) 100%),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.05) 100%);
-      background-blend-mode: overlay, normal;
-      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-      border-radius: 14px;
-      border: 1px solid rgba(184, 142, 60, 0.65);
-      outline: 1px solid rgba(212, 175, 55, 0.35); outline-offset: -7px;
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 1px, transparent 1px),
+        radial-gradient(circle at 75% 15%, rgba(255,255,255,0.05) 1px, transparent 1px),
+        radial-gradient(circle at 40% 70%, rgba(255,255,255,0.06) 1.5px, transparent 1.5px),
+        radial-gradient(circle at 10% 80%, rgba(255,255,255,0.04) 1px, transparent 1px),
+        radial-gradient(circle at 90% 60%, rgba(255,255,255,0.07) 1px, transparent 1px),
+        linear-gradient(135deg, #050b0d 0%, #0c1a1f 100%);
+      background-attachment: fixed;
+      font-family: 'Noto Serif JP', serif;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* 英語・数値向けフォントファミリー */
+    .font-cinzel {
+      font-family: 'Cinzel', serif;
+    }
+
+    /* アプリケーションコンテナ */
+    .app-container {
+      width: 100%;
+      max-width: 540px;
+      margin: 20px auto 80px auto;
+    }
+
+    /* ヘッダー・ロゴ */
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .brand-logo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 28px;
+      letter-spacing: 2px;
+      color: var(--color-gold-bright);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+    }
+
+    /* 羊皮紙カードスタイル */
+    .parchment-card {
+      background-image: radial-gradient(
+        circle at 50% 25%, 
+        var(--color-parchment-light) 0%, 
+        var(--color-parchment-mid) 55%, 
+        var(--color-parchment-dark) 100%
+      );
+      color: var(--color-dark-brown);
+      border: 1px solid var(--color-gold-border);
+      border-radius: 12px;
+      padding: 28px;
       box-shadow: 
-        0 25px 50px -12px rgba(0, 0, 0, 0.75),
-        0 0 20px rgba(212, 175, 55, 0.18),
-        inset 0 0 35px rgba(139, 90, 43, 0.28),
-        inset 0 2px 4px rgba(255, 255, 255, 0.8);
-      padding: 45px 35px 40px; text-align: center; margin-bottom: 40px;
+        inset 0 0 35px rgba(139, 90, 43, 0.28), 
+        0 25px 50px -12px rgba(0, 0, 0, 0.75);
+      position: relative;
+      margin-bottom: 24px;
+      overflow: hidden;
     }
 
-    .logo-wrapper { margin-bottom: 12px; }
-    .logo-img { width: 95px; height: auto; filter: drop-shadow(0px 3px 6px rgba(139, 107, 27, 0.35)); }
-    
-    .badge {
-      display: inline-block; font-family: var(--font-en); font-size: 0.8rem; letter-spacing: 0.25em;
-      color: var(--color-gold-dark); border: 1px solid rgba(139, 107, 27, 0.4); background: rgba(212, 175, 55, 0.12);
-      padding: 4px 16px; border-radius: 50px; margin-bottom: 16px; text-transform: uppercase;
-      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.5);
+    /* 二重金箔フレームの内側線 */
+    .parchment-card::after {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      right: 6px;
+      bottom: 6px;
+      border: 1px solid var(--color-gold-outline);
+      border-radius: 8px;
+      pointer-events: none;
     }
 
-    .main-title { font-size: 1.85rem; font-weight: 600; color: var(--color-text-dark); letter-spacing: 0.05em; line-height: 1.5; margin-bottom: 10px; }
-    .main-description { font-size: 0.92rem; color: #5A4E48; margin-bottom: 30px; }
-
-    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 25px; text-align: left; }
-    .form-group { display: flex; flex-direction: column; }
-    .form-group.full-width { grid-column: span 2; }
-
-    label { font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px; }
-    .label-note { font-size: 0.72rem; font-weight: normal; color: #7a6a58; margin-left: 4px; }
-
-    input[type="text"], input[type="email"], input[type="date"], input[type="time"] {
-      width: 100%; padding: 11px 14px;
-      background-color: rgba(255, 252, 245, 0.85);
-      border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px;
-      font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none; transition: all 0.3s ease;
-      box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.12);
-    }
-    input[type="text"]:focus, input[type="email"]:focus, input[type="date"]:focus, input[type="time"]:focus {
-      border-color: var(--color-gold-dark);
-      box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.15), 0 0 8px rgba(212, 175, 55, 0.3);
-      background-color: #FFFDF9;
+    h2 {
+      font-size: 20px;
+      color: var(--color-gold-text);
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      border-bottom: 1px dashed rgba(139, 90, 43, 0.3);
+      padding-bottom: 8px;
     }
 
-    .submit-btn {
-      width: 100%; padding: 15px 28px; font-size: 1.05rem; font-weight: 600; font-family: var(--font-ja); color: #FFFDF9;
-      background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%); border: none; border-radius: 8px; cursor: pointer;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
-      display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.2s;
-    }
-    .submit-btn:hover { transform: translateY(-1px); }
-
-    /* 有料会員登録枠（Stripe/Tally導線） */
-    .paid-member-box {
-      margin-top: 30px; padding: 22px 18px;
-      background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(139, 107, 27, 0.08) 100%);
-      border: 1px solid rgba(139, 107, 27, 0.4);
-      border-radius: 10px; text-align: center;
-    }
-    .paid-member-box.bottom-box {
-      margin-top: 35px;
-      background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(139, 107, 27, 0.12) 100%);
-      border: 1px solid rgba(139, 107, 27, 0.5);
-    }
-    .paid-member-title { font-size: 1rem; font-weight: 700; color: var(--color-gold-dark); margin-bottom: 6px; }
-    .paid-member-desc { font-size: 0.82rem; color: #5A4E48; margin-bottom: 14px; line-height: 1.6; }
-    .paid-member-btn {
-      display: inline-block; width: 100%; max-width: 380px; padding: 13px 20px;
-      background: linear-gradient(135deg, #8B6B1B 0%, #5C450E 100%);
-      color: #FFFDF9; text-decoration: none; font-weight: 600; font-size: 0.92rem;
-      border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.2s; cursor: pointer; border: none;
-    }
-    .paid-member-btn:hover { background: linear-gradient(135deg, #A37E20 0%, #6E5311 100%); transform: translateY(-1px); }
-
-    .member-portal-box {
-      margin-top: 20px; padding-top: 18px;
-      border-top: 1px dashed rgba(139, 107, 27, 0.35); text-align: center;
-    }
-    .member-portal-title { font-size: 0.88rem; font-weight: 600; color: var(--color-gold-dark); margin-bottom: 8px; }
-    .member-links { display: flex; justify-content: center; gap: 15px; font-size: 0.8rem; }
-    .member-links a { color: var(--color-gold-dark); text-decoration: underline; font-weight: 600; }
-
-    /* サイト詳細・説明セクション */
-    .about-section {
-      width: 100%; max-width: 680px;
-      background-image: radial-gradient(circle at 50% 30%, rgba(255, 253, 248, 0.97) 0%, rgba(243, 234, 214, 0.95) 100%);
-      border-radius: 14px; border: 1px solid rgba(184, 142, 60, 0.5); outline: 1px solid rgba(212, 175, 55, 0.3); outline-offset: -6px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 0 25px rgba(139, 90, 43, 0.2);
-      padding: 40px 35px; margin-bottom: 30px; color: var(--color-text-dark);
-    }
-    .about-header { text-align: center; border-bottom: 1px solid rgba(139, 107, 27, 0.3); padding-bottom: 18px; margin-bottom: 25px; }
-    .about-header-sub { font-family: var(--font-en); font-size: 0.82rem; letter-spacing: 0.2em; color: var(--color-gold-dark); text-transform: uppercase; margin-bottom: 6px; }
-    .about-title { font-size: 1.35rem; font-weight: 700; color: var(--color-gold-dark); line-height: 1.4; }
-    
-    .about-lead {
-      font-size: 0.95rem; font-weight: 600; color: #3D322C; line-height: 1.8; margin-bottom: 20px;
-      text-align: center; background: rgba(212, 175, 55, 0.08); padding: 15px 18px; border-radius: 8px;
-      border: 1px solid rgba(139, 107, 27, 0.2);
+    /* 画面切り替え用のクラス */
+    .screen {
+      display: none;
     }
 
-    .about-content p { font-size: 0.88rem; line-height: 1.9; margin-bottom: 16px; color: #4a3e36; text-align: justify; }
+    .screen.active {
+      display: block;
+      animation: fadeIn 0.4s ease-out forwards;
+    }
 
-    .about-h3 {
-      font-size: 1.05rem; font-weight: 700; color: var(--color-gold-dark);
-      margin: 28px 0 12px; padding-left: 12px; border-left: 3px solid var(--color-gold-dark);
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 入力フォームコントロール */
+    .form-group {
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-dark-brown);
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid rgba(139, 90, 43, 0.4);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 15px;
+      background-color: rgba(255, 255, 255, 0.75);
+      color: var(--color-dark-brown);
+      transition: all 0.25s ease;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      background-color: #ffffff;
+      border-color: var(--color-gold-text);
+      box-shadow: 0 0 8px rgba(139, 90, 43, 0.15);
+    }
+
+    /* ボタンデザイン */
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 6px;
+      font-family: 'Noto Serif JP', serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      margin-top: 15px;
+    }
+
+    /* プライマリ金箔ボタン */
+    .btn-primary {
+      background: linear-gradient(135deg, #8B6B1B 0%, #D4AF37 50%, #B88E3C 100%);
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    /* セカンダリダークブラウンボタン */
+    .btn-secondary {
+      background-color: var(--color-dark-brown);
+      color: #f4eae1;
+      border: 1px solid var(--color-gold-border);
+    }
+
+    .btn-secondary:hover {
+      background-color: #43332D;
+    }
+
+    /* テキストリンク */
+    .text-link {
+      color: var(--color-gold-text);
+      text-align: center;
+      display: block;
+      margin-top: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: underline;
+      z-index: 1;
+      position: relative;
+    }
+
+    /* ローディングオーバーレイ */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(12, 26, 31, 0.85);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(212, 175, 55, 0.2);
+      border-top: 4px solid var(--color-gold-bright);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* 鑑定結果表示のスタイル */
+    .result-section {
+      margin-top: 20px;
+      border-top: 1px solid rgba(139, 90, 43, 0.2);
+      padding-top: 20px;
+    }
+
+    .result-item {
+      margin-bottom: 15px;
+    }
+
+    .result-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--color-gold-text);
+      font-weight: bold;
+    }
+
+    .result-value {
+      font-size: 18px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* 有料コンテンツエリアのロック制御 */
+    .premium-lock-area {
+      position: relative;
+    }
+
+    .premium-lock-area.locked {
+      /* blurエフェクト */
+      filter: blur(5px);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .lock-overlay {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(245, 233, 208, 0.4);
+      z-index: 10;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .premium-lock-container {
+      position: relative;
+      margin-top: 24px;
+    }
+
+    /* ロックがかかっている時の案内カード（blurの上に非非blurで重ねる） */
+    .lock-card-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 85%;
+      max-width: 320px;
+      background: #ffffff;
+      border: 2px solid var(--color-gold-border);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      text-align: center;
+      z-index: 20;
+    }
+
+    .lock-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .lock-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--color-gold-text);
+      margin-bottom: 8px;
+    }
+
+    .lock-desc {
+      font-size: 12px;
+      color: var(--color-dark-brown);
+      margin-bottom: 15px;
       line-height: 1.5;
     }
 
-    .about-card {
-      background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(139, 107, 27, 0.25);
-      border-radius: 8px; padding: 16px; margin-bottom: 16px; font-size: 0.88rem;
+    /* 会員ステータスバッジ */
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
     }
-    .about-card-title { font-weight: 700; color: #3D322C; margin-bottom: 6px; }
 
-    .site-footer {
-      width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3);
-      padding: 24px 20px; text-align: center; position: relative; z-index: 10;
+    .status-badge.free {
+      background-color: rgba(139, 90, 43, 0.15);
+      color: var(--color-dark-brown);
+      border: 1px solid rgba(139, 90, 43, 0.3);
     }
-    .footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 12px; flex-wrap: wrap; }
-    .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
-    .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); }
 
-    @media (max-width: 640px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .form-group.full-width { grid-column: span 1; }
-      .about-section { padding: 28px 20px; }
+    .status-badge.paid {
+      background-color: rgba(212, 175, 55, 0.2);
+      color: #8B6B1B;
+      border: 1px solid var(--color-gold-border);
+    }
+
+    /* タブメニュー（マイページ内） */
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(139, 90, 43, 0.2);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: 14px;
+      color: rgba(44, 34, 30, 0.6);
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      color: var(--color-gold-text);
+      border-bottom: 2px solid var(--color-gold-text);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
     }
   </style>
 </head>
 <body>
 
-  <header class="site-header">
-    <a href="./index.html" class="header-logo"><img src="./img/libertas-logo.png" alt="Logo"><span>Libertas Jyotish</span></a>
-    <nav class="header-nav">
-      <a href="#about">Libertas Jyotishとは</a>
-      <a href="#form-area">無料診断</a>
-      <a href="./mypage.html" class="nav-btn-member">会員マイページ</a>
-    </nav>
-  </header>
+  <div class="app-container">
+    <header>
+      <img src="https://storage.googleapis.com/studio-design-asset-files/projects/VG0K6BPGWn/s-512x512_webp_1febdca2-cb42-4ffd-b236-a8c700216dcb.png" alt="Libertas Jyotish Logo" class="brand-logo">
+      <h1>Libertas Jyotish</h1>
+      <div class="subtitle">Sidereal Astrology Portal</div>
+    </header>
 
-  <section class="hero-section">
-    <!-- 上部：診断フォーム ＆ 有料会員入口（1箇所目） -->
-    <div class="hero-container" id="form-area">
-      <div class="logo-wrapper"><img src="./img/libertas-logo.png" alt="Logo" class="logo-img"></div>
-
-      <span class="badge">Libertas Jyotish</span>
-      <h1 class="main-title">Libertas Jyotish<br><span style="font-size: 1.4rem;">星の宿命を紐解き、本当のあなたを解き放つ</span></h1>
-      <p class="main-description">古代インドの叡智「サイデリアル式」で、あなたの魂の設計図（クンダリー）を算術・分析する本格個人鑑定サービスです。</p>
-
-      <form id="jyotish-form">
-        <div class="form-grid">
-          <div class="form-group full-width">
-            <label for="user-email">メールアドレス <span class="label-note">（診断結果の保存・マイページ連携に使用）</span></label>
-            <input type="email" id="user-email" placeholder="example@gmail.com" required>
-          </div>
-
+    <!-- ==================== 画面①: LP / 無料診断フォーム ==================== -->
+    <div id="screen-lp" class="screen active">
+      <div class="parchment-card">
+        <h2>宿命を紐解く無料月星座診断</h2>
+        <form id="form-free-diagnose">
           <div class="form-group">
-            <label for="birth-date">生年月日</label>
-            <input type="date" id="birth-date" required>
+            <label for="diag-email">メールアドレス（マイページ認証用）</label>
+            <input type="email" id="diag-email" required placeholder="example@gmail.com">
           </div>
           <div class="form-group">
-            <label for="birth-time">出生時間 <span class="label-note">（不明な場合は空欄でOK）</span></label>
-            <input type="time" id="birth-time">
+            <label for="diag-dob">生年月日</label>
+            <input type="date" id="diag-dob" required>
           </div>
-          <div class="form-group full-width">
-            <label for="birth-place">出生地（都道府県・市区町村）</label>
-            <input type="text" id="birth-place" placeholder="例：東京都世田谷区" required>
+          <div class="form-group">
+            <label for="diag-tob">出生時間（不明な場合は空欄：12:00補填）</label>
+            <input type="time" id="diag-tob">
           </div>
-        </div>
-
-        <button type="submit" class="submit-btn" id="btn-submit">
-          <span>運命の設計図を紐解く</span>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-        </button>
-      </form>
-
-      <!-- 有料プレミアム会員登録枠（上部・1箇所目） -->
-      <div class="paid-member-box">
-        <div class="paid-member-title">🌟 有料プレミアムプランのご案内</div>
-        <p class="paid-member-desc">詳細なダシャー時期予測・精密ホロスコープ・レメディ処方など、すべての本格鑑定機能を開放します。</p>
-        <button type="button" class="paid-member-btn btn-upgrade-tally">有料プレミアム会員に登録する（お申し込み・決済）</button>
-      </div>
-
-      <div class="member-portal-box">
-        <div class="member-portal-title">🔑 すでに診断した方・有料会員の方</div>
-        <div class="member-links">
-          <a href="./mypage.html">マイページログイン</a>
-        </div>
+          <div class="form-group">
+            <label for="diag-city">出生都市名（英語またはローマ字推奨）</label>
+            <input type="text" id="diag-city" required placeholder="Tokyo, Kyoto, Osaka など">
+          </div>
+          <div class="form-group">
+            <label for="diag-lang">診断言語 / Language</label>
+            <select id="diag-lang">
+              <option value="ja">日本語</option>
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="pt">Português</option>
+              <option value="ar">العربية</option>
+              <option value="hi">हिन्दी (India)</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">運命の鑑定を実行する</button>
+        </form>
+        <span class="text-link" onclick="switchScreen('screen-login')">すでにマイページをお持ちの方はこちらからログイン</span>
       </div>
     </div>
 
-    <!-- 中部：サイト詳細・説明セクション -->
-    <div class="about-section" id="about">
-      <div class="about-header">
-        <div class="about-header-sub">LIBERTAS JYOTISH</div>
-        <h2 class="about-title">運命に縛られるのではなく、自らの人生を自由にデザインするために。</h2>
-      </div>
-
-      <div class="about-content">
-        <div class="about-lead">
-          最高峰の天文学的精度が明かす、あなただけの宇宙的設計図
+    <!-- ==================== 画面②: ログイン / 認証コード画面 ==================== -->
+    <div id="screen-login" class="screen">
+      <div class="parchment-card">
+        <h2>マイページログイン</h2>
+        
+        <!-- メールアドレス入力ステップ -->
+        <div id="login-step-email">
+          <div class="form-group">
+            <label for="login-email">登録済みのメールアドレス</label>
+            <input type="email" id="login-email" placeholder="example@gmail.com">
+          </div>
+          <button onclick="requestLoginCode()" class="btn btn-primary">ワンタイムログインコードを送信</button>
         </div>
 
-        <p>西洋占星術で語られる「太陽星座」だけで、あなたの複雑な人生のすべてを解き明かすことはできたでしょうか？<br>
-        もしあなたが従来の星占いにどこか漠然とした物足りなさを感じていたなら、その理由は明確です。一般的な星占いは、いま実際の夜空に存在する本物の天体配置を反映していないからです。</p>
-
-        <p><strong>LIBERTAS JYOTISH（リベルタス・ジューティシュ）</strong>は、5,000年以上の歴史を誇る古代インドの聖典『ヴェーダ』の知恵と、現代天文学の精密な計算ロジックを融合させた最高峰の宇宙知性プラットフォームです。「Libertas（自由）」の名が示す通り、当サイトはあなたを運命論で縛るためではなく、本物の星の知恵によって自らの人生の主権を取り戻し、未来を自由に切り拓くために作られました。</p>
-
-        <h3 class="about-h3">1. 西洋占星術との決定的な違い：実際の宇宙空間と同調する「サイデリアル方式」</h3>
-        <p>西洋占星術とインド占星術（Jyotish）の最大の相違点は、黄道（星の通り道）の計算方法にあります。</p>
-
-        <div class="about-card">
-          <div class="about-card-title">■ 西洋占星術（トロピカル方式）</div>
-          <p style="margin-bottom:0;">約2,000年前の春分点（季節のサイクル）に固定された計算。</p>
+        <!-- コード入力ステップ（初期非表示） -->
+        <div id="login-step-code" style="display: none; margin-top: 20px;">
+          <p style="font-size: 13px; margin-bottom: 15px; text-align: center; line-height: 1.4;">
+            ご指定のメールアドレスに6桁の認証コードを送信しました。<br>
+            メールを確認し、コードを入力してください。
+          </p>
+          <div class="form-group">
+            <label for="login-code">6桁の認証コード</label>
+            <input type="text" id="login-code" maxlength="6" placeholder="123456" style="letter-spacing: 5px; text-align: center; font-size: 20px; font-weight: bold;">
+          </div>
+          <button onclick="verifyLoginCode()" class="btn btn-primary">認証してログイン</button>
+          <span class="text-link" onclick="resetLoginFlow()" style="margin-top: 15px;">メールアドレス入力に戻る</span>
         </div>
 
-        <div class="about-card">
-          <div class="about-card-title">■ インド占星術（サイデリアル方式）</div>
-          <p style="margin-bottom:0;">地球の軸の傾き（歳差運動）によるズレをミリ単位で補正し、「いま実際の夜空に存在する本物の天体位置」に基づく計算。</p>
-        </div>
-
-        <p>地球の歳差運動により、実際の星空と暦の上での星座には約24度のズレが生じています（この精密な補正数値をアヤナムシャ / Ayanamsaと呼びます）。</p>
-        <p>LIBERTAS JYOTISHでは、天文学的なアヤナムシャ数値を極めて緻密に算出。今夜見上げた空に実際に滞在している「本物の星座と天体度数」から、気休めではない、あなただけのありのままの宇宙的設計図（ホロスコープ / ラーシ・チャクラ）を立ち上げます。</p>
-
-        <h3 class="about-h3">2. 緻密さを生み出す3つの専門的解釈体系</h3>
-        <p>当サイトが「世界で最も精緻な占術」と確信を持って提示する理由は、多層的な計算とロジックの厚みにあります。</p>
-
-        <div class="about-card">
-          <div class="about-card-title">① 27の星宿「ナクシャトラ（Nakshatra）」</div>
-          <p style="margin-bottom:0;">西洋占星術の12星座（30度ずつの大雑把な分割）を超え、月が辿る軌道をさらに細かく27の領域に分けた「ナクシャトラ（月宿）」を使用します。ひとつの星座の奥深くに秘められたあなたの深層心理、潜在意識の癖、人間関係のパターン、そして魂の真の目的をミクロの精度で浮き彫りにします。</p>
-        </div>
-
-        <div class="about-card">
-          <div class="about-card-title">② 精密な人生のタイムライン「ヴィムショッタリ・ダシャー（Vimshottari Dasha）」</div>
-          <p style="margin-bottom:0;">「人生の転機がいつ訪れるのか」を圧倒的な精度で特定するのが、インド占星術独自の時期予測システム「ダシャー」です。あなたが生まれた瞬間の「月のナクシャトラ」を起点に、どの惑星の影響を受けるかを階層的に算出。「いつ攻めるべきか」「いつ整えるべきか」という人生の決定的瞬間と戦略を割り出します。</p>
-        </div>
-
-        <div class="about-card">
-          <div class="about-card-title">③ 魂の器を定義する「ラグナ（Lagna）」</div>
-          <p style="margin-bottom:0;">生年月日だけでなく、「確定的な出生時間」と「出生地の詳細な緯度経度」から、あなたが生まれた瞬間に東の地平線が指していた方位＝ラグナ（アセンダント / 第1ハウス）を厳密に算出します。ラグナを軸とすることで、9つの惑星（ナヴァグラハ）と12のハウスが織りなす真の人間構造を立体的に解析します。</p>
-        </div>
-
-        <h3 class="about-h3">3. レメディ（処方）と調和：あなたを自由にする真の知恵</h3>
-        <p>古代インドにおいて「光の科学」と称されたJyotishは、単なる未来の予知ではありません。</p>
-        <p>当サイトでは、星の負荷を和らげる「ヴェーダのレメディ（Upaya：処方）」を標準的に組み込んでいます。あなたに最適化されたマントラ（特定の音の周波数）、色の調整、アーユルヴェーダ的な体質改善（ドーシャ調整）を通して、星のエネルギーを調和させ、潜在能力を最大限に引き出す「具体的な解決策」を提供します。</p>
-
-        <h3 class="about-h3">4. 妥協なき数学的・天文学的精度へのこだわり</h3>
-        <p>LIBERTAS JYOTISHの計算エンジンは、世界最高峰の天文学ライブラリ（Swiss Ephemeris準拠）を搭載。歴史上の複雑なタイムゾーン変更、サマータイムの微差、正確な緯度経度データをリアルタイムで補正します。</p>
-        <p>抽象的なポエムや、万人にあてはまる使い回しの診断テキストは一切出力しません。宇宙があなたに与えた数学的かつ天文学的な事実だけを抽出し、あなたの人生を照らす「真実の光」としてお届けします。</p>
-
-        <div style="text-align: center; margin-top: 30px; font-weight: 700; color: var(--color-gold-dark); font-size: 1.05rem;">
-          あなたの「真の星回り」を解読する準備はできましたか？<br>
-          出生データを入力し、LIBERTAS JYOTISHが明かす、あなただけの本物のロードマップをお受け取りください。
-        </div>
-
-        <!-- 有料プレミアム会員登録枠（下部・2箇所目） -->
-        <div class="paid-member-box bottom-box">
-          <div class="paid-member-title">🌟 本格鑑定を開放するプレミアム会員登録</div>
-          <p class="paid-member-desc">説明をお読みいただきありがとうございます。あなただけの精密なホロスコープ・ダシャー時期予測・各種レメディを今すぐ手に入れましょう。</p>
-          <button type="button" class="paid-member-btn btn-upgrade-tally">有料プレミアム会員に登録する（お申し込み・決済）</button>
-        </div>
+        <span class="text-link" onclick="switchScreen('screen-lp')">無料診断（トップページ）に戻る</span>
       </div>
     </div>
-  </section>
 
-  <footer class="site-footer">
-    <div class="footer-links"><a href="./legal.html">特定商取引法に基づく表記・利用規約・プライバシーポリシー</a></div>
-    <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
-  </footer>
+    <!-- ==================== 画面③: マイページ / 鑑定結果画面 ==================== -->
+    <div id="screen-mypage" class="screen">
+      <div class="parchment-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+          <div>
+            <span id="badge-status" class="status-badge free">FREE MEMBER</span>
+          </div>
+          <span class="text-link" onclick="logout()" style="margin: 0; font-size: 12px;">ログアウト</span>
+        </div>
 
-  <script>
-    const TALLY_FORM_ID = 'jaXr71';
+        <h2 id="mypage-title">神秘の鑑定書</h2>
+        
+        <!-- タブメニュー -->
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('tab-free')">基本性質</button>
+          <button class="tab-btn" onclick="switchTab('tab-premium')">今日の運勢＆マハーダシャー</button>
+        </div>
 
-    // Tally 決済ポップアップ表示処理
-    function openTallyPopup() {
-      const email = document.getElementById('user-email')?.value.trim() || 
-                    localStorage.getItem('lj_user_email') || 
-                    localStorage.getItem('email') || '';
+        <!-- タブ1: 無料枠鑑定（基本情報・月星座） -->
+        <div id="tab-free" class="tab-content active">
+          <div class="result-section">
+            <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+              <div class="result-item" style="flex: 1;">
+                <div class="result-label">あなたの月星座 (Moon Sign)</div>
+                <div class="result-value font-cinzel" id="res-moonsign" style="color: var(--color-gold-text);">-</div>
+              </div>
+              <div class="result-item" style="flex: 1;">
+                <div class="result-label">ナクシャトラ (Nakshatra)</div>
+                <div class="result-value" id="res-nakshatra">-</div>
+              </div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">基本性質の解説</div>
+              <div id="res-reading" style="font-size: 14px; line-height: 1.6; margin-top: 10px; color: var(--color-dark-brown);">
+                診断結果をお待ちください...
+              </div>
+            </div>
+            
+            <!-- 【追加ロジック】① 本日の運勢 -->
+            <div class="result-item" style="margin-top: 20px;">
+              <div class="result-label">① 本日の運勢 (Today's Horoscope)</div>
+              <div id="res-horoscope" style="font-size: 14px; line-height: 1.7; color: var(--color-dark-brown); margin-top: 6px; text-align: justify;">
+                診断結果をお待ちください...
+              </div>
+            </div>
 
-      if (typeof Tally !== 'undefined') {
-        Tally.openPopup(TALLY_FORM_ID, { layout: 'modal', width: 600, hiddenFields: { email: email } });
+            <!-- 【追加ロジック】② 本日受ける星の影響 -->
+            <div class="result-item" style="margin-top: 20px;">
+              <div class="result-label">② 本日受ける星の影響 (Astro Influence)</div>
+              <div id="res-influence" style="font-size: 14px; line-height: 1.7; color: var(--color-dark-brown); margin-top: 6px; text-align: justify;">
+                診断結果をお待ちください...
+              </div>
+            </div>
+
+            <!-- 【追加ロジック】③ 支配星周期の過ごし方 -->
+            <div class="result-item" style="margin-top: 20px;">
+              <div class="result-label">③ 支配星周期の過ごし方 (Current Mahadasha Guidance)</div>
+              <div id="res-dasha-free" style="font-size: 14px; line-height: 1.7; color: var(--color-dark-brown); margin-top: 6px; text-align: justify;">
+                診断結果をお待ちください...
+              </div>
+            </div>
+
+            <!-- 【追加ロジック】④ 本日のラッキー要素 -->
+            <div id="res-lucky-card" style="margin-top: 20px; padding: 15px; background: rgba(139, 90, 43, 0.06); border: 1px dashed var(--color-gold-border); border-radius: 6px; text-align: center; color: var(--color-gold-text); font-weight: bold; font-size: 14px;">
+              ✨ 今日の開運の鍵: <span id="res-lucky-element">星々が示す開運 of the day 鍵を紡いでいます...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- タブ2: 有料枠鑑定（今日の運勢・マハーダシャー） -->
+        <div id="tab-premium" class="tab-content">
+          <div class="premium-lock-container">
+            
+            <!-- 有料コンテンツ（status: freeの場合はぼかし制御） -->
+            <div id="premium-content-area" class="premium-lock-area locked">
+              <div class="result-section">
+                <div class="result-item" style="margin-bottom: 25px;">
+                  <div class="result-label">本日の日次運勢</div>
+                  <div id="res-fortune" style="font-size: 14px; line-height: 1.6; margin-top: 8px;">-</div>
+                </div>
+                <div class="result-item" style="margin-bottom: 25px;">
+                  <div class="result-label">マハー・ダシャー（生涯周期システム）</div>
+                  <div id="res-dasha" style="font-size: 14px; line-height: 1.6; margin-top: 8px;">-</div>
+                </div>
+                
+                <!-- 【追加ロジック】① 精密クンダリー・9天体配置の解読 -->
+                <div class="result-item" style="margin-top: 25px;">
+                  <div class="result-label">精密クンダリー・9天体配置の宿命解読</div>
+                  <div id="res-kundali-reading" style="font-size: 14px; line-height: 1.6; margin-top: 8px;">-</div>
+                </div>
+
+                <!-- 【追加ロジック】② 本日の日次＆週次詳細運勢レポート -->
+                <div class="result-item" style="margin-top: 25px;">
+                  <div class="result-label">本日の日次＆週次詳細運勢レポート</div>
+                  <div id="res-detailed-horoscope" style="font-size: 14px; line-height: 1.6; margin-top: 8px;">-</div>
+                </div>
+
+                <!-- 【追加ロジック】③ 108区分生涯カルテ・ダシャー超詳細解読 -->
+                <div class="result-item" style="margin-top: 25px;">
+                  <div class="result-label">108区分生涯カルテ ＆ 支配星（ダシャー）超詳細解読</div>
+                  <div id="res-lifetime-dasha" style="font-size: 14px; line-height: 1.6; margin-top: 8px;">-</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ロック用オーバーレイ案内 -->
+            <div id="lock-overlay-card" class="lock-card-overlay">
+              <div class="lock-icon">🔒</div>
+              <div class="lock-title">プレミアム鑑定エリア</div>
+              <div class="lock-desc">
+                日次の運勢情報および生涯の大周期を司る「マハー・ダシャー鑑定」は、プレミアム会員限定のコンテンツです。
+              </div>
+              <a href="https://tally.so/r/YOUR_TALLY_FORM" target="_blank" class="btn btn-primary" style="font-size: 13px; padding: 10px;">プレミアムプランを購入</a>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ローディング表示 -->
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="spinner"></div>
+    <div id="loading-text" style="color: #ffffff; font-size: 14px; font-weight: bold; letter-spacing: 1px;">運命の糸を紡ぎ中...</div>
+  </div>
+
+  <!-- ==================== JavaScript ロジック ==================== -->
+<script>
+    // ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
+    const LJ_APP_VERSION = 'v5';
+    const currentVersion = localStorage.getItem('lj_app_version');
+    if (currentVersion !== LJ_APP_VERSION) {
+      const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
+      localStorage.clear();
+      sessionStorage.clear();
+      if (email) localStorage.setItem('lj_user_email', email);
+      localStorage.setItem('lj_app_version', LJ_APP_VERSION);
+      location.reload();
+    }
+
+    if ('serviceWorker' in navigator) {
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        refreshing = true;
+        window.location.reload();
+      });
+    }
+
+    // ⚠️ あなたのMakeカスタムWebhook URLをここに設定してください
+    const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+
+    // 起動時の初期化
+    document.addEventListener("DOMContentLoaded", () => {
+      // ローカルストレージに保存されたユーザーデータがあれば自動ロード
+      const savedUser = localStorage.getItem("jyotish_user");
+      let cachedUser = null;
+      if (savedUser) {
+        try {
+          cachedUser = JSON.parse(savedUser);
+          
+          // ★自己修復：トップページのマイページキャッシュに未展開のバグ文字列が含まれている場合は自動排除
+          if (cachedUser && cachedUser.lastResult) {
+            const lastResultStr = JSON.stringify(cachedUser.lastResult);
+            if (lastResultStr.includes('\\${') || lastResultStr.includes('${')) {
+              console.warn("Corrupt cached result detected in index.html. Self-healing by purging...");
+              cachedUser.lastResult = null;
+              localStorage.setItem('jyotish_user', JSON.stringify(cachedUser));
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      
+      if (cachedUser && cachedUser.lastResult) {
+        renderMypage(cachedUser);
+        switchScreen('screen-mypage');
+      }
+
+      // 無料診断フォームのイベントハンドラー
+      document.getElementById("form-free-diagnose").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        showLoading("宇宙に接続中...（約10〜15秒かかります）");
+
+        const email = document.getElementById("diag-email").value;
+        const dob = document.getElementById("diag-dob").value;
+        const tob = document.getElementById("diag-tob").value || "12:00"; // 未入力時の正午補填
+        const city = document.getElementById("diag-city").value;
+        const lang = document.getElementById("diag-lang").value;
+
+        try {
+          // Make APIを呼び出す
+          const payload = {
+            action: "fetch_profile",
+            email: email,
+            dob: dob,
+            tob: tob,
+            city: city,
+            address: city, // Nominatim座標変換用
+            language: lang,
+            datetime: `${dob} ${tob}`
+          };
+
+          const response = await fetch(MAKE_WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) {
+            throw new Error(`APIエラー: ${response.status}`);
+          }
+
+          const resultData = await response.json();
+          
+          // ユーザーデータとして保存（デフォルトステータスは無料）
+          const userData = {
+            email: email,
+            dob: dob,
+            tob: tob,
+            city: city,
+            language: lang,
+            status: resultData.status || "free", // Make側で有料判定があればそれを設定
+            lastResult: resultData
+          };
+
+          localStorage.setItem("jyotish_user", JSON.stringify(userData));
+          renderMypage(userData);
+          switchScreen('screen-mypage');
+
+        } catch (error) {
+          alert(`鑑定の取得に失敗しました。時間をおいて再度お試しください。(${error.message})`);
+          console.error(error);
+        } finally {
+          hideLoading();
+        }
+      });
+    });
+
+    // 画面切り替えユーティリティ
+    function switchScreen(screenId) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.getElementById(screenId).classList.add("active");
+    }
+
+    // タブ切り替えユーティリティ
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+      
+      // クリックされたボタンをアクティブにする
+      event.target.classList.add("active");
+      document.getElementById(tabId).classList.add("active");
+    }
+
+    // ローディング制御
+    function showLoading(text) {
+      document.getElementById("loading-text").innerText = text;
+      document.getElementById("loading-overlay").style.display = "flex";
+    }
+
+    function hideLoading() {
+      document.getElementById("loading-overlay").style.display = "none";
+    }
+
+    // マイページレンダリング
+    function renderMypage(user) {
+      const res = user.lastResult || {};
+      
+      // ユーザー情報の反映
+      document.getElementById("mypage-title").innerText = `${user.email.split('@')[0]} 様の鑑定書`;
+      
+      // 無料鑑定項目の描画 (Original)
+      document.getElementById("res-moonsign").innerText = res.moonSign || "-";
+      document.getElementById("res-nakshatra").innerText = res.nakshatra || "-";
+      document.getElementById("res-reading").innerHTML = res.reading || (res.free_reading && res.free_reading.horoscope) || "鑑定書の展開に失敗しました。";
+
+      // --- 新規追加・簡易診断用データの安全描画 (Additive) ---
+      const freeReading = res.free_reading || {};
+      
+      const elemInfluence = document.getElementById("res-influence");
+      if (elemInfluence) {
+        elemInfluence.innerHTML = freeReading.influence || res.fortune || "星の影響度を解析中...";
+      }
+      
+      const elemHoroscope = document.getElementById("res-horoscope");
+      if (elemHoroscope) {
+        elemHoroscope.innerHTML = freeReading.horoscope || res.fortune || "本日の運勢を解析中...";
+      }
+      
+      const elemDashaFree = document.getElementById("res-dasha-free");
+      if (elemDashaFree) {
+        elemDashaFree.innerHTML = freeReading.dasha_summary || res.dasha_summary || "支配星ダシャーの過ごし方データを読み込んでいます...";
+      }
+      
+      const elemLucky = document.getElementById("res-lucky-element");
+      if (elemLucky) {
+        elemLucky.innerText = freeReading.lucky_element || res.lucky_element || "✨ ラッキーカラー: ゴールド | テーマ: 自己の探求";
+      }
+
+      // 会員ステータスの設定
+      const badge = document.getElementById("badge-status");
+      const premiumArea = document.getElementById("premium-content-area");
+      const lockOverlay = document.getElementById("lock-overlay-card");
+
+      // Stripe/Tallyの連携用に決済URLの動的パラメータを調整
+      const tallyBtn = document.getElementById("tally-checkout-btn") || document.querySelector("a[href*='YOUR_TALLY_FORM']");
+      if (tallyBtn) {
+        tallyBtn.id = "tally-checkout-btn"; // Ensure ID is set
+        tallyBtn.href = `https://tally.so/r/YOUR_TALLY_FORM?email=${encodeURIComponent(user.email)}`;
+      }
+
+      if (user.status === "paid") {
+        badge.innerText = "PREMIUM MEMBER";
+        badge.className = "status-badge paid";
+        premiumArea.classList.remove("locked");
+        lockOverlay.style.display = "none";
+
+        // 有料データの描画 (Original)
+        document.getElementById("res-fortune").innerHTML = res.fortune || (res.premium_reading && res.premium_reading.detailed_horoscope) || "本日の運勢情報を取得できませんでした。";
+        
+        const resDashaElem = document.getElementById("res-dasha");
+        if (resDashaElem) {
+          resDashaElem.innerHTML = res.dasha_summary || (res.premium_reading && res.premium_reading.lifetime_dasha) || "マハー・ダシャー情報の取得に失敗しました。";
+        }
+
+        // --- 新規追加・精密鑑定データの安全描画 (Additive) ---
+        const premiumReading = res.premium_reading || {};
+        
+        const elemKundali = document.getElementById("res-kundali-reading");
+        if (elemKundali) {
+          elemKundali.innerHTML = premiumReading.kundali_reading || res.reading || "精密クンダリーデータを展開しています...";
+        }
+        
+        const elemDetailedHoro = document.getElementById("res-detailed-horoscope");
+        if (elemDetailedHoro) {
+          elemDetailedHoro.innerHTML = premiumReading.detailed_horoscope || res.fortune || "詳細な運勢レポートを構築中...";
+        }
+        
+        const elemLifetimeDasha = document.getElementById("res-lifetime-dasha");
+        if (elemLifetimeDasha) {
+          elemLifetimeDasha.innerHTML = premiumReading.lifetime_dasha || res.dasha_summary || "生涯予測レポートを描画中...";
+        }
       } else {
-        window.open(`https://tally.so/r/${TALLY_FORM_ID}?email=${encodeURIComponent(email)}`, '_blank');
+        badge.innerText = "FREE MEMBER";
+        badge.className = "status-badge free";
+        premiumArea.classList.add("locked");
+        lockOverlay.style.display = "block";
       }
     }
 
-    document.querySelectorAll('.btn-upgrade-tally').forEach(btn => {
-      btn.addEventListener('click', openTallyPopup);
-    });
+    // ==================== ログイン認証フロー ====================
+    let tempEmail = "";
 
-    const form = document.getElementById('jyotish-form');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    async function requestLoginCode() {
+      const email = document.getElementById("login-email").value;
+      if (!email) {
+        alert("メールアドレスを入力してください。");
+        return;
+      }
       
-      const email = document.getElementById('user-email').value.trim();
-      const birthDate = document.getElementById('birth-date').value;
-      const timeVal = document.getElementById('birth-time').value || "12:00";
-      const birthPlace = document.getElementById('birth-place').value;
+      showLoading("ワンタイム認証コードを送信中...");
+      try {
+        const payload = {
+          action: "send_code",
+          email: email
+        };
 
-      const isoDatetime = `${birthDate}T${timeVal.length === 5 ? timeVal + ':00' : timeVal}+09:00`;
+        const response = await fetch(MAKE_WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
 
-      localStorage.setItem('lj_user_email', email);
+        if (!response.ok) throw new Error("送信失敗");
+        
+        tempEmail = email;
+        document.getElementById("login-step-email").style.display = "none";
+        document.getElementById("login-step-code").style.display = "block";
+      } catch (error) {
+        alert("認証メールの送信に失敗しました。正しいメールアドレスかご確認ください。");
+        console.error(error);
+      } finally {
+        hideLoading();
+      }
+    }
 
-      const payload = {
-        action: 'diagnosis',
-        email: email,
-        address: birthPlace,
-        datetime: isoDatetime,
-        city: birthPlace,
-        dob: birthDate,
-        tob: timeVal,
-        status: 'free',
-        language: navigator.language.startsWith('ja') ? 'ja' : 'en'
-      };
+    async function verifyLoginCode() {
+      const code = document.getElementById("login-code").value;
+      if (code.length < 6) {
+        alert("6桁のコードを正しく入力してください。");
+        return;
+      }
 
-      sessionStorage.removeItem('lj_diagnosis_result');
-      sessionStorage.setItem('lj_user_input', JSON.stringify(payload));
-      
-      window.location.href = './result.html';
-    });
+      showLoading("認証情報を検証中...");
+      try {
+        // ※ 補足: Makeブループリント側には現在認証コードのDB照合ロジックがありません。
+        // ここでは、Makeから「プロフィール再取得（fetch_profile）」を走らせることでログイン＆データ取得を代用します。
+        // 生年月日が未入力であっても、Make側が既にSheetsに存在するデータを引き当てるか、
+        // 開発中の場合は一旦プロフィール再取得用の空ダミーデータを送信します。
+        
+        const payload = {
+          action: "fetch_profile",
+          email: tempEmail,
+          dob: "", // 既存登録を sheets から引っ張る想定
+          tob: "",
+          city: "",
+          language: "ja"
+        };
 
+        const response = await fetch(MAKE_WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) throw new Error("ログインデータ取得失敗");
+
+        const resultData = await response.json();
+        
+        const userData = {
+          email: tempEmail,
+          status: resultData.status || "free", // Sheetsの契約状態に合わせてfree/paidが変化
+          lastResult: resultData
+        };
+
+        localStorage.setItem("jyotish_user", JSON.stringify(userData));
+        renderMypage(userData);
+        switchScreen('screen-mypage');
+        resetLoginFlow();
+
+      } catch (error) {
+        alert("ログインに失敗しました。コードが異なるか、まだ初期登録が行われていない可能性があります。");
+        console.error(error);
+      } finally {
+        hideLoading();
+      }
+    }
+
+    function resetLoginFlow() {
+      document.getElementById("login-step-email").style.display = "block";
+      document.getElementById("login-step-code").style.display = "none";
+      document.getElementById("login-code").value = "";
+    }
+
+    // ログアウト
+    function logout() {
+      if (confirm("マイページからログアウトしますか？")) {
+        localStorage.removeItem("jyotish_user");
+        switchScreen('screen-lp');
+      }
+    }
+
+    // Service Workerの登録 (PWA用)
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('Service Worker registered successfully!', reg))
+          .catch(err => console.log('Service Worker registration failed.', err));
       });
     }
   </script>
