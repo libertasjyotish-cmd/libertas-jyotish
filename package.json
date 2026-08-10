@@ -1,0 +1,10 @@
+{
+  "name": "libertas-jyotish",
+  "version": "1.0.0",
+  "description": "Vercel integration for Libertas Jyotish",
+  "main": "index.html",
+  "dependencies": {
+    "google-auth-library": "^9.14.0",
+    "google-spreadsheet": "^4.1.4"
+  }
+}
