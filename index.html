@@ -322,7 +322,7 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 </div>
 
 <div class="about-card">
-<div classs="about-card-title">③ 魂 of 器を定義する「ラグナ（Lagna）」</div>
+<div class="about-card-title">③ 魂の器を定義する「ラグナ（Lagna）」</div>
 <p style="margin-bottom:0;">生年月日だけでなく、「確定的な出生時間」と「出生地の詳細な緯度経度」から、あなたが生まれた瞬間に東の地平線が指していた方位＝ラグナ（アセンダント / 第1ハウス）を厳密に算出します。ラグナを軸とすることで、9つの惑星（ナヴァグラハ）と12のハウスが織りなす真の人間構造を立体的に解析します。</p>
 </div>
 
@@ -356,7 +356,7 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 
 <script>
     // ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
-    const LJ_APP_VERSION = 'v9';
+    const LJ_APP_VERSION = 'v10';
     const currentVersion = localStorage.getItem('lj_app_version');
     if (currentVersion !== LJ_APP_VERSION) {
       const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
@@ -404,7 +404,7 @@ const birthDate = document.getElementById('birth-date').value;
 const timeVal = document.getElementById('birth-time').value || "12:00";
 const birthPlace = document.getElementById('birth-place').value;
 
-const isoDatetime = `${birthDate}T${timeVal.length ===5 ? timeVal + ':00' : timeVal}+09:00`;
+const isoDatetime = `${birthDate}T${timeVal.length === 5 ? timeVal + ':00' : timeVal}+09:00`;
 
 localStorage.setItem('lj_user_email', email);
 localStorage.setItem('city', birthPlace);
