@@ -1,4 +1,4 @@
-const CACHE_NAME = 'libertas-jyotish-v9'; // バージョンをv6に上げて古いキャッシュを強制削除
+const CACHE_NAME = 'libertas-jyotish-v10';
 const ASSETS_TO_CACHE = [
 './',
 './index.html',
@@ -10,18 +10,16 @@ const ASSETS_TO_CACHE = [
 './img/libertas-logo.png'
 ];
 
-// インストール処理（即時待機解除＆キャッシュ登録）
 self.addEventListener('install', (e) => {
 self.skipWaiting();
 e.waitUntil(
 caches.open(CACHE_NAME).then((cache) => {
-console.log('[Service Worker] Caching all assets (v9)');
+console.log('[Service Worker] Caching all assets (v10)');
 return cache.addAll(ASSETS_TO_CACHE);
 })
 );
 });
 
-// 有効化処理（古いバージョンのキャッシュ削除＆全クライアント即時制御）
 self.addEventListener('activate', (e) => {
 e.waitUntil(
 caches.keys().then((keyList) => {
@@ -37,14 +35,11 @@ return caches.delete(key);
 );
 });
 
-// フェッチ処理（クローラー除外 & ネットワーク優先）
 self.addEventListener('fetch', (e) => {
 const userAgent = e.request.headers.get('User-Agent') || '';
-
 if (e.request.method !== 'GET' || userAgent.includes('Googlebot')) {
 return;
 }
-
 e.respondWith(
 fetch(e.request)
 .then((networkResponse) => {
