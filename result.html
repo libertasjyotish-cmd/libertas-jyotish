@@ -111,7 +111,7 @@ padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
 
 <script>
 // ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
-const LJ_APP_VERSION = 'v8';
+const LJ_APP_VERSION = 'v9';
 const currentVersion = localStorage.getItem('lj_app_version');
 if (currentVersion !== LJ_APP_VERSION) {
   const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
@@ -131,7 +131,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-const MAKE_WEBHOOK_URL = "https://hook.us2.make.com/huqp37moaxv9y3zerpag7wdn3r1evm4p";
+const JYOTISH_API_URL = '/api/jyotish';
 const PREMIUM_UPGRADE_URL = "https://tally.so/r/YOUR_FORM_ID";
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -157,7 +157,7 @@ return;
 if (savedInput) {
 const payload = JSON.parse(savedInput);
 try {
-const response = await fetch(MAKE_WEBHOOK_URL, {
+const response = await fetch(JYOTISH_API_URL, {
 method: 'POST',
 headers: { 'Content-Type': 'application/json' },
 body: JSON.stringify(payload)
