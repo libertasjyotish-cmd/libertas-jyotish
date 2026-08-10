@@ -112,7 +112,7 @@ padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
 
 <script>
 // ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
-const LJ_APP_VERSION = 'v10';
+const LJ_APP_VERSION = 'v11'
 const currentVersion = localStorage.getItem('lj_app_version');
 if (currentVersion !== LJ_APP_VERSION) {
 const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
@@ -166,7 +166,14 @@ headers: { 'Content-Type': 'application/json' },
 body: JSON.stringify(payload)
 });
 
-if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+if (!response.ok) {
+  let errMsg = `HTTP error! status: ${response.status}`;
+  try {
+    const errJson = await response.json();
+    if (errJson && errJson.error) errMsg = errJson.error;
+  } catch(e) {}
+  throw new Error(errMsg);
+}
 
 const data = await response.json();
 sessionStorage.setItem('lj_diagnosis_result', JSON.stringify(data));
@@ -194,7 +201,7 @@ console.error("通信エラー:", err);
 contentArea.innerHTML = `
 <div style="text-align:center; padding:20px;">
 <p style="color:#c0392b; font-weight:bold; font-size:1.05rem;">鑑定データの取得に失敗しました。</p>
-<p style="font-size:0.85rem; color:#5A4E48; margin-top:8px;">自社サーバー通信または通信状況をご確認ください。</p>
+<p style="font-size:0.85rem; color:#5A4E48; margin-top:8px;">大変恐れ入りますが、しばらく時間をおいてから再度お試しいただくか、通信環境の良い場所で再度お試しください。</p>
 <a href="./index.html" class="btn-secondary" style="margin-top:15px; display:inline-block;">入力画面に戻る</a>
 </div>
 `;
