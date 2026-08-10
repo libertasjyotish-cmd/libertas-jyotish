@@ -1,4 +1,4 @@
-const CACHE_NAME = 'libertas-jyotish-v2'; // バージョンを上げて古いキャッシュを破棄
+const CACHE_NAME = 'libertas-jyotish-v3'; // クローラー対策を含めたバージョン更新
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -37,15 +37,18 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// フェッチ処理（ネットワーク優先：最新データを取得し、通信エラー時のみキャッシュを使用）
+// フェッチ処理（クローラー除外 & ネットワーク優先）
 self.addEventListener('fetch', (e) => {
-  // POST等のデータ送信処理（Make通信等）はキャッシュ処理から除外
-  if (e.request.method !== 'GET') return;
+  const userAgent = e.request.headers.get('User-Agent') || '';
+
+  // GET以外の通信、および Googlebot などのクローラーはキャッシュ処理から完全除外
+  if (e.request.method !== 'GET' || userAgent.includes('Googlebot')) {
+    return;
+  }
 
   e.respondWith(
     fetch(e.request)
       .then((networkResponse) => {
-        // ネットワークから正常に取得できた場合は最新ファイルをキャッシュにも上書き保存
         if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -55,7 +58,6 @@ self.addEventListener('fetch', (e) => {
         return networkResponse;
       })
       .catch(() => {
-        // オフライン時など通信失敗時のみ、保存されているキャッシュを返す
         return caches.match(e.request);
       })
   );
