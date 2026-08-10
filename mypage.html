@@ -1,569 +1,614 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>マイページ | Libertas Jyotish</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>マイページ | Libertas Jyotish</title>
 
-  <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
-  <link rel="canonical" href="https://libertas-jyotish.com/mypage.html">
+<!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
+<link rel="canonical" href="https://libertas-jyotish.com/mypage.html">
 
-  <!-- PWA & Theme Settings -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0c1a1f">
-  <link rel="apple-touch-icon" href="./img/libertas-logo.png">
+<!-- PWA & Theme Settings -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0c1a1f">
+<link rel="apple-touch-icon" href="./img/libertas-logo.png">
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
-  
-  <!-- Tally Popup Widget Script -->
-  <script src="https://tally.so/widgets/embed.js"></script>
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
 
-  <!-- Google Identity Services SDK -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+<!-- Tally Popup Widget Script -->
+<script src="https://tally.so/widgets/embed.js"></script>
 
-  <style>
-    :root {
-      --color-gold-light: #FDE047;
-      --color-gold-main: #D4AF37;
-      --color-gold-dark: #8B6B1B;
-      --color-bg-dark: #0c1a1f;
-      --color-text-dark: #2C221E;
-      --font-en: 'Cinzel', serif;
-      --font-ja: 'Noto Serif JP', serif;
-    }
+<!-- Google Identity Services SDK -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+<style>
+:root {
+--color-gold-light: #FDE047;
+--color-gold-main: #D4AF37;
+--color-gold-dark: #8B6B1B;
+--color-bg-dark: #0c1a1f;
+--color-text-dark: #2C221E;
+--font-en: 'Cinzel', serif;
+--font-ja: 'Noto Serif JP', serif;
+}
 
-    body {
-      font-family: var(--font-ja);
-      color: var(--color-text-dark);
-      line-height: 1.8;
-      min-height: 100vh;
-      overflow-x: hidden;
-      background-color: var(--color-bg-dark);
-      display: flex;
-      flex-direction: column;
-    }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .site-header {
-      position: fixed;
-      top: 0; left: 0; width: 100%; z-index: 100;
-      background: rgba(12, 26, 31, 0.92);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(139, 107, 27, 0.3);
-      padding: 12px 20px;
-      display: flex; justify-content: space-between; align-items: center;
-    }
+body {
+font-family: var(--font-ja);
+color: var(--color-text-dark);
+line-height: 1.8;
+min-height: 100vh;
+overflow-x: hidden;
+background-color: var(--color-bg-dark);
+display: flex;
+flex-direction: column;
+}
 
-    .header-logo {
-      display: flex; align-items: center; gap: 10px;
-      text-decoration: none; color: var(--color-gold-main);
-      font-family: var(--font-en); font-weight: 600; font-size: 1.05rem;
-    }
+.site-header {
+position: fixed;
+top: 0; left: 0; width: 100%; z-index: 100;
+background: rgba(12, 26, 31, 0.92);
+backdrop-filter: blur(8px);
+-webkit-backdrop-filter: blur(8px);
+border-bottom: 1px solid rgba(139, 107, 27, 0.3);
+padding: 12px 20px;
+display: flex; justify-content: space-between; align-items: center;
+}
 
-    .header-logo img { width: 32px; height: 32px; }
+.header-logo {
+display: flex; align-items: center; gap: 10px;
+text-decoration: none; color: var(--color-gold-main);
+font-family: var(--font-en); font-weight: 600; font-size: 1.05rem;
+}
 
-    .header-nav { display: flex; gap: 18px; align-items: center; }
-    .header-nav a { color: #E2D9CE; text-decoration: none; font-size: 0.82rem; transition: color 0.3s; }
-    .header-nav a:hover { color: var(--color-gold-main); }
+.header-logo img { width: 32px; height: 32px; }
 
-    .main-section {
-      position: relative; flex: 1;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 100px 20px 60px;
-      background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("./img/bg-jyotish.jpg");
-      background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed;
-    }
+.header-nav { display: flex; gap: 18px; align-items: center; }
+.header-nav a { color: #E2D9CE; text-decoration: none; font-size: 0.82rem; transition: color 0.3s; }
+.header-nav a:hover { color: var(--color-gold-main); }
 
-    .hero-container {
-      position: relative; z-index: 2; width: 100%; max-width: 680px;
-      background-image: 
-        radial-gradient(circle at 50% 25%, rgba(255, 253, 245, 0.98) 0%, rgba(245, 233, 208, 0.95) 55%, rgba(220, 200, 162, 0.96) 100%),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.05) 100%);
-      background-blend-mode: overlay, normal;
-      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-      border-radius: 14px;
-      border: 1px solid rgba(184, 142, 60, 0.65);
-      outline: 1px solid rgba(212, 175, 55, 0.35);
-      outline-offset: -7px;
-      box-shadow: 
-        0 25px 50px -12px rgba(0, 0, 0, 0.75),
-        0 0 20px rgba(212, 175, 55, 0.18),
-        inset 0 0 35px rgba(139, 90, 43, 0.28),
-        inset 0 2px 4px rgba(255, 255, 255, 0.8);
-      padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
-    }
+.main-section {
+position: relative; flex: 1;
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+padding: 100px 20px 60px;
+background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("./img/bg-jyotish.jpg");
+background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed;
+}
 
-    .status-bar {
-      display: flex; justify-content: space-between; align-items: center;
-      padding-bottom: 15px; margin-bottom: 25px; border-bottom: 1px dashed rgba(139, 107, 27, 0.35);
-    }
-    .user-badge { font-size: 0.78rem; font-weight: 600; padding: 4px 14px; border-radius: 20px; }
-    .user-badge.free { background: rgba(139, 107, 27, 0.15); color: var(--color-gold-dark); border: 1px solid rgba(139, 107, 27, 0.4); }
-    .user-badge.paid { background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%); color: #FFFDF9; }
+.hero-container {
+position: relative; z-index: 2; width: 100%; max-width: 680px;
+background-image:
+radial-gradient(circle at 50% 25%, rgba(255, 253, 245, 0.98) 0%, rgba(245, 233, 208, 0.95) 55%, rgba(220, 200, 162, 0.96) 100%),
+linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.05) 100%);
+background-blend-mode: overlay, normal;
+backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+border-radius: 14px;
+border: 1px solid rgba(184, 142, 60, 0.65);
+outline: 1px solid rgba(212, 175, 55, 0.35);
+outline-offset: -7px;
+box-shadow:
+0 25px 50px -12px rgba(0, 0, 0, 0.75),
+0 0 20px rgba(212, 175, 55, 0.18),
+inset 0 0 35px rgba(139, 90, 43, 0.28),
+inset 0 2px 4px rgba(255, 255, 255, 0.8);
+padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
+}
 
-    .btn-logout {
-      font-size: 0.75rem; color: #8B6B1B; text-decoration: underline; cursor: pointer; margin-left: 10px; transition: color 0.2s;
-    }
-    .btn-logout:hover { color: #5A4E48; }
+.status-bar {
+display: flex; justify-content: space-between; align-items: center;padding-bottom: 15px; margin-bottom: 25px; border-bottom: 1px dashed rgba(139, 107, 27, 0.35);
+}
+.user-badge { font-size: 0.78rem; font-weight: 600; padding: 4px 14px; border-radius: 20px; }
+.user-badge.free { background: rgba(139, 107, 27, 0.15); color: var(--color-gold-dark); border: 1px solid rgba(139, 107, 27, 0.4); }
+.user-badge.paid { background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%); color: #FFFDF9; }
 
-    .card-box {
-      background: rgba(255, 252, 245, 0.85);
-      border: 1px solid rgba(139, 107, 27, 0.35); border-radius: 10px;
-      padding: 22px; margin-bottom: 22px; text-align: left;
-      box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.12);
-      position: relative; overflow: hidden;
-    }
+.btn-logout {
+font-size: 0.75rem; color: #8B6B1B; text-decoration: underline; cursor: pointer; margin-left: 10px; transition: color 0.2s;
+}
+.btn-logout:hover { color: #5A4E48; }
 
-    .card-title {
-      font-size: 1.05rem; color: var(--color-gold-dark); font-weight: 600;
-      margin-bottom: 10px; border-bottom: 1px solid rgba(139, 107, 27, 0.2); padding-bottom: 5px;
-    }
+.card-box {
+background: rgba(255, 252, 245, 0.85);
+border: 1px solid rgba(139, 107, 27, 0.35); border-radius: 10px;
+padding: 22px; margin-bottom: 22px; text-align: left;
+box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.12);
+position: relative; overflow: hidden;
+}
 
-    input[type="email"], input[type="text"] {
-      width: 100%; padding: 11px 14px;
-      background-color: rgba(255, 252, 245, 0.85);
-      border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px;
-      font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none; transition: all 0.3s ease;
-      box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.12);
-    }
-    input[type="email"]:focus, input[type="text"]:focus {
-      border-color: var(--color-gold-dark);
-      box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.15), 0 0 8px rgba(212, 175, 55, 0.3);
-      background-color: #FFFDF9;
-    }
+.card-title {font-size: 1.05rem; color: var(--color-gold-dark); font-weight: 600;
+margin-bottom: 10px; border-bottom: 1px solid rgba(139, 107, 27, 0.2); padding-bottom: 5px;
+}
 
-    .google-btn-container {
-      width: 100%; display: flex; justify-content: center; margin-bottom: 12px; min-height: 44px;
-    }
+input[type="email"], input[type="text"] {
+width: 100%; padding: 11px 14px;
+background-color: rgba(255, 252, 245, 0.85);
+border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px;
+font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none; transition: all 0.3s ease;
+box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.12);
+}
+input[type="email"]:focus, input[type="text"]:focus {
+border-color: var(--color-gold-dark);
+box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.15), 0 0 8px rgba(212, 175, 55, 0.3);
+background-color: #FFFDF9;
+}
 
-    .auth-divider {
-      text-align: center; font-size: 0.78rem; color: #8B6B1B; margin: 14px 0;
-    }
+.google-btn-container {
+width: 100%; display: flex; justify-content: center; margin-bottom: 12px; min-height: 44px;
+}
 
-    .login-form-group { display: flex; gap: 8px; margin-top: 8px; }
-    
-    .btn-action {
-      padding: 11px 20px; background: var(--color-gold-dark); color: #FFFDF9;
-      border: none; border-radius: 8px; cursor: pointer; font-size: 0.88rem; font-weight: 600;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: background 0.2s, opacity 0.2s;
-      white-space: nowrap;
-    }
-    .btn-action:hover { background: #735715; }
-    .btn-action:disabled { opacity: 0.6; cursor: not-allowed; }
+.auth-divider {
+text-align: center; font-size: 0.78rem; color: #8B6B1B; margin: 14px 0;
+}
 
-    .locked-wrapper { position: relative; overflow: hidden; border-radius: 10px; }
-    .blur-content { filter: blur(6px); user-select: none; pointer-events: none; opacity: 0.5; transition: filter 0.5s ease; }
-    .lock-overlay {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(242, 231, 207, 0.82);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 20px; text-align: center; z-index: 10;
-    }
+.login-form-group { display: flex; gap: 8px; margin-top: 8px; }
 
-    .btn-upgrade {
-      display: inline-block; padding: 12px 24px; font-size: 0.95rem; font-weight: 600;
-      color: #FFFDF9; background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%);
-      border: none; border-radius: 8px; cursor: pointer; text-decoration: none;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255, 255, 255, 0.4);
-      transition: transform 0.2s;
-    }
-    .btn-upgrade:hover { transform: translateY(-1px); }
+.btn-action {
+padding: 11px 20px; background: var(--color-gold-dark); color: #FFFDF9;
+border: none; border-radius: 8px; cursor: pointer; font-size: 0.88rem; font-weight: 600;
+box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: background 0.2s, opacity 0.2s;
+white-space: nowrap;
+}
+.btn-action:hover { background: #735715; }
+.btn-action:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    .planet-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
-    .planet-table th, .planet-table td { padding: 8px 10px; border: 1px solid rgba(139, 107, 27, 0.3); text-align: left; }
-    .planet-table th { background: rgba(212, 175, 55, 0.15); color: var(--color-gold-dark); font-weight: 600; }
-    .planet-table td.planet-name { font-weight: 600; white-space: nowrap; color: #3A2E2B; }
+.locked-wrapper { position: relative; overflow: hidden; border-radius: 10px; }
+.blur-content { filter: blur(6px); user-select: none; pointer-events: none; opacity: 0.5; transition: filter 0.5s ease; }
+.lock-overlay {
+position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+background: rgba(242, 231, 207, 0.82);
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+padding: 20px; text-align: center; z-index: 10;
+}
 
-    .site-footer {
-      width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3);
-      padding: 24px 20px; text-align: center; position: relative; z-index: 10;
-    }
-    .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
-    .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
+.btn-upgrade {
+display: inline-block; padding: 12px 24px; font-size: 0.95rem; font-weight: 600;
+color: #FFFDF9; background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%);
+border: none; border-radius: 8px; cursor: pointer; text-decoration: none;
+box-shadow: 0 8px 20px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+transition: transform 0.2s;
+}
+.btn-upgrade:hover { transform: translateY(-1px); }
 
-    @media (max-width: 640px) {
-      .header-nav { gap: 10px; }
-      .header-nav a { font-size: 0.75rem; }
-      .hero-container { padding: 35px 20px 30px; }
-      .login-form-group { flex-direction: column; }
-    }
-  </style>
+.planet-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+.planet-table th, .planet-table td { padding: 8px 10px; border: 1px solid rgba(139, 107, 27, 0.3); text-align: left; }
+.planet-table th { background: rgba(212, 175, 55, 0.15); color: var(--color-gold-dark); font-weight: 600; }
+.planet-table td.planet-name { font-weight: 600; white-space: nowrap; color: #3A2E2B; }
+
+.site-footer {
+width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3);
+padding: 24px 20px; text-align: center; position: relative; z-index: 10;
+}
+.footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
+.copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
+
+@media (max-width: 640px) {
+.header-nav { gap: 10px; }
+.header-nav a { font-size: 0.75rem; }
+.hero-container { padding: 35px 20px 30px; }
+.login-form-group { flex-direction: column; }
+}
+</style>
 </head>
 <body>
 
-  <header class="site-header">
-    <a href="./index.html" class="header-logo">
-      <img src="./img/libertas-logo.png" alt="Logo">
-      <span>Libertas Jyotish</span>
-    </a>
-    <nav class="header-nav">
-      <a href="./index.html">トップ</a>
-      <a href="./index.html#form-area">無料診断</a>
-      <a href="./mypage.html" style="color:var(--color-gold-main);">マイページ</a>
-      <a href="./pdf-purchase.html">完全鑑定書</a>
-    </nav>
-  </header>
+<header class="site-header">
+<a href="./index.html" class="header-logo">
+<img src="./img/libertas-logo.png" alt="Logo">
+<span>Libertas Jyotish</span>
+</a>
+<nav class="header-nav">
+<a href="./index.html">トップ</a>
+<a href="./index.html#form-area">無料診断</a>
+<a href="./mypage.html" style="color:var(--color-gold-main);">マイページ</a>
+<a href="./pdf-purchase.html">完全鑑定書</a>
+</nav>
+</header>
 
-  <section class="main-section">
-    <div class="hero-container">
-      
-      <!-- ステータス表示エリア -->
-      <div class="status-bar">
-        <div style="text-align:left;">
-          <div style="font-size:0.75rem; color:#7a6a58; font-family:var(--font-en);">MEMBERSHIP PORTAL</div>
-          <div style="display:flex; align-items:center;">
-            <span id="user-display-email" style="font-weight:600; font-size:0.95rem; color:var(--color-text-dark);">未ログイン（ゲスト）</span>
-            <span id="btn-logout" class="btn-logout" style="display:none;" onclick="logout()">ログアウト</span>
-          </div>
-        </div>
-        <span id="user-status-badge" class="user-badge free">無料プラン</span>
+<section class="main-section">
+<div class="hero-container">
+
+<!-- ステータス表示エリア -->
+<div class="status-bar">
+<div style="text-align:left;">
+<div style="font-size:0.75rem; color:#7a6a58; font-family:var(--font-en);">MEMBERSHIP PORTAL</div>
+<div style="display:flex; align-items:center;">
+<span id="user-display-email" style="font-weight:600; font-size:0.95rem; color:var(--color-text-dark);">未ログイン（ゲスト）</span>
+<span id="btn-logout" class="btn-logout" style="display:none;" onclick="logout()">ログアウト</span>
+</div>
+</div>
+<span id="user-status-badge" class="user-badge free">無料プラン</span>
+</div>
+
+<!-- ログイン・端末連携カード -->
+<div id="auth-box" class="card-box">
+<div class="card-title">🔑 マイページへログイン・端末連携</div>
+
+<!-- Google 公式認証ボタン領域 --><div class="google-btn-container">
+<div id="g_id_onload"
+data-client_id="789459066589-2tla7ubk127eic0g5aekql75ohdejnto.apps.googleusercontent.com"
+data-callback="handleCredentialResponse"
+data-auto_prompt="false">
+</div>
+<div class="g_id_signin"
+data-type="standard"
+data-size="large"
+data-theme="outline"
+data-text="sign_in_with"
+data-shape="rectangular"
+data-logo_alignment="left"
+data-width="320">
+</div>
+</div>
+
+<div class="auth-divider">─ またはメールアドレスで認証 ─</div>
+
+<div id="step-email" class="login-form-group">
+<input type="email" id="login-email" placeholder="メールアドレスを入力" required>
+<button id="btn-send-code" class="btn-action">コード送信</button>
+</div>
+
+<div id="step-code" class="login-form-group" style="display:none; margin-top:10px;">
+<input type="text" id="login-code" placeholder="6桁の認証コードを入力" maxlength="6">
+<button id="btn-verify-code" class="btn-action" style="background:#2C5282;">認証する</button>
+</div>
+</div>
+
+<!-- 本日の月星座運勢 -->
+<div class="card-box">
+<div class="card-title">🌟 本日の月星座運勢</div>
+<p id="today-transit-text" style="font-size:0.88rem; color:#4a3e36; min-height: 48px;">
+本日の星回りデータを読み込んでいます...
+</p>
+</div>
+
+<!-- プレミアム鑑定カルテ -->
+<h2 style="font-size:1.15rem; color:var(--color-gold-dark); text-align:left; margin-bottom:12px;">📜 プレミアム鑑定カルテ</h2>
+
+<div id="premium-gatekeeper" class="locked-wrapper">
+<div id="premium-content-area">
+
+<div class="card-box blur-content">
+<div class="card-title">マハー・ダシャー周期の解読</div>
+<p id="dasha-period-title" style="font-weight:600; font-size:0.9rem; color:#3A2E2B; margin-bottom:6px;">現在の周期：取得中...</p>
+<p id="dasha-description" style="font-size:0.88rem; color:#4a3e36;">データ読み込み中...</p>
+</div>
+
+<div class="card-box blur-content" style="margin-bottom:0;">
+<div class="card-title">🪐 全天体（9天体）配置表</div>
+<div style="overflow-x: auto;">
+<table class="planet-table">
+<thead>
+<tr>
+<th>天体</th>
+<th>サイン（星座）</th>
+<th>ハウス</th>
+<th>一言解説</th>
+</tr>
+</thead>
+<tbody id="planet-table-body">
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<!-- ロックオーバーレイ -->
+<div id="lock-overlay" class="lock-overlay">
+<div style="font-size:1.8rem; margin-bottom:6px;">🔒</div>
+<div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:8px;">有料会員限定コンテンツ</div>
+<p style="font-size:0.82rem; color:#5A4E48; margin-bottom:15px;">全天体配置・ダシャー周期の解読にはプラン登録が必要です。</p>
+<button id="btn-upgrade-tally" class="btn-upgrade">有料プランに登録する</button>
+</div>
+</div>
+
+</div>
+</section>
+
+<footer class="site-footer">
+<div class="footer-links"><a href="./legal.html">特定商取引法に基づく表記・利用規約・プライバシーポリシー</a></div>
+<p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+</footer>
+
+<script>
+const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/huqp37moaxv9y3zerpag7wdn3r1evm4p';
+const TALLY_FORM_ID = 'jaXr71';
+
+// Google Identity Services JWT デコード関数
+function parseJwt(token) {
+try {
+const base64Url = token.split('.')[1];
+const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);}).join(''));
+return JSON.parse(jsonPayload);
+} catch (e) {
+return null;
+}
+}
+
+// Google Sign-In 成功時の自動コールバック
+function handleCredentialResponse(response) {
+const responsePayload = parseJwt(response.credential);
+if (responsePayload && responsePayload.email) {
+completeLogin(responsePayload.email);
+}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+const savedEmail = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
+
+if (savedEmail) {
+setLoggedInState(savedEmail);
+fetchUserDataAndRender(savedEmail);
+} else {
+setLoggedOutState();
+}
+
+// Tally 決済モーダル呼び出し
+document.getElementById('btn-upgrade-tally').addEventListener('click', () => {
+const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
+if (typeof Tally !== 'undefined') {
+Tally.openPopup(TALLY_FORM_ID, { layout: 'modal', width: 600, hiddenFields: { email: email } });
+} else {
+window.open(`https://tally.so/r/${TALLY_FORM_ID}?email=${encodeURIComponent(email)}`, '_blank');
+}
+});
+
+// メール認証コード送信処理
+document.getElementById('btn-send-code').addEventListener('click', async () => {
+const emailInput = document.getElementById('login-email');
+const email = emailInput.value.trim();
+const btnSend = document.getElementById('btn-send-code');
+
+if (!email || !email.includes('@')) {
+alert('有効なメールアドレスを入力してください。');
+return;
+}
+
+btnSend.disabled = true;
+btnSend.textContent = '送信中...';
+
+try {
+const res = await fetch(MAKE_WEBHOOK_URL, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ action: 'send_code', email: email })
+});
+
+if (res.ok) {
+alert('認証コードを送信しました。届いた6桁の数字を入力してください。');
+document.getElementById('step-code').style.display = 'flex';
+} else {
+throw new Error('API Error');
+}
+} catch(e) {
+alert('送信に失敗しました。通信状況をご確認の上、再度お試しください。');
+} finally {
+btnSend.disabled = false;
+btnSend.textContent = 'コード送信';
+}
+});
+
+// 認証コード検証処理
+document.getElementById('btn-verify-code').addEventListener('click', async () => {
+const email = document.getElementById('login-email').value.trim();
+const codeInput = document.getElementById('login-code');
+const code = codeInput.value.trim();
+const btnVerify = document.getElementById('btn-verify-code');
+
+if (!code || code.length !== 6) {
+alert('6桁 of 認証コードを正確に入力してください。');
+return;
+}
+
+btnVerify.disabled = true;
+btnVerify.textContent = '検証中...';
+
+try {const res = await fetch(MAKE_WEBHOOK_URL, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ action: 'verify_code', email: email, code: code })
+});
+
+if (res.ok) {
+completeLogin(email);
+} else {
+alert('認証コードが正しくないか、有効期限が切れています。');
+}
+} catch(e) {
+alert('検証に失敗しました。通信状況をご確認の上、再度お試しください。');
+} finally {
+btnVerify.disabled = false;
+btnVerify.textContent = '認証する';
+}
+});
+});
+
+function completeLogin(email) {
+localStorage.setItem('lj_user_email', email);
+setLoggedInState(email);
+fetchUserDataAndRender(email);
+}
+
+function setLoggedInState(email) {
+document.getElementById('user-display-email').textContent = email;
+document.getElementById('btn-logout').style.display = 'inline';
+document.getElementById('auth-box').style.display = 'none';
+}
+
+function setLoggedOutState() {
+document.getElementById('user-display-email').textContent = '未ログイン（ゲスト）';
+document.getElementById('btn-logout').style.display = 'none';
+document.getElementById('auth-box').style.display = 'block';
+document.getElementById('today-transit-text').textContent = 'ログインすると、あなたの出生データに基づいた本日の運勢が表示されます。';
+}
+
+function logout() {
+localStorage.removeItem('lj_user_email');
+localStorage.removeItem('email');
+setLoggedOutState();
+}
+
+function getJstIsoString() {
+const now = new Date();
+const jstOffset = 9 * 60;
+const localTime = now.getTime();
+const localOffset = now.getTimezoneOffset() * 60000;
+const utc = localTime + localOffset;
+const jstTime = new Date(utc + (jstOffset * 60000));
+
+const YYYY = jstTime.getFullYear();
+const MM = String(jstTime.getMonth() + 1).padStart(2, '0');
+const DD = String(jstTime.getDate()).padStart(2, '0');
+const hh = String(jstTime.getHours()).padStart(2, '0');
+const mm = String(jstTime.getMinutes()).padStart(2, '0');
+const ss = String(jstTime.getSeconds()).padStart(2, '0');
+
+return `${YYYY}-${MM}-${DD}T${hh}:${mm}:${ss}+09:00`;
+}
+
+async function fetchUserDataAndRender(email) {
+let userAddress = localStorage.getItem('city') ||
+localStorage.getItem('lj_user_city') ||
+localStorage.getItem('lj_city') ||
+localStorage.getItem('address') ||
+localStorage.getItem('user_city') || '東京都';
+
+const userDob = localStorage.getItem('dob') || localStorage.getItem('lj_dob') || '1970-01-01';
+const userTob = localStorage.getItem('tob') || localStorage.getItem('lj_tob') || '12:00';
+const currentJstISO = getJstIsoString();
+
+try {
+const response = await fetch(MAKE_WEBHOOK_URL, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({
+action: 'fetch_profile',
+email: email,
+address: userAddress,
+city: userAddress,
+dob: userDob,
+tob: userTob,
+datetime: currentJstISO,
+language: 'ja'
+})
+});
+
+if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+const responseText = await response.text();
+let data = {};
+
+try {
+data = JSON.parse(responseText);
+} catch (pErr) {
+data = { fortune: responseText };
+}
+
+if (data.status === 'paid') {
+unlockPaidContent();
+}
+
+const fortuneContent = data.fortune || data.dailyMessage || data.text || data.message || data.response || data.result;
+
+if (data.free_reading) {
+    const fr = data.free_reading;
+    let html = '';
+    if (fr.horoscope) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>① 本日の運勢 (Today's Horoscope):</strong><br>\${fr.horoscope}</div>`;
+    if (fr.influence) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>② 本日受ける星の影響 (Astro Influence):</strong><br>\${fr.influence}</div>`;
+    if (fr.dasha_summary) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>③ 支配星周期の過ごし方 (Current Mahadasha Guidance):</strong><br>\${fr.dasha_summary}</div>`;
+    if (fr.lucky_element) html += `<div style="margin-top:15px; padding:10px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:6px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">④ \${fr.lucky_element}</div>`;
+    document.getElementById('today-transit-text').innerHTML = html;
+  } else {
+    // 【完全維持】既存の平文フォールバック
+    if (fortuneContent && typeof fortuneContent === 'string' && fortuneContent.trim() !== '') {
+      document.getElementById('today-transit-text').innerHTML = fortuneContent.replace(/\n/g, '<br>');
+    } else if (data.moonSign) {
+      document.getElementById('today-transit-text').textContent = `本日の月星座：\${data.moonSign}`;
+    }
+  }`;
+}
+
+if (data.dashaTitle) {
+document.getElementById('dasha-period-title').textContent = data.dashaTitle;
+}
+if (data.dashaDesc) {
+document.getElementById('dasha-description').textContent = data.dashaDesc;
+}
+
+if (data.planets && Array.isArray(data.planets)) {
+renderPlanetTable(data.planets);
+}
+
+// ★【拡張ロジック】有料契約情報（premium_reading）が返された場合、既存の天体配置表の下に豪華な個別精密鑑定テキストを自動展開
+if (data.status === 'paid' && data.premium_reading) {
+  const pr = data.premium_reading;
+  let detailContainer = document.getElementById('premium-detail-container');
+  if (!detailContainer) {
+    detailContainer = document.createElement('div');
+    detailContainer.id = 'premium-detail-container';
+    document.getElementById('premium-content-area').appendChild(detailContainer);
+  }
+  
+  let detailHtml = '';
+  if (pr.kundali_reading) {
+    detailHtml += `
+      <div class="card-box" style="margin-top:22px;">
+        <div class="card-title">🔮 精密クンダリー・9天体配置の宿命解読</div>
+        <div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">\${pr.kundali_reading}</div>
       </div>
-
-      <!-- ログイン・端末連携カード -->
-      <div id="auth-box" class="card-box">
-        <div class="card-title">🔑 マイページへログイン・端末連携</div>
-        
-        <!-- Google 公式認証ボタン領域 -->
-        <div class="google-btn-container">
-          <div id="g_id_onload"
-               data-client_id="789459066589-2tla7ubk127eic0g5aekql75ohdejnto.apps.googleusercontent.com"
-               data-callback="handleCredentialResponse"
-               data-auto_prompt="false">
-          </div>
-          <div class="g_id_signin"
-               data-type="standard"
-               data-size="large"
-               data-theme="outline"
-               data-text="sign_in_with"
-               data-shape="rectangular"
-               data-logo_alignment="left"
-               data-width="320">
-          </div>
-        </div>
-
-        <div class="auth-divider">─ またはメールアドレスで認証 ─</div>
-
-        <div id="step-email" class="login-form-group">
-          <input type="email" id="login-email" placeholder="メールアドレスを入力" required>
-          <button id="btn-send-code" class="btn-action">コード送信</button>
-        </div>
-
-        <div id="step-code" class="login-form-group" style="display:none; margin-top:10px;">
-          <input type="text" id="login-code" placeholder="6桁の認証コードを入力" maxlength="6">
-          <button id="btn-verify-code" class="btn-action" style="background:#2C5282;">認証する</button>
-        </div>
-      </div>
-
-      <!-- 本日の月星座運勢 -->
+    `;
+  }
+  if (pr.detailed_horoscope) {
+    detailHtml += `
       <div class="card-box">
-        <div class="card-title">🌟 本日の月星座運勢</div>
-        <p id="today-transit-text" style="font-size:0.88rem; color:#4a3e36; min-height: 48px;">
-          本日の星回りデータを読み込んでいます...
-        </p>
+        <div class="card-title">📅 本日の日次＆週次詳細運勢レポート</div>
+        <div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">\${pr.detailed_horoscope}</div>
       </div>
-
-      <!-- プレミアム鑑定カルテ -->
-      <h2 style="font-size:1.15rem; color:var(--color-gold-dark); text-align:left; margin-bottom:12px;">📜 プレミアム鑑定カルテ</h2>
-      
-      <div id="premium-gatekeeper" class="locked-wrapper">
-        <div id="premium-content-area">
-          
-          <div class="card-box blur-content">
-            <div class="card-title">マハー・ダシャー周期の解読</div>
-            <p id="dasha-period-title" style="font-weight:600; font-size:0.9rem; color:#3A2E2B; margin-bottom:6px;">現在の周期：取得中...</p>
-            <p id="dasha-description" style="font-size:0.88rem; color:#4a3e36;">データ読み込み中...</p>
-          </div>
-
-          <div class="card-box blur-content" style="margin-bottom:0;">
-            <div class="card-title">🪐 全天体（9天体）配置表</div>
-            <div style="overflow-x: auto;">
-              <table class="planet-table">
-                <thead>
-                  <tr>
-                    <th>天体</th>
-                    <th>サイン（星座）</th>
-                    <th>ハウス</th>
-                    <th>一言解説</th>
-                  </tr>
-                </thead>
-                <tbody id="planet-table-body">
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- ロックオーバーレイ -->
-        <div id="lock-overlay" class="lock-overlay">
-          <div style="font-size:1.8rem; margin-bottom:6px;">🔒</div>
-          <div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:8px;">有料会員限定コンテンツ</div>
-          <p style="font-size:0.82rem; color:#5A4E48; margin-bottom:15px;">全天体配置・ダシャー周期の解読にはプラン登録が必要です。</p>
-          <button id="btn-upgrade-tally" class="btn-upgrade">有料プランに登録する</button>
-        </div>
+    `;
+  }
+  if (pr.lifetime_dasha) {
+    detailHtml += `
+      <div class="card-box">
+        <div class="card-title">📜 108区分生涯カルテ＆支配星詳細解読</div>
+        <div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">\${pr.lifetime_dasha}</div>
       </div>
+    `;
+  }
+  detailContainer.innerHTML = detailHtml;
+}
 
-    </div>
-  </section>
+} catch (err) {
+console.error('Fetch Error:', err);
+document.getElementById('today-transit-text').textContent = '⚠️ データの取得に失敗しました。通信環境をご確認のうえ、再読み込みをお試しください。';
+}
+}
 
-  <footer class="site-footer">
-    <div class="footer-links"><a href="./legal.html">特定商取引法に基づく表記・利用規約・プライバシーポリシー</a></div>
-    <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
-  </footer>
+function unlockPaidContent() {
+document.getElementById('user-status-badge').textContent = 'プレミアム会員';
+document.getElementById('user-status-badge').className = 'user-badge paid';
+document.getElementById('lock-overlay').style.display = 'none';
+document.querySelectorAll('.blur-content').forEach(el => el.classList.remove('blur-content'));
+}
 
-  <script>
-    const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/huqp37moaxv9y3zerpag7wdn3r1evm4p';
-    const TALLY_FORM_ID = 'jaXr71';
-
-    // Google Identity Services JWT デコード関数
-    function parseJwt(token) {
-      try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        return JSON.parse(jsonPayload);
-      } catch (e) {
-        return null;
-      }
-    }
-
-    // Google Sign-In 成功時の自動コールバック
-    function handleCredentialResponse(response) {
-      const responsePayload = parseJwt(response.credential);
-      if (responsePayload && responsePayload.email) {
-        completeLogin(responsePayload.email);
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const savedEmail = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
-      
-      if (savedEmail) {
-        setLoggedInState(savedEmail);
-        fetchUserDataAndRender(savedEmail);
-      } else {
-        setLoggedOutState();
-      }
-
-      // Tally 決済モーダル呼び出し
-      document.getElementById('btn-upgrade-tally').addEventListener('click', () => {
-        const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
-        if (typeof Tally !== 'undefined') {
-          Tally.openPopup(TALLY_FORM_ID, { layout: 'modal', width: 600, hiddenFields: { email: email } });
-        } else {
-          window.open(`https://tally.so/r/${TALLY_FORM_ID}?email=${encodeURIComponent(email)}`, '_blank');
-        }
-      });
-
-      // メール認証コード送信処理
-      document.getElementById('btn-send-code').addEventListener('click', async () => {
-        const emailInput = document.getElementById('login-email');
-        const email = emailInput.value.trim();
-        const btnSend = document.getElementById('btn-send-code');
-
-        if (!email || !email.includes('@')) {
-          alert('有効なメールアドレスを入力してください。');
-          return;
-        }
-
-        btnSend.disabled = true;
-        btnSend.textContent = '送信中...';
-
-        try {
-          const res = await fetch(MAKE_WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'send_code', email: email })
-          });
-
-          if (res.ok) {
-            alert('認証コードを送信しました。届いた6桁の数字を入力してください。');
-            document.getElementById('step-code').style.display = 'flex';
-          } else {
-            throw new Error('API Error');
-          }
-        } catch(e) {
-          alert('送信に失敗しました。通信状況をご確認の上、再度お試しください。');
-        } finally {
-          btnSend.disabled = false;
-          btnSend.textContent = 'コード送信';
-        }
-      });
-
-      // 認証コード検証処理
-      document.getElementById('btn-verify-code').addEventListener('click', async () => {
-        const email = document.getElementById('login-email').value.trim();
-        const codeInput = document.getElementById('login-code');
-        const code = codeInput.value.trim();
-        const btnVerify = document.getElementById('btn-verify-code');
-
-        if (!code || code.length !== 6) {
-          alert('6桁の認証コードを正確に入力してください。');
-          return;
-        }
-
-        btnVerify.disabled = true;
-        btnVerify.textContent = '検証中...';
-
-        try {
-          const res = await fetch(MAKE_WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'verify_code', email: email, code: code })
-          });
-
-          if (res.ok) {
-            completeLogin(email);
-          } else {
-            alert('認証コードが正しくないか、有効期限が切れています。');
-          }
-        } catch(e) {
-          alert('検証に失敗しました。通信状況をご確認の上、再度お試しください。');
-        } finally {
-          btnVerify.disabled = false;
-          btnVerify.textContent = '認証する';
-        }
-      });
-    });
-
-    function completeLogin(email) {
-      localStorage.setItem('lj_user_email', email);
-      setLoggedInState(email);
-      fetchUserDataAndRender(email);
-    }
-
-    function setLoggedInState(email) {
-      document.getElementById('user-display-email').textContent = email;
-      document.getElementById('btn-logout').style.display = 'inline';
-      document.getElementById('auth-box').style.display = 'none';
-    }
-
-    function setLoggedOutState() {
-      document.getElementById('user-display-email').textContent = '未ログイン（ゲスト）';
-      document.getElementById('btn-logout').style.display = 'none';
-      document.getElementById('auth-box').style.display = 'block';
-      document.getElementById('today-transit-text').textContent = 'ログインすると、あなたの出生データに基づいた本日の運勢が表示されます。';
-    }
-
-    function logout() {
-      localStorage.removeItem('lj_user_email');
-      localStorage.removeItem('email');
-      setLoggedOutState();
-    }
-
-    function getJstIsoString() {
-      const now = new Date();
-      const jstOffset = 9 * 60;
-      const localTime = now.getTime();
-      const localOffset = now.getTimezoneOffset() * 60000;
-      const utc = localTime + localOffset;
-      const jstTime = new Date(utc + (jstOffset * 60000));
-
-      const YYYY = jstTime.getFullYear();
-      const MM = String(jstTime.getMonth() + 1).padStart(2, '0');
-      const DD = String(jstTime.getDate()).padStart(2, '0');
-      const hh = String(jstTime.getHours()).padStart(2, '0');
-      const mm = String(jstTime.getMinutes()).padStart(2, '0');
-      const ss = String(jstTime.getSeconds()).padStart(2, '0');
-
-      return `${YYYY}-${MM}-${DD}T${hh}:${mm}:${ss}+09:00`;
-    }
-
-    async function fetchUserDataAndRender(email) {
-      let userAddress = localStorage.getItem('city') || 
-                        localStorage.getItem('lj_user_city') || 
-                        localStorage.getItem('lj_city') ||
-                        localStorage.getItem('address') ||
-                        localStorage.getItem('user_city') || '東京都';
-
-      const userDob = localStorage.getItem('dob') || localStorage.getItem('lj_dob') || '1970-01-01';
-      const userTob = localStorage.getItem('tob') || localStorage.getItem('lj_tob') || '12:00';
-      const currentJstISO = getJstIsoString();
-
-      try {
-        const response = await fetch(MAKE_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            action: 'fetch_profile',
-            email: email,
-            address: userAddress, 
-            city: userAddress,
-            dob: userDob,
-            tob: userTob,
-            datetime: currentJstISO,
-            language: 'ja'
-          })
-        });
-
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        
-        const responseText = await response.text();
-        let data = {};
-        
-        try {
-          data = JSON.parse(responseText);
-        } catch (pErr) {
-          data = { fortune: responseText };
-        }
-
-        if (data.status === 'paid') {
-          unlockPaidContent();
-        }
-
-        const fortuneContent = data.fortune || data.dailyMessage || data.text || data.message || data.response || data.result;
-
-        if (fortuneContent && typeof fortuneContent === 'string' && fortuneContent.trim() !== '') {
-          document.getElementById('today-transit-text').textContent = fortuneContent;
-        } else if (data.moonSign) {
-          document.getElementById('today-transit-text').textContent = `本日の月星座：${data.moonSign}`;
-        }
-
-        if (data.dashaTitle) {
-          document.getElementById('dasha-period-title').textContent = data.dashaTitle;
-        }
-        if (data.dashaDesc) {
-          document.getElementById('dasha-description').textContent = data.dashaDesc;
-        }
-
-        if (data.planets && Array.isArray(data.planets)) {
-          renderPlanetTable(data.planets);
-        }
-
-      } catch (err) {
-        console.error('Fetch Error:', err);
-        document.getElementById('today-transit-text').textContent = '⚠️ データの取得に失敗しました。通信環境をご確認のうえ、再読み込みをお試しください。';
-      }
-    }
-
-    function unlockPaidContent() {
-      document.getElementById('user-status-badge').textContent = 'プレミアム会員';
-      document.getElementById('user-status-badge').className = 'user-badge paid';
-      document.getElementById('lock-overlay').style.display = 'none';
-      document.querySelectorAll('.blur-content').forEach(el => el.classList.remove('blur-content'));
-    }
-
-    function renderPlanetTable(planets) {
-      const tbody = document.getElementById('planet-table-body');
-      tbody.innerHTML = '';
-      planets.forEach(p => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td class="planet-name">${p.name || '-'}</td>
-          <td>${p.sign || '-'}</td>
-          <td>第${p.house || '-'}ハウス</td>
-          <td>${p.comment || p.nakshatra || '-'}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-  </script>
+function renderPlanetTable(planets) {
+const tbody = document.getElementById('planet-table-body');
+tbody.innerHTML = '';
+planets.forEach(p => {
+const tr = document.createElement('tr');
+tr.innerHTML = `
+<td class="planet-name">${p.name || '-'}</td>
+<td>${p.sign || '-'}</td>
+<td>第${p.house || '-'}ハウス</td>
+<td>${p.comment || p.nakshatra || '-'}</td>
+`;
+tbody.appendChild(tr);
+});
+}
+</script>
 </body>
 </html>
