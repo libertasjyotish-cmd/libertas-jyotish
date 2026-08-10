@@ -256,6 +256,31 @@ data-width="320">
 </div>
 </div>
 
+<!-- 出生データ登録カード（初回ログイン時・データ欠落時の自律復元用） -->
+<div id="birth-setup-box" class="card-box" style="display: none;">
+<div class="card-title">📅 出生データの登録</div>
+<p style="font-size: 0.82rem; color: #5A4E48; margin-bottom: 15px; line-height: 1.6; text-align: left;">
+  このデバイスでの最初のログイン、または出生データが登録されていません。<br>
+  正確な星回り情報と本日の運勢を表示するため、あなたの出生データを入力してください。<br>
+  ※一度設定すると、次回からは自動的にログインして表示されます。
+</p>
+<form id="form-birth-setup">
+  <div style="margin-bottom: 12px; text-align: left;">
+    <label style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px;">生年月日</label>
+    <input type="date" id="setup-dob" required style="width: 100%; padding: 11px 14px; background-color: rgba(255, 252, 245, 0.85); border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px; font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none;">
+  </div>
+  <div style="margin-bottom: 12px; text-align: left;">
+    <label style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px;">出生時間 <span style="font-weight: normal; font-size: 0.72rem; color: #7a6a58; margin-left: 4px;">（不明な場合は空欄でOK：12:00補填）</span></label>
+    <input type="time" id="setup-tob" style="width: 100%; padding: 11px 14px; background-color: rgba(255, 252, 245, 0.85); border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px; font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none;">
+  </div>
+  <div style="margin-bottom: 18px; text-align: left;">
+    <label style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px;">出生地（都道府県・市区町村）</label>
+    <input type="text" id="setup-city" placeholder="例：東京都千代田区" required style="width: 100%; padding: 11px 14px; background-color: rgba(255, 252, 245, 0.85); border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px; font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none;">
+  </div>
+  <button type="submit" class="btn-action" style="width: 100%; padding: 13px; font-size: 0.95rem; font-weight: 600; text-align: center; border-radius: 8px; background: var(--color-gold-dark); color: #FFFDF9; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">データを登録して占う</button>
+</form>
+</div>
+
 <!-- 本日の月星座運勢 -->
 <div class="card-box">
 <div class="card-title">🌟 本日の月星座運勢</div>
@@ -315,7 +340,7 @@ data-width="320">
 
 <script>
 // ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
-const LJ_APP_VERSION = 'v6';
+const LJ_APP_VERSION = 'v7';
 const currentVersion = localStorage.getItem('lj_app_version');
 if (currentVersion !== LJ_APP_VERSION) {
   const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
@@ -393,25 +418,97 @@ document.addEventListener('DOMContentLoaded', () => {
   if (savedEmail) {
     setLoggedInState(savedEmail);
     
-    // ★【UX最適化】Webhook通信中（呼びっぱなしの間）も、キャッシュがあれば前回診断結果を先行して超速表示！
-    if (cachedUser && cachedUser.lastResult) {
-      console.log("Cached diagnostic data restored immediately.");
-      renderUserData(cachedUser.lastResult);
-    } else {
-      // sessionStorageなど別の一時キャッシュからもフォールバック復元
-      const savedResult = sessionStorage.getItem('lj_diagnosis_result');
-      if (savedResult) {
-        try {
-          renderUserData(JSON.parse(savedResult));
-        } catch(e) {}
+    // ★出生データ（生年月日・出生地）がLocalStorageに実在するか厳密に死活チェック
+    let hasBirthData = false;
+    let localDob = '';
+    let localCity = '';
+    
+    if (cachedUser) {
+      if (cachedUser.dob && cachedUser.city && cachedUser.dob !== '1970-01-01' && cachedUser.city !== '東京都') {
+        hasBirthData = true;
+        localDob = cachedUser.dob;
+        localCity = cachedUser.city;
       }
     }
     
-    // バックグラウンドで最新の本日の星回り情報を非同期でフェッチして更新
-    fetchUserDataAndRender(savedEmail);
+    if (!hasBirthData) {
+      localDob = localStorage.getItem('dob') || localStorage.getItem('lj_dob') || '';
+      localCity = localStorage.getItem('city') || localStorage.getItem('lj_user_city') || localStorage.getItem('lj_city') || localStorage.getItem('address') || localStorage.getItem('user_city') || '';
+      
+      if (localDob === '1970-01-01') localDob = '';
+      if (localCity === '東京都') localCity = '';
+      
+      if (localDob && localCity) {
+        hasBirthData = true;
+      }
+    }
+    
+    if (hasBirthData) {
+      // 出生データが揃っている場合は通常の先行表示＆バックグラウンド更新を実行
+      document.getElementById('birth-setup-box').style.display = 'none';
+      
+      if (cachedUser && cachedUser.lastResult) {
+        console.log("Cached diagnostic data restored immediately.");
+        renderUserData(cachedUser.lastResult);
+      } else {
+        const savedResult = sessionStorage.getItem('lj_diagnosis_result');
+        if (savedResult) {
+          try {
+            renderUserData(JSON.parse(savedResult));
+          } catch(e) {}
+        }
+      }
+      fetchUserDataAndRender(savedEmail);
+    } else {
+      // 出生データがない場合（新規ログイン、他デバイスからの引き継ぎ直後）は
+      // 勝手に1970年のダミー計算をMakeへ送らず、美しくデザインされた入力フォームを提示
+      showBirthSetupUI();
+    }
   } else {
     setLoggedOutState();
   }
+
+  // 出生データ手動登録フォームのサブミット制御
+  document.getElementById('form-birth-setup').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const dob = document.getElementById('setup-dob').value;
+    const tob = document.getElementById('setup-tob').value || '12:00'; // 不明時の12:00補填のみ許可
+    const city = document.getElementById('setup-city').value.trim();
+    
+    if (!dob || !city) {
+      alert('生年月日と出生地は必須項目です。');
+      return;
+    }
+    
+    // ローカルキャッシュの再構築
+    const savedUserStr = localStorage.getItem('jyotish_user');
+    let savedUser = {};
+    if (savedUserStr) {
+      try { savedUser = JSON.parse(savedUserStr); } catch(err) {}
+    }
+    savedUser.email = savedEmail;
+    savedUser.dob = dob;
+    savedUser.tob = tob;
+    savedUser.city = city;
+    savedUser.status = savedUser.status || 'free';
+    
+    localStorage.setItem('jyotish_user', JSON.stringify(savedUser));
+    localStorage.setItem('lj_user_email', savedEmail);
+    localStorage.setItem('dob', dob);
+    localStorage.setItem('tob', tob);
+    localStorage.setItem('city', city);
+    
+    // UIを通常描画モードに切り替え
+    document.getElementById('birth-setup-box').style.display = 'none';
+    document.getElementById('today-transit-text').parentNode.style.display = 'block';
+    const premiumGate = document.getElementById('premium-gatekeeper');
+    if (premiumGate) premiumGate.style.display = 'block';
+    const premiumTitle = document.querySelector('section.main-section h2');
+    if (premiumTitle) premiumTitle.style.display = 'block';
+    
+    // 最新情報を取得してマイページを描画
+    fetchUserDataAndRender(savedEmail);
+  });
 
   // Tally 決済モーダル呼び出し
   document.getElementById('btn-upgrade-tally').addEventListener('click', () => {
@@ -544,35 +641,63 @@ function getJstIsoString() {
   return `${YYYY}-${MM}-${DD}T${hh}:${mm}:${ss}+09:00`;
 }
 
+function showBirthSetupUI() {
+  document.getElementById('birth-setup-box').style.display = 'block';
+  document.getElementById('auth-box').style.display = 'none';
+  
+  // 読み込み中カードおよびプレミアム枠を隠す
+  const horoCard = document.getElementById('today-transit-text').parentNode;
+  if (horoCard) horoCard.style.display = 'none';
+  
+  const premiumGate = document.getElementById('premium-gatekeeper');
+  if (premiumGate) premiumGate.style.display = 'none';
+  
+  const premiumTitle = document.querySelector('section.main-section h2');
+  if (premiumTitle) premiumTitle.style.display = 'none';
+}
+
 async function fetchUserDataAndRender(email) {
   // ★ハイブリッド・ローカルストレージパース
   const savedUserStr = localStorage.getItem('jyotish_user');
-  let userAddress = '東京都';
-  let userDob = '1970-01-01';
-  let userTob = '12:00';
+  let userAddress = '';
+  let userDob = '';
+  let userTob = '12:00'; // デフォルトは正午補正のみ
 
   if (savedUserStr) {
     try {
       const user = JSON.parse(savedUserStr);
       if (user.city) userAddress = user.city;
       if (user.dob) userDob = user.dob;
-      if (user.tob) userTob = user.tob;
+      if (user.tob) userTob = user.tob || '12:00';
     } catch(e) {}
   }
 
   // 古い個別キーからのフォールバック
-  if (userAddress === '東京都') {
+  if (!userAddress) {
     userAddress = localStorage.getItem('city') ||
-    localStorage.getItem('lj_user_city') ||
-    localStorage.getItem('lj_city') ||
-    localStorage.getItem('address') ||
-    localStorage.getItem('user_city') || '東京都';
+                  localStorage.getItem('lj_user_city') ||
+                  localStorage.getItem('lj_city') ||
+                  localStorage.getItem('address') ||
+                  localStorage.getItem('user_city') || '';
   }
-  if (userDob === '1970-01-01') {
-    userDob = localStorage.getItem('dob') || localStorage.getItem('lj_dob') || '1970-01-01';
+  if (!userDob) {
+    userDob = localStorage.getItem('dob') ||
+              localStorage.getItem('lj_dob') || '';
   }
-  if (userTob === '12:00') {
-    userTob = localStorage.getItem('tob') || localStorage.getItem('lj_tob') || '12:00';
+  if (!userTob) {
+    userTob = localStorage.getItem('tob') ||
+              localStorage.getItem('lj_tob') || '12:00';
+  }
+
+  // 1970-01-01 や 東京都 といったダミーの先祖返りキーを完全排除
+  if (userAddress === '東京都') userAddress = '';
+  if (userDob === '1970-01-01') userDob = '';
+
+  // 万が一データが揃っていない場合は、送信せずに登録画面を出す
+  if (!userDob || !userAddress) {
+    console.warn("Required birth data missing in fetchUserDataAndRender. Showing setup form.");
+    showBirthSetupUI();
+    return;
   }
 
   const currentJstISO = getJstIsoString();
@@ -601,7 +726,13 @@ async function fetchUserDataAndRender(email) {
     try {
       data = JSON.parse(responseText);
     } catch (pErr) {
-      data = { fortune: responseText };
+      if (responseText.trim() === "Accepted") {
+        console.warn("Make returned 'Accepted' plain text response. This means the Webhook router did not find the database record yet.");
+        // 静的な仮置きエラーにせず、キャッシュがあればそのまま生かし、なければ親切なローディングメッセージに留める
+        data = { status: "free", fortune: "宇宙の星々の配置をデータベース（会員DB）と照合・同期しています。約10秒ほどで自動更新されますので、このまましばらくお待ちください..." };
+      } else {
+        data = { fortune: responseText };
+      }
     }
 
     // 描画ヘルパーを呼び出して最新データを画面に完全反映！
@@ -615,9 +746,9 @@ async function fetchUserDataAndRender(email) {
     savedUser.email = email;
     savedUser.status = data.status || "free";
     savedUser.lastResult = data;
-    if (!savedUser.dob || savedUser.dob === '1970-01-01') savedUser.dob = userDob;
-    if (!savedUser.tob || savedUser.tob === '12:00') savedUser.tob = userTob;
-    if (!savedUser.city || savedUser.city === '東京都') savedUser.city = userAddress;
+    if (userDob && userDob !== '1970-01-01') savedUser.dob = userDob;
+    if (userTob) savedUser.tob = userTob;
+    if (userAddress && userAddress !== '東京都') savedUser.city = userAddress;
 
     localStorage.setItem('jyotish_user', JSON.stringify(savedUser));
     localStorage.setItem('lj_user_email', email);
