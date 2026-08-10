@@ -1,4 +1,4 @@
-const CACHE_NAME = 'libertas-jyotish-v8'; // バージョンをv6に上げて古いキャッシュを強制削除
+const CACHE_NAME = 'libertas-jyotish-v9'; // バージョンをv6に上げて古いキャッシュを強制削除
 const ASSETS_TO_CACHE = [
 './',
 './index.html',
@@ -15,7 +15,7 @@ self.addEventListener('install', (e) => {
 self.skipWaiting();
 e.waitUntil(
 caches.open(CACHE_NAME).then((cache) => {
-console.log('[Service Worker] Caching all assets (v8)');
+console.log('[Service Worker] Caching all assets (v9)');
 return cache.addAll(ASSETS_TO_CACHE);
 })
 );
