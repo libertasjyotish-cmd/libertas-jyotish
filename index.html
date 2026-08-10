@@ -356,13 +356,28 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 
 <script>
     // ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
-    const LJ_APP_VERSION = 'v6';
+    const LJ_APP_VERSION = 'v7';
     const currentVersion = localStorage.getItem('lj_app_version');
     if (currentVersion !== LJ_APP_VERSION) {
       const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
       localStorage.clear();
       sessionStorage.clear();
       if (email) localStorage.setItem('lj_user_email', email);
+localStorage.setItem('city', birthPlace);
+localStorage.setItem('dob', birthDate);
+localStorage.setItem('tob', timeVal);
+
+// jyotish_userキャッシュオブジェクトの事前構築
+const userData = {
+  email: email,
+  dob: birthDate,
+  tob: timeVal,
+  city: birthPlace,
+  language: navigator.language.startsWith('ja') ? 'ja' : 'en',
+  status: 'free',
+  lastResult: null
+};
+localStorage.setItem('jyotish_user', JSON.stringify(userData));
 localStorage.setItem('dob', birthDate);
 localStorage.setItem('tob', timeVal);
 localStorage.setItem('city', birthPlace);
@@ -410,6 +425,21 @@ const birthPlace = document.getElementById('birth-place').value;
 const isoDatetime = `${birthDate}T${timeVal.length ===5 ? timeVal + ':00' : timeVal}+09:00`;
 
 localStorage.setItem('lj_user_email', email);
+localStorage.setItem('city', birthPlace);
+localStorage.setItem('dob', birthDate);
+localStorage.setItem('tob', timeVal);
+
+// jyotish_userキャッシュオブジェクトの事前構築
+const userData = {
+  email: email,
+  dob: birthDate,
+  tob: timeVal,
+  city: birthPlace,
+  language: navigator.language.startsWith('ja') ? 'ja' : 'en',
+  status: 'free',
+  lastResult: null
+};
+localStorage.setItem('jyotish_user', JSON.stringify(userData));
 localStorage.setItem('dob', birthDate);
 localStorage.setItem('tob', timeVal);
 localStorage.setItem('city', birthPlace);
