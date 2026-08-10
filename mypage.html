@@ -314,6 +314,27 @@ data-width="320">
 </footer>
 
 <script>
+// ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
+const LJ_APP_VERSION = 'v5';
+const currentVersion = localStorage.getItem('lj_app_version');
+if (currentVersion !== LJ_APP_VERSION) {
+  const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
+  localStorage.clear();
+  sessionStorage.clear();
+  if (email) localStorage.setItem('lj_user_email', email);
+  localStorage.setItem('lj_app_version', LJ_APP_VERSION);
+  location.reload();
+}
+
+if ('serviceWorker' in navigator) {
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+}
+
 const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/huqp37moaxv9y3zerpag7wdn3r1evm4p';
 const TALLY_FORM_ID = 'jaXr71';
 
@@ -347,6 +368,17 @@ document.addEventListener('DOMContentLoaded', () => {
   if (savedUserStr) {
     try {
       cachedUser = JSON.parse(savedUserStr);
+      
+      // ★自己修復：マイページのキャッシュに未展開のバグ文字列が含まれている場合は自動排除して再取得
+      if (cachedUser && cachedUser.lastResult) {
+        const lastResultStr = JSON.stringify(cachedUser.lastResult);
+        if (lastResultStr.includes('\\${') || lastResultStr.includes('${')) {
+          console.warn("Corrupt cached result detected in MyPage. Self-healing by purging...");
+          cachedUser.lastResult = null;
+          localStorage.setItem('jyotish_user', JSON.stringify(cachedUser));
+        }
+      }
+      
       savedEmail = cachedUser.email || '';
     } catch (e) {
       console.error("jyotish_user parse error:", e);
