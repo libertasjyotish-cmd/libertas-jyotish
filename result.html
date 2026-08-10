@@ -167,6 +167,24 @@ if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
 const data = await response.json();
 sessionStorage.setItem('lj_diagnosis_result', JSON.stringify(data));
+
+// ★マイページでの即時表示・データ引継ぎのために jyotish_user キャッシュを保存
+try {
+  const userData = {
+    email: payload.email,
+    dob: payload.dob,
+    tob: payload.tob,
+    city: payload.city || payload.address,
+    language: payload.language || 'ja',
+    status: data.status || 'free',
+    lastResult: data
+  };
+  localStorage.setItem('jyotish_user', JSON.stringify(userData));
+  localStorage.setItem('lj_user_email', payload.email);
+} catch (e) {
+  console.error("Failed to save jyotish_user:", e);
+}
+
 renderDiagnosis(data, payload);
 } catch (err) {
 console.error("通信エラー:", err);
