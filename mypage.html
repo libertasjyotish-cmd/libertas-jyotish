@@ -339,263 +339,351 @@ completeLogin(responsePayload.email);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-const savedEmail = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
+  // ★ハイブリッド互換：jyotish_user（JSON型）または古い個別キーからログイン状態を復元
+  const savedUserStr = localStorage.getItem('jyotish_user');
+  let savedEmail = '';
+  let cachedUser = null;
 
-if (savedEmail) {
-setLoggedInState(savedEmail);
-fetchUserDataAndRender(savedEmail);
-} else {
-setLoggedOutState();
-}
+  if (savedUserStr) {
+    try {
+      cachedUser = JSON.parse(savedUserStr);
+      savedEmail = cachedUser.email || '';
+    } catch (e) {
+      console.error("jyotish_user parse error:", e);
+    }
+  }
 
-// Tally 決済モーダル呼び出し
-document.getElementById('btn-upgrade-tally').addEventListener('click', () => {
-const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
-if (typeof Tally !== 'undefined') {
-Tally.openPopup(TALLY_FORM_ID, { layout: 'modal', width: 600, hiddenFields: { email: email } });
-} else {
-window.open(`https://tally.so/r/${TALLY_FORM_ID}?email=${encodeURIComponent(email)}`, '_blank');
-}
-});
+  // 古い個別キーへのフォールバック
+  if (!savedEmail) {
+    savedEmail = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
+  }
 
-// メール認証コード送信処理
-document.getElementById('btn-send-code').addEventListener('click', async () => {
-const emailInput = document.getElementById('login-email');
-const email = emailInput.value.trim();
-const btnSend = document.getElementById('btn-send-code');
+  if (savedEmail) {
+    setLoggedInState(savedEmail);
+    
+    // ★【UX最適化】Webhook通信中（呼びっぱなしの間）も、キャッシュがあれば前回診断結果を先行して超速表示！
+    if (cachedUser && cachedUser.lastResult) {
+      console.log("Cached diagnostic data restored immediately.");
+      renderUserData(cachedUser.lastResult);
+    } else {
+      // sessionStorageなど別の一時キャッシュからもフォールバック復元
+      const savedResult = sessionStorage.getItem('lj_diagnosis_result');
+      if (savedResult) {
+        try {
+          renderUserData(JSON.parse(savedResult));
+        } catch(e) {}
+      }
+    }
+    
+    // バックグラウンドで最新の本日の星回り情報を非同期でフェッチして更新
+    fetchUserDataAndRender(savedEmail);
+  } else {
+    setLoggedOutState();
+  }
 
-if (!email || !email.includes('@')) {
-alert('有効なメールアドレスを入力してください。');
-return;
-}
+  // Tally 決済モーダル呼び出し
+  document.getElementById('btn-upgrade-tally').addEventListener('click', () => {
+    const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
+    if (typeof Tally !== 'undefined') {
+      Tally.openPopup(TALLY_FORM_ID, { layout: 'modal', width: 600, hiddenFields: { email: email } });
+    } else {
+      window.open(`https://tally.so/r/${TALLY_FORM_ID}?email=${encodeURIComponent(email)}`, '_blank');
+    }
+  });
 
-btnSend.disabled = true;
-btnSend.textContent = '送信中...';
+  // メール認証コード送信処理
+  document.getElementById('btn-send-code').addEventListener('click', async () => {
+    const emailInput = document.getElementById('login-email');
+    const email = emailInput.value.trim();
+    const btnSend = document.getElementById('btn-send-code');
 
-try {
-const res = await fetch(MAKE_WEBHOOK_URL, {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ action: 'send_code', email: email })
-});
+    if (!email || !email.includes('@')) {
+      alert('有効なメールアドレスを入力してください。');
+      return;
+    }
 
-if (res.ok) {
-alert('認証コードを送信しました。届いた6桁の数字を入力してください。');
-document.getElementById('step-code').style.display = 'flex';
-} else {
-throw new Error('API Error');
-}
-} catch(e) {
-alert('送信に失敗しました。通信状況をご確認の上、再度お試しください。');
-} finally {
-btnSend.disabled = false;
-btnSend.textContent = 'コード送信';
-}
-});
+    btnSend.disabled = true;
+    btnSend.textContent = '送信中...';
 
-// 認証コード検証処理
-document.getElementById('btn-verify-code').addEventListener('click', async () => {
-const email = document.getElementById('login-email').value.trim();
-const codeInput = document.getElementById('login-code');
-const code = codeInput.value.trim();
-const btnVerify = document.getElementById('btn-verify-code');
+    try {
+      const res = await fetch(MAKE_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'send_code', email: email })
+      });
 
-if (!code || code.length !== 6) {
-alert('6桁 of 認証コードを正確に入力してください。');
-return;
-}
+      if (res.ok) {
+        alert('認証コードを送信しました。届いた6桁の数字を入力してください。');
+        document.getElementById('step-code').style.display = 'flex';
+      } else {
+        throw new Error('API Error');
+      }
+    } catch(e) {
+      alert('送信に失敗しました。通信状況をご確認の上、再度お試しください。');
+    } finally {
+      btnSend.disabled = false;
+      btnSend.textContent = 'コード送信';
+    }
+  });
 
-btnVerify.disabled = true;
-btnVerify.textContent = '検証中...';
+  // 認証コード検証処理
+  document.getElementById('btn-verify-code').addEventListener('click', async () => {
+    const email = document.getElementById('login-email').value.trim();
+    const codeInput = document.getElementById('login-code');
+    const code = codeInput.value.trim();
+    const btnVerify = document.getElementById('btn-verify-code');
 
-try {const res = await fetch(MAKE_WEBHOOK_URL, {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ action: 'verify_code', email: email, code: code })
-});
+    if (!code || code.length !== 6) {
+      alert('6桁の認証コードを正確に入力してください。');
+      return;
+    }
 
-if (res.ok) {
-completeLogin(email);
-} else {
-alert('認証コードが正しくないか、有効期限が切れています。');
-}
-} catch(e) {
-alert('検証に失敗しました。通信状況をご確認の上、再度お試しください。');
-} finally {
-btnVerify.disabled = false;
-btnVerify.textContent = '認証する';
-}
-});
+    btnVerify.disabled = true;
+    btnVerify.textContent = '検証中...';
+
+    try {
+      const res = await fetch(MAKE_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'verify_code', email: email, code: code })
+      });
+
+      if (res.ok) {
+        completeLogin(email);
+      } else {
+        alert('認証コードが正しくないか、有効期限が切れています。');
+      }
+    } catch(e) {
+      alert('検証に失敗しました。通信状況をご確認の上、再度お試しください。');
+    } finally {
+      btnVerify.disabled = false;
+      btnVerify.textContent = '認証する';
+    }
+  });
 });
 
 function completeLogin(email) {
-localStorage.setItem('lj_user_email', email);
-setLoggedInState(email);
-fetchUserDataAndRender(email);
+  // jyotish_userキーの初期化
+  const savedUserStr = localStorage.getItem('jyotish_user');
+  let savedUser = savedUserStr ? JSON.parse(savedUserStr) : {};
+  savedUser.email = email;
+  localStorage.setItem('jyotish_user', JSON.stringify(savedUser));
+  
+  localStorage.setItem('lj_user_email', email);
+  setLoggedInState(email);
+  fetchUserDataAndRender(email);
 }
 
 function setLoggedInState(email) {
-document.getElementById('user-display-email').textContent = email;
-document.getElementById('btn-logout').style.display = 'inline';
-document.getElementById('auth-box').style.display = 'none';
+  document.getElementById('user-display-email').textContent = email;
+  document.getElementById('btn-logout').style.display = 'inline';
+  document.getElementById('auth-box').style.display = 'none';
 }
 
 function setLoggedOutState() {
-document.getElementById('user-display-email').textContent = '未ログイン（ゲスト）';
-document.getElementById('btn-logout').style.display = 'none';
-document.getElementById('auth-box').style.display = 'block';
-document.getElementById('today-transit-text').textContent = 'ログインすると、あなたの出生データに基づいた本日の運勢が表示されます。';
+  document.getElementById('user-display-email').textContent = '未ログイン（ゲスト）';
+  document.getElementById('btn-logout').style.display = 'none';
+  document.getElementById('auth-box').style.display = 'block';
+  document.getElementById('today-transit-text').textContent = 'ログインすると、あなたの出生データに基づいた本日の運勢が表示されます。';
 }
 
 function logout() {
-localStorage.removeItem('lj_user_email');
-localStorage.removeItem('email');
-setLoggedOutState();
+  localStorage.removeItem('jyotish_user');
+  localStorage.removeItem('lj_user_email');
+  localStorage.removeItem('email');
+  setLoggedOutState();
 }
 
 function getJstIsoString() {
-const now = new Date();
-const jstOffset = 9 * 60;
-const localTime = now.getTime();
-const localOffset = now.getTimezoneOffset() * 60000;
-const utc = localTime + localOffset;
-const jstTime = new Date(utc + (jstOffset * 60000));
+  const now = new Date();
+  const jstOffset = 9 * 60;
+  const localTime = now.getTime();
+  const localOffset = now.getTimezoneOffset() * 60000;
+  const utc = localTime + localOffset;
+  const jstTime = new Date(utc + (jstOffset * 60000));
 
-const YYYY = jstTime.getFullYear();
-const MM = String(jstTime.getMonth() + 1).padStart(2, '0');
-const DD = String(jstTime.getDate()).padStart(2, '0');
-const hh = String(jstTime.getHours()).padStart(2, '0');
-const mm = String(jstTime.getMinutes()).padStart(2, '0');
-const ss = String(jstTime.getSeconds()).padStart(2, '0');
+  const YYYY = jstTime.getFullYear();
+  const MM = String(jstTime.getMonth() + 1).padStart(2, '0');
+  const DD = String(jstTime.getDate()).padStart(2, '0');
+  const hh = String(jstTime.getHours()).padStart(2, '0');
+  const mm = String(jstTime.getMinutes()).padStart(2, '0');
+  const ss = String(jstTime.getSeconds()).padStart(2, '0');
 
-return `${YYYY}-${MM}-${DD}T${hh}:${mm}:${ss}+09:00`;
+  return `${YYYY}-${MM}-${DD}T${hh}:${mm}:${ss}+09:00`;
 }
 
 async function fetchUserDataAndRender(email) {
-let userAddress = localStorage.getItem('city') ||
-localStorage.getItem('lj_user_city') ||
-localStorage.getItem('lj_city') ||
-localStorage.getItem('address') ||
-localStorage.getItem('user_city') || '東京都';
+  // ★ハイブリッド・ローカルストレージパース
+  const savedUserStr = localStorage.getItem('jyotish_user');
+  let userAddress = '東京都';
+  let userDob = '1970-01-01';
+  let userTob = '12:00';
 
-const userDob = localStorage.getItem('dob') || localStorage.getItem('lj_dob') || '1970-01-01';
-const userTob = localStorage.getItem('tob') || localStorage.getItem('lj_tob') || '12:00';
-const currentJstISO = getJstIsoString();
+  if (savedUserStr) {
+    try {
+      const user = JSON.parse(savedUserStr);
+      if (user.city) userAddress = user.city;
+      if (user.dob) userDob = user.dob;
+      if (user.tob) userTob = user.tob;
+    } catch(e) {}
+  }
 
-try {
-const response = await fetch(MAKE_WEBHOOK_URL, {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({
-action: 'fetch_profile',
-email: email,
-address: userAddress,
-city: userAddress,
-dob: userDob,
-tob: userTob,
-datetime: currentJstISO,
-language: 'ja'
-})
-});
+  // 古い個別キーからのフォールバック
+  if (userAddress === '東京都') {
+    userAddress = localStorage.getItem('city') ||
+    localStorage.getItem('lj_user_city') ||
+    localStorage.getItem('lj_city') ||
+    localStorage.getItem('address') ||
+    localStorage.getItem('user_city') || '東京都';
+  }
+  if (userDob === '1970-01-01') {
+    userDob = localStorage.getItem('dob') || localStorage.getItem('lj_dob') || '1970-01-01';
+  }
+  if (userTob === '12:00') {
+    userTob = localStorage.getItem('tob') || localStorage.getItem('lj_tob') || '12:00';
+  }
 
-if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+  const currentJstISO = getJstIsoString();
 
-const responseText = await response.text();
-let data = {};
+  try {
+    const response = await fetch(MAKE_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'fetch_profile',
+        email: email,
+        address: userAddress,
+        city: userAddress,
+        dob: userDob,
+        tob: userTob,
+        datetime: currentJstISO,
+        language: 'ja'
+      })
+    });
 
-try {
-data = JSON.parse(responseText);
-} catch (pErr) {
-data = { fortune: responseText };
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+    const responseText = await response.text();
+    let data = {};
+
+    try {
+      data = JSON.parse(responseText);
+    } catch (pErr) {
+      data = { fortune: responseText };
+    }
+
+    // 描画ヘルパーを呼び出して最新データを画面に完全反映！
+    renderUserData(data);
+
+    // ★最新の鑑定データとステータスを `jyotish_user` キャッシュに安全にマージ保存（UX超高速化・呼びっぱなし防止）
+    let savedUser = {};
+    if (savedUserStr) {
+      try { savedUser = JSON.parse(savedUserStr); } catch(e) {}
+    }
+    savedUser.email = email;
+    savedUser.status = data.status || "free";
+    savedUser.lastResult = data;
+    if (!savedUser.dob || savedUser.dob === '1970-01-01') savedUser.dob = userDob;
+    if (!savedUser.tob || savedUser.tob === '12:00') savedUser.tob = userTob;
+    if (!savedUser.city || savedUser.city === '東京都') savedUser.city = userAddress;
+
+    localStorage.setItem('jyotish_user', JSON.stringify(savedUser));
+    localStorage.setItem('lj_user_email', email);
+    if (data.status === 'paid') {
+      localStorage.setItem('lj_status', 'paid');
+    }
+
+  } catch (err) {
+    console.error('Fetch Error:', err);
+    // もしキャッシュ表示がすでに成功している（＝呼びっぱなしではない）ならエラー文を上書きしない
+    const textElem = document.getElementById('today-transit-text');
+    if (textElem && (textElem.textContent.includes('読み込んでいます') || !textElem.innerHTML.trim())) {
+      textElem.textContent = '⚠️ データの取得に失敗しました。通信環境をご確認のうえ、再読み込みをお試しください。';
+    }
+  }
 }
 
-if (data.status === 'paid') {
-unlockPaidContent();
-}
 
-const fortuneContent = data.fortune || data.dailyMessage || data.text || data.message || data.response || data.result;
+function renderUserData(data) {
+  if (data.status === 'paid') {
+    unlockPaidContent();
+  } else {
+    // ステータスを無料会員に戻す（もしダウングレードや未決済の場合）
+    document.getElementById('user-status-badge').textContent = '無料プラン';
+    document.getElementById('user-status-badge').className = 'user-badge free';
+    document.getElementById('lock-overlay').style.display = 'flex';
+    document.getElementById('premium-content-area').classList.add('blur-content');
+  }
 
-if (data.free_reading) {
+  const fortuneContent = data.fortune || data.dailyMessage || data.text || data.message || data.response || data.result;
+
+  // 新旧両形式に対応したハイブリッド・フォールバック描画
+  if (data.free_reading) {
     const fr = data.free_reading;
     let html = '';
-    if (fr.horoscope) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>① 本日の運勢 (Today's Horoscope):</strong><br>\${fr.horoscope}</div>`;
-    if (fr.influence) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>② 本日受ける星の影響 (Astro Influence):</strong><br>\${fr.influence}</div>`;
-    if (fr.dasha_summary) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>③ 支配星周期の過ごし方 (Current Mahadasha Guidance):</strong><br>\${fr.dasha_summary}</div>`;
-    if (fr.lucky_element) html += `<div style="margin-top:15px; padding:10px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:6px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">④ \${fr.lucky_element}</div>`;
+    if (fr.horoscope) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>① 本日の運勢 (Today's Horoscope):</strong><br>${fr.horoscope}</div>`;
+    if (fr.influence) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>② 本日受ける星の影響 (Astro Influence):</strong><br>${fr.influence}</div>`;
+    if (fr.dasha_summary) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>③ 支配星周期の過ごし方 (Current Mahadasha Guidance):</strong><br>${fr.dasha_summary}</div>`;
+    if (fr.lucky_element) html += `<div style="margin-top:15px; padding:10px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:6px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">④ ${fr.lucky_element}</div>`;
     document.getElementById('today-transit-text').innerHTML = html;
   } else {
-    // 【完全維持】既存の平文フォールバック
     if (fortuneContent && typeof fortuneContent === 'string' && fortuneContent.trim() !== '') {
       document.getElementById('today-transit-text').innerHTML = fortuneContent.replace(/\n/g, '<br>');
     } else if (data.moonSign) {
-      document.getElementById('today-transit-text').textContent = `本日の月星座：\${data.moonSign}`;
+      document.getElementById('today-transit-text').textContent = `本日の月星座：${data.moonSign}`;
     }
-  }`;
-}
-
-if (data.dashaTitle) {
-document.getElementById('dasha-period-title').textContent = data.dashaTitle;
-}
-if (data.dashaDesc) {
-document.getElementById('dasha-description').textContent = data.dashaDesc;
-}
-
-if (data.planets && Array.isArray(data.planets)) {
-renderPlanetTable(data.planets);
-}
-
-// ★【拡張ロジック】有料契約情報（premium_reading）が返された場合、既存の天体配置表の下に豪華な個別精密鑑定テキストを自動展開
-if (data.status === 'paid' && data.premium_reading) {
-  const pr = data.premium_reading;
-  let detailContainer = document.getElementById('premium-detail-container');
-  if (!detailContainer) {
-    detailContainer = document.createElement('div');
-    detailContainer.id = 'premium-detail-container';
-    document.getElementById('premium-content-area').appendChild(detailContainer);
   }
-  
-  let detailHtml = '';
-  if (pr.kundali_reading) {
-    detailHtml += `
-      <div class="card-box" style="margin-top:22px;">
-        <div class="card-title">🔮 精密クンダリー・9天体配置の宿命解読</div>
-        <div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">\${pr.kundali_reading}</div>
-      </div>
-    `;
-  }
-  if (pr.detailed_horoscope) {
-    detailHtml += `
-      <div class="card-box">
-        <div class="card-title">📅 本日の日次＆週次詳細運勢レポート</div>
-        <div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">\${pr.detailed_horoscope}</div>
-      </div>
-    `;
-  }
-  if (pr.lifetime_dasha) {
-    detailHtml += `
-      <div class="card-box">
-        <div class="card-title">📜 108区分生涯カルテ＆支配星詳細解読</div>
-        <div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">\${pr.lifetime_dasha}</div>
-      </div>
-    `;
-  }
-  detailContainer.innerHTML = detailHtml;
-}
 
-} catch (err) {
-console.error('Fetch Error:', err);
-document.getElementById('today-transit-text').textContent = '⚠️ データの取得に失敗しました。通信環境をご確認のうえ、再読み込みをお試しください。';
-}
-}
+  if (data.dashaTitle) {
+    document.getElementById('dasha-period-title').textContent = data.dashaTitle;
+  }
+  if (data.dashaDesc) {
+    document.getElementById('dasha-description').textContent = data.dashaDesc;
+  }
 
-function unlockPaidContent() {
-document.getElementById('user-status-badge').textContent = 'プレミアム会員';
-document.getElementById('user-status-badge').className = 'user-badge paid';
-document.getElementById('lock-overlay').style.display = 'none';
-document.querySelectorAll('.blur-content').forEach(el => el.classList.remove('blur-content'));
-}
+  if (data.planets && Array.isArray(data.planets)) {
+    renderPlanetTable(data.planets);
+  }
 
-function renderPlanetTable(planets) {
+  // プレミアム詳細鑑定データが返された場合、天体表の下に美麗な追加カルテカードを動的に展開
+  if (data.status === 'paid' && data.premium_reading) {
+    const pr = data.premium_reading;
+    let detailContainer = document.getElementById('premium-detail-container');
+    if (!detailContainer) {
+      detailContainer = document.createElement('div');
+      detailContainer.id = 'premium-detail-container';
+      document.getElementById('premium-content-area').appendChild(detailContainer);
+    }
+    
+    let detailHtml = '';
+    if (pr.kundali_reading) {
+      detailHtml += `
+        <div class="card-box" style="margin-top:22px;">
+          <div class="card-title">🔮 精密クンダリー・9天体配置の宿命解読</div>
+          <div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">${pr.kundali_reading}</div>
+        </div>
+      `;
+    }
+    if (pr.detailed_horoscope) {
+      detailHtml += `
+        <div class="card-box">
+          <div class="card-title">📅 本日の日次＆週次詳細運勢レポート</div>
+          <div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">${pr.detailed_horoscope}</div>
+        </div>
+      `;
+    }
+    if (pr.lifetime_dasha) {
+      detailHtml += `
+        <div class="card-box">
+          <div class="card-title">📜 108区分生涯カルテ＆支配星詳細解読</div>
+          <div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">${pr.lifetime_dasha}</div>
+        </div>
+      `;
+    }
+    detailContainer.innerHTML = detailHtml;
+  }
+}
+\n\nfunction renderPlanetTable(planets) {
 const tbody = document.getElementById('planet-table-body');
 tbody.innerHTML = '';
 planets.forEach(p => {
