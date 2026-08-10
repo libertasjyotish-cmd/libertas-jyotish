@@ -363,24 +363,6 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
       localStorage.clear();
       sessionStorage.clear();
       if (email) localStorage.setItem('lj_user_email', email);
-localStorage.setItem('city', birthPlace);
-localStorage.setItem('dob', birthDate);
-localStorage.setItem('tob', timeVal);
-
-// jyotish_userキャッシュオブジェクトの事前構築
-const userData = {
-  email: email,
-  dob: birthDate,
-  tob: timeVal,
-  city: birthPlace,
-  language: navigator.language.startsWith('ja') ? 'ja' : 'en',
-  status: 'free',
-  lastResult: null
-};
-localStorage.setItem('jyotish_user', JSON.stringify(userData));
-localStorage.setItem('dob', birthDate);
-localStorage.setItem('tob', timeVal);
-localStorage.setItem('city', birthPlace);
       localStorage.setItem('lj_app_version', LJ_APP_VERSION);
       location.reload();
     }
@@ -440,9 +422,6 @@ const userData = {
   lastResult: null
 };
 localStorage.setItem('jyotish_user', JSON.stringify(userData));
-localStorage.setItem('dob', birthDate);
-localStorage.setItem('tob', timeVal);
-localStorage.setItem('city', birthPlace);
 
 const payload = {
 action: 'diagnosis',
