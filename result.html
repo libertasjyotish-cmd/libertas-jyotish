@@ -29,7 +29,8 @@ padding: 12px 20px; display: flex; justify-content: space-between; align-items: 
 .header-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--color-gold-main); font-family: var(--font-en); font-weight: 600; font-size: 1.05rem; }
 .header-logo img { width: 32px; height: 32px; }
 .header-nav { display: flex; gap: 18px; align-items: center; }
-.header-nav a { color: #E2D9CE; text-decoration: none; font-size: 0.82rem; transition: color 0.3s; }.nav-btn-member { border: 1px solid var(--color-gold-main); color: var(--color-gold-main) !important; padding: 4px 12px; border-radius: 4px; background: rgba(212, 175, 55, 0.1); }
+.header-nav a { color: #E2D9CE; text-decoration: none; font-size: 0.82rem; transition: color 0.3s; }
+.nav-btn-member { border: 1px solid var(--color-gold-main); color: var(--color-gold-main) !important; padding: 4px 12px; border-radius: 4px; background: rgba(212, 175, 55, 0.1); }
 
 .main-section {
 position: relative; flex: 1; display: flex; align-items: center; justify-content: center; padding: 100px 20px 60px;
@@ -111,27 +112,27 @@ padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
 
 <script>
 // ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
-const LJ_APP_VERSION = 'v9';
+const LJ_APP_VERSION = 'v10';
 const currentVersion = localStorage.getItem('lj_app_version');
 if (currentVersion !== LJ_APP_VERSION) {
-  const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
-  localStorage.clear();
-  sessionStorage.clear();
-  if (email) localStorage.setItem('lj_user_email', email);
-  localStorage.setItem('lj_app_version', LJ_APP_VERSION);
-  location.reload();
+const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
+localStorage.clear();
+sessionStorage.clear();
+if (email) localStorage.setItem('lj_user_email', email);
+localStorage.setItem('lj_app_version', LJ_APP_VERSION);
+location.reload();
 }
 
 if ('serviceWorker' in navigator) {
-  let refreshing = false;
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (refreshing) return;
-    refreshing = true;
-    window.location.reload();
-  });
+let refreshing = false;
+navigator.serviceWorker.addEventListener('controllerchange', () => {
+if (refreshing) return;
+refreshing = true;
+window.location.reload();
+});
 }
 
-const JYOTISH_API_URL = '/api/jyotish';
+const JYOTISH_API_URL = "/api/jyotish";
 const PREMIUM_UPGRADE_URL = "https://tally.so/r/YOUR_FORM_ID";
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -139,14 +140,16 @@ const contentArea = document.getElementById('content-area');
 const savedInput = sessionStorage.getItem('lj_user_input');
 const savedResult = sessionStorage.getItem('lj_diagnosis_result');
 
-// ★自己修復：キャッシュデータ内に未展開のバグ文字列（\${ や ${）がないか自動検査して破棄
+// ★自己修復：キャッシュデータ内に未展開 of バグ文字列がないか自動検査して破棄
 let isCorrupted = false;
 if (savedResult) {
-  if (savedResult.includes('\\${') || savedResult.includes('${')) {
-    console.warn("Corrupt diagnosis cache detected. Self-healing by removing...");
-    sessionStorage.removeItem('lj_diagnosis_result');
-    isCorrupted = true;
-  }
+  try {
+    if (savedResult.includes('\\${') || savedResult.includes('${')) {
+      console.warn("Corrupt diagnosis cache detected. Self-healing by removing...");
+      sessionStorage.removeItem('lj_diagnosis_result');
+      isCorrupted = true;
+    }
+  } catch(e) {}
 }
 
 if (savedResult && !isCorrupted) {
@@ -170,19 +173,19 @@ sessionStorage.setItem('lj_diagnosis_result', JSON.stringify(data));
 
 // ★マイページでの即時表示・データ引継ぎのために jyotish_user キャッシュを保存
 try {
-  const userData = {
-    email: payload.email,
-    dob: payload.dob,
-    tob: payload.tob,
-    city: payload.city || payload.address,
-    language: payload.language || 'ja',
-    status: data.status || 'free',
-    lastResult: data
-  };
-  localStorage.setItem('jyotish_user', JSON.stringify(userData));
-  localStorage.setItem('lj_user_email', payload.email);
+const userData = {
+email: payload.email,
+dob: payload.dob,
+tob: payload.tob,
+city: payload.city || payload.address,
+language: payload.language || 'ja',
+status: data.status || 'free',
+lastResult: data
+};
+localStorage.setItem('jyotish_user', JSON.stringify(userData));
+localStorage.setItem('lj_user_email', payload.email);
 } catch (e) {
-  console.error("Failed to save jyotish_user:", e);
+console.error("Failed to save jyotish_user:", e);
 }
 
 renderDiagnosis(data, payload);
@@ -191,7 +194,7 @@ console.error("通信エラー:", err);
 contentArea.innerHTML = `
 <div style="text-align:center; padding:20px;">
 <p style="color:#c0392b; font-weight:bold; font-size:1.05rem;">鑑定データの取得に失敗しました。</p>
-<p style="font-size:0.85rem; color:#5A4E48; margin-top:8px;">Make連携のレスポンスまたは通信状況をご確認ください。</p>
+<p style="font-size:0.85rem; color:#5A4E48; margin-top:8px;">自社サーバー通信または通信状況をご確認ください。</p>
 <a href="./index.html" class="btn-secondary" style="margin-top:15px; display:inline-block;">入力画面に戻る</a>
 </div>
 `;
@@ -202,54 +205,54 @@ window.location.href = './index.html';
 });
 
 function renderDiagnosis(result, input) {
-  let readingContent = result.reading || result.result || JSON.stringify(result);
-  
-  // ★【拡張ロジック】新簡易鑑定の4大要素（free_reading）が返ってきた場合に綺麗にカードレイアウト化
-  if (result.free_reading) {
-    const fr = result.free_reading;
-    readingContent = `
-      <h2>あなたを導く神秘の鑑定書</h2>
-      
-      <div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
-        <p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">あなたの月星座 (Moon Sign)</p>
-        <p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.moonSign || '-'}</p>
-      </div>
+let readingContent = result.reading || result.result || JSON.stringify(result);
 
-      <div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
-        <p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">ナクシャトラ (Nakshatra)</p>
-        <p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.nakshatra || '-'}</p>
-      </div>
+// ★【拡張ロジック】新簡易鑑定の4大要素（free_reading）が返ってきた場合に綺麗にカードレイアウト化
+if (result.free_reading) {
+const fr = result.free_reading;
+readingContent = `
+<h2>あなたを導く神秘の鑑定書</h2>
 
-      <div style="margin-bottom:24px;">
-        <p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">① 本日の運勢 (Today's Horoscope)</p>
-        <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.horoscope || '-'}</p>
-      </div>
+<div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">あなたの月星座 (Moon Sign)</p>
+<p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.moonSign || '-'}</p>
+</div>
 
-      <div style="margin-bottom:24px;">
-        <p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">② 本日受ける星の影響 (Astro Influence)</p>
-        <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.influence || '-'}</p>
-      </div>
+<div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">ナクシャトラ (Nakshatra)</p>
+<p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.nakshatra || '-'}</p>
+</div>
 
-      <div style="margin-bottom:24px;">
-        <p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">③ 支配星周期の過ごし方 (Current Mahadasha Guidance)</p>
-        <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.dasha_summary || '-'}</p>
-      </div>
+<div style="margin-bottom:24px;">
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">① 本日の運勢 (Today's Horoscope)</p>
+<p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.horoscope || '-'}</p>
+</div>
 
-      <div style="margin-top:25px; padding:15px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:8px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">
-        ④ ${fr.lucky_element || '✨ 本日のラッキーテーマ: 沈黙と深い内省'}
-      </div>
-    `;
-  }
+<div style="margin-bottom:24px;">
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">② 本日受ける星の影響 (Astro Influence)</p>
+<p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.influence || '-'}</p>
+</div>
 
-  document.getElementById('content-area').innerHTML = `
-    ${input ? `<div class="meta-card">✉️ メール: ${input.email || '未設定'}<br>📅 生年月日: ${input.dob} ${input.tob || ''} | 📍 出生地: ${input.address || input.city}</div>` : ''}
-    <div class="result-body">${readingContent}</div>
-    <div class="cta-card">
-      <h3 style="color:var(--color-gold-dark); margin-bottom:8px;">✨ マイページで全ての星の配置を確認</h3>
-      <p style="font-size:0.85rem; color:#5A4E48; margin-bottom:15px;">会員マイページにて、いつでもカルテや本日の運勢を確認できます。</p>
-      <a href="./mypage.html" class="btn-primary">マイページへアクセスする</a>
-    </div>
-  `;
+<div style="margin-bottom:24px;">
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">③ 支配星周期の過ごし方 (Current Mahadasha Guidance)</p>
+<p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.dasha_summary || '-'}</p>
+</div>
+
+<div style="margin-top:25px; padding:15px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:8px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">
+④ ${fr.lucky_element || '✨ 本日のラッキーテーマ: 沈黙と深い内省'}
+</div>
+`;
+}
+
+document.getElementById('content-area').innerHTML = `
+${input ? `<div class="meta-card">✉️ メール: ${input.email || '未設定'}<br>📅 生年月日: ${input.dob} ${input.tob || ''} | 📍 出生地: ${input.address || input.city}</div>` : ''}
+<div class="result-body">${readingContent}</div>
+<div class="cta-card">
+<h3 style="color:var(--color-gold-dark); margin-bottom:8px;">✨ マイページで全ての星の配置を確認</h3>
+<p style="font-size:0.85rem; color:#5A4E48; margin-bottom:15px;">会員マイページにて、いつでもカルテや本日の運勢を確認できます。</p>
+<a href="./mypage.html" class="btn-primary">マイページへアクセスする</a>
+</div>
+`;
 }
 </script>
 </body>
