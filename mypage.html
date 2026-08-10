@@ -340,7 +340,7 @@ data-width="320">
 
 <script>
 // ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
-const LJ_APP_VERSION = 'v8';
+const LJ_APP_VERSION = 'v9';
 const currentVersion = localStorage.getItem('lj_app_version');
 if (currentVersion !== LJ_APP_VERSION) {
   const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
@@ -360,7 +360,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/huqp37moaxv9y3zerpag7wdn3r1evm4p';
+const JYOTISH_API_URL = '/api/jyotish';
 const TALLY_FORM_ID = 'jaXr71';
 
 // Google Identity Services JWT デコード関数
@@ -535,13 +535,17 @@ document.addEventListener('DOMContentLoaded', () => {
     btnSend.textContent = '送信中...';
 
     try {
-      const res = await fetch(MAKE_WEBHOOK_URL, {
+      const res = await fetch(JYOTISH_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'send_code', email: email })
       });
 
       if (res.ok) {
+        const resData = await res.json();
+        if (resData.token) {
+          localStorage.setItem('lj_auth_token', resData.token);
+        }
         alert('認証コードを送信しました。届いた6桁の数字を入力してください。');
         document.getElementById('step-code').style.display = 'flex';
       } else {
@@ -571,10 +575,11 @@ document.addEventListener('DOMContentLoaded', () => {
     btnVerify.textContent = '検証中...';
 
     try {
-      const res = await fetch(MAKE_WEBHOOK_URL, {
+      const token = localStorage.getItem('lj_auth_token') || '';
+      const res = await fetch(JYOTISH_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'verify_code', email: email, code: code })
+        body: JSON.stringify({ action: 'verify_code', email: email, code: code, token: token })
       });
 
       if (res.ok) {
@@ -708,7 +713,7 @@ async function fetchUserDataAndRender(email, isRetry = false) {
   const currentJstISO = getJstIsoString();
 
   try {
-    const response = await fetch(MAKE_WEBHOOK_URL, {
+    const response = await fetch(JYOTISH_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
