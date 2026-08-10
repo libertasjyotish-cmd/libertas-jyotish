@@ -110,6 +110,27 @@ padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
 </footer>
 
 <script>
+// ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
+const LJ_APP_VERSION = 'v5';
+const currentVersion = localStorage.getItem('lj_app_version');
+if (currentVersion !== LJ_APP_VERSION) {
+  const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
+  localStorage.clear();
+  sessionStorage.clear();
+  if (email) localStorage.setItem('lj_user_email', email);
+  localStorage.setItem('lj_app_version', LJ_APP_VERSION);
+  location.reload();
+}
+
+if ('serviceWorker' in navigator) {
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+}
+
 const MAKE_WEBHOOK_URL = "https://hook.us2.make.com/huqp37moaxv9y3zerpag7wdn3r1evm4p";
 const PREMIUM_UPGRADE_URL = "https://tally.so/r/YOUR_FORM_ID";
 
@@ -118,7 +139,17 @@ const contentArea = document.getElementById('content-area');
 const savedInput = sessionStorage.getItem('lj_user_input');
 const savedResult = sessionStorage.getItem('lj_diagnosis_result');
 
+// ★自己修復：キャッシュデータ内に未展開のバグ文字列（\${ や ${）がないか自動検査して破棄
+let isCorrupted = false;
 if (savedResult) {
+  if (savedResult.includes('\\${') || savedResult.includes('${')) {
+    console.warn("Corrupt diagnosis cache detected. Self-healing by removing...");
+    sessionStorage.removeItem('lj_diagnosis_result');
+    isCorrupted = true;
+  }
+}
+
+if (savedResult && !isCorrupted) {
 renderDiagnosis(JSON.parse(savedResult), savedInput ? JSON.parse(savedInput) : null);
 return;
 }
@@ -163,38 +194,38 @@ function renderDiagnosis(result, input) {
       
       <div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
         <p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">あなたの月星座 (Moon Sign)</p>
-        <p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">\${result.moonSign || '-'}</p>
+        <p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.moonSign || '-'}</p>
       </div>
 
       <div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
         <p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">ナクシャトラ (Nakshatra)</p>
-        <p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">\${result.nakshatra || '-'}</p>
+        <p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.nakshatra || '-'}</p>
       </div>
 
       <div style="margin-bottom:24px;">
         <p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">① 本日の運勢 (Today's Horoscope)</p>
-        <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">\${fr.horoscope || '-'}</p>
+        <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.horoscope || '-'}</p>
       </div>
 
       <div style="margin-bottom:24px;">
         <p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">② 本日受ける星の影響 (Astro Influence)</p>
-        <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">\${fr.influence || '-'}</p>
+        <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.influence || '-'}</p>
       </div>
 
       <div style="margin-bottom:24px;">
         <p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">③ 支配星周期の過ごし方 (Current Mahadasha Guidance)</p>
-        <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">\${fr.dasha_summary || '-'}</p>
+        <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.dasha_summary || '-'}</p>
       </div>
 
       <div style="margin-top:25px; padding:15px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:8px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">
-        ④ \${fr.lucky_element || '✨ 本日のラッキーテーマ: 沈黙と深い内省'}
+        ④ ${fr.lucky_element || '✨ 本日のラッキーテーマ: 沈黙と深い内省'}
       </div>
     `;
   }
 
   document.getElementById('content-area').innerHTML = `
     ${input ? `<div class="meta-card">✉️ メール: ${input.email || '未設定'}<br>📅 生年月日: ${input.dob} ${input.tob || ''} | 📍 出生地: ${input.address || input.city}</div>` : ''}
-    <div class="result-body">\${readingContent}</div>
+    <div class="result-body">${readingContent}</div>
     <div class="cta-card">
       <h3 style="color:var(--color-gold-dark); margin-bottom:8px;">✨ マイページで全ての星の配置を確認</h3>
       <p style="font-size:0.85rem; color:#5A4E48; margin-bottom:15px;">会員マイページにて、いつでもカルテや本日の運勢を確認できます。</p>
