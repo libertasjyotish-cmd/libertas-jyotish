@@ -363,6 +363,9 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
       localStorage.clear();
       sessionStorage.clear();
       if (email) localStorage.setItem('lj_user_email', email);
+localStorage.setItem('dob', birthDate);
+localStorage.setItem('tob', timeVal);
+localStorage.setItem('city', birthPlace);
       localStorage.setItem('lj_app_version', LJ_APP_VERSION);
       location.reload();
     }
@@ -407,6 +410,9 @@ const birthPlace = document.getElementById('birth-place').value;
 const isoDatetime = `${birthDate}T${timeVal.length ===5 ? timeVal + ':00' : timeVal}+09:00`;
 
 localStorage.setItem('lj_user_email', email);
+localStorage.setItem('dob', birthDate);
+localStorage.setItem('tob', timeVal);
+localStorage.setItem('city', birthPlace);
 
 const payload = {
 action: 'diagnosis',
