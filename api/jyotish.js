@@ -1,14 +1,14 @@
 // Vercel Serverless Function 統合API: /api/jyotish.js
 // 依存関係: google-auth-library, google-spreadsheet (package.json に記載してデプロイ)
 
-import { GoogleSpreadsheet } from 'google-spreadsheet';
-import { JWT } from 'google-auth-library';
-import crypto from 'crypto';
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+const { JWT } = require('google-auth-library');
+const crypto = require('crypto');
 
 // セキュリティ用の固定暗号シークレット（環境変数がない場合の安全弁）
 const AUTH_SECRET = process.env.AUTH_SECRET || 'libertas_jyotish_secret_key_2026_secure';
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // CORSヘッダーの設定（本本番ドメインおよびローカル検証からのアクセスを許可）
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
