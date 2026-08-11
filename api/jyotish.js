@@ -64,12 +64,18 @@ module.exports = async function handler(req, res) {
         });
 
         if (!mailRes.ok) {
-          throw new Error("Resend API failed");
+          let mailErrData;
+          try {
+            mailErrData = await mailRes.json();
+          } catch (e) {}
+          const errMsg = mailErrData?.message || `Resend API failed with status ${mailRes.status}`;
+          throw new Error(errMsg);
         }
       } catch (mailErr) {
         console.error("Mail send error:", mailErr);
-        // メール送信APIが落ちていても、テスト用に認証コードをログに出しつつ正常終了を偽装する自律リカバリー
+        // ローカル環境等のテストを妨げないためのRECOVERYログ
         console.log(`[RECOVERY] Generated verification code for ${email}: ${verificationCode}`);
+        return res.status(400).json({ error: `メール送信エラー: ${mailErr.message}` });
       }
 
       return res.status(200).json({ status: 'success', token: securityToken });
@@ -249,7 +255,7 @@ module.exports = async function handler(req, res) {
 
   } catch (error) {
     console.error("Critical API Processing Error:", error);
-    // どのようなルート例外が起きても、絶対に500エラーを出さずに、200 OKの正常レスポンスを返す！
+    // どのようなルート例外が起きても、絶対に500エラーを出さずに、200 OK of 正常レスポンスを返す！
     const fallback = buildFallbackResponse(dob || '1990-01-01', status === 'paid');
     fallback.status = status || 'free';
     return res.status(200).json(fallback);
@@ -287,7 +293,7 @@ function buildFallbackResponse(dob, isPaid) {
       { name: "水星", sign: "乙女座", house: "6", comment: "分析能力とコミュニケーション。緻密な計画を立案する力が非常に研ぎ澄まされています。" },
       { name: "金星", sign: "天秤座", house: "7", comment: "対人関係、パートナーシップ、美。愛に満ちた調和のとれた関係性が築かれます。" },
       { name: "火星", sign: "牡羊座", house: "10", comment: "仕事とキャリア、行動力。抜群の実行力でどんな高い壁も一撃でなぎ倒します。" },
-      { name: "木星", sign: "射手座", house: "9", comment: "学問、幸運、精神の拡大。あなたを導く偉大な智慧と保護のエネルギーです。" },
+      { name: "木星", sign: "射手座", house: "9", comment: "学問、幸運、精神の拡大。あなたを導く智慧と保護のエネルギーです。" },
       { name: "土星", sign: "山羊座", house: "12", comment: "長期的な基盤。カルマの整理と、目に見えない世界での深い内省と成長。" },
       { name: "ラーフ", sign: "双子座", house: "3", comment: "飽くなき知識への探求心。新しいデジタルツールや技術への旺盛な適応力。" },
       { name: "ケートゥ", sign: "射手座", house: "9", comment: "精神世界への目覚め。過去生から受け継いできた確固たる霊的直感。" }
@@ -342,7 +348,7 @@ function buildAstrologyPrompt(prokeralaData, isPaid, lang) {
       "moonSign": "${moonSign}",
       "nakshatra": "${nakshatra}",
       "free_reading": {
-        "horoscope": "本日の運勢。今日一日の心のバイオリズムや行動の指標を、山羊座やナクシャトラの性質を踏まえて150文字前後で暖かく親しみやすく語りかけてください。",
+        "horoscope": "本日の運勢。今日一日の心のバイオリズムや行動 of 指標を、山羊座やナクシャトラの性質を踏まえて150文字前後で暖かく親しみやすく語りかけてください。",
         "influence": "本日受ける星の影響。トランジット天体が月の感情に及ぼす影響を、心理的・実用的な視点から150文字前後で解読してください。",
         "dasha_summary": "支配星周期の過ごし方。生まれた瞬間の月の位置から導かれる大まかな周期アドバイスを150文字前後で導いてください。",
         "lucky_element": "✨ 本日のラッキーカラー: XXX | 開運アクション: XXX などの一言（1行）"
