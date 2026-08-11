@@ -550,10 +550,15 @@ sessionStorage.setItem('lj_auth_token', data.token);
 alert('認証コードを送信しました。届いた6桁の数字を入力してください。');
 document.getElementById('step-code').style.display = 'flex';
 } else {
-throw new Error('API Error');
+let errMsg = 'API Error';
+try {
+const errJson = await res.json();
+if (errJson && errJson.error) errMsg = errJson.error;
+} catch(e) {}
+throw new Error(errMsg);
 }
 } catch(e) {
-alert('送信に失敗しました。通信状況をご確認の上、再度お試しください。');
+alert('送信に失敗しました：' + e.message);
 } finally {
 btnSend.disabled = false;
 btnSend.textContent = 'コード送信';
@@ -568,7 +573,7 @@ const code = codeInput.value.trim();
 const btnVerify = document.getElementById('btn-verify-code');
 
 if (!code || code.length !== 6) {
-alert('6桁の認証コードを正確を入力してください。');
+alert('6桁の認証コードを正確に入力してください。');
 return;
 }
 
