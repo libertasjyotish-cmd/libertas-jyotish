@@ -520,6 +520,8 @@ window.open(`https://tally.so/r/${TALLY_FORM_ID}?email=${encodeURIComponent(emai
 }
 });
 
+let currentAuthToken = '';
+
 // メール認証コード送信処理
 document.getElementById('btn-send-code').addEventListener('click', async () => {
 const emailInput = document.getElementById('login-email');
@@ -542,6 +544,9 @@ body: JSON.stringify({ action: 'send_code', email: email })
 });
 
 if (res.ok) {
+const data = await res.json();
+currentAuthToken = data.token;
+sessionStorage.setItem('lj_auth_token', data.token);
 alert('認証コードを送信しました。届いた6桁の数字を入力してください。');
 document.getElementById('step-code').style.display = 'flex';
 } else {
@@ -563,7 +568,7 @@ const code = codeInput.value.trim();
 const btnVerify = document.getElementById('btn-verify-code');
 
 if (!code || code.length !== 6) {
-alert('6桁の認証コードを正確に入力してください。');
+alert('6桁の認証コードを正確を入力してください。');
 return;
 }
 
@@ -571,10 +576,11 @@ btnVerify.disabled = true;
 btnVerify.textContent = '検証中...';
 
 try {
+const token = currentAuthToken || sessionStorage.getItem('lj_auth_token');
 const res = await fetch(JYOTISH_API_URL, {
 method: 'POST',
 headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ action: 'verify_code', email: email, code: code })
+body: JSON.stringify({ action: 'verify_code', email: email, code: code, token: token })
 });
 
 if (res.ok) {
@@ -677,7 +683,7 @@ if (user.tob) userTob = user.tob || '12:00';
 } catch(e) {}
 }
 
-# 古い個別キーからのフォールバック
+// 古い個別キーからのフォールバック
 if (!userAddress) {
 userAddress = localStorage.getItem('city') ||
               localStorage.getItem('lj_user_city') ||
@@ -694,11 +700,11 @@ userTob = localStorage.getItem('tob') ||
           localStorage.getItem('lj_tob') || '12:00';
 }
 
-# 1970-01-01 や 東京都 といったダミーの先祖返りキーを完全排除
+// 1970-01-01 や 東京都 といったダミーの先祖返りキーを完全排除
 if (userAddress === '東京都') userAddress = '';
 if (userDob === '1970-01-01') userDob = '';
 
-# 万が一データが揃っていない場合は、送信せずに登録画面を出す
+// 万が一データが揃っていない場合は、送信せずに登録画面を出す
 if (!userDob || !userAddress) {
 console.warn("Required birth data missing in fetchUserDataAndRender. Showing setup form.");
 showBirthSetupUI();
@@ -761,10 +767,10 @@ data = { fortune: responseText };
 }
 }
 
-# 描画ヘルパーを呼び出して最新データを画面に完全反映！
+// 描画ヘルパーを呼び出して最新データを画面に完全反映！
 renderUserData(data);
 
-# ★最新の鑑定データとステータスを `jyotish_user` キャッシュに安全にマージ保存（UX超高速化・呼びっぱなし防止）
+// ★最新の鑑定データとステータスを `jyotish_user` キャッシュに安全にマージ保存（UX超高速化・呼びっぱなし防止）
 let savedUser = {};
 if (savedUserStr) {
 try { savedUser = JSON.parse(savedUserStr); } catch(e) {}
