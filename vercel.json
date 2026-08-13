@@ -1,4 +1,6 @@
 {
-  "cleanUrls": false,
-  "trailingSlash": false
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/ja/(.*)", "destination": "/ja/$1" }
+  ]
 }
