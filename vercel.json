@@ -1,6 +1,11 @@
 {
   "cleanUrls": true,
+  "redirects": [
+    { "source": "/", "destination": "/ja/index.html", "permanent": false }
+  ],
   "rewrites": [
-    { "source": "/ja/(.*)", "destination": "/ja/$1" }
+    { "source": "/ja/(.*)", "destination": "/ja/$1" },
+    { "source": "/mypage.html", "destination": "/ja/mypage.html" },
+    { "source": "/legal.html", "destination": "/ja/legal.html" }
   ]
 }
