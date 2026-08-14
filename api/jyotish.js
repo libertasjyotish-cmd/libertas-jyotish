@@ -179,6 +179,7 @@ module.exports = async function handler(req, res) {
         let transitData = null;
         // 秘密情報を含まない障害区分。フォールバック時にどの外部APIが落ちたかを判別するために返す。
         let fallbackReason = null;
+        let fallbackDetail = null;
         try {
           const prokeralaClientId = process.env.PROKERALA_CLIENT_ID;
           const prokeralaClientSecret = process.env.PROKERALA_CLIENT_SECRET;
@@ -213,6 +214,7 @@ module.exports = async function handler(req, res) {
               fallbackReason = `prokerala_position_${positionRes.status}`;
               const errText = await positionRes.text().catch(() => '');
               console.error(`Prokerala position error ${positionRes.status}: ${errText.slice(0, 300)}`);
+              fallbackDetail = extractProkeralaMessage(errText);
             }
 
             // 出生図（natal）だけでは毎日同じ鑑定になるため、当日のトランジット天体も取得する
@@ -289,6 +291,7 @@ module.exports = async function handler(req, res) {
           });
           cleanJsonResult = buildFallbackResponse(finalDob, finalStatus === 'paid');
           cleanJsonResult.fallback_reason = fallbackReason || 'unknown';
+          if (fallbackDetail) cleanJsonResult.fallback_detail = fallbackDetail;
         }
 
         cleanJsonResult.status = finalStatus;
@@ -380,6 +383,23 @@ function siderealSunSign(dob) {
     if (month > m || (month === m && day >= d)) sign = s;
   }
   return sign;
+}
+
+// Prokerala のエラー本文から、原因判別に使えるメッセージだけを取り出す（クレジット切れ等）
+function extractProkeralaMessage(text) {
+  try {
+    const body = JSON.parse(text);
+    const msg =
+      body?.errors?.[0]?.detail ||
+      body?.errors?.[0]?.title ||
+      body?.message ||
+      body?.error_description ||
+      body?.error;
+    if (msg) return String(msg).slice(0, 200);
+  } catch (err) {
+    // JSON でなければ本文の先頭を使う
+  }
+  return String(text || '').replace(/<[^>]*>/g, ' ').trim().slice(0, 200) || null;
 }
 
 // API 障害時の退避鑑定書。内容は実際の天体計算ではないため is_fallback で明示する。
