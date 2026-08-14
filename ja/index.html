@@ -7,13 +7,13 @@
 <meta name="description" content="Libertas Jyotish（リベルタス・ジューティシュ）は、古代インドの叡智「サイデリアル式」に基づいた月星座診断および個人鑑定を提供するWebサービスです。">
 
 <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
-<link rel="canonical" href="https://libertas-jyotish.com/ja/">
+<link rel="canonical" href="https://libertas-jyotish.com/ja">
 
 <!-- PWA & Theme Settings -->
-<link rel="manifest" href="../manifest.json">
+<link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#0c1a1f">
-<link rel="icon" type="image/png" href="../img/libertas-logo.png">
-<link rel="apple-touch-icon" href="../img/libertas-logo.png">
+<link rel="icon" type="image/png" href="/img/libertas-logo.png">
+<link rel="apple-touch-icon" href="/img/libertas-logo.png">
 
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,7 +75,7 @@ background: rgba(212, 175, 55, 0.1);
 position: relative; flex: 1;
 display: flex; flex-direction: column; align-items: center; justify-content: center;
 padding: 100px 20px 60px;
-background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("../img/bg-jyotish.jpg");background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed;
+background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed;
 }
 
 /* 羊皮紙カード質感 */
@@ -218,18 +218,18 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 <body>
 
 <header class="site-header">
-<a href="./index.html" class="header-logo"><img src="../img/libertas-logo.png" alt="Logo"><span>Libertas Jyotish</span></a>
+<a href="/ja" class="header-logo"><img src="/img/libertas-logo.png" alt="Logo"><span>Libertas Jyotish</span></a>
 <nav class="header-nav">
 <a href="#about">Libertas Jyotishとは</a>
 <a href="#form-area">無料診断</a>
-<a href="./mypage.html" class="nav-btn-member">会員マイページ</a>
+<a href="/ja/mypage" class="nav-btn-member">会員マイページ</a>
 </nav>
 </header>
 
 <section class="hero-section">
 <!-- 上部：診断フォーム ＆ 有料会員入口（1箇所目） -->
 <div class="hero-container" id="form-area">
-<div class="logo-wrapper"><img src="../img/libertas-logo.png" alt="Logo" class="logo-img"></div>
+<div class="logo-wrapper"><img src="/img/libertas-logo.png" alt="Logo" class="logo-img"></div>
 
 <span class="badge">Libertas Jyotish</span>
 <h1 class="main-title">Libertas Jyotish<br><span style="font-size: 1.4rem;">星の宿命を紐解き、本当のあなたを解き放つ</span></h1>
@@ -268,13 +268,13 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 <div class="paid-member-box">
 <div class="paid-member-title">🌟 有料プレミアムプランのご案内</div>
 <p class="paid-member-desc">詳細なダシャー時期予測・精密ホロスコープ・レメディ処方など、すべての本格鑑定機能を開放します。</p>
-<button type="button" class="paid-member-btn btn-upgrade-tally">有料プレミアム会員に登録する（お申し込み・決済）</button>
+<button type="button" class="paid-member-btn btn-upgrade-premium">有料プレミアム会員に登録する（お申し込み・決済）</button>
 </div>
 
 <div class="member-portal-box">
 <div class="member-portal-title">🔑 すでに診断した方・有料会員の方</div>
 <div class="member-links">
-<a href="./mypage.html">マイページログイン</a>
+<a href="/ja/mypage">マイページログイン</a>
 </div>
 </div>
 </div>
@@ -347,14 +347,14 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 <div class="paid-member-box bottom-box">
 <div class="paid-member-title">🌟 本格鑑定を開放するプレミアム会員登録</div>
 <p class="paid-member-desc">説明をお読みいただきありがとうございます。あなただけの精密なホロスコープ・ダシャー時期予測・各種レメディを今すぐ手に入れましょう。</p>
-<button type="button" class="paid-member-btn btn-upgrade-tally">有料プレミアム会員に登録する（お申し込み・決済）</button>
+<button type="button" class="paid-member-btn btn-upgrade-premium">有料プレミアム会員に登録する（お申し込み・決済）</button>
 </div>
 </div>
 </div>
 </section>
 
 <footer class="site-footer">
-<div class="footer-links"><a href="./legal.html">特定商取引法に基づく表記・利用規約・プライバシーポリシー</a></div>
+<div class="footer-links"><a href="/ja/legal">特定商取引法に基づく表記・利用規約・プライバシーポリシー</a></div>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 
@@ -390,7 +390,7 @@ function openStripeCheckout() {
   window.open(stripeUrl, '_blank');
 }
 
-document.querySelectorAll('.btn-upgrade-tally').forEach(btn => {
+document.querySelectorAll('.btn-upgrade-premium').forEach(btn => {
   btn.addEventListener('click', openStripeCheckout);
 });
 
@@ -439,12 +439,12 @@ sessionStorage.setItem('lj_user_input', JSON.stringify(payload));
 // ★超堅牢化：キャッシュクリアで道連れに消去されないよう、localStorageにも「絶対バックアップ」を二重保存！
 localStorage.setItem('lj_user_input_backup', JSON.stringify(payload));
 
-window.location.href = './result.html';
+window.location.href = '/ja/result';
 });
 
 if ('serviceWorker' in navigator) {
 window.addEventListener('load', () => {
-navigator.serviceWorker.register('../sw.js').catch(err => console.log(err));
+navigator.serviceWorker.register('/sw.js').catch(err => console.log(err));
 });
 }
 </script>

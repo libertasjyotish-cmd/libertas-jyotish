@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>鑑定結果 | Libertas Jyotish</title>
 <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
-<link rel="canonical" href="https://libertas-jyotish.com/ja/result.html">
-<link rel="manifest" href="../manifest.json">
+<link rel="canonical" href="https://libertas-jyotish.com/ja/result">
+<link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#0c1a1f">
-<link rel="icon" type="image/png" href="../img/libertas-logo.png">
-<link rel="apple-touch-icon" href="../img/libertas-logo.png">
+<link rel="icon" type="image/png" href="/img/libertas-logo.png">
+<link rel="apple-touch-icon" href="/img/libertas-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
@@ -35,7 +35,7 @@ padding: 12px 20px; display: flex; justify-content: space-between; align-items: 
 
 .main-section {
 position: relative; flex: 1; display: flex; align-items: center; justify-content: center; padding: 100px 20px 60px;
-background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("../img/bg-jyotish.jpg");
+background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");
 background-size: cover; background-position: center; background-attachment: fixed;
 }
 
@@ -84,18 +84,18 @@ padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
 <body>
 
 <header class="site-header">
-<a href="./index.html" class="header-logo"><img src="../img/libertas-logo.png" alt="Logo"><span>Libertas Jyotish</span></a>
+<a href="/ja" class="header-logo"><img src="/img/libertas-logo.png" alt="Logo"><span>Libertas Jyotish</span></a>
 <nav class="header-nav">
-<a href="./index.html#about">Libertas Jyotishとは</a>
-<a href="./index.html#form-area">無料診断</a>
-<a href="./mypage.html" class="nav-btn-member">会員マイページ</a>
+<a href="/ja#about">Libertas Jyotishとは</a>
+<a href="/ja#form-area">無料診断</a>
+<a href="/ja/mypage" class="nav-btn-member">会員マイページ</a>
 </nav>
 </header>
 
 <section class="main-section">
 <div class="result-container">
 <div class="header-area">
-<img src="../img/libertas-logo.png" alt="Logo" class="logo-img"><br>
+<img src="/img/libertas-logo.png" alt="Logo" class="logo-img"><br>
 <span class="badge">Moon Sign Reading</span>
 </div>
 <div id="content-area">
@@ -107,7 +107,7 @@ padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
 </section>
 
 <footer class="site-footer">
-<div class="footer-links"><a href="./legal.html">特定商取引法に基づく表記・利用規約・プライバシーポリシー</a></div>
+<div class="footer-links"><a href="/ja/legal">特定商取引法に基づく表記・利用規約・プライバシーポリシー</a></div>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 
@@ -226,7 +226,7 @@ contentArea.innerHTML = `
 <div style="text-align:center; padding:20px;">
 <p style="color:#c0392b; font-weight:bold; font-size:1.05rem;">鑑定データの取得に失敗しました。</p>
 <p style="font-size:0.85rem; color:#5A4E48; margin-top:8px;">大変恐れ入りますが、しばらく時間をおいてから再度お試しいただくか、通信環境の良い場所で再度お試しください。</p>
-<a href="./index.html" class="btn-secondary" style="margin-top:15px; display:inline-block;">入力画面に戻る</a>
+<a href="/ja" class="btn-secondary" style="margin-top:15px; display:inline-block;">入力画面に戻る</a>
 </div>
 `;
 }
@@ -240,7 +240,7 @@ contentArea.innerHTML = `
       <p style="font-size:0.85rem; color:#5A4E48; line-height:1.6; margin-bottom:20px;">
         ブラウザのセキュリティ設定、プライベートモードの利用、またはキャッシュの更新により、入力した一時データが消去された可能性があります。
       </p>
-      <a href="./index.html" class="btn-primary" style="display:inline-block; text-decoration:none; padding:12px 24px; font-weight:600; border-radius:8px; width:auto; max-width:260px;">もう一度TOPから入力する</a>
+      <a href="/ja" class="btn-primary" style="display:inline-block; text-decoration:none; padding:12px 24px; font-weight:600; border-radius:8px; width:auto; max-width:260px;">もう一度TOPから入力する</a>
     </div>
   `;
 }
@@ -292,7 +292,7 @@ ${input ? `<div class="meta-card">✉️ メール: ${input.email || '未設定'
 <div class="cta-card">
 <h3 style="color:var(--color-gold-dark); margin-bottom:8px;">✨ マイページで全ての星の配置を確認</h3>
 <p style="font-size:0.85rem; color:#5A4E48; margin-bottom:15px;">会員マイページにて、いつでもカルテや本日の運勢を確認できます。</p>
-<a href="./mypage.html" class="btn-primary">マイページへアクセスする</a>
+<a href="/ja/mypage" class="btn-primary">マイページへアクセスする</a>
 </div>
 `;
 }

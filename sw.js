@@ -1,22 +1,24 @@
-const CACHE_NAME = 'libertas-jyotish-v12';
+const CACHE_NAME = 'libertas-jyotish-v13';
+// vercel.json の cleanUrls: true に合わせ、リダイレクトされない実体パスを指定する
 const ASSETS_TO_CACHE = [
-  './',
-  './index.html',
-  './mypage.html',
-  './result.html',
-  './legal.html',
-  './manifest.json',
-  './img/bg-jyotish.jpg',
-  './img/libertas-logo.png'
+  '/ja',
+  '/ja/mypage',
+  '/ja/result',
+  '/ja/legal',
+  '/manifest.json',
+  '/img/bg-jyotish.jpg',
+  '/img/libertas-logo.png'
 ];
 
 self.addEventListener('install', (e) => {
   self.skipWaiting();
   e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('[Service Worker] Caching all assets (v12)');
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
+    // 個別に追加し、1 件でも失敗したら install ごと失敗する addAll の挙動を回避する
+    caches.open(CACHE_NAME).then((cache) => Promise.all(
+      ASSETS_TO_CACHE.map((url) => cache.add(url).catch((err) => {
+        console.warn('[Service Worker] Failed to cache', url, err);
+      }))
+    ))
   );
 });
 

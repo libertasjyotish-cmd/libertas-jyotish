@@ -2,19 +2,19 @@
   "name": "Libertas Jyotish",
   "short_name": "Libertas",
   "description": "インド占星術（サイデリアル式）鑑定システム",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0c1a1f",
   "theme_color": "#0c1a1f",
   "icons": [
     {
-      "src": "./img/libertas-logo.png",
+      "src": "/img/libertas-logo.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "./img/libertas-logo.png",
+      "src": "/img/libertas-logo.png",
       "sizes": "512x512",
       "type": "image/png"
     }
