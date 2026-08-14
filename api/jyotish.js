@@ -235,10 +235,11 @@ module.exports = async function handler(req, res) {
             } else {
               const promptText = buildAstrologyPrompt(prokeralaData, transitData, finalStatus === 'paid', finalLang);
 
-              // モデル名は環境変数で上書き可能。指定が無ければ新しい順に試し、廃止モデルで詰まないようにする。
+              // モデル名は環境変数で上書き可能。指定が無ければ、そのキーで実際に使えるモデルを ListModels で取得する。
+              // （固定のモデル名は廃止・キー種別の違いで 404 になるため）
               const geminiModels = process.env.GEMINI_MODEL
                 ? [process.env.GEMINI_MODEL]
-                : ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+                : await listGeminiModels(geminiApiKey);
 
               for (const geminiModel of geminiModels) {
                 const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${geminiApiKey}`;
@@ -327,6 +328,33 @@ function isSignatureEqual(actual, expected) {
   const expectedBuf = Buffer.from(expected, 'utf8');
   if (actualBuf.length !== expectedBuf.length) return false;
   return crypto.timingSafeEqual(actualBuf, expectedBuf);
+}
+
+// キーで利用可能な generateContent 対応モデルを取得し、新しい flash 系を優先して並べる。
+async function listGeminiModels(apiKey) {
+  const preset = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest'];
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}&pageSize=200`);
+    if (!res.ok) {
+      console.error(`Gemini ListModels failed with status ${res.status}`);
+      return preset;
+    }
+    const data = await res.json();
+    const names = (data.models || [])
+      .filter((m) => (m.supportedGenerationMethods || []).includes('generateContent'))
+      .map((m) => String(m.name || '').replace(/^models\//, ''))
+      .filter((n) => n.startsWith('gemini') && !n.includes('thinking') && !n.includes('image') && !n.includes('tts'));
+
+    if (!names.length) return preset;
+
+    const score = (n) => (n.includes('flash') ? 0 : 1) + (n.includes('lite') ? 0.5 : 0) + (/\d/.test(n) ? 0 : 0.25);
+    names.sort((a, b) => score(a) - score(b) || b.localeCompare(a));
+    console.log('Gemini available models (top):', names.slice(0, 5).join(', '));
+    return names.slice(0, 5);
+  } catch (e) {
+    console.error('Gemini ListModels error:', e);
+    return preset;
+  }
 }
 
 // API 障害時の退避鑑定書。内容は実際の天体計算ではないため is_fallback で明示する。
