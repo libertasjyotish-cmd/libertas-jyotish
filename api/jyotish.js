@@ -567,6 +567,12 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang) {
   `;
 }
 
+function findMemberRows(rows, email) {
+  const normalized = String(email || '').trim().toLowerCase();
+  if (!normalized) return [];
+  return rows.filter(r => String(r.get('email') || '').trim().toLowerCase() === normalized);
+}
+
 async function fetchProfileFromSheets(email) {
   try {
     if (!email) return null;
@@ -574,12 +580,14 @@ async function fetchProfileFromSheets(email) {
     if (!sheet) return null;
 
     const rows = await sheet.getRows();
-    const userRow = rows.find(r => r.get('email') === email);
+    const matched = findMemberRows(rows, email);
+    // 大文字小文字違いなどで行が重複した場合は paid を優先する
+    const userRow = matched.find(r => String(r.get('status') || '').trim().toLowerCase() === 'paid') || matched[0];
 
     if (userRow) {
       return {
         email: userRow.get('email'),
-        status: userRow.get('status') || 'free',
+        status: String(userRow.get('status') || 'free').trim().toLowerCase(),
         dob: userRow.get('dob'),
         tob: userRow.get('tob'),
         city: userRow.get('city'),
@@ -599,7 +607,9 @@ async function saveProfileToSheets(email, status, dob, tob, city, readingData, l
     if (!sheet) return;
 
     const rows = await sheet.getRows();
-    const existingRow = rows.find(r => r.get('email') === email);
+    const matchedRows = findMemberRows(rows, email);
+    const existingRow =
+      matchedRows.find(r => String(r.get('status') || '').trim().toLowerCase() === 'paid') || matchedRows[0];
 
     const nowStr = new Date().toISOString();
     const rowPayload = {
