@@ -165,7 +165,12 @@ CORS は全オリジン許可。`OPTIONS` は 200、`POST` 以外は 405。
 - Stripe Payment Link: `https://buy.stripe.com/dRmaEZ0I73Bx6g8auH24000?prefilled_email=<email>`
 - サブスク登録・PDF 単品購入とも同じリンクを使用
 - 完了ページ: `ja/success.html`（`lj_status = 'paid'`）、`ja/pdf-success.html`（`lj_pdf_purchased = 'true'`）
-- Stripe Webhook は未実装。`status` の `paid` 昇格は Sheets の手動更新またはクライアント側フラグに依存
+- Stripe Webhook: `POST /api/stripe-webhook`
+  - `STRIPE_WEBHOOK_SECRET` で署名検証（HMAC-SHA256 / タイムスタンプ許容 300 秒）
+  - `checkout.session.completed` / `checkout.session.async_payment_succeeded` / `invoice.paid` で Sheets の `status` を `paid` に昇格
+  - メールは `customer_details.email` → `customer_email` → `receipt_email` → `metadata.email` の順で解決
+- 課金状態は **Sheets のみを正** とし、`/api/jyotish` はリクエストボディの `status` を無視する（改ざんによる昇格と、診断時の `free` 上書きによる降格の両方を防止）
+- 決済直後は `/ja/mypage?status=paid` で Webhook 反映待ちのリトライ（最大 5 回 / 4 秒間隔）を行う
 
 ## 8. デザインガイドライン（v12 から継承・実装済み）
 

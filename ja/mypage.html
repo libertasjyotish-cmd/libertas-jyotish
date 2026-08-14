@@ -689,6 +689,7 @@ if (premiumTitle) premiumTitle.style.display = 'none';
 }
 
 let makeRetryCount = 0; // 同期失敗時のリトライ回数
+let paidSyncRetry = 0; // Stripe決済直後、Webhook反映待ちのリトライ回数
 
 async function fetchUserDataAndRender(email, isRetry = false) {
 if (!isRetry) {
@@ -790,6 +791,15 @@ fortune: "⚠️ 同期に失敗しました。マイページを再読み込み
 } else {
 data = { fortune: responseText };
 }
+}
+
+// Stripe決済直後は Webhook による paid 反映に数秒かかることがあるため待ち受ける
+if (new URLSearchParams(location.search).get('status') === 'paid' && data.status !== 'paid' && paidSyncRetry < 5) {
+paidSyncRetry++;
+const textElem = document.getElementById('today-transit-text');
+if (textElem) textElem.textContent = `決済情報を確認しています...（${paidSyncRetry}/5）`;
+setTimeout(() => { fetchUserDataAndRender(email, true); }, 4000);
+return;
 }
 
 // 描画ヘルパーを呼び出して最新データを画面に完全反映！
