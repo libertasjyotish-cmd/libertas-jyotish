@@ -134,9 +134,11 @@ module.exports = async function handler(req, res) {
       let finalStatus = 'free';
       let finalLang = language || 'ja';
 
+      let profileSource = 'none';
       try {
         const sheetsProfile = await fetchProfileFromSheets(email);
         if (sheetsProfile) {
+          profileSource = 'sheets';
           finalStatus = sheetsProfile.status || 'free';
           if (action === 'fetch_profile') {
             if (sheetsProfile.dob && sheetsProfile.dob !== '1970-01-01') finalDob = sheetsProfile.dob;
@@ -288,6 +290,8 @@ module.exports = async function handler(req, res) {
         }
 
         cleanJsonResult.status = finalStatus;
+        // Sheets の会員行を読めたかどうか（課金反映トラブルの切り分け用）
+        cleanJsonResult.profile_source = profileSource;
         cleanJsonResult.generated_at = toJstIsoString(new Date());
         cleanJsonResult.reading_date = cleanJsonResult.generated_at.slice(0, 10);
 
