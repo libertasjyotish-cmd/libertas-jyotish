@@ -1,0 +1,39 @@
+name: Auto-merge Devin PRs
+
+# devin/* ブランチから main へ向けた PR を自動で squash マージする。
+# 必須チェックが設定されている場合は、それらが成功してからマージされる。
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
+  check_suite:
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enable auto-merge for devin/* pull requests
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          prs=$(gh pr list --repo "$REPO" --state open --base main \
+            --json number,headRefName,isDraft \
+            --jq '.[] | select(.isDraft == false) | select(.headRefName | startswith("devin/")) | .number')
+          if [ -z "$prs" ]; then
+            echo "No matching PRs."
+            exit 0
+          fi
+          for pr in $prs; do
+            echo "Merging PR #$pr"
+            # auto-merge が無効なリポジトリでは即時マージにフォールバックする
+            gh pr merge "$pr" --repo "$REPO" --squash --delete-branch --auto \
+              || gh pr merge "$pr" --repo "$REPO" --squash --delete-branch
+          done
