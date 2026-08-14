@@ -1,6 +1,10 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "functions": {
+    "api/jyotish.js": { "maxDuration": 60 },
+    "api/stripe-webhook.js": { "maxDuration": 30 }
+  },
   "redirects": [
     { "source": "/mypage", "destination": "/ja/mypage", "permanent": false },
     { "source": "/result", "destination": "/ja/result", "permanent": false },

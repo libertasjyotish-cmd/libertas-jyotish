@@ -4,6 +4,17 @@ const { getMemberSheet, getLastSheetIssue } = require('./_sheets');
 
 const AUTH_SECRET = process.env.AUTH_SECRET;
 
+// 外部APIが応答しない場合に実行時間を食い潰さないよう、必ず打ち切る。
+async function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -162,9 +173,9 @@ module.exports = async function handler(req, res) {
         let lat = 35.6762, lon = 139.6503; // デフォルトは東京
         try {
           const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(finalCity)}&format=json&limit=1`;
-          const geoRes = await fetch(nominatimUrl, {
+          const geoRes = await fetchWithTimeout(nominatimUrl, {
             headers: { 'User-Agent': 'LibertasJyotishApp/2.0 (info@libertas-jyotish.com)' }
-          });
+          }, 8000);
           const geoData = await geoRes.json();
           if (geoData && geoData.length > 0) {
             lat = parseFloat(geoData[0].lat);
@@ -188,7 +199,7 @@ module.exports = async function handler(req, res) {
             throw new Error('PROKERALA_CLIENT_ID / PROKERALA_CLIENT_SECRET are not configured.');
           }
 
-          const tokenRes = await fetch('https://api.prokerala.com/token', {
+          const tokenRes = await fetchWithTimeout('https://api.prokerala.com/token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({
@@ -196,7 +207,7 @@ module.exports = async function handler(req, res) {
               client_id: prokeralaClientId,
               client_secret: prokeralaClientSecret
             })
-          });
+          }, 10000);
           if (!tokenRes.ok) {
             fallbackReason = `prokerala_token_${tokenRes.status}`;
           } else {
@@ -205,9 +216,15 @@ module.exports = async function handler(req, res) {
 
             const isoDatetime = `${finalDob}T${finalTob.length === 5 ? finalTob + ':00' : finalTob}+09:00`;
             const positionUrl = `https://api.prokerala.com/v2/astrology/planet-position?datetime=${encodeURIComponent(isoDatetime)}&coordinates=${lat},${lon}&ayanamsa=1`;
-            const positionRes = await fetch(positionUrl, {
-              headers: { 'Authorization': `Bearer ${accessToken}` }
-            });
+            // 出生図（natal）だけでは毎日同じ鑑定になるため、当日のトランジット天体も併せて取得する。
+            // 2本は独立しているので直列にせず同時に投げる（応答時間を約半分にする）。
+            const transitUrl = `https://api.prokerala.com/v2/astrology/planet-position?datetime=${encodeURIComponent(toJstIsoString(new Date()))}&coordinates=${lat},${lon}&ayanamsa=1`;
+            const authHeaders = { headers: { 'Authorization': `Bearer ${accessToken}` } };
+            const [positionRes, transitRes] = await Promise.all([
+              fetchWithTimeout(positionUrl, authHeaders, 15000),
+              fetchWithTimeout(transitUrl, authHeaders, 15000).catch(() => null)
+            ]);
+
             if (positionRes.ok) {
               prokeralaData = await positionRes.json();
             } else {
@@ -217,12 +234,7 @@ module.exports = async function handler(req, res) {
               fallbackDetail = extractProkeralaMessage(errText);
             }
 
-            // 出生図（natal）だけでは毎日同じ鑑定になるため、当日のトランジット天体も取得する
-            const transitUrl = `https://api.prokerala.com/v2/astrology/planet-position?datetime=${encodeURIComponent(toJstIsoString(new Date()))}&coordinates=${lat},${lon}&ayanamsa=1`;
-            const transitRes = await fetch(transitUrl, {
-              headers: { 'Authorization': `Bearer ${accessToken}` }
-            });
-            if (transitRes.ok) {
+            if (transitRes && transitRes.ok) {
               transitData = await transitRes.json();
             }
           }
@@ -247,17 +259,20 @@ module.exports = async function handler(req, res) {
                 ? [process.env.GEMINI_MODEL]
                 : await listGeminiModels(geminiApiKey);
 
+              // 有料鑑定は生成量が多く時間がかかるため、モデルごとの上限を分けて待ち切れる範囲に収める
+              const geminiTimeout = finalStatus === 'paid' ? 40000 : 25000;
+
               for (const geminiModel of geminiModels) {
                 const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${geminiApiKey}`;
 
-                const geminiRes = await fetch(geminiUrl, {
+                const geminiRes = await fetchWithTimeout(geminiUrl, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     contents: [{ role: "user", parts: [{ text: promptText }] }],
                     generationConfig: { responseMimeType: "application/json", temperature: 1.0 }
                   })
-                });
+                }, geminiTimeout);
 
                 if (!geminiRes.ok) {
                   fallbackReason = `gemini_${geminiRes.status}`;
@@ -343,7 +358,7 @@ function isSignatureEqual(actual, expected) {
 async function listGeminiModels(apiKey) {
   const preset = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest'];
   try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}&pageSize=200`);
+    const res = await fetchWithTimeout(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}&pageSize=200`, {}, 8000);
     if (!res.ok) {
       console.error(`Gemini ListModels failed with status ${res.status}`);
       return preset;

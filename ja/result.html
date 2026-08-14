@@ -100,7 +100,8 @@ padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
 </div>
 <div id="content-area">
 <div class="loading-box">
-<div class="spinner"></div><p class="loading-title">宇宙の配置（月星座）を解読中...</p>
+<div class="spinner"></div><p class="loading-title" id="loading-title">宇宙の配置（月星座）を解読中...</p>
+<p id="loading-note" style="font-size:0.8rem; color:#7a6a58; margin-top:6px;">鑑定文の生成に30～60秒ほどかかります。このままお待ちください。</p>
 </div>
 </div>
 </div>
@@ -189,11 +190,31 @@ sessionStorage.removeItem('lj_diagnosis_result');
 
 if (savedInput) {
 const payload = JSON.parse(savedInput);
+
+// 鑑定生成は数十秒かかるため、進行状況を順に見せて無反応に見えないようにする
+const progressSteps = [
+  '宇宙の配置（月星座）を解読中...',
+  '出生地の座標と出生図を計算しています...',
+  '本日のトランジット（星回り）を取得しています...',
+  'あなた専用の鑑定文を執筆しています...'
+];
+let progressIndex = 0;
+const progressTimer = setInterval(() => {
+  progressIndex = Math.min(progressIndex + 1, progressSteps.length - 1);
+  const titleElem = document.getElementById('loading-title');
+  if (titleElem) titleElem.textContent = progressSteps[progressIndex];
+}, 9000);
+
+// ブラウザが無限に待たないよう自分で打ち切り、再試行を案内する
+const abortController = new AbortController();
+const clientTimeout = setTimeout(() => abortController.abort(), 90000);
+
 try {
 const response = await fetch(JYOTISH_API_URL, {
 method: 'POST',
 headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify(payload)
+body: JSON.stringify(payload),
+signal: abortController.signal
 });
 
 if (!response.ok) {
@@ -228,13 +249,20 @@ console.error("Failed to save jyotish_user:", e);
 renderDiagnosis(data, payload);
 } catch (err) {
 console.error("通信エラー:", err);
+const timedOut = err && err.name === 'AbortError';
 contentArea.innerHTML = `
 <div style="text-align:center; padding:20px;">
-<p style="color:#c0392b; font-weight:bold; font-size:1.05rem;">鑑定データの取得に失敗しました。</p>
-<p style="font-size:0.85rem; color:#5A4E48; margin-top:8px;">大変恐れ入りますが、しばらく時間をおいてから再度お試しいただくか、通信環境の良い場所で再度お試しください。</p>
-<a href="/ja" class="btn-secondary" style="margin-top:15px; display:inline-block;">入力画面に戻る</a>
+<p style="color:#c0392b; font-weight:bold; font-size:1.05rem;">${timedOut ? '鑑定文の生成に時間がかかっています。' : '鑑定データの取得に失敗しました。'}</p>
+<p style="font-size:0.85rem; color:#5A4E48; margin-top:8px;">${timedOut ? '外部の占星計算・AI生成が混雑している可能性があります。再試行すると成功することが多いです。' : '大変恐れ入りますが、しばらく時間をおいてから再度お試しください。'}</p>
+<button id="retry-diagnosis" class="btn-primary" style="margin-top:15px; padding:12px 24px; border:none; border-radius:8px; font-weight:600; cursor:pointer;">もう一度試す</button>
+<div><a href="/ja" class="btn-secondary" style="margin-top:12px; display:inline-block;">入力画面に戻る</a></div>
 </div>
 `;
+const retryBtn = document.getElementById('retry-diagnosis');
+if (retryBtn) retryBtn.addEventListener('click', () => location.reload());
+} finally {
+clearInterval(progressTimer);
+clearTimeout(clientTimeout);
 }
 } else {
   // ★強制送還をブロックして、画面上に丁寧な再入力を促すUIを自動描画！
