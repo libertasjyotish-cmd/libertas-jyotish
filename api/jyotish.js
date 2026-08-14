@@ -175,10 +175,13 @@ module.exports = async function handler(req, res) {
         // (B) Prokerala API 認証 & 惑星データ取得（出生図＋当日のトランジット）
         let prokeralaData = null;
         let transitData = null;
+        // 秘密情報を含まない障害区分。フォールバック時にどの外部APIが落ちたかを判別するために返す。
+        let fallbackReason = null;
         try {
           const prokeralaClientId = process.env.PROKERALA_CLIENT_ID;
           const prokeralaClientSecret = process.env.PROKERALA_CLIENT_SECRET;
           if (!prokeralaClientId || !prokeralaClientSecret) {
+            fallbackReason = 'prokerala_not_configured';
             throw new Error('PROKERALA_CLIENT_ID / PROKERALA_CLIENT_SECRET are not configured.');
           }
 
@@ -191,7 +194,9 @@ module.exports = async function handler(req, res) {
               client_secret: prokeralaClientSecret
             })
           });
-          if (tokenRes.ok) {
+          if (!tokenRes.ok) {
+            fallbackReason = `prokerala_token_${tokenRes.status}`;
+          } else {
             const tokenData = await tokenRes.json();
             const accessToken = tokenData.access_token;
 
@@ -202,6 +207,8 @@ module.exports = async function handler(req, res) {
             });
             if (positionRes.ok) {
               prokeralaData = await positionRes.json();
+            } else {
+              fallbackReason = `prokerala_position_${positionRes.status}`;
             }
 
             // 出生図（natal）だけでは毎日同じ鑑定になるため、当日のトランジット天体も取得する
@@ -214,6 +221,7 @@ module.exports = async function handler(req, res) {
             }
           }
         } catch (proErr) {
+          fallbackReason = fallbackReason || 'prokerala_error';
           console.error("Prokerala API failed, trigger fallback content:", proErr);
         }
 
@@ -222,7 +230,9 @@ module.exports = async function handler(req, res) {
         if (prokeralaData) {
           try {
             const geminiApiKey = process.env.GEMINI_API_KEY;
-            if (geminiApiKey) {
+            if (!geminiApiKey) {
+              fallbackReason = 'gemini_not_configured';
+            } else {
               const promptText = buildAstrologyPrompt(prokeralaData, transitData, finalStatus === 'paid', finalLang);
 
               // モデル名は環境変数で上書き可能。指定が無ければ新しい順に試し、廃止モデルで詰まないようにする。
@@ -243,19 +253,24 @@ module.exports = async function handler(req, res) {
                 });
 
                 if (!geminiRes.ok) {
+                  fallbackReason = `gemini_${geminiRes.status}`;
                   console.error(`Gemini model ${geminiModel} failed with status ${geminiRes.status}`);
                   continue;
                 }
 
                 const geminiData = await geminiRes.json();
                 const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
-                if (!rawText) continue;
+                if (!rawText) {
+                  fallbackReason = 'gemini_empty_response';
+                  continue;
+                }
                 cleanJsonResult = JSON.parse(rawText.trim());
                 cleanJsonResult.generated_by = geminiModel;
                 break;
               }
             }
           } catch (gemErr) {
+            fallbackReason = fallbackReason || 'gemini_error';
             console.error("Gemini Generation failed, triggers fallback:", gemErr);
           }
         }
@@ -268,6 +283,7 @@ module.exports = async function handler(req, res) {
             gemini_key: Boolean(process.env.GEMINI_API_KEY)
           });
           cleanJsonResult = buildFallbackResponse(finalDob, finalStatus === 'paid');
+          cleanJsonResult.fallback_reason = fallbackReason || 'unknown';
         }
 
         cleanJsonResult.status = finalStatus;
