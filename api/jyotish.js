@@ -137,8 +137,8 @@ module.exports = async function handler(req, res) {
       let profileSource = 'none';
       try {
         const sheetsProfile = await fetchProfileFromSheets(email);
+        profileSource = lastLookupSource;
         if (sheetsProfile) {
-          profileSource = 'sheets';
           finalStatus = sheetsProfile.status || 'free';
           if (action === 'fetch_profile') {
             if (sheetsProfile.dob && sheetsProfile.dob !== '1970-01-01') finalDob = sheetsProfile.dob;
@@ -211,6 +211,8 @@ module.exports = async function handler(req, res) {
               prokeralaData = await positionRes.json();
             } else {
               fallbackReason = `prokerala_position_${positionRes.status}`;
+              const errText = await positionRes.text().catch(() => '');
+              console.error(`Prokerala position error ${positionRes.status}: ${errText.slice(0, 300)}`);
             }
 
             // 出生図（natal）だけでは毎日同じ鑑定になるため、当日のトランジット天体も取得する
@@ -577,11 +579,18 @@ function findMemberRows(rows, email) {
   return rows.filter(r => String(r.get('email') || '').trim().toLowerCase() === normalized);
 }
 
+// 課金反映の切り分け用。どこで会員行を見失ったかを profile_source として返す。
+let lastLookupSource = 'none';
+
 async function fetchProfileFromSheets(email) {
+  lastLookupSource = 'none';
   try {
     if (!email) return null;
     const sheet = await getMemberSheet();
-    if (!sheet) return null;
+    if (!sheet) {
+      lastLookupSource = 'sheet_unavailable';
+      return null;
+    }
 
     const rows = await sheet.getRows();
     const matched = findMemberRows(rows, email);
@@ -589,6 +598,7 @@ async function fetchProfileFromSheets(email) {
     const userRow = matched.find(r => String(r.get('status') || '').trim().toLowerCase() === 'paid') || matched[0];
 
     if (userRow) {
+      lastLookupSource = 'sheets';
       return {
         email: userRow.get('email'),
         status: String(userRow.get('status') || 'free').trim().toLowerCase(),
@@ -599,7 +609,9 @@ async function fetchProfileFromSheets(email) {
         lastResult: userRow.get('last_reading') ? JSON.parse(userRow.get('last_reading')) : null
       };
     }
+    lastLookupSource = 'row_not_found';
   } catch (err) {
+    lastLookupSource = 'sheet_error';
     console.error("Google Sheets fetch error:", err);
   }
   return null;
