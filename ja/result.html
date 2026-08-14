@@ -176,9 +176,15 @@ if (savedResult) {
   } catch(e) {}
 }
 
+// 前日以前のキャッシュは「本日の運勢」として使わず、再取得する
+const jstToday = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 if (savedResult && !isCorrupted) {
-renderDiagnosis(JSON.parse(savedResult), savedInput ? JSON.parse(savedInput) : null);
+const parsedResult = JSON.parse(savedResult);
+if (parsedResult && parsedResult.reading_date === jstToday) {
+renderDiagnosis(parsedResult, savedInput ? JSON.parse(savedInput) : null);
 return;
+}
+sessionStorage.removeItem('lj_diagnosis_result');
 }
 
 if (savedInput) {

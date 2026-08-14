@@ -22,7 +22,8 @@ module.exports = async function handler(req, res) {
 
   const { action, email, address, datetime, city, dob, tob, status, language, code, token } = req.body;
 
-  if (!AUTH_SECRET) {
+  // AUTH_SECRET はメール認証にのみ必要。診断系は未設定でも動作させる。
+  if ((action === 'send_code' || action === 'verify_code') && !AUTH_SECRET) {
     console.error('AUTH_SECRET is not configured.');
     return res.status(500).json({ error: 'Server is not configured.' });
   }
@@ -171,8 +172,9 @@ module.exports = async function handler(req, res) {
           console.error("Geocoding failed, using Tokyo fallback:", geoErr);
         }
 
-        // (B) Prokerala API 認証 & 惑星データ取得
+        // (B) Prokerala API 認証 & 惑星データ取得（出生図＋当日のトランジット）
         let prokeralaData = null;
+        let transitData = null;
         try {
           const prokeralaClientId = process.env.PROKERALA_CLIENT_ID;
           const prokeralaClientSecret = process.env.PROKERALA_CLIENT_SECRET;
@@ -201,6 +203,15 @@ module.exports = async function handler(req, res) {
             if (positionRes.ok) {
               prokeralaData = await positionRes.json();
             }
+
+            // 出生図（natal）だけでは毎日同じ鑑定になるため、当日のトランジット天体も取得する
+            const transitUrl = `https://api.prokerala.com/v2/astrology/planet-position?datetime=${encodeURIComponent(toJstIsoString(new Date()))}&coordinates=${lat},${lon}&ayanamsa=1`;
+            const transitRes = await fetch(transitUrl, {
+              headers: { 'Authorization': `Bearer ${accessToken}` }
+            });
+            if (transitRes.ok) {
+              transitData = await transitRes.json();
+            }
           }
         } catch (proErr) {
           console.error("Prokerala API failed, trigger fallback content:", proErr);
@@ -212,23 +223,36 @@ module.exports = async function handler(req, res) {
           try {
             const geminiApiKey = process.env.GEMINI_API_KEY;
             if (geminiApiKey) {
-              const geminiModel = 'gemini-1.5-flash';
-              const promptText = buildAstrologyPrompt(prokeralaData, finalStatus === 'paid', finalLang);
-              const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${geminiApiKey}`;
-              
-              const geminiRes = await fetch(geminiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  contents: [{ role: "user", parts: [{ text: promptText }] }],
-                  generationConfig: { responseMimeType: "application/json" }
-                })
-              });
+              const promptText = buildAstrologyPrompt(prokeralaData, transitData, finalStatus === 'paid', finalLang);
 
-              if (geminiRes.ok) {
+              // モデル名は環境変数で上書き可能。指定が無ければ新しい順に試し、廃止モデルで詰まないようにする。
+              const geminiModels = process.env.GEMINI_MODEL
+                ? [process.env.GEMINI_MODEL]
+                : ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+
+              for (const geminiModel of geminiModels) {
+                const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${geminiApiKey}`;
+
+                const geminiRes = await fetch(geminiUrl, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    contents: [{ role: "user", parts: [{ text: promptText }] }],
+                    generationConfig: { responseMimeType: "application/json", temperature: 1.0 }
+                  })
+                });
+
+                if (!geminiRes.ok) {
+                  console.error(`Gemini model ${geminiModel} failed with status ${geminiRes.status}`);
+                  continue;
+                }
+
                 const geminiData = await geminiRes.json();
-                const rawText = geminiData.candidates[0].content.parts[0].text;
+                const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (!rawText) continue;
                 cleanJsonResult = JSON.parse(rawText.trim());
+                cleanJsonResult.generated_by = geminiModel;
+                break;
               }
             }
           } catch (gemErr) {
@@ -238,11 +262,17 @@ module.exports = async function handler(req, res) {
 
         // (D) 【大救済ロジック】もしAPIやAIが途中で落ちていても、絶対に500エラーにせず、正常な診断書を構築して返す！
         if (!cleanJsonResult) {
-          console.warn("[RECOVERY ACTIVATED] Synthesizing static astrology response to prevent 500 error.");
+          console.warn("[RECOVERY ACTIVATED] Synthesizing static astrology response to prevent 500 error.", {
+            prokerala: Boolean(prokeralaData),
+            transit: Boolean(transitData),
+            gemini_key: Boolean(process.env.GEMINI_API_KEY)
+          });
           cleanJsonResult = buildFallbackResponse(finalDob, finalStatus === 'paid');
         }
 
         cleanJsonResult.status = finalStatus;
+        cleanJsonResult.generated_at = toJstIsoString(new Date());
+        cleanJsonResult.reading_date = cleanJsonResult.generated_at.slice(0, 10);
 
         // Sheetsへの保存処理（落ちても気にせず継続）
         if (action === 'diagnosis') {
@@ -283,7 +313,7 @@ function isSignatureEqual(actual, expected) {
   return crypto.timingSafeEqual(actualBuf, expectedBuf);
 }
 
-// 完璧なスタティック鑑定書ジェネレーター（100%バグを救い、ユーザーに感動を与える温かい鑑定書）
+// API 障害時の退避鑑定書。内容は実際の天体計算ではないため is_fallback で明示する。
 function buildFallbackResponse(dob, isPaid) {
   // 生年月日の日をベースに、27ナクシャトラを自動推定して変化を与える
   const day = parseInt(dob.split('-')[2]) || 15;
@@ -293,14 +323,24 @@ function buildFallbackResponse(dob, isPaid) {
   const selectedMoonSign = moonSigns[day % 12];
   const selectedNakshatra = nakshatras[day % 27];
 
+  // 退避文面でも日付ごとにトランジット月の位置が変わるようにする（月は約2.25日で1星座進む）
+  const todayJst = toJstIsoString(new Date()).slice(0, 10);
+  const daysSinceEpoch = Math.floor(new Date(`${todayJst}T00:00:00+09:00`).getTime() / 86400000);
+  const transitMoonSign = moonSigns[Math.floor(daysSinceEpoch / 2.25) % 12];
+  const transitNakshatra = nakshatras[daysSinceEpoch % 27];
+  const luckyThemes = ['白湯を飲むこと', '朝日を浴びること', '香りを整えること', '水回りを清めること', '黄色を身につけること', '静かな読書', '土に触れること'];
+  const luckyActions = ['スマホの通知を一時的にオフにして内省する', '感謝を一言だけ誰かに伝える', '机の上を5分だけ片づける', '深呼吸を10回する', '歩く速度を少しゆるめる', '不要な予定をひとつ手放す', '早めに休む'];
+
   const response = {
+    is_fallback: true,
+    reading_date: todayJst,
     moonSign: selectedMoonSign,
     nakshatra: selectedNakshatra,
     free_reading: {
-      horoscope: `本日の運勢。今日の星々は、あなたの内なる情熱をそっと刺激しています。特に「${selectedMoonSign}」のエネルギーが、あなたの潜在意識に優しい光を投げかけており、焦らずに一歩ずつ進むことで、大きなインスピレーションを受け取ることができるでしょう。今日はご自身の直感を一番の味方にしてください。`,
-      influence: `本日受ける星の影響。トランジット（現在運行中）の月が、あなたの感情を司るハウスと美しく調成しています。誰かに言われた些細な一言に惑わされることなく、自分の真実の声を聴くのに最適な配置です。静かな時間を5分だけでも持つことが、運気を最大に引き上げる鍵となります。`,
+      horoscope: `本日（${todayJst}）の運勢。本日のトランジット月は「${transitMoonSign}」付近を運行しています。今日の星々は、あなたの内なる情熱をそっと刺激しています。特に「${selectedMoonSign}」のエネルギーが、あなたの潜在意識に優しい光を投げかけており、焦らずに一歩ずつ進むことで、大きなインスピレーションを受け取ることができるでしょう。今日はご自身の直感を一番の味方にしてください。`,
+      influence: `本日受ける星の影響。トランジット（現在運行中）の月がナクシャトラ「${transitNakshatra}」を通過し、あなたの感情を司るハウスと美しく調成しています。誰かに言われた些細な一言に惑わされることなく、自分の真実の声を聴くのに最適な配置です。静かな時間を5分だけでも持つことが、運気を最大に引き上げる鍵となります。`,
       dasha_summary: `支配星周期の過ごし方。生まれた瞬間の月のナクシャトラ「${selectedNakshatra}」が、あなたの人生に豊かな潤いを与えています。今は「自己愛と整理整頓」のサイクルにあります。これまでの努力が静かに実を結ぶ直前の時期ですので、ご自身をたくさん労い、褒めてあげてください。`,
-      lucky_element: `✨ 本日のラッキーテーマ: ココアを飲むこと | 開運アクション: スマホの通知を一時的にオフにして内省する`
+      lucky_element: `✨ 本日のラッキーテーマ: ${luckyThemes[daysSinceEpoch % luckyThemes.length]} | 開運アクション: ${luckyActions[daysSinceEpoch % luckyActions.length]}`
     }
   };
 
@@ -329,14 +369,24 @@ function buildFallbackResponse(dob, isPaid) {
   return response;
 }
 
+// JSTのISO8601文字列（+09:00）を返す
+function toJstIsoString(date) {
+  const jst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+  return `${jst.toISOString().slice(0, 19)}+09:00`;
+}
+
 // Gemini 占星術パーソナライズプロンプト構築ロジック
-function buildAstrologyPrompt(prokeralaData, isPaid, lang) {
+function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang) {
   const planetList = prokeralaData.data?.planets || [];
   const ascendantData = prokeralaData.data?.ascendant || {};
   
   const moonData = planetList.find(p => p.name === 'Moon') || {};
   const moonSign = moonData.sign || '不明';
   const nakshatra = moonData.nakshatra || '不明';
+
+  const transitPlanets = transitData?.data?.planets || [];
+  const todayJst = toJstIsoString(new Date()).slice(0, 10);
+  const transitMoon = transitPlanets.find(p => p.name === 'Moon') || {};
 
   let formatSchema = '';
   if (isPaid) {
@@ -386,10 +436,15 @@ function buildAstrologyPrompt(prokeralaData, isPaid, lang) {
   【月のナクシャトラ (Nakshatra)】 ${nakshatra}
   【アセンダント (Ascendant/Lagna)】 ${ascendantData.sign || '不明'}、第1ハウス
 
-  【9天体配置データ】
+  【出生図9天体配置データ（natal）】
   ${JSON.stringify(planetList)}
 
+  【${todayJst} 現在のトランジット天体配置】
+  ${transitPlanets.length ? JSON.stringify(transitPlanets) : '取得できませんでした'}
+  【本日のトランジット月】 ${transitMoon.sign || '不明'} / ナクシャトラ: ${transitMoon.nakshatra || '不明'}
+
   【鑑定執筆の基本ガイドライン】
+  - 「本日の運勢」「本日受ける星の影響」は、必ず ${todayJst} のトランジット天体配置と出生図の関係（アスペクト・在住ハウス）から導くこと。日付が変われば内容も変わるのが正しい振る舞いです。
   - ポエムや使い回しの文章は一切禁止。本当に天体配置と月の位置、ナクシャトラの特徴から、相談者の心へ誠実かつ深い内省を促すように語りかけてください。
   - トーンは高貴で、神秘的でありながら、現実的で温かい励ましに満ちた言葉遣い（日本語）。
   - 有料鑑定の場合は、プロフェッショナル鑑定書に相応しい、各セクションの最低文字数を必ず厳守して、重厚かつ詳細に運命を紐解いてください。
