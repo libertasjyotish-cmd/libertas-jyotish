@@ -446,9 +446,17 @@ const SIGN_JA = {
   Sagittarius: '射手座', Capricorn: '山羊座', Aquarius: '水瓶座', Pisces: '魚座'
 };
 
+// Prokerala v2 はサンスクリット名（Mesha 等）で返すことがある
+const SIGN_SA_JA = {
+  Mesha: '牡羊座', Vrishabha: '牡牛座', Vrushabha: '牡牛座', Mithuna: '双子座',
+  Karka: '蟹座', Kataka: '蟹座', Karkata: '蟹座', Simha: '獅子座', Kanya: '乙女座',
+  Tula: '天秤座', Thula: '天秤座', Vrischika: '蠍座', Vrishchika: '蠍座',
+  Dhanu: '射手座', Dhanus: '射手座', Makara: '山羊座', Kumbha: '水瓶座', Meena: '魚座'
+};
+
 function toJapaneseSign(sign) {
   if (!sign) return '不明';
-  return SIGN_JA[sign] || sign;
+  return SIGN_JA[sign] || SIGN_SA_JA[sign] || sign;
 }
 
 // Prokerala v2 planet-position のレスポンスを扱いやすい形に正規化する。
