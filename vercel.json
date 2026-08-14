@@ -1,11 +1,13 @@
 {
   "cleanUrls": true,
+  "trailingSlash": false,
   "redirects": [
-    { "source": "/", "destination": "/ja/index.html", "permanent": false }
-  ],
-  "rewrites": [
-    { "source": "/ja/(.*)", "destination": "/ja/$1" },
-    { "source": "/mypage.html", "destination": "/ja/mypage.html" },
-    { "source": "/legal.html", "destination": "/ja/legal.html" }
+    { "source": "/mypage", "destination": "/ja/mypage", "permanent": false },
+    { "source": "/result", "destination": "/ja/result", "permanent": false },
+    { "source": "/legal", "destination": "/ja/legal", "permanent": false },
+    { "source": "/reissue", "destination": "/ja/reissue", "permanent": false },
+    { "source": "/success", "destination": "/ja/success", "permanent": false },
+    { "source": "/pdf-purchase", "destination": "/ja/pdf-purchase", "permanent": false },
+    { "source": "/pdf-success", "destination": "/ja/pdf-success", "permanent": false }
   ]
 }

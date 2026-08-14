@@ -3,7 +3,7 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library');
 const crypto = require('crypto');
 
-const AUTH_SECRET = process.env.AUTH_SECRET || 'libertas_jyotish_secret_key_2026_secure';
+const AUTH_SECRET = process.env.AUTH_SECRET;
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -22,6 +22,11 @@ module.exports = async function handler(req, res) {
 
   const { action, email, address, datetime, city, dob, tob, status, language, code, token } = req.body;
 
+  if (!AUTH_SECRET) {
+    console.error('AUTH_SECRET is not configured.');
+    return res.status(500).json({ error: 'Server is not configured.' });
+  }
+
   try {
     // ① メール認証コード送信処理 (action: send_code)
     if (action === 'send_code') {
@@ -29,7 +34,7 @@ module.exports = async function handler(req, res) {
         return res.status(400).json({ error: 'Invalid email address' });
       }
 
-      const verificationCode = String(Math.floor(Math.random() * 900000) + 100000);
+      const verificationCode = String(crypto.randomInt(100000, 1000000));
       const expiry = Date.now() + 10 * 60 * 1000;
 
       const dataToSign = `${email}:${verificationCode}:${expiry}`;
@@ -78,8 +83,6 @@ module.exports = async function handler(req, res) {
         }
       } catch (mailErr) {
         console.error("Mail send error:", mailErr);
-        // ローカル環境等のテストを妨げないためのRECOVERYログ
-        console.log(`[RECOVERY] Generated verification code for ${email}: ${verificationCode}`);
         return res.status(400).json({ error: `メール送信エラー: ${mailErr.message}` });
       }
 
@@ -102,7 +105,7 @@ module.exports = async function handler(req, res) {
       const dataToSign = `${email}:${code}:${expiry}`;
       const expectedSignature = crypto.createHmac('sha256', AUTH_SECRET).update(dataToSign).digest('hex');
 
-      if (signature !== expectedSignature) {
+      if (!isSignatureEqual(signature, expectedSignature)) {
         return res.status(400).json({ error: 'Invalid verification code' });
       }
 
@@ -137,14 +140,15 @@ module.exports = async function handler(req, res) {
             finalStatus = sheetsProfile.status || 'free';
             if (sheetsProfile.dob && sheetsProfile.dob !== '1970-01-01') finalDob = sheetsProfile.dob;
             if (sheetsProfile.tob) finalTob = sheetsProfile.tob;
-            if (sheetsProfile.city && sheetsProfile.city !== '東京都') finalCity = sheetsProfile.city;
+            if (sheetsProfile.city) finalCity = sheetsProfile.city;
           }
         } catch (sheetErr) {
           console.error("Sheets profile sync failed, falling back to memory:", sheetErr);
         }
       }
 
-      if (!finalDob || finalDob === '1970-01-01' || !finalCity || finalCity === '東京都') {
+      // '1970-01-01' は旧システムのダミー値。実在の出生地である '東京都' は弾かない。
+      if (!finalDob || finalDob === '1970-01-01' || !finalCity) {
         return res.status(400).json({ error: 'Missing or corrupt birth date or birth place data.' });
       }
 
@@ -170,9 +174,12 @@ module.exports = async function handler(req, res) {
         // (B) Prokerala API 認証 & 惑星データ取得
         let prokeralaData = null;
         try {
-          const prokeralaClientId = process.env.PROKERALA_CLIENT_ID || '2413eb05-2b3a-4c00-b92e-5e12ad3fadd6';
-          const prokeralaClientSecret = process.env.PROKERALA_CLIENT_SECRET || 'V5gyYkEDx0DYgV6knOQfX576fBgmmB6ZuhWfWgsO';
-          
+          const prokeralaClientId = process.env.PROKERALA_CLIENT_ID;
+          const prokeralaClientSecret = process.env.PROKERALA_CLIENT_SECRET;
+          if (!prokeralaClientId || !prokeralaClientSecret) {
+            throw new Error('PROKERALA_CLIENT_ID / PROKERALA_CLIENT_SECRET are not configured.');
+          }
+
           const tokenRes = await fetch('https://api.prokerala.com/token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -266,6 +273,15 @@ module.exports = async function handler(req, res) {
     return res.status(200).json(fallback);
   }
 };
+
+// タイミング攻撃を避けた署名比較
+function isSignatureEqual(actual, expected) {
+  if (typeof actual !== 'string') return false;
+  const actualBuf = Buffer.from(actual, 'utf8');
+  const expectedBuf = Buffer.from(expected, 'utf8');
+  if (actualBuf.length !== expectedBuf.length) return false;
+  return crypto.timingSafeEqual(actualBuf, expectedBuf);
+}
 
 // 完璧なスタティック鑑定書ジェネレーター（100%バグを救い、ユーザーに感動を与える温かい鑑定書）
 function buildFallbackResponse(dob, isPaid) {
@@ -385,11 +401,11 @@ function buildAstrologyPrompt(prokeralaData, isPaid, lang) {
 
 async function fetchProfileFromSheets(email) {
   try {
-    const sheetId = process.env.GOOGLE_SHEETS_ID || '12bVoLkNY2EEoOztv2Ij6nZYjVwu1vhgquo2SBVGFfIo';
+    const sheetId = process.env.GOOGLE_SHEETS_ID;
     const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
     const privateKey = process.env.GOOGLE_PRIVATE_KEY;
 
-    if (!clientEmail || !privateKey) {
+    if (!sheetId || !clientEmail || !privateKey) {
       console.warn("Google credentials missing. Running in memory-only mode.");
       return null;
     }
@@ -427,11 +443,11 @@ async function fetchProfileFromSheets(email) {
 
 async function saveProfileToSheets(email, status, dob, tob, city, readingData, lang) {
   try {
-    const sheetId = process.env.GOOGLE_SHEETS_ID || '12bVoLkNY2EEoOztv2Ij6nZYjVwu1vhgquo2SBVGFfIo';
+    const sheetId = process.env.GOOGLE_SHEETS_ID;
     const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
     const privateKey = process.env.GOOGLE_PRIVATE_KEY;
 
-    if (!clientEmail || !privateKey) {
+    if (!sheetId || !clientEmail || !privateKey) {
       console.warn("Google credentials missing. Skipping spreadsheet save.");
       return;
     }

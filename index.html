@@ -5,33 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Libertas Jyotish</title>
   <link rel="canonical" href="https://libertas-jyotish.com/">
-  <link rel="icon" type="image/png" href="./img/libertas-logo.png">
-  <link rel="apple-touch-icon" href="./img/libertas-logo.png">
+  <link rel="icon" type="image/png" href="/img/libertas-logo.png">
+  <link rel="apple-touch-icon" href="/img/libertas-logo.png">
   <meta name="description" content="Libertas Jyotish - Astro-Intelligence Platform">
   <script>
     (function() {
       // ユーザーのブラウザ言語を取得
       const userLang = (navigator.language || navigator.userLanguage || 'ja').toLowerCase();
       
-      // 今後追加される6言語の一覧
-      // 現在は日本語（/ja/）のみ構築完了しているため、デフォルト・フォールバックも含めてすべて「ja」へ転送します。
-      const supportedLangs = ['ja', 'en', 'es', 'pt', 'ar', 'id'];
-      
-      let targetLang = 'ja'; // デフォルトフォールバックは日本語
-      
-      // もし将来的に他言語フォルダを追加した場合は、ここの条件判定を有効化します。
-      // 現在はすべて /ja/ に転送し、コンテンツ未実在による404エラーを防ぎます。
-      /*
-      for (const lang of supportedLangs) {
+      // 公開済みの言語ディレクトリのみを列挙する。
+      // 新しい言語（/en/, /es/, /pt/, /ar/, /id/）を公開したらここに追加すれば自動判定に載る。
+      const availableLangs = ['ja'];
+
+      let targetLang = 'ja'; // 未対応言語のフォールバックは日本語
+      for (const lang of availableLangs) {
         if (userLang.startsWith(lang)) {
           targetLang = lang;
           break;
         }
       }
-      */
-      
-      // ja フォルダへ即時・超高速自動リダイレクト
-      window.location.replace('/' + targetLang + '/index.html');
+
+      // 言語ディレクトリへ即時リダイレクト（cleanUrls のため拡張子なし）
+      window.location.replace('/' + targetLang);
     })();
   </script>
 </head>

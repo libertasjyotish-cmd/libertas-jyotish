@@ -6,13 +6,13 @@
 <title>マイページ | Libertas Jyotish</title>
 
 <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
-<link rel="canonical" href="https://libertas-jyotish.com/ja/mypage.html">
+<link rel="canonical" href="https://libertas-jyotish.com/ja/mypage">
 
 <!-- PWA & Theme Settings -->
-<link rel="manifest" href="../manifest.json">
+<link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#0c1a1f">
-<link rel="icon" type="image/png" href="../img/libertas-logo.png">
-<link rel="apple-touch-icon" href="../img/libertas-logo.png">
+<link rel="icon" type="image/png" href="/img/libertas-logo.png">
+<link rel="apple-touch-icon" href="/img/libertas-logo.png">
 
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,7 +75,7 @@ font-family: var(--font-en); font-weight: 600; font-size: 1.05rem;
 position: relative; flex: 1;
 display: flex; flex-direction: column; align-items: center; justify-content: center;
 padding: 100px 20px 60px;
-background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("../img/bg-jyotish.jpg");
+background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");
 background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed;
 }
 
@@ -195,15 +195,15 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 <body>
 
 <header class="site-header">
-<a href="./index.html" class="header-logo">
-<img src="../img/libertas-logo.png" alt="Logo">
+<a href="/ja" class="header-logo">
+<img src="/img/libertas-logo.png" alt="Logo">
 <span>Libertas Jyotish</span>
 </a>
 <nav class="header-nav">
-<a href="./index.html">トップ</a>
-<a href="./index.html#form-area">無料診断</a>
-<a href="./mypage.html" style="color:var(--color-gold-main);">マイページ</a>
-<a href="./pdf-purchase.html">完全鑑定書</a>
+<a href="/ja">トップ</a>
+<a href="/ja#form-area">無料診断</a>
+<a href="/ja/mypage" style="color:var(--color-gold-main);">マイページ</a>
+<a href="/ja/pdf-purchase">完全鑑定書</a>
 </nav>
 </header>
 
@@ -326,7 +326,7 @@ data-width="320">
 <div style="font-size:1.8rem; margin-bottom:6px;">🔒</div>
 <div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:8px;">有料会員限定コンテンツ</div>
 <p style="font-size:0.82rem; color:#5A4E48; margin-bottom:15px;">全天体配置・ダシャー周期の解読にはプラン登録が必要です。</p>
-<button id="btn-upgrade-tally" class="btn-upgrade">有料プランに登録する</button>
+<button id="btn-upgrade-premium" class="btn-upgrade">有料プランに登録する</button>
 </div>
 </div>
 
@@ -334,7 +334,7 @@ data-width="320">
 </section>
 
 <footer class="site-footer">
-<div class="footer-links"><a href="./legal.html">特定商取引法に基づく表記・利用規約・プライバシーポリシー</a></div>
+<div class="footer-links"><a href="/ja/legal">特定商取引法に基づく表記・利用規約・プライバシーポリシー</a></div>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 
@@ -361,6 +361,7 @@ window.location.reload();
 }
 
 const JYOTISH_API_URL = "/api/jyotish";
+const PREMIUM_UPGRADE_URL = "https://buy.stripe.com/dRmaEZ0I73Bx6g8auH24000";
 
 
 // Google Identity Services JWT デコード関数
@@ -424,7 +425,7 @@ let localDob = '';
 let localCity = '';
 
 if (cachedUser) {
-if (cachedUser.dob && cachedUser.city && cachedUser.dob !== '1970-01-01' && cachedUser.city !== '東京都') {
+if (cachedUser.dob && cachedUser.city && cachedUser.dob !== '1970-01-01') {
 hasBirthData = true;
 localDob = cachedUser.dob;
 localCity = cachedUser.city;
@@ -436,7 +437,6 @@ localDob = localStorage.getItem('dob') || localStorage.getItem('lj_dob') || '';
 localCity = localStorage.getItem('city') || localStorage.getItem('lj_user_city') || localStorage.getItem('lj_city') || localStorage.getItem('address') || localStorage.getItem('user_city') || '';
 
 if (localDob === '1970-01-01') localDob = '';
-if (localCity === '東京都') localCity = '';
 
 if (localDob && localCity) {
 hasBirthData = true;
@@ -510,15 +510,10 @@ if (premiumTitle) premiumTitle.style.display = 'block';
 fetchUserDataAndRender(savedEmail);
 });
 
-// Tally 決済モーダル呼び出し
-document.getElementById('btn-upgrade-tally').addEventListener('click', () => {
+// Stripe 決済ページ呼び出し
+document.getElementById('btn-upgrade-premium')?.addEventListener('click', () => {
   const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
-  const stripeUrl = `https://buy.stripe.com/dRmaEZ0I73Bx6g8auH24000?prefilled_email=${encodeURIComponent(email)}`;
-  window.open(stripeUrl, '_blank');
-});
-} else {
-window.open(`https://tally.so/r/${TALLY_FORM_ID}?email=${encodeURIComponent(email)}`, '_blank');
-}
+  window.open(`${PREMIUM_UPGRADE_URL}?prefilled_email=${encodeURIComponent(email)}`, '_blank');
 });
 
 let currentAuthToken = '';
@@ -706,8 +701,7 @@ userTob = localStorage.getItem('tob') ||
           localStorage.getItem('lj_tob') || '12:00';
 }
 
-// 1970-01-01 や 東京都 といったダミーの先祖返りキーを完全排除
-if (userAddress === '東京都') userAddress = '';
+// 旧システムのダミー値 1970-01-01 を排除（'東京都' は実在の出生地なので保持）
 if (userDob === '1970-01-01') userDob = '';
 
 // 万が一データが揃っていない場合は、送信せずに登録画面を出す
@@ -786,7 +780,7 @@ savedUser.status = data.status || "free";
 savedUser.lastResult = data;
 if (userDob && userDob !== '1970-01-01') savedUser.dob = userDob;
 if (userTob) savedUser.tob = userTob;
-if (userAddress && userAddress !== '東京都') savedUser.city = userAddress;
+if (userAddress) savedUser.city = userAddress;
 
 localStorage.setItem('jyotish_user', JSON.stringify(savedUser));
 localStorage.setItem('lj_user_email', email);
