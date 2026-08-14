@@ -24,7 +24,16 @@ function normalizePrivateKey(raw) {
       // base64 ではない
     }
   }
-  return key.replace(/\\n/g, '\n');
+  key = key.replace(/\\n/g, '\n');
+
+  // 改行が空白に潰れて貼られていても復元できるよう、PEM を組み立て直す
+  const pem = key.match(/-----BEGIN ([A-Z ]+)-----([\s\S]*?)-----END \1-----/);
+  if (pem) {
+    const body = pem[2].replace(/\s+/g, '');
+    const wrapped = body.match(/.{1,64}/g) || [];
+    key = `-----BEGIN ${pem[1]}-----\n${wrapped.join('\n')}\n-----END ${pem[1]}-----\n`;
+  }
+  return key;
 }
 
 async function findSheetWithMemberHeaders(sheets) {
