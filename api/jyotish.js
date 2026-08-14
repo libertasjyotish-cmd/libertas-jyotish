@@ -251,7 +251,7 @@ module.exports = async function handler(req, res) {
             if (!geminiApiKey) {
               fallbackReason = 'gemini_not_configured';
             } else {
-              const promptText = buildAstrologyPrompt(prokeralaData, transitData, finalStatus === 'paid', finalLang);
+              const isPaid = finalStatus === 'paid';
 
               // モデル名は環境変数で上書き可能。指定が無ければ、そのキーで実際に使えるモデルを ListModels で取得する。
               // （固定のモデル名は廃止・キー種別の違いで 404 になるため）
@@ -259,36 +259,33 @@ module.exports = async function handler(req, res) {
                 ? [process.env.GEMINI_MODEL]
                 : await listGeminiModels(geminiApiKey);
 
-              // 有料鑑定は生成量が多く時間がかかるため、モデルごとの上限を分けて待ち切れる範囲に収める
-              const geminiTimeout = finalStatus === 'paid' ? 40000 : 25000;
+              if (isPaid) {
+                // 有料は出力量が多く1回の生成が長い。基本鑑定とプレミアム詳細を別プロンプトに割って
+                // 同時に生成することで、実行時間を最長のセクション1本分に抑える。
+                const [base, premium] = await Promise.all([
+                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'base'), 40000),
+                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'premium'), 40000)
+                ]);
 
-              for (const geminiModel of geminiModels) {
-                const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${geminiApiKey}`;
-
-                const geminiRes = await fetchWithTimeout(geminiUrl, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    contents: [{ role: "user", parts: [{ text: promptText }] }],
-                    generationConfig: { responseMimeType: "application/json", temperature: 1.0 }
-                  })
-                }, geminiTimeout);
-
-                if (!geminiRes.ok) {
-                  fallbackReason = `gemini_${geminiRes.status}`;
-                  console.error(`Gemini model ${geminiModel} failed with status ${geminiRes.status}`);
-                  continue;
+                if (base.json) {
+                  cleanJsonResult = base.json;
+                  cleanJsonResult.generated_by = base.model;
+                  if (premium.json && premium.json.premium_reading) {
+                    cleanJsonResult.premium_reading = premium.json.premium_reading;
+                  } else {
+                    fallbackReason = premium.reason || 'gemini_premium_missing';
+                  }
+                } else {
+                  fallbackReason = base.reason || 'gemini_error';
                 }
-
-                const geminiData = await geminiRes.json();
-                const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
-                if (!rawText) {
-                  fallbackReason = 'gemini_empty_response';
-                  continue;
+              } else {
+                const result = await generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, false, finalLang), 25000);
+                if (result.json) {
+                  cleanJsonResult = result.json;
+                  cleanJsonResult.generated_by = result.model;
+                } else {
+                  fallbackReason = result.reason || 'gemini_error';
                 }
-                cleanJsonResult = JSON.parse(rawText.trim());
-                cleanJsonResult.generated_by = geminiModel;
-                break;
               }
             }
           } catch (gemErr) {
@@ -307,6 +304,9 @@ module.exports = async function handler(req, res) {
           cleanJsonResult = buildFallbackResponse(finalDob, finalStatus === 'paid');
           cleanJsonResult.fallback_reason = fallbackReason || 'unknown';
           if (fallbackDetail) cleanJsonResult.fallback_detail = fallbackDetail;
+        } else if (fallbackReason) {
+          // 基本鑑定は生成できたがプレミアム詳細だけ落ちた場合など、部分失敗も見えるようにする
+          cleanJsonResult.partial_reason = fallbackReason;
         }
 
         cleanJsonResult.status = finalStatus;
@@ -517,7 +517,44 @@ function extractPlanets(prokeralaData) {
 }
 
 // Gemini 占星術パーソナライズプロンプト構築ロジック
-function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang) {
+// 利用可能なモデルを順に試して JSON を1本生成する。失敗理由は秘密情報を含まない区分だけ返す。
+async function generateWithGemini(apiKey, models, promptText, timeoutMs) {
+  let reason = 'gemini_error';
+  for (const model of models) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    try {
+      const res = await fetchWithTimeout(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: promptText }] }],
+          generationConfig: { responseMimeType: 'application/json', temperature: 1.0 }
+        })
+      }, timeoutMs);
+
+      if (!res.ok) {
+        reason = `gemini_${res.status}`;
+        console.error(`Gemini model ${model} failed with status ${res.status}`);
+        continue;
+      }
+
+      const data = await res.json();
+      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!rawText) {
+        reason = 'gemini_empty_response';
+        continue;
+      }
+      return { json: JSON.parse(rawText.trim()), model, reason: null };
+    } catch (err) {
+      reason = err?.name === 'AbortError' ? 'gemini_timeout' : 'gemini_error';
+      console.error(`Gemini model ${model} error:`, err?.message);
+    }
+  }
+  return { json: null, model: null, reason };
+}
+
+// section: 'all'（既定）/ 'base'（プレミアム詳細以外）/ 'premium'（プレミアム詳細のみ）
+function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section = 'all') {
   const planetList = extractPlanets(prokeralaData);
   const ascRaw = prokeralaData.data?.ascendant || planetList.find(p => p.name === 'Ascendant') || {};
   const ascendantData = { sign: toJapaneseSign(ascRaw.rasi?.name || ascRaw.sign) };
@@ -540,7 +577,17 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang) {
   const transitMoon = transitPlanets.find(p => p.name === 'Moon') || {};
 
   let formatSchema = '';
-  if (isPaid) {
+  if (isPaid && section === 'premium') {
+    formatSchema = `
+    以下のJSONスキーマに従って日本語で100%出力してください（他のキーは出力しないこと）：
+    {
+      "premium_reading": {
+        "kundali_reading": "精密クンダリー・9天体配置の宿命解読（300文字以上の詳細解説）",
+        "detailed_horoscope": "本日のアスペクトによる日次＆週次詳細運勢レポート（500文字以上の詳細解説）",
+        "lifetime_dasha": "108区分生涯カルテ＆支配星詳細解読（800文字以上の生涯のバイオリズム解説）"
+      }
+    }`;
+  } else if (isPaid) {
     formatSchema = `
     以下のJSONスキーマに従って日本語で100%出力してください：
     {
@@ -557,12 +604,12 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang) {
       },
       "planets": [
         { "name": "天体名", "sign": "星座名", "house": "ハウス番号(数字)", "comment": "天体とハウスによる宿命の一言解読" }
-      ],
+      ]${section === 'all' ? `,
       "premium_reading": {
         "kundali_reading": "精密クンダリー・9天体配置の宿命解読（300文字以上の詳細解説）",
         "detailed_horoscope": "本日のアスペクトによる日次＆週次詳細運勢レポート（500文字以上の詳細解説）",
         "lifetime_dasha": "108区分生涯カルテ＆支配星詳細解読（800文字以上の生涯のバイオリズム解説）"
-      }
+      }` : ''}
     }`;
   } else {
     formatSchema = `
