@@ -309,6 +309,14 @@ module.exports = async function handler(req, res) {
           cleanJsonResult.partial_reason = fallbackReason;
         }
 
+        // 星座・ナクシャトラは Prokerala の算出値が正。生成AIが「不明」等に取りこぼすことがあるので上書きする。
+        if (prokeralaData) {
+          const computed = computeSigns(prokeralaData);
+          if (computed.sunSign) cleanJsonResult.sunSign = computed.sunSign;
+          if (computed.moonSign) cleanJsonResult.moonSign = computed.moonSign;
+          if (computed.nakshatra) cleanJsonResult.nakshatra = computed.nakshatra;
+        }
+
         cleanJsonResult.status = finalStatus;
         // Sheets の会員行を読めたかどうか（課金反映トラブルの切り分け用）
         cleanJsonResult.profile_source = profileSource;
@@ -500,6 +508,42 @@ function toJapaneseSign(sign) {
   return SIGN_JA[sign] || SIGN_SA_JA[sign] || sign;
 }
 
+// Prokerala のナクシャトラ名（英字表記・表記ゆれあり）を日本語へ変換する
+const NAKSHATRA_JA = {
+  ashwini: 'アシュヴィニー', ashvini: 'アシュヴィニー', bharani: 'バラニー',
+  krittika: 'クリッティカー', kritika: 'クリッティカー', rohini: 'ローヒニー',
+  mrigashira: 'ムリガシラス', mrigashirsha: 'ムリガシラス', mrighashira: 'ムリガシラス',
+  ardra: 'アールドラー', punarvasu: 'プナルヴァス', pushya: 'プシャ',
+  ashlesha: 'アーシュレーシャ', aslesha: 'アーシュレーシャ', magha: 'マガー',
+  purvaphalguni: 'プールヴァ・パールグニー', uttaraphalguni: 'ウッタラ・パールグニー',
+  hasta: 'ハスタ', chitra: 'チトラ', swati: 'スヴァーティ', swathi: 'スヴァーティ',
+  vishakha: 'ヴィシャーカー', visakha: 'ヴィシャーカー', anuradha: 'アヌラーダ',
+  jyeshta: 'ジェーシュタ', jyeshtha: 'ジェーシュタ', mula: 'ムーラ', moola: 'ムーラ',
+  purvaashadha: 'プールヴァ・アシャーダー', uttaraashadha: 'ウッタラ・アシャーダー',
+  shravana: 'シュラヴァナ', dhanishta: 'ダニシュター', dhanishtha: 'ダニシュター',
+  shatabhisha: 'シャタビシャ', satabhisha: 'シャタビシャ',
+  purvabhadrapada: 'プールヴァ・バードラパダー', uttarabhadrapada: 'ウッタラ・バードラパダー',
+  revati: 'レーヴァティー', abhijit: 'アビジット'
+};
+
+function toJapaneseNakshatra(name) {
+  if (!name) return '';
+  const key = String(name).toLowerCase().replace(/[^a-z]/g, '');
+  return NAKSHATRA_JA[key] || name;
+}
+
+// Prokerala の出生図から太陽星座・月星座・ナクシャトラを求める（表示の正となる値）
+function computeSigns(prokeralaData) {
+  const planets = extractPlanets(prokeralaData);
+  const moon = planets.find(p => p.name === 'Moon') || {};
+  const sun = planets.find(p => p.name === 'Sun') || {};
+  return {
+    sunSign: sun.sign ? toJapaneseSign(sun.sign) : '',
+    moonSign: moon.sign ? toJapaneseSign(moon.sign) : '',
+    nakshatra: toJapaneseNakshatra(moon.nakshatra)
+  };
+}
+
 // Prokerala v2 planet-position のレスポンスを扱いやすい形に正規化する。
 // （星座は rasi.name、ナクシャトラは nakshatra.name に入っており、キー名も planet_position など差異がある）
 function extractPlanets(prokeralaData) {
@@ -578,7 +622,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
 
   const moonData = planetList.find(p => p.name === 'Moon') || {};
   const moonSign = toJapaneseSign(moonData.sign);
-  const nakshatra = moonData.nakshatra || '不明';
+  const nakshatra = toJapaneseNakshatra(moonData.nakshatra) || '不明';
 
 
   // インド占星術（サイデリアル）の太陽星座
