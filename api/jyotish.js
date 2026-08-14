@@ -1,6 +1,6 @@
 // Vercel Serverless Function 統合API: /api/jyotish.js (CommonJS 完全自律救済版)
 const crypto = require('crypto');
-const { getMemberSheet } = require('./_sheets');
+const { getMemberSheet, getLastSheetIssue } = require('./_sheets');
 
 const AUTH_SECRET = process.env.AUTH_SECRET;
 
@@ -588,7 +588,7 @@ async function fetchProfileFromSheets(email) {
     if (!email) return null;
     const sheet = await getMemberSheet();
     if (!sheet) {
-      lastLookupSource = 'sheet_unavailable';
+      lastLookupSource = `sheet_unavailable:${getLastSheetIssue()}`;
       return null;
     }
 
