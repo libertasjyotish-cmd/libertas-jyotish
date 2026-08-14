@@ -451,20 +451,42 @@ function toJapaneseSign(sign) {
   return SIGN_JA[sign] || sign;
 }
 
+// Prokerala v2 planet-position のレスポンスを扱いやすい形に正規化する。
+// （星座は rasi.name、ナクシャトラは nakshatra.name に入っており、キー名も planet_position など差異がある）
+function extractPlanets(prokeralaData) {
+  const d = prokeralaData?.data || {};
+  const raw = d.planet_position || d.planets || d.planet_positions || [];
+  if (!Array.isArray(raw)) return [];
+  return raw.map((p) => ({
+    name: p.name,
+    sign: p.rasi?.name || p.sign?.name || p.sign || p.zodiac || '',
+    nakshatra: p.nakshatra?.name || (typeof p.nakshatra === 'string' ? p.nakshatra : '') || '',
+    degree: p.degree,
+    house: p.position || p.house,
+    is_retrograde: p.is_retrograde
+  }));
+}
+
 // Gemini 占星術パーソナライズプロンプト構築ロジック
 function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang) {
-  const planetList = prokeralaData.data?.planets || [];
-  const ascendantData = prokeralaData.data?.ascendant || {};
-  
+  const planetList = extractPlanets(prokeralaData);
+  const ascRaw = prokeralaData.data?.ascendant || planetList.find(p => p.name === 'Ascendant') || {};
+  const ascendantData = { sign: toJapaneseSign(ascRaw.rasi?.name || ascRaw.sign) };
+
+  if (!planetList.length) {
+    console.error('Prokerala response keys (planets not found):', Object.keys(prokeralaData?.data || {}));
+  }
+
   const moonData = planetList.find(p => p.name === 'Moon') || {};
   const moonSign = toJapaneseSign(moonData.sign);
   const nakshatra = moonData.nakshatra || '不明';
+
 
   // インド占星術（サイデリアル）の太陽星座
   const sunData = planetList.find(p => p.name === 'Sun') || {};
   const sunSign = toJapaneseSign(sunData.sign);
 
-  const transitPlanets = transitData?.data?.planets || [];
+  const transitPlanets = extractPlanets(transitData);
   const todayJst = toJstIsoString(new Date()).slice(0, 10);
   const transitMoon = transitPlanets.find(p => p.name === 'Moon') || {};
 
@@ -517,14 +539,14 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang) {
   【月の星座 (Moon Sign)】 ${moonSign}
   【太陽星座 (Sun Sign / サイデリアル)】 ${sunSign}
   【月のナクシャトラ (Nakshatra)】 ${nakshatra}
-  【アセンダント (Ascendant/Lagna)】 ${ascendantData.sign || '不明'}、第1ハウス
+  【アセンダント (Ascendant/Lagna)】 ${ascendantData.sign}、第1ハウス
 
   【出生図9天体配置データ（natal）】
   ${JSON.stringify(planetList)}
 
   【${todayJst} 現在のトランジット天体配置】
   ${transitPlanets.length ? JSON.stringify(transitPlanets) : '取得できませんでした'}
-  【本日のトランジット月】 ${transitMoon.sign || '不明'} / ナクシャトラ: ${transitMoon.nakshatra || '不明'}
+  【本日のトランジット月】 ${toJapaneseSign(transitMoon.sign)} / ナクシャトラ: ${transitMoon.nakshatra || '不明'}
 
   【鑑定執筆の基本ガイドライン】
   - 「本日の運勢」「本日受ける星の影響」は、必ず ${todayJst} のトランジット天体配置と出生図の関係（アスペクト・在住ハウス）から導くこと。日付が変われば内容も変わるのが正しい振る舞いです。
