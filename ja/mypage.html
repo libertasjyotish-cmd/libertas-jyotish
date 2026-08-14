@@ -340,6 +340,7 @@ data-width="320">
 <div style="font-size:1.8rem; margin-bottom:6px;">🔒</div>
 <div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:8px;">有料会員限定コンテンツ</div>
 <p style="font-size:0.82rem; color:#5A4E48; margin-bottom:15px;">全天体配置・ダシャー周期の解読にはプラン登録が必要です。</p>
+<p id="paid-sync-notice" style="display:none; font-size:0.82rem; color:#8a3b2f; margin-bottom:15px;">お支払いは確認できましたが、この会員アカウントにまだ反映されていません。決済時に入力したメールアドレスでログインしているかご確認ください（反映に数分かかる場合があります）。</p>
 <button id="btn-upgrade-premium" class="btn-upgrade">有料プランに登録する</button>
 </div>
 </div>
@@ -800,6 +801,12 @@ const textElem = document.getElementById('today-transit-text');
 if (textElem) textElem.textContent = `決済情報を確認しています...（${paidSyncRetry}/5）`;
 setTimeout(() => { fetchUserDataAndRender(email, true); }, 4000);
 return;
+}
+
+// 決済直後なのに反映されないままリトライを使い切った場合は理由を明示する
+if (new URLSearchParams(location.search).get('status') === 'paid' && data.status !== 'paid' && paidSyncRetry >= 5) {
+const notice = document.getElementById('paid-sync-notice');
+if (notice) notice.style.display = 'block';
 }
 
 // 描画ヘルパーを呼び出して最新データを画面に完全反映！
