@@ -284,6 +284,20 @@ data-width="320">
 <!-- 本日の月星座運勢 -->
 <div class="card-box">
 <div class="card-title">🌟 本日の月星座運勢</div>
+<div id="sign-summary" style="display:none; gap:16px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px dashed rgba(139,107,27,0.25);">
+<div style="flex:1;">
+<div style="font-size:0.72rem; color:var(--color-gold-dark); font-weight:700;">太陽星座 (Sun Sign)</div>
+<div id="sun-sign-text" style="font-size:1.05rem; font-weight:700; color:var(--color-text-dark);">-</div>
+</div>
+<div style="flex:1;">
+<div style="font-size:0.72rem; color:var(--color-gold-dark); font-weight:700;">月星座 (Moon Sign)</div>
+<div id="moon-sign-text" style="font-size:1.05rem; font-weight:700; color:var(--color-text-dark);">-</div>
+</div>
+<div style="flex:1;">
+<div style="font-size:0.72rem; color:var(--color-gold-dark); font-weight:700;">ナクシャトラ</div>
+<div id="nakshatra-text" style="font-size:1.05rem; font-weight:700; color:var(--color-text-dark);">-</div>
+</div>
+</div>
 <p id="today-transit-text" style="font-size:0.88rem; color:#4a3e36; min-height: 48px;">
 本日の星回りデータを読み込んでいます...
 </p>
@@ -816,6 +830,17 @@ document.getElementById('user-status-badge').textContent = '無料プラン';
 document.getElementById('user-status-badge').className = 'user-badge free';
 document.getElementById('lock-overlay').style.display = 'flex';
 document.getElementById('premium-content-area').classList.add('blur-content');
+}
+
+// インド占星術（サイデリアル）の太陽星座・月星座・ナクシャトラ
+if (data.sunSign || data.moonSign || data.nakshatra) {
+const summary = document.getElementById('sign-summary');
+if (summary) {
+summary.style.display = 'flex';
+document.getElementById('sun-sign-text').textContent = data.sunSign || '-';
+document.getElementById('moon-sign-text').textContent = data.moonSign || '-';
+document.getElementById('nakshatra-text').textContent = data.nakshatra || '-';
+}
 }
 
 const fortuneContent = data.fortune || data.dailyMessage || data.text || data.message || data.response || data.result;

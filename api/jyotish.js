@@ -357,6 +357,25 @@ async function listGeminiModels(apiKey) {
   }
 }
 
+// 退避用の簡易サイデリアル太陽星座（サンクラーンティの概算日付。正確な値は Prokerala から取得する）
+function siderealSunSign(dob) {
+  const parts = String(dob || '').split('-');
+  const month = parseInt(parts[1], 10);
+  const day = parseInt(parts[2], 10);
+  if (!month || !day) return '不明';
+  // [開始月, 開始日, 星座]
+  const ranges = [
+    [1, 15, '山羊座'], [2, 13, '水瓶座'], [3, 15, '魚座'], [4, 14, '牡羊座'],
+    [5, 15, '牡牛座'], [6, 15, '双子座'], [7, 17, '蟹座'], [8, 17, '獅子座'],
+    [9, 17, '乙女座'], [10, 18, '天秤座'], [11, 16, '蠍座'], [12, 16, '射手座']
+  ];
+  let sign = '射手座'; // 1/1〜1/14 は前年12/16開始の射手座
+  for (const [m, d, s] of ranges) {
+    if (month > m || (month === m && day >= d)) sign = s;
+  }
+  return sign;
+}
+
 // API 障害時の退避鑑定書。内容は実際の天体計算ではないため is_fallback で明示する。
 function buildFallbackResponse(dob, isPaid) {
   // 生年月日の日をベースに、27ナクシャトラを自動推定して変化を与える
@@ -378,6 +397,7 @@ function buildFallbackResponse(dob, isPaid) {
   const response = {
     is_fallback: true,
     reading_date: todayJst,
+    sunSign: siderealSunSign(dob),
     moonSign: selectedMoonSign,
     nakshatra: selectedNakshatra,
     free_reading: {
@@ -419,14 +439,30 @@ function toJstIsoString(date) {
   return `${jst.toISOString().slice(0, 19)}+09:00`;
 }
 
+// Prokerala は星座名を英語で返すため、表示用に日本語へ変換する
+const SIGN_JA = {
+  Aries: '牡羊座', Taurus: '牡牛座', Gemini: '双子座', Cancer: '蟹座',
+  Leo: '獅子座', Virgo: '乙女座', Libra: '天秤座', Scorpio: '蠍座',
+  Sagittarius: '射手座', Capricorn: '山羊座', Aquarius: '水瓶座', Pisces: '魚座'
+};
+
+function toJapaneseSign(sign) {
+  if (!sign) return '不明';
+  return SIGN_JA[sign] || sign;
+}
+
 // Gemini 占星術パーソナライズプロンプト構築ロジック
 function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang) {
   const planetList = prokeralaData.data?.planets || [];
   const ascendantData = prokeralaData.data?.ascendant || {};
   
   const moonData = planetList.find(p => p.name === 'Moon') || {};
-  const moonSign = moonData.sign || '不明';
+  const moonSign = toJapaneseSign(moonData.sign);
   const nakshatra = moonData.nakshatra || '不明';
+
+  // インド占星術（サイデリアル）の太陽星座
+  const sunData = planetList.find(p => p.name === 'Sun') || {};
+  const sunSign = toJapaneseSign(sunData.sign);
 
   const transitPlanets = transitData?.data?.planets || [];
   const todayJst = toJstIsoString(new Date()).slice(0, 10);
@@ -438,6 +474,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang) {
     以下のJSONスキーマに従って日本語で100%出力してください：
     {
       "moonSign": "${moonSign}",
+      "sunSign": "${sunSign}",
       "nakshatra": "${nakshatra}",
       "dashaTitle": "現在の支配星大周期（例：マハー・ダシャー 木星期）",
       "dashaDesc": "マハー・ダシャー周期の解読アドバイス（200文字程度）",
@@ -461,6 +498,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang) {
     以下のJSONスキーマに従って日本語で100%出力してください：
     {
       "moonSign": "${moonSign}",
+      "sunSign": "${sunSign}",
       "nakshatra": "${nakshatra}",
       "free_reading": {
         "horoscope": "本日の運勢。今日一日の心のバイオリズムや行動の指標を、山羊座やナクシャトラの性質を踏まえて150文字前後で暖かく親しみやすく語りかけてください。",
@@ -477,6 +515,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang) {
 
   【アヤナムシャ】 ラーヒリ（Lahiri）
   【月の星座 (Moon Sign)】 ${moonSign}
+  【太陽星座 (Sun Sign / サイデリアル)】 ${sunSign}
   【月のナクシャトラ (Nakshatra)】 ${nakshatra}
   【アセンダント (Ascendant/Lagna)】 ${ascendantData.sign || '不明'}、第1ハウス
 
