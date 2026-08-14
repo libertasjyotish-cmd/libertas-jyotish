@@ -111,7 +111,12 @@ module.exports = async function handler(req, res) {
 
   try {
     const updated = await setMemberStatus(email, 'paid');
-    console.log(`Stripe ${event.type}: status=paid updated=${updated}`);
+    if (!updated) {
+      // シート未接続などで昇格できていない場合、200 を返すと失敗が誰にも見えなくなる
+      console.error(`Stripe ${event.type}: member sheet unavailable, status not promoted.`);
+      return res.status(500).json({ error: 'Member sheet unavailable' });
+    }
+    console.log(`Stripe ${event.type}: status=paid for ${email}`);
   } catch (err) {
     console.error('Failed to update member status:', err.message);
     // Stripe にリトライさせる
