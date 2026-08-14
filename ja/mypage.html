@@ -611,6 +611,9 @@ body: JSON.stringify({ action: 'verify_code', email: email, code: code, token: t
 });
 
 if (res.ok) {
+const verified = await res.json().catch(() => ({}));
+// 鑑定書など購入者限定APIの本人確認に使うセッション
+if (verified.session) localStorage.setItem('lj_session', verified.session);
 completeLogin(email);
 } else {
 alert('認証コードが正しくないか、有効期限が切れています。');
@@ -651,6 +654,7 @@ document.getElementById('today-transit-text').textContent = 'ログインする�
 
 function logout() {
 localStorage.removeItem('jyotish_user');
+localStorage.removeItem('lj_session');
 localStorage.removeItem('lj_user_email');
 localStorage.removeItem('email');
 setLoggedOutState();

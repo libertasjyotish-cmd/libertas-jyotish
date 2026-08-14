@@ -1,8 +1,9 @@
-// Stripe Webhook: 決済完了を受けて会員ステータスを paid に昇格する
+// Stripe Webhook: 決済完了を受けて会員ステータスを paid に昇格する（サブスク）／
+// 買い切り（mode=payment）は完全鑑定書の購入として記録する
 // Stripe ダッシュボードで https://<domain>/api/stripe-webhook を登録し、
 // checkout.session.completed / checkout.session.async_payment_succeeded / invoice.paid を送信する。
 const crypto = require('crypto');
-const { setMemberStatus } = require('./_sheets');
+const { setMemberStatus, setPdfPurchased } = require('./_sheets');
 
 // 署名検証には生のリクエストボディが必要なため、Vercel の自動パースを無効化する
 module.exports.config = { api: { bodyParser: false } };
@@ -109,16 +110,19 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({ received: true, skipped: 'no_email' });
   }
 
+  // 買い切り（完全鑑定書）とサブスクは別の権利。mode で振り分ける。
+  const isOneTime = object.mode === 'payment';
+
   try {
-    const updated = await setMemberStatus(email, 'paid');
+    const updated = isOneTime ? await setPdfPurchased(email) : await setMemberStatus(email, 'paid');
     if (!updated) {
-      // シート未接続などで昇格できていない場合、200 を返すと失敗が誰にも見えなくなる
-      console.error(`Stripe ${event.type}: member sheet unavailable, status not promoted.`);
+      // シート未接続などで反映できていない場合、200 を返すと失敗が誰にも見えなくなる
+      console.error(`Stripe ${event.type}: member sheet unavailable, purchase not recorded.`);
       return res.status(500).json({ error: 'Member sheet unavailable' });
     }
-    console.log(`Stripe ${event.type}: status=paid for ${email}`);
+    console.log(`Stripe ${event.type}: ${isOneTime ? 'pdf_purchased=true' : 'status=paid'} for ${email}`);
   } catch (err) {
-    console.error('Failed to update member status:', err.message);
+    console.error('Failed to update member record:', err.message);
     // Stripe にリトライさせる
     return res.status(500).json({ error: 'Failed to update status' });
   }

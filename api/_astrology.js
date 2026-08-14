@@ -1,0 +1,421 @@
+// 完全鑑定書（PDF）用の Prokerala 取得・正規化レイヤー（CommonJS）
+// 鑑定書に載せる数値・期間・図はすべてここで確定させ、生成AIには一切計算させない。
+const {
+  SIGN_LORD, SIGN_ELEMENT, PLANET_JA, PLANET_DOMAIN, DIGNITY_SCORE, DIGNITY_JA,
+  LIFE_STONE, PLANET_COLOR, PLANET_DIRECTION, WORK_STYLE, RHYTHM_BY_ELEMENT,
+  HOUSE_DOMAIN, DASHA_SEASON
+} = require('./_dictionaries');
+
+const API_BASE = 'https://api.prokerala.com';
+
+const SIGN_JA = {
+  Aries: '牡羊座', Taurus: '牡牛座', Gemini: '双子座', Cancer: '蟹座',
+  Leo: '獅子座', Virgo: '乙女座', Libra: '天秤座', Scorpio: '蠍座',
+  Sagittarius: '射手座', Capricorn: '山羊座', Aquarius: '水瓶座', Pisces: '魚座'
+};
+
+const SIGN_SA_JA = {
+  Mesha: '牡羊座', Vrishabha: '牡牛座', Vrushabha: '牡牛座', Mithuna: '双子座',
+  Karka: '蟹座', Kataka: '蟹座', Karkata: '蟹座', Simha: '獅子座', Kanya: '乙女座',
+  Tula: '天秤座', Thula: '天秤座', Vrischika: '蠍座', Vrishchika: '蠍座',
+  Dhanu: '射手座', Dhanus: '射手座', Makara: '山羊座', Kumbha: '水瓶座', Meena: '魚座'
+};
+
+const NAKSHATRA_JA = {
+  ashwini: 'アシュヴィニー', ashvini: 'アシュヴィニー', bharani: 'バラニー',
+  krittika: 'クリッティカー', kritika: 'クリッティカー', rohini: 'ローヒニー',
+  mrigashira: 'ムリガシラス', mrigashirsha: 'ムリガシラス', mrighashira: 'ムリガシラス',
+  ardra: 'アールドラー', punarvasu: 'プナルヴァス', pushya: 'プシャ',
+  ashlesha: 'アーシュレーシャ', aslesha: 'アーシュレーシャ', magha: 'マガー',
+  purvaphalguni: 'プールヴァ・パールグニー', uttaraphalguni: 'ウッタラ・パールグニー',
+  hasta: 'ハスタ', chitra: 'チトラ', swati: 'スヴァーティ', swathi: 'スヴァーティ',
+  vishakha: 'ヴィシャーカー', visakha: 'ヴィシャーカー', anuradha: 'アヌラーダ',
+  jyeshta: 'ジェーシュタ', jyeshtha: 'ジェーシュタ', mula: 'ムーラ', moola: 'ムーラ',
+  purvaashadha: 'プールヴァ・アシャーダー', uttaraashadha: 'ウッタラ・アシャーダー',
+  shravana: 'シュラヴァナ', dhanishta: 'ダニシュター', dhanishtha: 'ダニシュター',
+  shatabhisha: 'シャタビシャ', satabhisha: 'シャタビシャ',
+  purvabhadrapada: 'プールヴァ・バードラパダー', uttarabhadrapada: 'ウッタラ・バードラパダー',
+  revati: 'レーヴァティー', abhijit: 'アビジット'
+};
+
+const SIGN_ORDER = [
+  '牡羊座', '牡牛座', '双子座', '蟹座', '獅子座', '乙女座',
+  '天秤座', '蠍座', '射手座', '山羊座', '水瓶座', '魚座'
+];
+
+function toJapaneseSign(sign) {
+  if (!sign) return '';
+  return SIGN_JA[sign] || SIGN_SA_JA[sign] || sign;
+}
+
+function toJapaneseNakshatra(name) {
+  if (!name) return '';
+  const key = String(name).toLowerCase().replace(/[^a-z]/g, '');
+  return NAKSHATRA_JA[key] || name;
+}
+
+function toJstIsoString(date) {
+  const jst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+  return `${jst.toISOString().slice(0, 19)}+09:00`;
+}
+
+async function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function getAccessToken() {
+  const clientId = process.env.PROKERALA_CLIENT_ID;
+  const clientSecret = process.env.PROKERALA_CLIENT_SECRET;
+  if (!clientId || !clientSecret) throw new Error('prokerala_not_configured');
+
+  const res = await fetchWithTimeout(`${API_BASE}/token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'client_credentials',
+      client_id: clientId,
+      client_secret: clientSecret
+    })
+  }, 10000);
+  if (!res.ok) throw new Error(`prokerala_token_${res.status}`);
+  const data = await res.json();
+  return data.access_token;
+}
+
+// 失敗したエンドポイントがあっても鑑定書全体を落とさない（該当章だけ省略する）
+async function callEndpoint(token, path, params, asText = false) {
+  const url = `${API_BASE}/v2/${path}?${new URLSearchParams(params).toString()}`;
+  const res = await fetchWithTimeout(url, { headers: { Authorization: `Bearer ${token}` } }, 20000);
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    console.error(`Prokerala ${path} failed ${res.status}: ${body.slice(0, 200)}`);
+    return null;
+  }
+  return asText ? await res.text() : await res.json();
+}
+
+function normalizePlanets(planetPosition) {
+  const d = planetPosition?.data || {};
+  const raw = d.planet_position || d.planets || d.planet_positions || [];
+  if (!Array.isArray(raw)) return [];
+  return raw.map((p) => ({
+    key: p.name,
+    name: PLANET_JA[p.name] || p.name,
+    sign: toJapaneseSign(p.rasi?.name || p.sign?.name || p.sign || p.zodiac || ''),
+    nakshatra: toJapaneseNakshatra(p.nakshatra?.name || (typeof p.nakshatra === 'string' ? p.nakshatra : '')),
+    degree: typeof p.degree === 'number' ? Math.round(p.degree * 100) / 100 : null,
+    house: p.position || p.house || null,
+    retrograde: Boolean(p.is_retrograde)
+  }));
+}
+
+// 品位（planet-relationship または planet-position の dignity 表記）を点数化する
+function normalizeDignity(relationship, planets) {
+  const rows = relationship?.data?.planet_relationship || relationship?.data?.planet_relationships || [];
+  const byPlanet = {};
+  if (Array.isArray(rows)) {
+    for (const r of rows) {
+      const key = r.planet?.name || r.name;
+      const dignity = String(r.dignity || r.relationship || r.status || '').toLowerCase().replace(/[^a-z]/g, '');
+      if (key && dignity) byPlanet[key] = dignity;
+    }
+  }
+
+  return planets
+    .filter((p) => p.key !== 'Ascendant')
+    .map((p) => {
+      const dignity = byPlanet[p.key] || '';
+      const score = DIGNITY_SCORE[dignity] ?? 50;
+      return {
+        key: p.key,
+        name: p.name,
+        sign: p.sign,
+        house: p.house,
+        dignity: DIGNITY_JA[dignity] || '中立',
+        score,
+        domain: PLANET_DOMAIN[p.key] || null
+      };
+    })
+    .sort((a, b) => b.score - a.score);
+}
+
+function normalizeYogas(yoga, rajaYoga) {
+  const collect = (payload) => {
+    const groups = payload?.data?.yoga_details || payload?.data?.yogas || [];
+    const out = [];
+    if (!Array.isArray(groups)) return out;
+    for (const g of groups) {
+      const list = g.yoga_list || g.yogas || [];
+      if (Array.isArray(list) && list.length) {
+        for (const y of list) {
+          out.push({
+            group: g.name || '',
+            name: y.name || '',
+            description: y.description || '',
+            hasYoga: y.has_yoga !== false
+          });
+        }
+      } else if (g.name) {
+        out.push({ group: '', name: g.name, description: g.description || '', hasYoga: true });
+      }
+    }
+    return out;
+  };
+
+  const merged = [...collect(yoga), ...collect(rajaYoga)].filter((y) => y.hasYoga && y.name);
+  const seen = new Set();
+  return merged.filter((y) => {
+    const key = y.name.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+// サルヴァアシュタカヴァルガ: ハウスごとの点数（合計337点）。平均28点との差で強弱を判定する。
+function normalizeAshtakavarga(sarva, ascendantSign) {
+  const houses = sarva?.data?.sarvashtakavarga?.houses || sarva?.data?.houses || [];
+  if (!Array.isArray(houses) || !houses.length) return null;
+
+  const ascIndex = SIGN_ORDER.indexOf(ascendantSign);
+  const rows = houses.map((h, i) => {
+    const rasi = toJapaneseSign(h.rasi?.name || h.rasi || '');
+    let houseNo = h.house?.id || h.house?.number || h.house || null;
+    if (!houseNo && ascIndex >= 0 && rasi) {
+      const idx = SIGN_ORDER.indexOf(rasi);
+      houseNo = idx >= 0 ? ((idx - ascIndex + 12) % 12) + 1 : i + 1;
+    }
+    const domain = HOUSE_DOMAIN.find((d) => d.house === houseNo) || HOUSE_DOMAIN[i] || null;
+    return {
+      house: houseNo || i + 1,
+      sign: rasi,
+      score: Number(h.score) || 0,
+      label: domain?.label || '',
+      note: domain?.note || ''
+    };
+  }).sort((a, b) => a.house - b.house);
+
+  const average = 28; // 337点 ÷ 12ハウス
+  return {
+    average,
+    houses: rows.map((r) => ({ ...r, diff: r.score - average })),
+    strongest: [...rows].sort((a, b) => b.score - a.score).slice(0, 3),
+    weakest: [...rows].sort((a, b) => a.score - b.score).slice(0, 2)
+  };
+}
+
+// ヴィムショッタリー・ダシャー。現在地の特定と、今後15年の抽出まで行う。
+function normalizeDasha(kundli) {
+  const periods = kundli?.data?.dasha_periods || [];
+  if (!Array.isArray(periods) || !periods.length) return null;
+
+  const now = Date.now();
+  const toYear = (s) => String(s || '').slice(0, 10);
+  const timeline = periods.map((p) => ({
+    lord: p.name,
+    lordJa: PLANET_JA[p.name] || p.name,
+    season: DASHA_SEASON[p.name] || '',
+    start: toYear(p.start),
+    end: toYear(p.end),
+    isCurrent: new Date(p.start).getTime() <= now && now < new Date(p.end).getTime()
+  }));
+
+  const currentRaw = periods.find((p) => new Date(p.start).getTime() <= now && now < new Date(p.end).getTime());
+  let current = null;
+  if (currentRaw) {
+    const antar = (currentRaw.antardasha || []).find(
+      (a) => new Date(a.start).getTime() <= now && now < new Date(a.end).getTime()
+    );
+    const praty = antar
+      ? (antar.pratyantardasha || []).find(
+        (p) => new Date(p.start).getTime() <= now && now < new Date(p.end).getTime()
+      )
+      : null;
+    current = {
+      maha: { lord: currentRaw.name, lordJa: PLANET_JA[currentRaw.name] || currentRaw.name, start: toYear(currentRaw.start), end: toYear(currentRaw.end) },
+      antar: antar ? { lord: antar.name, lordJa: PLANET_JA[antar.name] || antar.name, start: toYear(antar.start), end: toYear(antar.end) } : null,
+      pratyantar: praty ? { lord: praty.name, lordJa: PLANET_JA[praty.name] || praty.name, start: toYear(praty.start), end: toYear(praty.end) } : null,
+      season: DASHA_SEASON[currentRaw.name] || ''
+    };
+  }
+
+  // 今後15年に含まれる中周期（アンタルダシャー）を切り出す
+  const horizon = now + 15 * 365.25 * 86400000;
+  const upcoming = [];
+  for (const p of periods) {
+    for (const a of p.antardasha || []) {
+      const start = new Date(a.start).getTime();
+      const end = new Date(a.end).getTime();
+      if (end > now && start < horizon) {
+        upcoming.push({
+          maha: PLANET_JA[p.name] || p.name,
+          antar: PLANET_JA[a.name] || a.name,
+          mahaKey: p.name,
+          antarKey: a.name,
+          start: toYear(a.start),
+          end: toYear(a.end)
+        });
+      }
+    }
+  }
+
+  // 過去の大周期の切り替わり（第9章「答え合わせ」に使う）
+  const pastSwitches = timeline
+    .filter((t) => new Date(t.start).getTime() < now)
+    .map((t) => ({ year: t.start.slice(0, 4), lordJa: t.lordJa, season: t.season }));
+
+  return { timeline, current, upcoming: upcoming.slice(0, 12), pastSwitches };
+}
+
+function normalizeSadeSati(sadeSati) {
+  const d = sadeSati?.data;
+  if (!d) return null;
+  const transits = (d.transits || []).map((t) => ({
+    phase: t.phase || '',
+    sign: toJapaneseSign(t.saturn_sign || ''),
+    start: String(t.start?.date || t.start || '').slice(0, 10),
+    end: String(t.end?.date || t.end || '').slice(0, 10),
+    retrograde: t.is_retrograde === true || t.is_retrograde === 'true'
+  }));
+  return {
+    active: Boolean(d.is_in_sade_sati),
+    phase: d.transit_phase || '',
+    transits
+  };
+}
+
+// 【モノ・コト・場所】をラグナ支配星などから一意に決定する（AIには選ばせない）
+function buildBoosters(planets, dasha) {
+  const asc = planets.find((p) => p.key === 'Ascendant');
+  const ascSign = asc?.sign || '';
+  const lagnaLord = SIGN_LORD[ascSign] || null;
+  const moon = planets.find((p) => p.key === 'Moon');
+  const element = SIGN_ELEMENT[moon?.sign] || '地';
+  const tenthSign = ascSign ? SIGN_ORDER[(SIGN_ORDER.indexOf(ascSign) + 9) % 12] : '';
+  const tenthLord = SIGN_LORD[tenthSign] || null;
+  const currentLord = dasha?.current?.maha?.lord || null;
+
+  const stone = lagnaLord ? LIFE_STONE[lagnaLord] : null;
+  const supportStone = currentLord ? LIFE_STONE[currentLord] : null;
+
+  return {
+    lagnaSign: ascSign,
+    lagnaLord: lagnaLord ? PLANET_JA[lagnaLord] : '',
+    tenthSign,
+    tenthLord: tenthLord ? PLANET_JA[tenthLord] : '',
+    mono: {
+      lifeStone: stone
+        ? {
+          stone: stone.stone,
+          alternatives: stone.alternatives,
+          metal: stone.metal,
+          reason: `ラグナ（1室）が${ascSign}で、その支配星が${PLANET_JA[lagnaLord]}であるため`
+        }
+        : null,
+      supportStone: supportStone && currentLord !== lagnaLord
+        ? {
+          stone: supportStone.stone,
+          reason: `現在の大周期の支配星が${PLANET_JA[currentLord]}であるため（${dasha?.current?.maha?.start}〜${dasha?.current?.maha?.end}）`
+        }
+        : null,
+      colors: {
+        main: lagnaLord ? PLANET_COLOR[lagnaLord] : null,
+        support: currentLord ? PLANET_COLOR[currentLord] : null,
+        reason: lagnaLord ? `1室支配星${PLANET_JA[lagnaLord]}の色属性` : ''
+      }
+    },
+    koto: {
+      workStyle: tenthLord
+        ? { ...WORK_STYLE[tenthLord], reason: `10室（仕事）が${tenthSign}で、その支配星が${PLANET_JA[tenthLord]}であるため` }
+        : null,
+      selfStyle: lagnaLord
+        ? { ...WORK_STYLE[lagnaLord], reason: `1室支配星が${PLANET_JA[lagnaLord]}であるため` }
+        : null,
+      rhythm: {
+        ...RHYTHM_BY_ELEMENT[element],
+        reason: `月が${moon?.sign || ''}（${element}のサイン）にあるため`
+      }
+    },
+    basho: {
+      primary: lagnaLord
+        ? { ...PLANET_DIRECTION[lagnaLord], reason: `1室支配星${PLANET_JA[lagnaLord]}の方位属性` }
+        : null,
+      career: tenthLord
+        ? { ...PLANET_DIRECTION[tenthLord], reason: `10室支配星${PLANET_JA[tenthLord]}の方位属性` }
+        : null,
+      rest: moon?.sign
+        ? { ...PLANET_DIRECTION.Moon, reason: '月（休息・回復）の方位属性' }
+        : null
+    }
+  };
+}
+
+// 鑑定書1冊分のデータを一括取得する。個々の失敗は null として扱い、該当章のみ省略する。
+async function fetchReportData({ dob, tob, lat, lon }) {
+  const token = await getAccessToken();
+  const time = tob && tob.length === 5 ? `${tob}:00` : (tob || '12:00:00');
+  const datetime = `${dob}T${time}+09:00`;
+  const coordinates = `${lat},${lon}`;
+  const base = { datetime, coordinates, ayanamsa: 1 };
+
+  const chartParams = (type) => ({
+    ...base, chart_type: type, chart_style: 'north-indian', format: 'svg'
+  });
+
+  const [
+    planetPosition, kundli, relationship, rajaYoga, yoga,
+    sarva, sadeSati, chartD1, chartD9, chartD10
+  ] = await Promise.all([
+    callEndpoint(token, 'astrology/planet-position', base),
+    callEndpoint(token, 'astrology/kundli/advanced', base),
+    callEndpoint(token, 'astrology/planet-relationship', base),
+    callEndpoint(token, 'astrology/raja-yoga', base),
+    callEndpoint(token, 'astrology/yoga', base),
+    callEndpoint(token, 'astrology/sarvashtakavarga', base),
+    callEndpoint(token, 'astrology/sade-sati/advanced', base),
+    callEndpoint(token, 'astrology/chart', chartParams('rasi'), true),
+    callEndpoint(token, 'astrology/chart', chartParams('navamsa'), true),
+    callEndpoint(token, 'astrology/chart', chartParams('dasamsa'), true)
+  ]);
+
+  if (!planetPosition) throw new Error('prokerala_position_failed');
+
+  const planets = normalizePlanets(planetPosition);
+  const asc = planets.find((p) => p.key === 'Ascendant');
+  const dasha = normalizeDasha(kundli);
+  const birthDetails = kundli?.data?.nakshatra_details || null;
+
+  return {
+    generated_at: toJstIsoString(new Date()),
+    birth: { dob, tob: tob || '12:00', lat, lon },
+    planets,
+    ascendant: asc ? { sign: asc.sign, degree: asc.degree } : null,
+    moon: planets.find((p) => p.key === 'Moon') || null,
+    sun: planets.find((p) => p.key === 'Sun') || null,
+    nakshatra: toJapaneseNakshatra(birthDetails?.nakshatra?.name || planets.find((p) => p.key === 'Moon')?.nakshatra || ''),
+    strength: normalizeDignity(relationship, planets),
+    yogas: normalizeYogas(yoga, rajaYoga),
+    ashtakavarga: normalizeAshtakavarga(sarva, asc?.sign || ''),
+    dasha,
+    sadeSati: normalizeSadeSati(sadeSati),
+    mangalDosha: kundli?.data?.mangal_dosha
+      ? { hasDosha: Boolean(kundli.data.mangal_dosha.has_dosha), description: kundli.data.mangal_dosha.description || '' }
+      : null,
+    boosters: buildBoosters(planets, dasha),
+    charts: { d1: chartD1 || null, d9: chartD9 || null, d10: chartD10 || null }
+  };
+}
+
+module.exports = {
+  fetchReportData,
+  toJstIsoString,
+  toJapaneseSign,
+  toJapaneseNakshatra,
+  SIGN_ORDER
+};

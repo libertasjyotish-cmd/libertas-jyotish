@@ -98,9 +98,9 @@
     <div class="success-card-container">
       <div style="font-size:3rem; margin-bottom:10px;">✨📜✨</div>
       <h1 style="font-size:1.5rem; color:var(--color-text-dark); margin-bottom:12px;">ご注文ありがとうございます</h1>
-      <p style="font-size:0.88rem; color:#5A4E48; margin-bottom:25px;">完全鑑定書（PDF）の準備が整いました。</p>
+      <p id="success-note" style="font-size:0.88rem; color:#5A4E48; margin-bottom:25px;">ご入金の確認を行っています。反映まで数十秒かかることがあります。</p>
 
-      <a href="#" id="pdf-download-link" class="btn-download" target="_blank">📄 完全鑑定書（PDF）をダウンロード</a>
+      <a href="/ja/pdf-report" id="report-link" class="btn-download">📖 完全鑑定書を開く</a>
     </div>
   </section>
 
@@ -110,14 +110,13 @@
   </footer>
 
   <script>
+    // 購入状態は Stripe の Webhook を受けてサーバ側で記録される。この画面では購入済みの判定を行わない。
     document.addEventListener('DOMContentLoaded', () => {
-      localStorage.setItem('lj_pdf_purchased', 'true');
-      const urlParams = new URLSearchParams(window.location.search);
-      const pdfUrl = urlParams.get('pdf_url');
-      if (pdfUrl) {
-        document.getElementById('pdf-download-link').href = decodeURIComponent(pdfUrl);
-      } else {
-        document.getElementById('pdf-download-link').textContent = "⚙️ PDF生成中...（メールをご確認ください）";
+      const note = document.getElementById('success-note');
+      const email = localStorage.getItem('lj_user_email');
+      const session = localStorage.getItem('lj_session');
+      if (!email || !session) {
+        note.innerHTML = '鑑定書の閲覧にはご購入時のメールアドレスでのログインが必要です。<a href="/ja/mypage">マイページ</a>からログインしてください。';
       }
     });
   </script>

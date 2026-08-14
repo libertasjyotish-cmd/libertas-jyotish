@@ -160,46 +160,9 @@
           <div class="form-group"><label for="user-birthplace">出生地</label><input type="text" id="user-birthplace" placeholder="例: 東京都世田谷区" required></div>
         </div>
 
-        <div style="font-size:1.3rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:15px;">買い切り 3,300円（税込）</div>
+        <div id="price-label" style="font-size:1.3rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:15px;"></div>
         <button id="btn-proceed-checkout" class="btn-purchase">💳 決済に進む（Stripe）</button>
-      </div>
-
-      <div id="pdf-report-view" style="display: none;">
-        <h1 style="font-size:1.4rem; color:var(--color-gold-dark); margin-bottom:6px;">✦ Libertas Jyotish 完全鑑定書 ✦</h1>
-        <p style="font-size:0.82rem; color:#6A5E58; margin-bottom:20px;" id="report-owner-info">鑑定対象者様データ</p>
-
-        <div class="report-card">
-          <h3>出生図（クンダリー・チャート）</h3>
-          <div class="kundali-img-wrapper">
-            <img id="kundali-chart-img" src="" alt="クンダリーチャート">
-          </div>
-          <p id="chart-summary-text" style="font-size:0.85rem; color:#4a3e36;"></p>
-        </div>
-
-        <div class="report-card">
-          <h3>人生のタイムライン（ダシャー全周期）</h3>
-          <div style="overflow-x: auto;">
-            <table class="timeline-table">
-              <thead>
-                <tr>
-                  <th>惑星期</th>
-                  <th>期間</th>
-                  <th>主な人生のテーマ</th>
-                </tr>
-              </thead>
-              <tbody id="dasha-timeline-body">
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="report-card">
-          <h3>開運レメディ & 処方せん</h3>
-          <div id="remedy-content" style="font-size:0.88rem; color:#4a3e36;">
-          </div>
-        </div>
-
-        <button id="btn-print-pdf" class="btn-purchase" style="margin-top:15px; background: linear-gradient(135deg, #2C5282 0%, #1A365D 100%);">📄 PDFとして保存・印刷する</button>
+        <p id="checkout-note" style="font-size:0.8rem; color:#6A5E58; margin-top:12px;">ご購入後、サイト内の鑑定書ページでいつでも閲覧できます（ブラウザの印刷機能でPDF保存も可能です）。</p>
       </div>
 
     </div>
@@ -211,7 +174,19 @@
   </footer>
 
   <script>
+    // 価格と Stripe の買い切りPayment Linkはここだけを変更すれば反映される
+    const PDF_PRICE_LABEL = '買い切り 4,980円（税込）';
+    const PDF_CHECKOUT_URL = '';
+
     document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('price-label').textContent = PDF_PRICE_LABEL;
+      if (!PDF_CHECKOUT_URL) {
+        const btn = document.getElementById('btn-proceed-checkout');
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
+        btn.textContent = '準備中です';
+        document.getElementById('checkout-note').textContent = 'この商品は現在準備中です。販売開始まで今しばらくお待ちください。';
+      }
       const savedEmail = localStorage.getItem('lj_user_email') || '';
       const savedBirthdate = localStorage.getItem('lj_user_birthdate') || '';
       const savedBirthplace = localStorage.getItem('lj_user_birthplace') || '';
@@ -220,14 +195,6 @@
       if (savedBirthdate) document.getElementById('user-birthdate').value = savedBirthdate;
       if (savedBirthplace) document.getElementById('user-birthplace').value = savedBirthplace;
 
-      const urlParams = new URLSearchParams(window.location.search);
-      const isPaidSuccess = urlParams.get('status') === 'success' || urlParams.get('paid') === 'true' || localStorage.getItem('lj_pdf_purchased') === 'true';
-
-      if (isPaidSuccess) {
-        document.getElementById('purchase-form-view').style.display = 'none';
-        document.getElementById('pdf-report-view').style.display = 'block';
-        loadReportData();
-      }
 
       document.getElementById('btn-proceed-checkout').addEventListener('click', () => {
         const email = document.getElementById('user-email').value;
@@ -241,61 +208,18 @@
         localStorage.setItem('lj_user_email', email);
         localStorage.setItem('lj_user_birthdate', birthdate);
         localStorage.setItem('lj_user_birthplace', birthplace);
+        // 鑑定書ページと同じキーで出生データを保持する
+        const [datePart, timePart] = birthdate.split('T');
+        if (datePart) localStorage.setItem('dob', datePart);
+        if (timePart) localStorage.setItem('tob', timePart.slice(0, 5));
+        localStorage.setItem('city', birthplace);
 
-        const domain = window.location.origin;
-        // 将来的にPDF購入のStripe決済リンクができましたら、ここをそのリンクに差し替えることで完全連携が可能です！
-        // ※下記は今回のサブスク商品のStripe決済リンクをプレースホルダー（サンプル）として差し込んでいます。
-        const stripePdfUrl = `https://buy.stripe.com/dRmaEZ0I73Bx6g8auH24000?prefilled_email=${encodeURIComponent(email)}`;
-        window.location.href = stripePdfUrl;
-      });
-
-      document.getElementById('btn-print-pdf').addEventListener('click', () => {
-        window.print();
+        if (!PDF_CHECKOUT_URL) return;
+        const separator = PDF_CHECKOUT_URL.includes('?') ? '&' : '?';
+        window.location.href = `${PDF_CHECKOUT_URL}${separator}prefilled_email=${encodeURIComponent(email)}`;
       });
     });
 
-    function loadReportData() {
-      const email = localStorage.getItem('lj_user_email') || 'ゲスト様';
-      const birthplace = localStorage.getItem('lj_user_birthplace') || '未設定';
-      document.getElementById('report-owner-info').textContent = `登録メール: ${email} | 出生地: ${birthplace}`;
-
-      let userData = JSON.parse(localStorage.getItem('lj_user_chart_data'));
-      
-      if (!userData) {
-        document.getElementById('chart-summary-text').textContent = '⚠️ 鑑定データが見つかりません。TOPページから診断を行ってください。';
-        return;
-      }
-
-      if (userData.kundaliChartUrl) {
-        document.getElementById('kundali-chart-img').src = userData.kundaliChartUrl;
-      }
-      if (userData.summary) {
-        document.getElementById('chart-summary-text').textContent = userData.summary;
-      }
-
-      if (userData.dashaTimeline && Array.isArray(userData.dashaTimeline)) {
-        const tbody = document.getElementById('dasha-timeline-body');
-        tbody.innerHTML = '';
-        userData.dashaTimeline.forEach(d => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td style="font-weight:600;">${d.planet}期</td>
-            <td>${d.period}</td>
-            <td>${d.theme}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-      }
-
-      if (userData.remedies) {
-        const remedyBox = document.getElementById('remedy-content');
-        remedyBox.innerHTML = `
-          <p><strong>🎨 ラッキーカラー：</strong> ${userData.remedies.color || '-'}</p>
-          <p style="margin-top:4px;"><strong>💎 開運宝石/マントラ：</strong> ${userData.remedies.gem || '-'}</p>
-          <p style="margin-top:6px;"><strong>✨ 意識すべきアクション：</strong> ${userData.remedies.action || '-'}</p>
-        `;
-      }
-    }
   </script>
 </body>
 </html>

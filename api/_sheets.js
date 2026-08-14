@@ -49,7 +49,7 @@ async function findSheetWithMemberHeaders(sheets) {
   return null;
 }
 
-async function getMemberSheet() {
+async function getSpreadsheet() {
   const sheetId = process.env.GOOGLE_SHEETS_ID;
   const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
   const privateKey = process.env.GOOGLE_PRIVATE_KEY;
@@ -84,6 +84,12 @@ async function getMemberSheet() {
     console.error(`Google Sheets loadInfo failed (${lastSheetIssue}):`, err?.message);
     return null;
   }
+  return doc;
+}
+
+async function getMemberSheet() {
+  const doc = await getSpreadsheet();
+  if (!doc) return null;
 
   const wanted = SHEET_TITLE.trim().toLowerCase();
   const sheets = doc.sheetsByIndex;
@@ -132,4 +138,187 @@ async function setMemberStatus(email, status) {
   return true;
 }
 
-module.exports = { getMemberSheet, setMemberStatus, getLastSheetIssue };
+function normalizeEmail(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+async function findMemberRow(email) {
+  const sheet = await getMemberSheet();
+  if (!sheet) return null;
+  const normalized = normalizeEmail(email);
+  if (!normalized) return null;
+  const rows = await sheet.getRows();
+  const matched = rows.filter(r => normalizeEmail(r.get('email')) === normalized);
+  return matched.find(r => String(r.get('status') || '').trim().toLowerCase() === 'paid') || matched[0] || null;
+}
+
+// 会員行の生データ（PDF購入フラグの判定に使う）
+async function getMemberRecord(email) {
+  const row = await findMemberRow(email);
+  if (!row) return null;
+  return {
+    email: row.get('email'),
+    status: String(row.get('status') || 'free').trim().toLowerCase(),
+    dob: row.get('dob') || '',
+    tob: row.get('tob') || '',
+    city: row.get('city') || '',
+    language: row.get('language') || 'ja',
+    pdfPurchased: String(row.get('pdf_purchased') || '').trim().toLowerCase() === 'true',
+    pdfPurchasedAt: row.get('pdf_purchased_at') || ''
+  };
+}
+
+// PDF購入用の列が無いシートでも動くよう、必要なヘッダーを足しておく
+async function ensureColumns(sheet, columns) {
+  await sheet.loadHeaderRow().catch(() => null);
+  const headers = sheet.headerValues || [];
+  const missing = columns.filter(c => !headers.includes(c));
+  if (missing.length) await sheet.setHeaderRow([...headers, ...missing]);
+}
+
+// 買い切り決済（mode=payment）の完了を記録する。会員行が無ければ最小限の行を作る。
+async function setPdfPurchased(email) {
+  if (!email) return false;
+  const sheet = await getMemberSheet();
+  if (!sheet) return false;
+  await ensureColumns(sheet, ['pdf_purchased', 'pdf_purchased_at']);
+
+  const nowStr = new Date().toISOString();
+  const row = await findMemberRow(email);
+  if (row) {
+    row.set('pdf_purchased', 'true');
+    row.set('pdf_purchased_at', nowStr);
+    row.set('updated_at', nowStr);
+    await row.save();
+  } else {
+    await sheet.addRow({
+      email: email,
+      status: 'free',
+      auth_provider: 'stripe',
+      pdf_purchased: 'true',
+      pdf_purchased_at: nowStr,
+      created_at: nowStr,
+      updated_at: nowStr,
+      language: 'ja'
+    });
+  }
+  return true;
+}
+
+// 鑑定書は1セルに収まらないため、専用タブに章ごとの列で保存する。
+const REPORT_SHEET_TITLE = process.env.GOOGLE_SHEETS_REPORT_TAB || 'PDF鑑定書';
+const CELL_LIMIT = 45000; // Google Sheets の1セル上限（50,000文字）に対する安全域
+const CHUNKS_PER_FIELD = 2;
+const REPORT_FIELDS = [
+  'astro', 'summary', 'ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'ch6',
+  'ch7', 'ch8', 'ch9', 'ch10', 'ch11', 'ch12'
+];
+
+function reportHeaders() {
+  const headers = ['email', 'updated_at'];
+  for (const field of REPORT_FIELDS) {
+    for (let i = 1; i <= CHUNKS_PER_FIELD; i += 1) headers.push(`${field}_${i}`);
+  }
+  return headers;
+}
+
+async function getReportSheet() {
+  const doc = await getSpreadsheet();
+  if (!doc) return null;
+  const existing = doc.sheetsByTitle[REPORT_SHEET_TITLE];
+  if (existing) {
+    await existing.loadHeaderRow().catch(() => null);
+    const headers = existing.headerValues || [];
+    const missing = reportHeaders().filter(h => !headers.includes(h));
+    if (missing.length) {
+      const next = [...headers, ...missing];
+      if ((existing.columnCount || 0) < next.length) await existing.resize({ rowCount: existing.rowCount, columnCount: next.length });
+      await existing.setHeaderRow(next);
+    }
+    return existing;
+  }
+  const headerValues = reportHeaders();
+  return doc.addSheet({
+    title: REPORT_SHEET_TITLE,
+    headerValues,
+    gridProperties: { rowCount: 1000, columnCount: headerValues.length }
+  });
+}
+
+function writeChunks(target, field, value) {
+  const text = value == null ? '' : String(value);
+  for (let i = 0; i < CHUNKS_PER_FIELD; i += 1) {
+    target[`${field}_${i + 1}`] = text.slice(i * CELL_LIMIT, (i + 1) * CELL_LIMIT);
+  }
+  if (text.length > CELL_LIMIT * CHUNKS_PER_FIELD) {
+    console.warn(`Report field ${field} exceeds storage capacity (${text.length} chars) and was truncated.`);
+  }
+}
+
+function readChunks(row, field) {
+  let text = '';
+  for (let i = 1; i <= CHUNKS_PER_FIELD; i += 1) text += row.get(`${field}_${i}`) || '';
+  return text;
+}
+
+// 保存済みの鑑定書を取得する（再訪時に再生成しないため）
+async function getPdfReport(email) {
+  const sheet = await getReportSheet();
+  if (!sheet) return null;
+  const normalized = normalizeEmail(email);
+  const rows = await sheet.getRows();
+  const row = rows.find(r => normalizeEmail(r.get('email')) === normalized);
+  if (!row) return null;
+
+  const report = { updated_at: row.get('updated_at') || '' };
+  for (const field of REPORT_FIELDS) {
+    const text = readChunks(row, field);
+    if (!text) continue;
+    try {
+      report[field] = JSON.parse(text);
+    } catch (err) {
+      console.warn(`Stored report field ${field} is not valid JSON, ignoring.`);
+    }
+  }
+  return report;
+}
+
+// 章単位で追記保存する。既存の章は保持し、渡された章だけ更新する。
+async function savePdfReport(email, partial) {
+  const sheet = await getReportSheet();
+  if (!sheet) return false;
+  const normalized = normalizeEmail(email);
+  const rows = await sheet.getRows();
+  const row = rows.find(r => normalizeEmail(r.get('email')) === normalized);
+  const nowStr = new Date().toISOString();
+
+  if (row) {
+    row.set('updated_at', nowStr);
+    for (const field of REPORT_FIELDS) {
+      if (!(field in partial)) continue;
+      const chunks = {};
+      writeChunks(chunks, field, JSON.stringify(partial[field]));
+      for (const [key, value] of Object.entries(chunks)) row.set(key, value);
+    }
+    await row.save();
+    return true;
+  }
+
+  const payload = { email: email, updated_at: nowStr };
+  for (const field of REPORT_FIELDS) {
+    writeChunks(payload, field, field in partial ? JSON.stringify(partial[field]) : '');
+  }
+  await sheet.addRow(payload);
+  return true;
+}
+
+module.exports = {
+  getMemberSheet,
+  setMemberStatus,
+  getLastSheetIssue,
+  getMemberRecord,
+  setPdfPurchased,
+  getPdfReport,
+  savePdfReport,
+  REPORT_FIELDS
+};
