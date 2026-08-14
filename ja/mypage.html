@@ -747,6 +747,8 @@ const progressSteps = [
   'あなた専用の鑑定文を執筆しています（最大約60秒）...'
 ];
 let progressIndex = 0;
+const initialTextElem = document.getElementById('today-transit-text');
+if (initialTextElem) initialTextElem.textContent = progressSteps[0];
 const progressTimer = setInterval(() => {
   progressIndex = Math.min(progressIndex + 1, progressSteps.length - 1);
   const textElem = document.getElementById('today-transit-text');
