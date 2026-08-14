@@ -522,15 +522,28 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs) {
   let reason = 'gemini_error';
   for (const model of models) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+    // 思考（thinking）が既定で有効なモデルは応答が数十秒に伸びる。鑑定文の生成に長考は不要なので最小化する。
+    // 設定名はモデル世代で異なり、未対応のキーを送ると 400 になるため、その場合は無指定で再試行する。
+    const thinkingConfigs = [];
+    if (/^gemini-3/.test(model)) thinkingConfigs.push({ thinkingConfig: { thinkingLevel: 'low' } });
+    else if (/^gemini-2\.5/.test(model)) thinkingConfigs.push({ thinkingConfig: { thinkingBudget: 0 } });
+    thinkingConfigs.push({});
+
     try {
-      const res = await fetchWithTimeout(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ role: 'user', parts: [{ text: promptText }] }],
-          generationConfig: { responseMimeType: 'application/json', temperature: 1.0 }
-        })
-      }, timeoutMs);
+      let res = null;
+      for (const extraConfig of thinkingConfigs) {
+        res = await fetchWithTimeout(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ role: 'user', parts: [{ text: promptText }] }],
+            generationConfig: { responseMimeType: 'application/json', temperature: 1.0, ...extraConfig }
+          })
+        }, timeoutMs);
+        if (res.status !== 400) break;
+        console.warn(`Gemini model ${model} rejected generationConfig ${JSON.stringify(extraConfig)}, retrying without it.`);
+      }
 
       if (!res.ok) {
         reason = `gemini_${res.status}`;
