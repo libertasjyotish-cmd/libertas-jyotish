@@ -875,6 +875,22 @@ clearTimeout(clientTimeout);
 }
 }
 
+// 有料会員向けにバッジ・ぼかし・ロックオーバーレイを解除する
+function unlockPaidContent() {
+const badge = document.getElementById('user-status-badge');
+if (badge) {
+badge.textContent = 'プレミアム';
+badge.className = 'user-badge paid';
+}
+const overlay = document.getElementById('lock-overlay');
+if (overlay) overlay.style.display = 'none';
+const area = document.getElementById('premium-content-area');
+if (area) {
+area.classList.remove('blur-content');
+area.querySelectorAll('.blur-content').forEach(el => el.classList.remove('blur-content'));
+}
+}
+
 function renderUserData(data) {
 if (data.status === 'paid') {
 unlockPaidContent();
