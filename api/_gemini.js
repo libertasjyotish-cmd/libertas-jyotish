@@ -36,10 +36,18 @@ async function listGeminiModels(apiKey) {
   }
 }
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 // 利用可能なモデルを順に試して JSON を1本生成する。失敗理由は秘密情報を含まない区分だけ返す。
+// 過負荷（429/503）は一時的なので、同じモデルで数回待ってから次のモデルに移る。
 async function generateWithGemini(apiKey, models, promptText, timeoutMs) {
   let reason = 'gemini_error';
-  for (const model of models) {
+  const attempts = [];
+  for (const model of models) attempts.push(model, model);
+
+  const dead = new Set();
+  for (const model of attempts) {
+    if (dead.has(model)) continue;
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
     // 思考（thinking）が既定で有効なモデルは応答が数十秒に伸びる。鑑定文の生成に長考は不要なので最小化する。
@@ -67,6 +75,8 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs) {
       if (!res.ok) {
         reason = `gemini_${res.status}`;
         console.error(`Gemini model ${model} failed with status ${res.status}`);
+        if (res.status === 404) dead.add(model);
+        else if (res.status === 429 || res.status >= 500) await sleep(1500);
         continue;
       }
 
