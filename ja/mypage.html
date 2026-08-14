@@ -363,6 +363,16 @@ window.location.reload();
 const JYOTISH_API_URL = "/api/jyotish";
 const PREMIUM_UPGRADE_URL = "https://buy.stripe.com/dRmaEZ0I73Bx6g8auH24000";
 
+// JSTの今日の日付（YYYY-MM-DD）
+function getJstDateString() {
+return new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+}
+
+// 前日以前の鑑定結果を「本日の運勢」として描画しないための判定
+function isTodaysReading(result) {
+return Boolean(result && result.reading_date === getJstDateString());
+}
+
 
 // Google Identity Services JWT デコード関数
 function parseJwt(token) {
@@ -447,14 +457,15 @@ if (hasBirthData) {
 // 出生データが揃っている場合は通常の先行表示＆バックグラウンド更新を実行
 document.getElementById('birth-setup-box').style.display = 'none';
 
-if (cachedUser && cachedUser.lastResult) {
+if (cachedUser && cachedUser.lastResult && isTodaysReading(cachedUser.lastResult)) {
 console.log("Cached diagnostic data restored immediately.");
 renderUserData(cachedUser.lastResult);
 } else {
 const savedResult = sessionStorage.getItem('lj_diagnosis_result');
 if (savedResult) {
 try {
-renderUserData(JSON.parse(savedResult));
+const parsed = JSON.parse(savedResult);
+if (isTodaysReading(parsed)) renderUserData(parsed);
 } catch(e) {}
 }
 }
