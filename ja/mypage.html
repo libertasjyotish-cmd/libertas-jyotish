@@ -740,10 +740,28 @@ return;
 
 const currentJstISO = getJstIsoString();
 
+// 鑑定生成は数十秒かかるので進行状況を見せ、ブラウザが無限に待ち続けないよう自分で打ち切る
+const progressSteps = [
+  '本日の星回りデータを読み込んでいます...',
+  '出生図と本日のトランジットを計算しています...',
+  'あなた専用の鑑定文を執筆しています（最大約60秒）...'
+];
+let progressIndex = 0;
+const progressTimer = setInterval(() => {
+  progressIndex = Math.min(progressIndex + 1, progressSteps.length - 1);
+  const textElem = document.getElementById('today-transit-text');
+  if (textElem && textElem.textContent.includes('しています')) {
+    textElem.textContent = progressSteps[progressIndex];
+  }
+}, 12000);
+const abortController = new AbortController();
+const clientTimeout = setTimeout(() => abortController.abort(), 90000);
+
 try {
 const response = await fetch(JYOTISH_API_URL, {
 method: 'POST',
 headers: { 'Content-Type': 'application/json' },
+signal: abortController.signal,
 body: JSON.stringify({
 action: 'fetch_profile',
 email: email,
@@ -832,10 +850,28 @@ localStorage.setItem('lj_status', 'paid');
 
 } catch (err) {
 console.error('Fetch Error:', err);
+const timedOut = err && err.name === 'AbortError';
 const textElem = document.getElementById('today-transit-text');
-if (textElem && (textElem.textContent.includes('読み込んでいます') || !textElem.innerHTML.trim())) {
-textElem.textContent = '⚠️ データの取得に失敗しました。通信環境をご確認のうえ、再読み込みをお試しください。';
+if (textElem) {
+textElem.textContent = timedOut
+  ? '⚠️ 鑑定文の生成に時間がかかっています。もう一度お試しください。'
+  : '⚠️ データの取得に失敗しました。通信環境をご確認のうえ、再度お試しください。';
+if (!document.getElementById('retry-profile')) {
+const retryBtn = document.createElement('button');
+retryBtn.id = 'retry-profile';
+retryBtn.textContent = 'もう一度試す';
+retryBtn.style.cssText = 'margin-top:12px; padding:10px 20px; border:none; border-radius:8px; font-weight:600; cursor:pointer; background:#8B6B1B; color:#fff;';
+retryBtn.addEventListener('click', () => {
+retryBtn.remove();
+textElem.textContent = '本日の星回りデータを読み込んでいます...';
+fetchUserDataAndRender(email, true);
+});
+textElem.parentNode.appendChild(retryBtn);
 }
+}
+} finally {
+clearInterval(progressTimer);
+clearTimeout(clientTimeout);
 }
 }
 
