@@ -1,7 +1,6 @@
 // Vercel Serverless Function 統合API: /api/jyotish.js (CommonJS 完全自律救済版)
-const { GoogleSpreadsheet } = require('google-spreadsheet');
-const { JWT } = require('google-auth-library');
 const crypto = require('crypto');
+const { getMemberSheet } = require('./_sheets');
 
 const AUTH_SECRET = process.env.AUTH_SECRET;
 
@@ -131,21 +130,22 @@ module.exports = async function handler(req, res) {
       let finalDob = dob;
       let finalTob = tob || '12:00';
       let finalCity = city || address;
-      let finalStatus = status || 'free';
+      // 課金状態はサーバ側（Sheets）のみを正とする。リクエストボディの status は信用しない。
+      let finalStatus = 'free';
       let finalLang = language || 'ja';
 
-      if (action === 'fetch_profile') {
-        try {
-          const sheetsProfile = await fetchProfileFromSheets(email);
-          if (sheetsProfile) {
-            finalStatus = sheetsProfile.status || 'free';
+      try {
+        const sheetsProfile = await fetchProfileFromSheets(email);
+        if (sheetsProfile) {
+          finalStatus = sheetsProfile.status || 'free';
+          if (action === 'fetch_profile') {
             if (sheetsProfile.dob && sheetsProfile.dob !== '1970-01-01') finalDob = sheetsProfile.dob;
             if (sheetsProfile.tob) finalTob = sheetsProfile.tob;
             if (sheetsProfile.city) finalCity = sheetsProfile.city;
           }
-        } catch (sheetErr) {
-          console.error("Sheets profile sync failed, falling back to memory:", sheetErr);
         }
+      } catch (sheetErr) {
+        console.error("Sheets profile sync failed, falling back to memory:", sheetErr);
       }
 
       // '1970-01-01' は旧システムのダミー値。実在の出生地である '東京都' は弾かない。
@@ -315,8 +315,8 @@ module.exports = async function handler(req, res) {
   } catch (error) {
     console.error("Critical API Processing Error:", error);
     // どのようなルート例外が起きても、絶対に500エラーを出さずに、200 OKの正常レスポンスを返す！
-    const fallback = buildFallbackResponse(dob || '1990-01-01', status === 'paid');
-    fallback.status = status || 'free';
+    const fallback = buildFallbackResponse(dob || '1990-01-01', false);
+    fallback.status = 'free';
     return res.status(200).json(fallback);
   }
 };
@@ -569,24 +569,8 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang) {
 
 async function fetchProfileFromSheets(email) {
   try {
-    const sheetId = process.env.GOOGLE_SHEETS_ID;
-    const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-    const privateKey = process.env.GOOGLE_PRIVATE_KEY;
-
-    if (!sheetId || !clientEmail || !privateKey) {
-      console.warn("Google credentials missing. Running in memory-only mode.");
-      return null;
-    }
-
-    const auth = new JWT({
-      email: clientEmail,
-      key: privateKey.replace(/\\n/g, '\n'),
-      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-    });
-
-    const doc = new GoogleSpreadsheet(sheetId, auth);
-    await doc.loadInfo();
-    const sheet = doc.sheetsByTitle['会員データ'];
+    if (!email) return null;
+    const sheet = await getMemberSheet();
     if (!sheet) return null;
 
     const rows = await sheet.getRows();
@@ -611,28 +595,8 @@ async function fetchProfileFromSheets(email) {
 
 async function saveProfileToSheets(email, status, dob, tob, city, readingData, lang) {
   try {
-    const sheetId = process.env.GOOGLE_SHEETS_ID;
-    const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-    const privateKey = process.env.GOOGLE_PRIVATE_KEY;
-
-    if (!sheetId || !clientEmail || !privateKey) {
-      console.warn("Google credentials missing. Skipping spreadsheet save.");
-      return;
-    }
-
-    const auth = new JWT({
-      email: clientEmail,
-      key: privateKey.replace(/\\n/g, '\n'),
-      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-    });
-
-    const doc = new GoogleSpreadsheet(sheetId, auth);
-    await doc.loadInfo();
-    const sheet = doc.sheetsByTitle['会員データ'];
-    if (!sheet) {
-      console.warn("'会員データ' sheet not found in spreadsheet.");
-      return;
-    }
+    const sheet = await getMemberSheet();
+    if (!sheet) return;
 
     const rows = await sheet.getRows();
     const existingRow = rows.find(r => r.get('email') === email);
