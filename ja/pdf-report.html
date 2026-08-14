@@ -324,7 +324,7 @@
       const items = (ch.items || []).map((y) => {
         const src = (a.yogas || []).find((v) => v.name === y.name);
         return `<div class="fact"><strong>${esc(y.name)}</strong>
-          ${src?.description ? `<span class="reason">${esc(src.description)}</span>` : ''}</div>${para(y.text)}`;
+          ${src?.group ? `<span class="reason">${esc(src.group)}</span>` : ''}</div>${para(y.text)}`;
       }).join('');
       return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>${para(ch.intro)}${items}${para(ch.closing)}`);
     }

@@ -62,7 +62,10 @@ const CHAPTERS = [
   {
     id: 'ch3',
     title: '第3章 持って生まれた強運の型',
-    pick: (a) => ({ yogas: a.yogas?.slice(0, 12), strongest: a.strength?.slice(0, 3) }),
+    pick: (a) => ({
+      yogas: (a.yogas || []).filter((y) => y.auspicious !== false).slice(0, 12),
+      strongest: a.strength?.slice(0, 3)
+    }),
     schema: `{
       "intro": "ヨーガ（吉配置）とは何かの説明（200文字程度）",
       "items": [{ "name": "確定データのヨーガ名をそのまま", "text": "この配置が人生のどの場面で効くか（200文字程度）" }],

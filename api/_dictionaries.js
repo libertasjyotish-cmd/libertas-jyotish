@@ -175,6 +175,89 @@ const REMEDY_MODERN = {
   ]
 };
 
+// 古典の高揚・減衰・自室・定座。品位はこの表からコード側で確定させる。
+const EXALTATION = {
+  Sun: '牡羊座', Moon: '牡牛座', Mars: '山羊座', Mercury: '乙女座',
+  Jupiter: '蟹座', Venus: '魚座', Saturn: '天秤座', Rahu: '牡牛座', Ketu: '蠍座'
+};
+
+const DEBILITATION = {
+  Sun: '天秤座', Moon: '蠍座', Mars: '蟹座', Mercury: '魚座',
+  Jupiter: '山羊座', Venus: '乙女座', Saturn: '牡羊座', Rahu: '蠍座', Ketu: '牡牛座'
+};
+
+const OWN_SIGNS = {
+  Sun: ['獅子座'], Moon: ['蟹座'], Mars: ['牡羊座', '蠍座'],
+  Mercury: ['双子座', '乙女座'], Jupiter: ['射手座', '魚座'],
+  Venus: ['牡牛座', '天秤座'], Saturn: ['山羊座', '水瓶座']
+};
+
+const MOOLATRIKONA = {
+  Sun: '獅子座', Moon: '牡牛座', Mars: '牡羊座', Mercury: '乙女座',
+  Jupiter: '射手座', Venus: '天秤座', Saturn: '水瓶座'
+};
+
+// 惑星同士の自然的な friend / enemy（古典の定説。中立はどちらにも含めない）
+const NATURAL_FRIENDS = {
+  Sun: ['Moon', 'Mars', 'Jupiter'],
+  Moon: ['Sun', 'Mercury'],
+  Mars: ['Sun', 'Moon', 'Jupiter'],
+  Mercury: ['Sun', 'Venus'],
+  Jupiter: ['Sun', 'Moon', 'Mars'],
+  Venus: ['Mercury', 'Saturn'],
+  Saturn: ['Mercury', 'Venus']
+};
+
+const NATURAL_ENEMIES = {
+  Sun: ['Venus', 'Saturn'],
+  Moon: [],
+  Mars: ['Mercury'],
+  Mercury: ['Moon'],
+  Jupiter: ['Mercury', 'Venus'],
+  Venus: ['Sun', 'Moon'],
+  Saturn: ['Sun', 'Moon', 'Mars']
+};
+
+// ヨーガ名の日本語表記（Prokerala は英語で返すため、鑑定書では日本語を併記する）
+const YOGA_JA = {
+  'gajakesari yoga': 'ガジャケーサリ・ヨーガ',
+  'raja yoga': 'ラージャ・ヨーガ',
+  'sunapha yoga': 'スナファ・ヨーガ',
+  'anapha yoga': 'アナファ・ヨーガ',
+  'durudhara yoga': 'ドゥルダラ・ヨーガ',
+  'duradhara yoga': 'ドゥルダラ・ヨーガ',
+  'vesi yoga': 'ヴェーシ・ヨーガ',
+  'vasi yoga': 'ヴァーシ・ヨーガ',
+  'ubhayachari yoga': 'ウバヤチャーリ・ヨーガ',
+  'daridra yoga': 'ダリドラ・ヨーガ',
+  'kemadruma yoga': 'ケーマドゥルマ・ヨーガ',
+  'chandra mangala yoga': 'チャンドラ・マンガラ・ヨーガ',
+  'adhi yoga': 'アディ・ヨーガ',
+  'budha aditya yoga': 'ブダ・アーディティヤ・ヨーガ',
+  'dhana yoga': 'ダナ・ヨーガ',
+  'vipreet raja yoga': 'ヴィパリータ・ラージャ・ヨーガ',
+  'viparita raja yoga': 'ヴィパリータ・ラージャ・ヨーガ',
+  'neecha bhanga raja yoga': 'ニーチャバンガ・ラージャ・ヨーガ',
+  'panch mahapurusha yoga': 'パンチャ・マハープルシャ・ヨーガ',
+  'ruchaka yoga': 'ルチャカ・ヨーガ',
+  'bhadra yoga': 'バドラ・ヨーガ',
+  'hamsa yoga': 'ハンサ・ヨーガ',
+  'malavya yoga': 'マーラヴィヤ・ヨーガ',
+  'sasa yoga': 'シャシャ・ヨーガ',
+  'parivartana yoga': 'パリヴァルタナ・ヨーガ',
+  'lakshmi yoga': 'ラクシュミー・ヨーガ',
+  'saraswati yoga': 'サラスヴァティー・ヨーガ'
+};
+
+// サディサティ／土星通過フェーズの日本語表記
+const SADE_SATI_PHASE_JA = {
+  'rising': '第1段階（準備期・月の1つ手前のサインを土星が通過）',
+  'peak': '第2段階（本番期・月と同じサインを土星が通過）',
+  'setting': '第3段階（仕上げ期・月の次のサインを土星が通過）',
+  'small panoti': '小パノーティ（月から4室を土星が通過する調整期）',
+  'ashtama sani': 'アシュタマ・シャニ（月から8室を土星が通過する再編期）'
+};
+
 // 大周期（マハーダシャー）支配星ごとの季節メタファー（巻頭サマリー用）
 const DASHA_SEASON = {
   Sun: '旗を立てる期',
@@ -202,5 +285,13 @@ module.exports = {
   RHYTHM_BY_ELEMENT,
   HOUSE_DOMAIN,
   REMEDY_MODERN,
-  DASHA_SEASON
+  DASHA_SEASON,
+  EXALTATION,
+  DEBILITATION,
+  OWN_SIGNS,
+  MOOLATRIKONA,
+  NATURAL_FRIENDS,
+  NATURAL_ENEMIES,
+  YOGA_JA,
+  SADE_SATI_PHASE_JA
 };
