@@ -4,6 +4,12 @@ const { JWT } = require('google-auth-library');
 
 const SHEET_TITLE = process.env.GOOGLE_SHEETS_MEMBER_TAB || '会員データ';
 
+// 直近の getMemberSheet() が失敗した理由。切り分け用に API 応答へ載せる。
+let lastSheetIssue = 'none';
+function getLastSheetIssue() {
+  return lastSheetIssue;
+}
+
 async function findSheetWithMemberHeaders(sheets) {
   for (const s of sheets) {
     try {
@@ -22,8 +28,15 @@ async function getMemberSheet() {
   const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
   const privateKey = process.env.GOOGLE_PRIVATE_KEY;
 
-  if (!sheetId || !clientEmail || !privateKey) {
-    console.warn('Google credentials missing. Skipping spreadsheet access.');
+  lastSheetIssue = 'none';
+
+  const missing = [];
+  if (!sheetId) missing.push('GOOGLE_SHEETS_ID');
+  if (!clientEmail) missing.push('GOOGLE_SERVICE_ACCOUNT_EMAIL');
+  if (!privateKey) missing.push('GOOGLE_PRIVATE_KEY');
+  if (missing.length) {
+    lastSheetIssue = `env_missing:${missing.join(',')}`;
+    console.warn(`Google credentials missing: ${missing.join(', ')}`);
     return null;
   }
 
@@ -34,7 +47,14 @@ async function getMemberSheet() {
   });
 
   const doc = new GoogleSpreadsheet(sheetId, auth);
-  await doc.loadInfo();
+  try {
+    await doc.loadInfo();
+  } catch (err) {
+    const status = err?.response?.status;
+    lastSheetIssue = status ? `load_info_${status}` : 'load_info_error';
+    console.error(`Google Sheets loadInfo failed (${lastSheetIssue}):`, err?.message);
+    return null;
+  }
 
   const wanted = SHEET_TITLE.trim().toLowerCase();
   const sheets = doc.sheetsByIndex;
@@ -46,6 +66,7 @@ async function getMemberSheet() {
     null;
 
   if (!sheet) {
+    lastSheetIssue = 'tab_not_found';
     console.warn(
       `'${SHEET_TITLE}' sheet not found. Available tabs: ${sheets.map(s => s.title).join(', ')}`
     );
@@ -82,4 +103,4 @@ async function setMemberStatus(email, status) {
   return true;
 }
 
-module.exports = { getMemberSheet, setMemberStatus };
+module.exports = { getMemberSheet, setMemberStatus, getLastSheetIssue };
