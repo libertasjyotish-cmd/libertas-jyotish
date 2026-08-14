@@ -10,6 +10,23 @@ function getLastSheetIssue() {
   return lastSheetIssue;
 }
 
+// Vercel の環境変数に貼られた鍵は、囲みクォート付き・\n エスケープ・base64 のいずれもあり得る
+function normalizePrivateKey(raw) {
+  let key = String(raw).trim();
+  if ((key.startsWith('"') && key.endsWith('"')) || (key.startsWith("'") && key.endsWith("'"))) {
+    key = key.slice(1, -1);
+  }
+  if (!key.includes('BEGIN')) {
+    try {
+      const decoded = Buffer.from(key, 'base64').toString('utf8');
+      if (decoded.includes('BEGIN')) key = decoded;
+    } catch (err) {
+      // base64 ではない
+    }
+  }
+  return key.replace(/\\n/g, '\n');
+}
+
 async function findSheetWithMemberHeaders(sheets) {
   for (const s of sheets) {
     try {
@@ -42,7 +59,7 @@ async function getMemberSheet() {
 
   const auth = new JWT({
     email: clientEmail,
-    key: privateKey.replace(/\\n/g, '\n'),
+    key: normalizePrivateKey(privateKey),
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
   });
 
@@ -51,7 +68,10 @@ async function getMemberSheet() {
     await doc.loadInfo();
   } catch (err) {
     const status = err?.response?.status;
-    lastSheetIssue = status ? `load_info_${status}` : 'load_info_error';
+    const code = String(err?.message || 'unknown')
+      .replace(/[^a-zA-Z0-9 _:.-]/g, '')
+      .slice(0, 60);
+    lastSheetIssue = status ? `load_info_${status}` : `load_info_error:${code}`;
     console.error(`Google Sheets loadInfo failed (${lastSheetIssue}):`, err?.message);
     return null;
   }
