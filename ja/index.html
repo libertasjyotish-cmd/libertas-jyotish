@@ -206,6 +206,16 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 }
 .footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 12px; flex-wrap: wrap; }
 .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
+.lang-switch { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+.lang-link {
+display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+color: #E2D9CE; font-size: 0.78rem; letter-spacing: 0.06em;
+border: 1px solid rgba(139, 107, 27, 0.35); border-radius: 50px; padding: 4px 12px;
+transition: color 0.3s, border-color 0.3s;
+}
+.lang-link:hover { color: var(--color-gold-main); border-color: var(--color-gold-main); }
+.lang-link.is-current { color: var(--color-gold-main); border-color: var(--color-gold-main); background: rgba(212, 175, 55, 0.12); }
+.lang-flag { font-size: 1rem; line-height: 1; }
 .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); }
 
 @media (max-width: 640px) {
@@ -355,6 +365,14 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 
 <footer class="site-footer">
 <div class="footer-links"><a href="/ja/legal">特定商取引法に基づく表記・利用規約・プライバシーポリシー</a></div>
+<nav class="lang-switch" aria-label="Language">
+<a class="lang-link is-current" href="/ja" hreflang="ja" lang="ja" title="日本語" aria-label="日本語"><span class="lang-flag">🇯🇵</span><span class="lang-code">JA</span></a>
+<a class="lang-link" href="/en" hreflang="en" lang="en" title="English" aria-label="English"><span class="lang-flag">🇬🇧</span><span class="lang-code">EN</span></a>
+<a class="lang-link" href="/es" hreflang="es" lang="es" title="Español" aria-label="Español"><span class="lang-flag">🇪🇸</span><span class="lang-code">ES</span></a>
+<a class="lang-link" href="/pt" hreflang="pt" lang="pt" title="Português" aria-label="Português"><span class="lang-flag">🇵🇹</span><span class="lang-code">PT</span></a>
+<a class="lang-link" href="/ar" hreflang="ar" lang="ar" title="العربية" aria-label="العربية"><span class="lang-flag">🇸🇦</span><span class="lang-code">AR</span></a>
+<a class="lang-link" href="/id" hreflang="id" lang="id" title="Bahasa Indonesia" aria-label="Bahasa Indonesia"><span class="lang-flag">🇮🇩</span><span class="lang-code">ID</span></a>
+</nav>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 

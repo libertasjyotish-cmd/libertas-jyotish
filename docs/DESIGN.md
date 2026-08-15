@@ -17,7 +17,7 @@ Make.com などのノーコード自動化ツールは使用しない。
 ```
 index.html          言語振り分け（現状は常に /ja/index.html へ redirect）
 manifest.json       PWA マニフェスト
-sw.js               Service Worker（CACHE_NAME = 'libertas-jyotish-v12'）
+sw.js               Service Worker（CACHE_NAME = 'libertas-jyotish-v14'）
 vercel.json         cleanUrls / redirects / rewrites
 package.json        google-spreadsheet, google-auth-library
 api/jyotish.js      統合 API（4 アクション + フォールバック）
@@ -29,6 +29,8 @@ ja/pdf-success.html  PDF 購入完了
 ja/success.html      有料登録完了
 ja/legal.html        特商法・利用規約・プライバシーポリシー
 ja/reissue.html      マイページ URL 再発行
+en|es|pt|ar|id/index.html  各言語の準備中ページ（scripts/build-lang-stubs.js で生成）
+scripts/build-lang-stubs.js 準備中ページの生成スクリプト
 img/                 bg-jyotish.jpg, libertas-logo.png
 push.py              GitHub API 経由の補助スクリプト（本番動作には不要）
 Agent.pdf            旧 v12 設計書（アーカイブ）
