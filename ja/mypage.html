@@ -155,8 +155,10 @@ white-space: nowrap;
 .btn-action:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .locked-wrapper { position: relative; overflow: hidden; border-radius: 10px; }
-.locked-wrapper.preview-capped { max-height: 560px; }
 .blur-content { filter: blur(3.5px); user-select: none; pointer-events: none; opacity: 0.8; transition: filter 0.5s ease; }
+/* 項目名は読める状態にして、中身だけをぼかす（有料で何が読めるか伝えるため） */
+.preview-blur { filter: blur(3.5px); user-select: none; pointer-events: none; opacity: 0.75; }
+.locked-wrapper.preview-mode .lock-overlay { position: static; padding: 18px 16px; background: rgba(212, 175, 55, 0.14); border: 1px solid rgba(139, 107, 27, 0.35); border-radius: 10px; margin-top: 16px; }
 .lock-overlay {
 position: absolute; left: 0; bottom: 0; width: 100%;
 background: linear-gradient(to bottom, rgba(242, 231, 207, 0) 0%, rgba(242, 231, 207, 0.95) 40%);
@@ -1017,11 +1019,13 @@ const portalLink = document.getElementById('btn-billing-portal');
 if (portalLink) portalLink.style.display = 'inline';
 const overlay = document.getElementById('lock-overlay');
 if (overlay) overlay.style.display = 'none';
-document.getElementById('premium-gatekeeper')?.classList.remove('preview-capped');
+document.getElementById('premium-gatekeeper')?.classList.remove('preview-mode');
+const lead = document.getElementById('premium-sample-lead');
+if (lead) lead.style.display = 'none';
 const area = document.getElementById('premium-content-area');
 if (area) {
 area.classList.remove('blur-content');
-area.querySelectorAll('.blur-content').forEach(el => el.classList.remove('blur-content'));
+area.querySelectorAll('.blur-content, .preview-blur').forEach(el => el.classList.remove('blur-content', 'preview-blur'));
 }
 }
 
@@ -1034,8 +1038,7 @@ document.getElementById('user-status-badge').className = 'user-badge free';
 const portalLink = document.getElementById('btn-billing-portal');
 if (portalLink) portalLink.style.display = 'none';
 document.getElementById('lock-overlay').style.display = 'flex';
-document.getElementById('premium-content-area').classList.add('blur-content');
-document.getElementById('premium-gatekeeper')?.classList.add('preview-capped');
+document.getElementById('premium-gatekeeper')?.classList.add('preview-mode');
 }
 
 // インド占星術（サイデリアル）の太陽星座・月星座・ナクシャトラ
@@ -1139,11 +1142,18 @@ const lead = document.getElementById('premium-sample-lead');
 if (lead) lead.style.display = 'block';
 
 const title = document.getElementById('dasha-period-title');
-if (title) title.textContent = PREMIUM_SAMPLE.dashaTitle;
+if (title) {
+title.textContent = PREMIUM_SAMPLE.dashaTitle;
+title.classList.add('preview-blur');
+}
 const desc = document.getElementById('dasha-description');
-if (desc) desc.textContent = PREMIUM_SAMPLE.dashaDesc;
+if (desc) {
+desc.textContent = PREMIUM_SAMPLE.dashaDesc;
+desc.classList.add('preview-blur');
+}
 
 renderPlanetTable(PREMIUM_SAMPLE.planets);
+document.getElementById('planet-table-body')?.classList.add('preview-blur');
 
 let detailContainer = document.getElementById('premium-detail-container');
 if (!detailContainer) {
@@ -1154,7 +1164,7 @@ document.getElementById('premium-content-area').appendChild(detailContainer);
 detailContainer.innerHTML = PREMIUM_SAMPLE.cards.map(c => `
 <div class="card-box" style="margin-top:22px;">
 <div class="card-title">${c.title}</div>
-<div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">${c.text}</div>
+<div class="preview-blur" style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">${c.text}</div>
 </div>
 `).join('');
 }
