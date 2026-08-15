@@ -5,6 +5,7 @@ const { getMemberRecord, getPdfReport, savePdfReport } = require('./_sheets');
 const { fetchReportData } = require('./_astrology');
 const { listGeminiModels } = require('./_gemini');
 const { CHAPTER_IDS, generateChapters } = require('./_report');
+const { normalizeLang } = require('./_terms');
 
 const TOKYO = { lat: 35.6762, lon: 139.6503 };
 // 1リクエストで生成する章数の上限。全13章を一度に生成すると実行時間上限とGeminiのレート制限に触れるため、
@@ -46,7 +47,8 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { email, session, dob, tob, city } = req.body || {};
+  const { email, session, dob, tob, city, language } = req.body || {};
+  const lang = normalizeLang(language);
   if (!email || !session) return res.status(400).json({ error: 'missing_credentials' });
 
   // 購入状態はサーバ側（Sheets）のみを正とする。クライアントの申告は一切信用しない。
@@ -70,7 +72,7 @@ module.exports = async function handler(req, res) {
 
   let stored = null;
   try {
-    stored = await getPdfReport(email);
+    stored = await getPdfReport(email, lang);
   } catch (err) {
     console.error('Stored report lookup failed:', err?.message);
   }
@@ -79,6 +81,7 @@ module.exports = async function handler(req, res) {
   if (stored && stored.astro && !missing.length) {
     return res.status(200).json({
       source: 'stored',
+      language: lang,
       updated_at: stored.updated_at,
       astro: stored.astro,
       chapters: Object.fromEntries(CHAPTER_IDS.map((id) => [id, stored[id]]))
@@ -90,7 +93,7 @@ module.exports = async function handler(req, res) {
   if (!astro) {
     try {
       const { lat, lon } = await geocode(finalCity);
-      astro = await fetchReportData({ dob: finalDob, tob: finalTob, lat, lon });
+      astro = await fetchReportData({ dob: finalDob, tob: finalTob, lat, lon, lang });
       astro.city = finalCity;
     } catch (err) {
       console.error('Prokerala report data failed:', err?.message);
@@ -104,10 +107,10 @@ module.exports = async function handler(req, res) {
 
   const batch = missing.slice(0, CHAPTERS_PER_REQUEST);
   const deferred = missing.slice(CHAPTERS_PER_REQUEST);
-  const { chapters, failed } = await generateChapters(astro, batch, apiKey, models);
+  const { chapters, failed } = await generateChapters(astro, batch, apiKey, models, { lang });
 
   try {
-    await savePdfReport(email, { astro, ...chapters });
+    await savePdfReport(email, lang, { astro, ...chapters });
   } catch (err) {
     console.error('Report save failed:', err?.message);
   }
@@ -120,6 +123,7 @@ module.exports = async function handler(req, res) {
 
   return res.status(200).json({
     source: 'generated',
+    language: lang,
     astro,
     chapters: merged,
     // 生成できなかった章は、次回の閲覧時に自動で補完される

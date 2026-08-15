@@ -1,6 +1,7 @@
 // Google Sheets「会員データ」シートへの共通アクセス（CommonJS）
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library');
+const { normalizeLang } = require('./_terms');
 
 const SHEET_TITLE = process.env.GOOGLE_SHEETS_MEMBER_TAB || '会員データ';
 
@@ -245,8 +246,13 @@ const REPORT_FIELDS = [
   'ch7', 'ch8', 'ch9', 'ch10', 'ch11', 'ch12'
 ];
 
+// language 列が空の行は、多言語化前に保存された日本語の鑑定書
+function rowLang(row) {
+  return normalizeLang(row.get('language') || 'ja');
+}
+
 function reportHeaders() {
-  const headers = ['email', 'updated_at'];
+  const headers = ['email', 'language', 'updated_at'];
   for (const field of REPORT_FIELDS) {
     for (let i = 1; i <= CHUNKS_PER_FIELD; i += 1) headers.push(`${field}_${i}`);
   }
@@ -292,16 +298,17 @@ function readChunks(row, field) {
   return text;
 }
 
-// 保存済みの鑑定書を取得する（再訪時に再生成しないため）
-async function getPdfReport(email) {
+// 保存済みの鑑定書を取得する（再訪時に再生成しないため）。鑑定書はメール×言語で 1 行。
+async function getPdfReport(email, language) {
   const sheet = await getReportSheet();
   if (!sheet) return null;
   const normalized = normalizeEmail(email);
+  const lang = normalizeLang(language);
   const rows = await sheet.getRows();
-  const row = rows.find(r => normalizeEmail(r.get('email')) === normalized);
+  const row = rows.find(r => normalizeEmail(r.get('email')) === normalized && rowLang(r) === lang);
   if (!row) return null;
 
-  const report = { updated_at: row.get('updated_at') || '' };
+  const report = { language: lang, updated_at: row.get('updated_at') || '' };
   for (const field of REPORT_FIELDS) {
     const text = readChunks(row, field);
     if (!text) continue;
@@ -315,15 +322,17 @@ async function getPdfReport(email) {
 }
 
 // 章単位で追記保存する。既存の章は保持し、渡された章だけ更新する。
-async function savePdfReport(email, partial) {
+async function savePdfReport(email, language, partial) {
   const sheet = await getReportSheet();
   if (!sheet) return false;
   const normalized = normalizeEmail(email);
+  const lang = normalizeLang(language);
   const rows = await sheet.getRows();
-  const row = rows.find(r => normalizeEmail(r.get('email')) === normalized);
+  const row = rows.find(r => normalizeEmail(r.get('email')) === normalized && rowLang(r) === lang);
   const nowStr = new Date().toISOString();
 
   if (row) {
+    row.set('language', lang);
     row.set('updated_at', nowStr);
     for (const field of REPORT_FIELDS) {
       if (!(field in partial)) continue;
@@ -335,7 +344,7 @@ async function savePdfReport(email, partial) {
     return true;
   }
 
-  const payload = { email: email, updated_at: nowStr };
+  const payload = { email: email, language: lang, updated_at: nowStr };
   for (const field of REPORT_FIELDS) {
     writeChunks(payload, field, field in partial ? JSON.stringify(partial[field]) : '');
   }
