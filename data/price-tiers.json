@@ -18,7 +18,23 @@
       "factor": 0.6
     }
   ],
-  "defaultTier": "T3",
+  "defaultTier": "T2",
+  "noDataTier": "T3",
+  "manualT1": [
+    "AS",
+    "GI",
+    "GU",
+    "IM",
+    "JG",
+    "LI",
+    "MC",
+    "MF",
+    "MP",
+    "NC",
+    "PF",
+    "VG",
+    "VI"
+  ],
   "countries": {
     "AD": {
       "name": "Andorra",
@@ -70,7 +86,7 @@
     },
     "AS": {
       "name": "American Samoa",
-      "tier": "T3",
+      "tier": "T1",
       "gniPpp": null,
       "year": null
     },
@@ -436,7 +452,7 @@
     },
     "GI": {
       "name": "Gibraltar",
-      "tier": "T3",
+      "tier": "T1",
       "gniPpp": null,
       "year": null
     },
@@ -478,7 +494,7 @@
     },
     "GU": {
       "name": "Guam",
-      "tier": "T3",
+      "tier": "T1",
       "gniPpp": null,
       "year": null
     },
@@ -544,7 +560,7 @@
     },
     "IM": {
       "name": "Isle of Man",
-      "tier": "T3",
+      "tier": "T1",
       "gniPpp": null,
       "year": null
     },
@@ -580,7 +596,7 @@
     },
     "JG": {
       "name": "Channel Islands",
-      "tier": "T3",
+      "tier": "T1",
       "gniPpp": null,
       "year": null
     },
@@ -688,7 +704,7 @@
     },
     "LI": {
       "name": "Liechtenstein",
-      "tier": "T3",
+      "tier": "T1",
       "gniPpp": null,
       "year": null
     },
@@ -742,7 +758,7 @@
     },
     "MC": {
       "name": "Monaco",
-      "tier": "T3",
+      "tier": "T1",
       "gniPpp": null,
       "year": null
     },
@@ -760,7 +776,7 @@
     },
     "MF": {
       "name": "St. Martin (French part)",
-      "tier": "T3",
+      "tier": "T1",
       "gniPpp": null,
       "year": null
     },
@@ -808,7 +824,7 @@
     },
     "MP": {
       "name": "Northern Mariana Islands",
-      "tier": "T3",
+      "tier": "T1",
       "gniPpp": null,
       "year": null
     },
@@ -868,7 +884,7 @@
     },
     "NC": {
       "name": "New Caledonia",
-      "tier": "T3",
+      "tier": "T1",
       "gniPpp": null,
       "year": null
     },
@@ -940,7 +956,7 @@
     },
     "PF": {
       "name": "French Polynesia",
-      "tier": "T3",
+      "tier": "T1",
       "gniPpp": null,
       "year": null
     },
@@ -1264,13 +1280,13 @@
     },
     "VG": {
       "name": "British Virgin Islands",
-      "tier": "T3",
+      "tier": "T1",
       "gniPpp": null,
       "year": null
     },
     "VI": {
       "name": "Virgin Islands (U.S.)",
-      "tier": "T3",
+      "tier": "T1",
       "gniPpp": null,
       "year": null
     },

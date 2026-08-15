@@ -16,11 +16,21 @@ const TIERS = [
   { tier: 'T3', min: 0, factor: 0.6 }
 ];
 
-// データが無い国のフォールバック（基準国と同等に扱わないため中位に寄せる）。
-const DEFAULT_TIER = 'T3';
+// テーブルに無い国コード（IPから国を判定できない場合を含む）の既定。
+const DEFAULT_TIER = 'T2';
 
-function tierOf(gni) {
-  if (!Number.isFinite(gni)) return DEFAULT_TIER;
+// 世界銀行に指標値が無いが、明らかに高所得の国・地域は T1 に手動で寄せる。
+// これ以外の指標値なしの国（キューバ・北朝鮮）は下限の T3 のまま。
+const MANUAL_T1 = new Set([
+  'MC', 'LI', 'GI', 'IM', 'JG', 'GU', 'VI', 'MP', 'AS', 'PF', 'NC', 'VG', 'MF'
+]);
+
+// 指標値が取得できなかった国の扱い（下限帯に置く）。
+const NO_DATA_TIER = 'T3';
+
+function tierOf(iso2, gni) {
+  if (MANUAL_T1.has(iso2)) return 'T1';
+  if (!Number.isFinite(gni)) return NO_DATA_TIER;
   return TIERS.find((t) => gni >= t.min).tier;
 }
 
@@ -49,7 +59,7 @@ async function main() {
     const data = gniByIso2.get(iso2);
     entries[iso2] = {
       name: c.name,
-      tier: tierOf(data && data.gni),
+      tier: tierOf(iso2, data && data.gni),
       gniPpp: data ? Math.round(data.gni) : null,
       year: data ? data.year : null
     };
@@ -61,6 +71,8 @@ async function main() {
     generatedAt: new Date().toISOString().slice(0, 10),
     thresholds: TIERS,
     defaultTier: DEFAULT_TIER,
+    noDataTier: NO_DATA_TIER,
+    manualT1: [...MANUAL_T1].sort(),
     countries: sorted
   };
 
