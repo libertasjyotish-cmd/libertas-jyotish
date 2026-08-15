@@ -253,6 +253,7 @@ transition: color 0.3s, border-color 0.3s;
 </style>
 <link rel="stylesheet" href="/css/site-menu.css">
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/checkout-links.js"></script>
 </head>
 <body>
 
@@ -441,7 +442,8 @@ function openStripeCheckout() {
                 localStorage.getItem('lj_user_email') ||
                 localStorage.getItem('email') || '';
 
-  const stripeUrl = `https://buy.stripe.com/dRmaEZ0I73Bx6g8auH24000?prefilled_email=${encodeURIComponent(email)}`;
+  // 訪問者の国の価格帯に応じた決済リンクを使う
+  const stripeUrl = `${window.LJCheckout.linkFor('premium')}?prefilled_email=${encodeURIComponent(email)}`;
   window.open(stripeUrl, '_blank');
 }
 

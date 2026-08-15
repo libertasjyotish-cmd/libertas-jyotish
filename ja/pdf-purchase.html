@@ -136,6 +136,7 @@
   </style>
 <link rel="stylesheet" href="/css/site-menu.css">
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/checkout-links.js"></script>
 </head>
 <body>
 
@@ -174,9 +175,9 @@
   </footer>
 
   <script>
-    // 価格と Stripe の買い切りPayment Linkはここだけを変更すれば反映される
-    const PDF_PRICE_LABEL = '買い切り 4,980円（税込）';
-    const PDF_CHECKOUT_URL = 'https://buy.stripe.com/3cI14paiHegb480fP124001';
+    // 価格と買い切りPayment Linkは訪問者の国の価格帯に応じて /js/checkout-links.js が解決する
+    const pdfPriceLabel = () => window.LJCheckout.labelFor('pdf');
+    const pdfCheckoutUrl = () => window.LJCheckout.linkFor('pdf');
 
     // 購入済みかどうかはサーバー（会員シート）だけを正とする。
     // 購入済みなら購入フォームを出さず、鑑定書への導線に差し替える。
@@ -206,14 +207,11 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       showPurchaseStateView();
-      document.getElementById('price-label').textContent = PDF_PRICE_LABEL;
-      if (!PDF_CHECKOUT_URL) {
-        const btn = document.getElementById('btn-proceed-checkout');
-        btn.disabled = true;
-        btn.style.opacity = '0.6';
-        btn.textContent = '準備中です';
-        document.getElementById('checkout-note').textContent = 'この商品は現在準備中です。販売開始まで今しばらくお待ちください。';
-      }
+      document.getElementById('price-label').textContent = pdfPriceLabel();
+      // 国判定が返ってきたら価格表示を確定させる
+      window.LJCheckout.ready.then(() => {
+        document.getElementById('price-label').textContent = pdfPriceLabel();
+      });
       const savedEmail = localStorage.getItem('lj_user_email') || '';
       const savedBirthdate = localStorage.getItem('lj_user_birthdate') || '';
       const savedBirthplace = localStorage.getItem('lj_user_birthplace') || '';
@@ -241,9 +239,9 @@
         if (timePart) localStorage.setItem('tob', timePart.slice(0, 5));
         localStorage.setItem('city', birthplace);
 
-        if (!PDF_CHECKOUT_URL) return;
-        const separator = PDF_CHECKOUT_URL.includes('?') ? '&' : '?';
-        window.location.href = `${PDF_CHECKOUT_URL}${separator}prefilled_email=${encodeURIComponent(email)}`;
+        const checkoutUrl = pdfCheckoutUrl();
+        const separator = checkoutUrl.includes('?') ? '&' : '?';
+        window.location.href = `${checkoutUrl}${separator}prefilled_email=${encodeURIComponent(email)}`;
       });
     });
 

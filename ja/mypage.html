@@ -217,6 +217,7 @@ body { overflow-x: hidden; }
 </style>
 <link rel="stylesheet" href="/css/site-menu.css">
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/checkout-links.js"></script>
 </head>
 <body>
 
@@ -394,7 +395,8 @@ window.location.reload();
 
 const JYOTISH_API_URL = "/api/jyotish";
 const STRIPE_PORTAL_API_URL = "/api/stripe-portal";
-const PREMIUM_UPGRADE_URL = "https://buy.stripe.com/dRmaEZ0I73Bx6g8auH24000";
+// 決済リンクは訪問者の国の価格帯に応じて /js/checkout-links.js が解決する
+const premiumUpgradeUrl = () => window.LJCheckout.linkFor('premium');
 
 // JSTの今日の日付（YYYY-MM-DD）
 function getJstDateString() {
@@ -570,7 +572,7 @@ fetchUserDataAndRender(savedEmail);
 // Stripe 決済ページ呼び出し
 document.getElementById('btn-upgrade-premium')?.addEventListener('click', () => {
   const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
-  window.open(`${PREMIUM_UPGRADE_URL}?prefilled_email=${encodeURIComponent(email)}`, '_blank');
+  window.open(`${premiumUpgradeUrl()}?prefilled_email=${encodeURIComponent(email)}`, '_blank');
 });
 
 let currentAuthToken = '';
