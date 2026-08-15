@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تقرير العمر | ليبرتاس جيوتيش</title>
+  <link rel="canonical" href="https://www.libertas-jyotish.com/ar/pdf-report">
+  <meta name="robots" content="noindex">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0c1a1f">
+  <link rel="icon" type="image/png" href="/img/libertas-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* 背景画像はここだけを差し替えれば全ページに反映される */
+    :root {
+      --cover-bg: url("/img/report-cover.jpg");
+      --chapter-bg: url("/img/report-cover.jpg");
+      --chapter-bg-opacity: 0.07;
+      --logo: url("/img/libertas-logo.png");
+      --color-gold-main: #D4AF37;
+      --color-gold-dark: #8B6B1B;
+      --color-ink: #2C221E;
+      --color-paper: #FFFDF7;
+      --font-en: 'Cinzel', serif;
+      --font-ja: 'Noto Naskh Arabic', serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-ja); color: var(--color-ink); line-height: 1.9;
+      background: #0c1a1f;
+    }
+    .toolbar {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+      background: rgba(12, 26, 31, 0.94); border-bottom: 1px solid rgba(139, 107, 27, 0.3);
+      padding: 10px 18px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .toolbar a { color: #E2D9CE; text-decoration: none; font-size: 0.82rem; }
+    .toolbar .brand { color: var(--color-gold-main); font-family: var(--font-en); }
+    .btn {
+      padding: 9px 18px; font-family: var(--font-ja); font-size: 0.85rem; color: #FFFDF9; cursor: pointer;
+      background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%);
+      border: none; border-radius: 6px;
+    }
+
+    .book { max-width: 820px; margin: 0 auto; padding: 70px 0 60px; }
+    .page {
+      position: relative; background: var(--color-paper); padding: 46px 46px 52px; margin-bottom: 22px;
+      border: 1px solid rgba(184, 142, 60, 0.5); border-radius: 6px;
+      box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
+    }
+    /* 章扉の背景は薄く敷き、本文の可読性を落とさない */
+    .page::before {
+      content: ''; position: absolute; inset: 0; border-radius: 6px; pointer-events: none;
+      background-image: var(--chapter-bg); background-size: cover; background-position: center;
+      opacity: var(--chapter-bg-opacity);
+    }
+    .page > * { position: relative; }
+
+    .cover {
+      min-height: 1000px; text-align: center; color: #3a2f14;
+      background-image: linear-gradient(rgba(255, 253, 247, 0.35), rgba(255, 253, 247, 0.55)), var(--cover-bg);
+      background-size: cover; background-position: center;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .cover::before { content: none; }
+    .cover .logo { width: 68px; margin: 0 auto; }
+    .cover h1 { font-family: var(--font-en); font-size: 2.1rem; letter-spacing: 0.14em; color: var(--color-gold-dark); }
+    .cover .sub { font-size: 1.15rem; letter-spacing: 0.3em; margin-top: 10px; }
+    .cover .owner { font-size: 0.95rem; line-height: 2.2; }
+
+    h2.chapter-title {
+      font-size: 1.35rem; color: var(--color-gold-dark); letter-spacing: 0.06em;
+      border-bottom: 1px solid rgba(139, 107, 27, 0.35); padding-bottom: 10px; margin-bottom: 22px;
+    }
+    h3 { font-size: 1rem; color: var(--color-gold-dark); margin: 22px 0 8px; }
+    p { font-size: 0.94rem; margin-bottom: 12px; text-align: justify; }
+    ul { margin: 6px 0 12px 1.2em; font-size: 0.94rem; }
+
+    .lead { font-size: 1.5rem; line-height: 1.7; color: var(--color-gold-dark); text-align: center; margin: 10px 0 26px; }
+    .toc li { margin-bottom: 6px; }
+
+    .fact {
+      background: rgba(212, 175, 55, 0.09); border-left: 3px solid var(--color-gold-main);
+      padding: 12px 16px; margin: 14px 0; font-size: 0.9rem;
+    }
+    .fact .reason { display: block; font-size: 0.8rem; color: #6A5E58; margin-top: 4px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 12px 0; }
+    th, td { border: 1px solid rgba(139, 107, 27, 0.3); padding: 7px 9px; text-align: left; }
+    th { background: rgba(212, 175, 55, 0.14); color: var(--color-gold-dark); font-weight: 600; }
+
+    .bar-row { display: grid; grid-template-columns: 7em 1fr 3.4em; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 0.85rem; }
+    .bar { height: 12px; background: rgba(139, 107, 27, 0.15); border-radius: 6px; overflow: hidden; }
+    .bar span { display: block; height: 100%; background: linear-gradient(90deg, #D4AF37, #8B6B1B); }
+
+    .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .chart-box { border: 1px solid rgba(139, 107, 27, 0.3); background: #fff; padding: 10px; text-align: center; }
+    .chart-box svg, .chart-box img { max-width: 100%; height: auto; }
+    .chart-box figcaption { font-size: 0.8rem; color: #6A5E58; margin-top: 6px; }
+
+    .color-chip { display: inline-block; width: 16px; height: 16px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2); vertical-align: -3px; margin-right: 6px; }
+    .disclaimer { font-size: 0.78rem; color: #6A5E58; line-height: 1.9; }
+
+    .status { color: #E2D9CE; text-align: center; padding: 140px 24px; font-size: 0.95rem; }
+    .status a { color: var(--color-gold-main); }
+
+    @media (max-width: 640px) {
+      .page { padding: 26px 20px 32px; }
+      .chart-grid { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      @page { size: A4; margin: 14mm; }
+      body { background: #fff; }
+      .toolbar, .status { display: none !important; }
+      .book { max-width: 100%; padding: 0; }
+      .page {
+        margin: 0; border: none; border-radius: 0; box-shadow: none; padding: 0 0 12mm;
+        page-break-after: always; break-after: page;
+      }
+      .page:last-child { page-break-after: auto; break-after: auto; }
+      .cover { min-height: 245mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .fact, .bar-row, table, .chart-box { page-break-inside: avoid; break-inside: avoid; }
+      h2.chapter-title, h3 { page-break-after: avoid; break-after: avoid; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+  <link rel="stylesheet" href="/css/rtl.css">
+</head>
+<body>
+
+  <div class="toolbar">
+    <a href="/ar" class="brand">Libertas Jyotish</a>
+    <div>
+      <span id="progress" style="color:#E2D9CE; font-size:0.78rem; margin-right:16px;"></span>
+      <a href="/ar/mypage" style="margin-right:16px;">صفحة العضوية</a>
+      <button class="btn" id="btn-print">الحفظ أو الطباعة بصيغة PDF</button>
+    </div>
+  </div>
+
+  <div id="status" class="status">جارٍ تحميل تقريرك...</div>
+  <div class="book" id="book" style="display:none;"></div>
+
+  <script>
+    const API_URL = '/api/pdf-report';
+    const statusEl = document.getElementById('status');
+    const bookEl = document.getElementById('book');
+
+    const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+    ));
+    const para = (text) => (text ? String(text).split(/\n{1,}/).map((t) => `<p>${esc(t)}</p>`).join('') : '');
+    const page = (inner) => `<section class="page">${inner}</section>`;
+
+    document.getElementById('btn-print').addEventListener('click', () => window.print());
+
+    function setStatus(html) {
+      statusEl.innerHTML = html;
+      statusEl.style.display = 'block';
+    }
+
+    async function requestReport(email, session) {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          session,
+          dob: localStorage.getItem('dob') || '',
+          tob: localStorage.getItem('tob') || '',
+          city: localStorage.getItem('city') || '',
+          language: 'ar'
+        })
+      });
+
+      if (res.status === 401) {
+        localStorage.removeItem('lj_session');
+        throw new Error('انتهت صلاحية جلستك.<br><a href=\"/ar/mypage?next=pdf-report\">سجّل الدخول من جديد لفتح تقريرك</a>');
+      }
+      if (res.status === 403) throw new Error('هذا التقرير مخصص للمشترين فقط.<br><a href=\"/ar/pdf-purchase\">عن تقرير العمر</a>');
+      if (!res.ok) {
+        const detail = await res.json().catch(() => ({}));
+        throw new Error(detail.error === 'missing_birth_data'
+          ? 'لا توجد بيانات ميلاد مسجَّلة.<br>سجّل تاريخ ميلادك ومكانه في <a href=\"/ar/mypage\">صفحة العضوية</a>.'
+          : 'تعذّر تجهيز تقريرك. أعد تحميل الصفحة بعد قليل.');
+      }
+      return res.json();
+    }
+
+    async function load() {
+      const email = localStorage.getItem('lj_user_email');
+      const session = localStorage.getItem('lj_session');
+      if (!email) {
+        setStatus('تحتاج إلى تسجيل الدخول لقراءة تقريرك.<br><a href=\"/ar/mypage\">سجّل الدخول من صفحة عضويتك</a>.');
+        return;
+      }
+      // Google ログインだと本人確認セッションが無いため、マイページでメール認証してここに戻す
+      if (!session) {
+        setStatus('جارٍ نقلك إلى تأكيد الهوية حيث تُدخل الرمز المرسل إلى بريدك...');
+        window.location.href = '/ar/mypage?next=pdf-report';
+        return;
+      }
+
+      // 未生成の章はサーバ側で分割生成されるため、pending がなくなるまで繰り返す
+      let attempt = 0;
+      let rendered = false;
+      while (attempt < 6) {
+        attempt += 1;
+        let data;
+        try {
+          data = await requestReport(email, session);
+        } catch (err) {
+          if (rendered) return;
+          setStatus(err.message || 'فشل الاتصال. أعد تحميل الصفحة بعد قليل.');
+          return;
+        }
+
+        render(data);
+        statusEl.style.display = 'none';
+        bookEl.style.display = 'block';
+        rendered = true;
+
+        const progressEl = document.getElementById('progress');
+        if (!data.pending || !data.pending.length) {
+          progressEl.textContent = '';
+          return;
+        }
+        progressEl.textContent = `جارٍ كتابة الفصول المتبقية وعددها ${data.pending.length}...`;
+      }
+    }
+
+    function render(data) {
+      const a = data.astro || {};
+      const c = data.chapters || {};
+      const html = [];
+
+      html.push(cover(a));
+      html.push(toc());
+      if (c.summary) html.push(summaryPage(c.summary, a));
+      if (c.ch1) html.push(page(`<h2 class="chapter-title">${esc(c.ch1.title)}</h2>
+        <h3>اللاغنا — أنت كما يراك الآخرون</h3>${para(c.ch1.lagna)}
+        <h3>القمر — أنت من الداخل</h3>${para(c.ch1.moon)}
+        <h3>الشمس — الاتجاه الذي تقصده</h3>${para(c.ch1.sun)}
+        <h3>كيف تتناغم الطبقات الثلاث</h3>${para(c.ch1.integration)}`));
+      if (c.ch2) html.push(strengthPage(c.ch2, a));
+      if (c.ch3) html.push(yogaPage(c.ch3, a));
+      if (c.ch4) html.push(monoPage(c.ch4, a));
+      if (c.ch5) html.push(kotoPage(c.ch5, a));
+      if (c.ch6) html.push(bashoPage(c.ch6, a));
+      if (c.ch7) html.push(page(`<h2 class="chapter-title">${esc(c.ch7.title)}</h2>
+        <div class="fact">أسلوبك في العمل: <strong>${esc(c.ch7.type)}</strong>
+          <span class="reason">${esc(a.boosters?.koto?.workStyle?.reason || '')}</span></div>
+        ${para(c.ch7.text)}
+        <h3>بيئات تزدهر فيها</h3>${para(c.ch7.environment)}
+        <h3>أساليب عمل تستنزفك</h3>${para(c.ch7.caution)}`));
+      if (c.ch8) html.push(wealthPage(c.ch8, a));
+      if (c.ch9) html.push(timelinePage(c.ch9, a));
+      if (c.ch10) html.push(nowPage(c.ch10, a));
+      if (c.ch11) html.push(futurePage(c.ch11, a));
+      if (c.ch12) html.push(trialPage(c.ch12, a));
+      html.push(chartsPage(a));
+      html.push(planetsPage(a));
+      html.push(disclaimerPage(data));
+
+      bookEl.innerHTML = html.join('');
+    }
+
+    function cover(a) {
+      const birth = `${esc(a.birth?.dob || '')} ${esc(a.birth?.tob || '')}`;
+      return `<section class="page cover">
+        <div><img class="logo" src="/img/libertas-logo.png" alt="Libertas Jyotish"></div>
+        <div>
+          <h1>Libertas Jyotish</h1>
+          <div class="sub">تقرير العمر</div>
+        </div>
+        <div class="owner">
+          الميلاد  ${birth}<br>
+          مكان الميلاد  ${esc(a.city || '')}<br>
+          اللاغنا  ${esc(a.ascendant?.sign || '')}  /  القمر  ${esc(a.moon?.sign || '')}  /  ${esc(a.nakshatra || '')}
+        </div>
+      </section>`;
+    }
+
+    function toc() {
+      const items = [
+        'دليل استخدامك، في صفحة واحدة',
+        'الفصل 1 الخريطة التي هي أنت',
+        'الفصل 2 أقوى كوكب في داخلك',
+        'الفصل 3 نوع الحظ الذي وُلدت به',
+        'الفصل 4 الأشياء: الأحجار والألوان',
+        'الفصل 5 الممارسات: العادات وأساليب العمل',
+        'الفصل 6 الأماكن: الاتجاهات والبيئات',
+        'الفصل 7 رسالتك المهنية وكيفية استثمار مواهبك',
+        'الفصل 8 طريقك إلى الوفرة',
+        'الفصل 9 خريطة قدرك (الخط الزمني للحياة)',
+        'الفصل 10 أين أنت الآن',
+        'الفصل 11 العصر الذهبي القادم',
+        'الفصل 12 تحويل الابتلاءات إلى أساس',
+        'ملحق البيانات'
+      ];
+      return page(`<h2 class="chapter-title">المحتويات</h2><ul class="toc">${items.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`);
+    }
+
+    function summaryPage(s, a) {
+      const list = (arr) => (Array.isArray(arr) ? `<ul>${arr.filter(Boolean).map((v) => `<li>${esc(v)}</li>`).join('')}</ul>` : '');
+      const dasha = a.dasha?.current?.maha;
+      return page(`<h2 class="chapter-title">دليل استخدامك، في صفحة واحدة</h2>
+        <div class="lead">${esc(s.catchphrase)}</div>
+        ${para(s.essence)}
+        <h3>صفات هي سلاحك</h3>${list(s.weapons)}
+        <h3>مجالات أمامها مساحة للنمو</h3>${list(s.growth)}
+        ${dasha ? `<div class="fact">الفترة الكبرى الحالية: ${esc(dasha.lordJa)} (${esc(dasha.start)} – ${esc(dasha.end)})
+          <span class="reason">محسوب بفيمشوتاري داشا</span></div>` : ''}
+        ${para(s.now)}`);
+    }
+
+    function strengthPage(ch, a) {
+      const rows = (a.strength || []).map((p) => `<div class="bar-row">
+        <span>${esc(p.name)}（${esc(p.dignity)}）</span>
+        <span class="bar"><span style="width:${Math.max(0, Math.min(100, p.score))}%"></span></span>
+        <span>${esc(p.score)}</span></div>`).join('');
+      const block = (arr) => (Array.isArray(arr) ? arr.map((i) => `<h3>${esc(i.planet)}</h3>${para(i.text)}`).join('') : '');
+      return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
+        ${para(ch.intro)}
+        <h3>قوة الكواكب التسعة</h3>${rows}
+        <h3>أسلحتك</h3>${block(ch.strong)}
+        <h3>مساحة للنمو</h3>${block(ch.weak)}
+        ${para(ch.closing)}`);
+    }
+
+    function yogaPage(ch, a) {
+      const items = (ch.items || []).map((y) => {
+        const src = (a.yogas || []).find((v) => v.name === y.name);
+        return `<div class="fact"><strong>${esc(y.name)}</strong>
+          ${src?.group ? `<span class="reason">${esc(src.group)}</span>` : ''}</div>${para(y.text)}`;
+      }).join('');
+      return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>${para(ch.intro)}${items}${para(ch.closing)}`);
+    }
+
+    function monoPage(ch, a) {
+      const mono = a.boosters?.mono || {};
+      const stone = mono.lifeStone;
+      const colors = mono.colors || {};
+      const chip = (c) => (c ? `<span class="color-chip" style="background:${esc(c.hex)}"></span>${esc(c.name)}` : '');
+      return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
+        ${stone ? `<div class="fact">حجر العمر: <strong>${esc(stone.stone)}</strong>
+          ${stone.alternatives?.length ? ` (بدائل: ${esc(stone.alternatives.join('، '))})` : ''}
+          <span class="reason">${esc(stone.reason)}</span></div>` : ''}
+        ${para(ch.stone)}
+        ${mono.supportStone ? `<div class="fact">حجر يدعم فترتك الحالية: <strong>${esc(mono.supportStone.stone)}</strong>
+          <span class="reason">${esc(mono.supportStone.reason)}</span></div>${para(ch.support)}` : ''}
+        <h3>لونك في اللحظات الحاسمة</h3>
+        <div class="fact">${chip(colors.main)}${colors.support ? `　／　${chip(colors.support)}` : ''}
+          <span class="reason">${esc(colors.reason || '')}</span></div>
+        ${para(ch.color)}
+        <p class="disclaimer">${esc(ch.note || '')}</p>`);
+    }
+
+    function kotoPage(ch, a) {
+      const koto = a.boosters?.koto || {};
+      const list = (arr) => (Array.isArray(arr) ? `<ul>${arr.map((v) => `<li>${esc(v)}</li>`).join('')}</ul>` : '');
+      return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
+        ${koto.workStyle ? `<div class="fact">أسلوبك في العمل: <strong>${esc(koto.workStyle.type)}</strong>　${esc(koto.workStyle.detail)}
+          <span class="reason">${esc(koto.workStyle.reason)}</span></div>` : ''}
+        ${para(ch.work)}
+        <h3>عادات الصباح</h3>${list(koto.rhythm?.morning)}${para(ch.morning)}
+        <h3>عادات المساء</h3>${list(koto.rhythm?.night)}${para(ch.night)}
+        <h3>الساعات التي تركّز فيها أفضل تركيز</h3>
+        ${koto.rhythm ? `<div class="fact">${esc(koto.rhythm.focus)}<span class="reason">${esc(koto.rhythm.reason)}</span></div>` : ''}
+        ${para(ch.focus)}`);
+    }
+
+    function bashoPage(ch, a) {
+      const b = a.boosters?.basho || {};
+      const box = (d, label, text) => (d ? `<h3>${label}</h3>
+        <div class="fact">الاتجاه: <strong>${esc(d.direction)}</strong>  البيئة: ${esc((d.environment || []).join('، '))}
+          <span class="reason">${esc(d.reason)}</span></div>${para(text)}` : '');
+      return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
+        ${box(b.primary, 'اتجاهك الطبيعي', ch.primary)}
+        ${box(b.career, 'بيئات تجعلك منتجًا في العمل', ch.career)}
+        ${box(b.rest, 'بيئات مناسبة للتعافي', ch.rest)}`);
+    }
+
+    function wealthPage(ch, a) {
+      const av = a.ashtakavarga;
+      const rows = av ? av.houses.map((h) => `<div class="bar-row">
+        <span>${esc(h.label)}</span>
+        <span class="bar"><span style="width:${Math.max(0, Math.min(100, Math.round(h.score / 50 * 100)))}%"></span></span>
+        <span>${esc(h.score)} نقطة</span></div>`).join('') : '';
+      return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
+        ${para(ch.intro)}
+        ${av ? `<div class="fact">مجموع المجالات الاثني عشر 337 نقطة، بمتوسط ${esc(av.average)} نقطة.
+          <span class="reason">محسوب بسارفاشتاكافارغا</span></div>${rows}` : ''}
+        <h3>مجالات قوية</h3>${para(ch.strong)}
+        <h3>مجالات تحتاج إلى تعزيز</h3>${para(ch.weak)}
+        <h3>من أين تأتي الوفرة</h3>${para(ch.money)}
+        <h3>كيف ترتّب نفقاتك</h3>${para(ch.spending)}`);
+    }
+
+    function timelinePage(ch, a) {
+      const map = new Map((ch.periods || []).map((p) => [p.lord, p.text]));
+      const rows = (a.dasha?.timeline || []).map((t) => `<tr>
+        <td>${esc(t.lordJa)} فترة</td><td>${esc(t.start)} – ${esc(t.end)}</td>
+        <td>${esc(t.season)}${t.isCurrent ? ' (الحالية)' : ''}</td>
+        <td>${esc(map.get(t.lordJa) || map.get(t.lord) || '')}</td></tr>`).join('');
+      return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
+        ${para(ch.intro)}
+        <table><thead><tr><th>الدورة</th><th>الفترة</th><th>الطابع</th><th>الموضوع</th></tr></thead><tbody>${rows}</tbody></table>
+        <h3>التحولات حتى الآن</h3>${para(ch.past)}`);
+    }
+
+    function nowPage(ch, a) {
+      const cur = a.dasha?.current;
+      const list = (arr) => (Array.isArray(arr) ? `<ul>${arr.filter(Boolean).map((v) => `<li>${esc(v)}</li>`).join('')}</ul>` : '');
+      const line = (label, d) => (d ? `${label}: ${esc(d.lordJa)} (${esc(d.start)} – ${esc(d.end)})<br>` : '');
+      return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
+        ${cur ? `<div class="fact">${line('الفترة الكبرى', cur.maha)}${line('الفترة الفرعية', cur.antar)}${line('الفترة الصغرى', cur.pratyantar)}
+          <span class="reason">محسوب بفيمشوتاري داشا</span></div>` : ''}
+        ${para(ch.text)}
+        <h3>ما ينجح في هذه الفترة</h3>${list(ch.todo)}
+        <h3>قرارات يُستحسن تجنبها</h3>${list(ch.avoid)}`);
+    }
+
+    function futurePage(ch, a) {
+      const rows = (a.dasha?.upcoming || []).map((u) => `<tr>
+        <td>${esc(u.maha)} / ${esc(u.antar)}</td><td>${esc(u.start)} 〜 ${esc(u.end)}</td></tr>`).join('');
+      const blocks = (ch.periods || []).map((p) => `<h3>${esc(p.label)}</h3>${para(p.text)}`).join('');
+      return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
+        ${para(ch.intro)}
+        <table><thead><tr><th>الفترة الكبرى / الفترة الفرعية</th><th>الفترة</th></tr></thead><tbody>${rows}</tbody></table>
+        ${blocks}${para(ch.closing)}`);
+    }
+
+    function trialPage(ch, a) {
+      const ss = a.sadeSati;
+      const rows = ss?.transits?.length ? `<table><thead><tr><th>المرحلة</th><th>موضع زحل</th><th>الفترة</th></tr></thead><tbody>
+        ${ss.transits.map((t) => `<tr><td>${esc(t.phase)}</td><td>${esc(t.sign)}</td><td>${esc(t.start)} 〜 ${esc(t.end)}</td></tr>`).join('')}
+        </tbody></table>` : '';
+      const list = (arr) => (Array.isArray(arr) ? `<ul>${arr.filter(Boolean).map((v) => `<li>${esc(v)}</li>`).join('')}</ul>` : '');
+      return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
+        ${para(ch.intro)}
+        <h3>ساديه ساتي (فترة تسوية زحل)</h3>
+        ${ss ? `<div class="fact">ينطبق: ${ss.active ? 'نعم' : 'لا'}${ss.phase ? ` (${esc(ss.phase)})` : ''}
+          <span class="reason">محسوب بساديه ساتي</span></div>` : ''}
+        ${rows}${para(ch.sadeSati)}
+        <h3>منغال دوشا (موضع قوي للمريخ)</h3>
+        ${a.mangalDosha ? `<div class="fact">ينطبق: ${a.mangalDosha.hasDosha ? 'نعم' : 'لا'}
+          <span class="reason">مُقيَّم بمنغال دوشا</span></div>` : ''}
+        ${para(ch.mangal)}
+        <h3>ما يمكنك البدء به اليوم</h3>${list(ch.actions)}
+        ${para(ch.closing)}`);
+    }
+
+    function chartsPage(a) {
+      const box = (svg, caption) => (svg ? `<figure class="chart-box">${svg}<figcaption>${esc(caption)}</figcaption></figure>` : '');
+      const charts = a.charts || {};
+      return page(`<h2 class="chapter-title">ملحق الخرائط</h2>
+        <div class="chart-grid">
+          ${box(charts.d1, 'D1 راشي (الحياة ككل)')}
+          ${box(charts.d9, 'D9 نافامشا (النضج والشريك)')}
+          ${box(charts.d10, 'D10 داشامشا (العمل والمجتمع)')}
+        </div>
+        <p class="disclaimer">الخرائط على النمط الهندي الشمالي. الرقم في كل قسم هو رقم البيت، والرموز هي الكواكب الواقعة فيه.</p>`);
+    }
+
+    function planetsPage(a) {
+      const dignity = new Map((a.strength || []).map((s) => [s.key, s.dignity]));
+      const rows = (a.planets || []).map((p) => `<tr>
+        <td>${esc(p.name)}</td><td>${esc(p.sign)}</td><td>${p.degree == null ? '' : esc(p.degree)}</td>
+        <td>${p.house == null ? '' : esc(p.house)}</td><td>${esc(p.nakshatra)}</td>
+        <td>${p.retrograde ? 'رجعي' : ''}</td><td>${esc(dignity.get(p.key) || '')}</td></tr>`).join('');
+      return page(`<h2 class="chapter-title">ملحق بيانات الكواكب</h2>
+        <table><thead><tr><th>الكوكب</th><th>البرج</th><th>الدرجة</th><th>البيت</th><th>الناكشاترا</th><th>رجعي</th><th>المرتبة</th></tr></thead>
+        <tbody>${rows}</tbody></table>`);
+    }
+
+    function disclaimerPage(data) {
+      return page(`<h2 class="chapter-title">قبل أن تقرأ</h2>
+        <p class="disclaimer">
+          كُتب هذا التقرير استنادًا إلى حسابات التنجيم الفيدي المبنية على بيانات الميلاد التي قدّمتها.\\n          وهو ليس استشارة طبية أو مالية أو قانونية، ولا يصلح أساسًا للتشخيص أو العلاج أو قرارات الاستثمار أو الأحكام القانونية.\\n          وللقرارات المتعلقة بالصحة أو المال أو العقود، استشر دائمًا مختصًا في المجال.<br><br>
+          الفترات المذكورة مبنية على حسابات فيمشوتاري داشا ولا تدل على كون تاريخ بعينه ميمونًا.\\n          والأحجار والألوان والاتجاهات اقتراحات مستخلصة من جداول التقابل الكلاسيكية، دون ضمان لأي أثر.<br><br>
+          تاريخ الإصدار: ${esc((data.astro?.generated_at || '').slice(0, 10))}<br>
+          &copy; Libertas Jyotish
+        </p>`);
+    }
+
+    load();
+  </script>
+</body>
+</html>

@@ -1,17 +1,27 @@
 <!DOCTYPE html>
-<html lang="id" dir="ltr">
+<html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Libertas Jyotish - Segera Hadir</title>
-<meta name="description" content="Libertas Jyotish, portal astrologi Veda, sedang menyiapkan edisi bahasa Indonesia.">
-<meta name="robots" content="noindex">
+<title>Libertas Jyotish - Portal Astrologi Veda</title>
+<meta name="description" content="Libertas Jyotish adalah layanan daring untuk pembacaan zodiak bulan dan konsultasi astrologi Veda pribadi berdasarkan metode sidereal dari India kuno.">
+
+<!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
 <link rel="canonical" href="https://libertas-jyotish.com/id">
+
+<!-- PWA & Theme Settings -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0c1a1f">
 <link rel="icon" type="image/png" href="/img/libertas-logo.png">
 <link rel="apple-touch-icon" href="/img/libertas-logo.png">
+
+<!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+
+
 <style>
 :root {
 --color-gold-light: #FDE047;
@@ -19,53 +29,212 @@
 --color-gold-dark: #8B6B1B;
 --color-text-dark: #2C221E;
 --font-en: 'Cinzel', serif;
---font-body: 'Noto Serif', Georgia, serif;
+--font-ja: 'Noto Serif', serif;
 }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-font-family: var(--font-body);
+font-family: var(--font-ja);
 color: var(--color-text-dark);
 line-height: 1.8;
 min-height: 100vh;
+overflow-x: hidden;
 background-color: #0c1a1f;
 display: flex; flex-direction: column;
 }
-.hero-section {
-flex: 1; display: flex; align-items: center; justify-content: center;
-padding: 80px 20px 60px;
-background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");
-background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed;
+
+.site-header {
+position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+background: rgba(12, 26, 31, 0.92);
+backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+border-bottom: 1px solid rgba(139, 107, 27, 0.3);
+padding: 12px 20px;
+display: flex; justify-content: space-between; align-items: center;
 }
+
+.header-logo {
+display: flex; align-items: center; gap: 10px;
+text-decoration: none; color: var(--color-gold-main);
+font-family: var(--font-en); font-weight: 600; font-size: 1.05rem;
+}
+.header-logo img { width: 32px; height: 32px; }
+
+.header-nav { display: flex; gap: 18px; align-items: center; }
+.header-nav a { color: #E2D9CE; text-decoration: none; font-size: 0.82rem; transition: color 0.3s; }
+.header-nav a:hover { color: var(--color-gold-main); }
+
+.nav-btn-member {
+border: 1px solid var(--color-gold-main);
+color: var(--color-gold-main) !important;
+padding: 4px 12px; border-radius: 4px;
+background: rgba(212, 175, 55, 0.1);
+}
+
+.hero-section {
+position: relative; flex: 1;
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+padding: 100px 20px 60px;
+background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed;
+}
+
+/* 羊皮紙カード質感 */
 .hero-container {
-width: 100%; max-width: 560px; text-align: center;
+position: relative; z-index: 2; width: 100%; max-width: 680px;
 background-image:
 radial-gradient(circle at 50% 25%, rgba(255, 253, 245, 0.98) 0%, rgba(245, 233, 208, 0.95) 55%, rgba(220, 200, 162, 0.96) 100%),
 linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.05) 100%);
+background-blend-mode: overlay, normal;
+backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
 border-radius: 14px;
 border: 1px solid rgba(184, 142, 60, 0.65);
 outline: 1px solid rgba(212, 175, 55, 0.35); outline-offset: -7px;
-box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75), inset 0 0 35px rgba(139, 90, 43, 0.28);
-padding: 45px 32px 38px;
+box-shadow:
+0 25px 50px -12px rgba(0, 0, 0, 0.75),
+0 0 20px rgba(212, 175, 55, 0.18),
+inset 0 0 35px rgba(139, 90, 43, 0.28),
+inset 0 2px 4px rgba(255, 255, 255, 0.8);
+padding:45px 35px 40px; text-align: center; margin-bottom: 40px;
 }
-.logo-img { width: 92px; height: auto; margin-bottom: 14px; filter: drop-shadow(0px 3px 6px rgba(139, 107, 27, 0.35)); }
-.brand { font-family: var(--font-en); font-size: 1.25rem; letter-spacing: 0.12em; color: var(--color-gold-dark); margin-bottom: 18px; }
+
+.logo-wrapper { margin-bottom: 12px; }
+.logo-img { width: 95px; height: auto; filter: drop-shadow(0px 3px 6px rgba(139, 107, 27, 0.35)); }
+
 .badge {
-display: inline-block; font-family: var(--font-en); font-size: 0.78rem; letter-spacing: 0.22em;
+display: inline-block; font-family: var(--font-en); font-size: 0.8rem; letter-spacing: 0.25em;
 color: var(--color-gold-dark); border: 1px solid rgba(139, 107, 27, 0.4); background: rgba(212, 175, 55, 0.12);
-padding: 4px 16px; border-radius: 50px; margin-bottom: 18px; text-transform: uppercase;
+padding: 4px 16px; border-radius: 50px; margin-bottom: 16px; text-transform: uppercase;
+box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.5);
 }
-h1 { font-size: 1.2rem; font-weight: 600; line-height: 1.6; margin-bottom: 12px; }
-p.lead { font-size: 0.92rem; color: #5A4E48; margin-bottom: 24px; }
-.btn-ja {
-display: inline-block; text-decoration: none; font-size: 0.85rem;
-color: #2C221E; background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold-main));
-border-radius: 6px; padding: 10px 22px; font-weight: 600;
+
+.main-title { font-size: 1.85rem; font-weight: 600; color: var(--color-text-dark); letter-spacing: 0.05em; line-height: 1.5; margin-bottom: 10px; }
+.main-description { font-size: 0.92rem; color: #5A4E48; margin-bottom: 30px; }
+
+.form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 25px; text-align: left; }
+.form-group { display: flex; flex-direction: column; }
+.form-group.full-width { grid-column: span 2; }
+
+label { font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px; }
+.label-note { font-size: 0.72rem; font-weight: normal; color: #7a6a58; margin-left: 4px; }
+
+input[type="text"], input[type="email"], input[type="date"], input[type="time"] {
+width: 100%; padding: 11px 14px;
+background-color: rgba(255, 252, 245, 0.85);
+border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px;
+font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none; transition: all 0.3s ease;
+box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.12);
 }
+input[type="text"]:focus, input[type="email"]:focus, input[type="date"]:focus, input[type="time"]:focus {
+border-color: var(--color-gold-dark);
+box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.15), 0 0 8px rgba(212, 175, 55, 0.3);
+background-color: #FFFDF9;
+}
+
+.submit-btn {
+width: 100%; padding: 15px 28px; font-size: 1.05rem; font-weight: 600; font-family: var(--font-ja); color: #FFFDF9;
+background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%); border: none; border-radius: 8px; cursor: pointer;
+box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.2s;
+}
+.submit-btn:hover { transform: translateY(-1px); }
+
+/* 有料会員登録枠（Stripe/Tally導線） */
+.paid-member-box {
+margin-top: 30px; padding: 22px 18px;
+background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(139, 107, 27, 0.08) 100%);
+border: 1px solid rgba(139, 107, 27, 0.4);
+border-radius: 10px; text-align: center;
+}
+.paid-member-box.bottom-box {
+margin-top: 35px;
+background: linear-gradient(135deg, rgba(212,175, 55, 0.2) 0%, rgba(139, 107, 27, 0.12) 100%);
+border: 1px solid rgba(139, 107, 27, 0.5);
+}
+.paid-member-title { font-size: 1rem; font-weight: 700; color: var(--color-gold-dark); margin-bottom: 6px; }
+.paid-member-desc { font-size: 0.82rem; color: #5A4E48; margin-bottom: 14px; line-height: 1.6; }
+.paid-member-price { font-size: 0.95rem; font-weight: 700; color: var(--color-gold-dark); margin-bottom: 12px; line-height: 1.5; }
+.paid-member-price:empty { display: none; }
+.paid-member-btn {
+display: inline-block; width: 100%; max-width: 380px; padding: 13px 20px;
+background: linear-gradient(135deg, #8B6B1B 0%, #5C450E 100%);
+color: #FFFDF9; text-decoration: none; font-weight: 600; font-size: 0.92rem;
+border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.2s; cursor: pointer; border: none;
+}
+.paid-member-btn:hover { background: linear-gradient(135deg, #A37E20 0%, #6E5311 100%); transform: translateY(-1px); }
+
+.member-portal-box {
+margin-top: 20px; padding-top: 18px;
+border-top: 1px dashed rgba(139, 107, 27, 0.35); text-align: center;
+}
+.member-portal-title { font-size: 0.88rem; font-weight: 600; color: var(--color-gold-dark); margin-bottom: 8px; }
+.member-links { display: flex; justify-content: center; gap: 15px; font-size: 0.8rem; }
+.member-links a { color: var(--color-gold-dark); text-decoration: underline; font-weight: 600; }
+
+/* サイト詳細・説明セクション */
+.about-section {
+width: 100%; max-width: 680px;
+background-image: radial-gradient(circle at 50% 30%, rgba(255, 253, 248, 0.97) 0%, rgba(243, 234, 214, 0.95) 100%);
+border-radius: 14px; border: 1px solid rgba(184, 142, 60, 0.5); outline: 1px solid rgba(212, 175, 55, 0.3); outline-offset: -6px;
+box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 0 25px rgba(139, 90, 43, 0.2);
+padding: 40px 35px; margin-bottom: 30px; color: var(--color-text-dark);
+}
+.about-header { text-align: center; border-bottom: 1px solid rgba(139, 107, 27, 0.3); padding-bottom: 18px; margin-bottom: 25px; }
+.about-header-sub { font-family: var(--font-en); font-size: 0.82rem; letter-spacing: 0.2em; color: var(--color-gold-dark); text-transform: uppercase; margin-bottom: 6px; }
+.about-title { font-size: 1.35rem; font-weight: 700; color: var(--color-gold-dark); line-height: 1.4; }
+
+.about-lead {
+font-size: 0.95rem; font-weight: 600; color: #3D322C; line-height: 1.8; margin-bottom: 20px;
+text-align: center; background: rgba(212, 175, 55, 0.08); padding: 15px 18px; border-radius: 8px;
+border: 1px solid rgba(139, 107, 27, 0.2);
+}
+
+.about-content p { font-size: 0.88rem; line-height: 1.9; margin-bottom: 16px; color: #4a3e36; text-align: justify; }
+
+.about-h3 {
+font-size: 1.05rem; font-weight: 700; color: var(--color-gold-dark);
+margin: 28px 0 12px; padding-left: 12px; border-left: 3px solid var(--color-gold-dark);
+line-height: 1.5;
+}
+
+.about-card {
+background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(139, 107, 27, 0.25);
+border-radius: 8px; padding: 16px; margin-bottom: 16px; font-size: 0.88rem;
+}
+.about-card-title { font-weight: 700; color: #3D322C; margin-bottom: 6px; }
+
+/* 長い説明文を章ごとのブロックに区切り、交互の背景色で読みやすくする */
+.about-block {
+background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(139, 107, 27, 0.18);
+border-radius: 10px; padding: 6px 18px 2px; margin-bottom: 20px;
+}
+.about-block.alt { background: rgba(212, 175, 55, 0.09); }
+.about-block .about-h3 { margin-top: 18px; }
+.about-cta {
+text-align: center; margin-top: 30px; padding: 18px 16px;
+font-weight: 700; color: var(--color-gold-dark); font-size: 1.02rem; line-height: 1.8;
+background: rgba(212, 175, 55, 0.12); border: 1px solid rgba(139, 107, 27, 0.3); border-radius: 10px;
+}
+
+/* トップのリード文（キャッチ＋解説）を囲って視線を止める */
+.lead-block {
+text-align: left; margin: 0 0 24px; padding: 18px 18px 14px;
+background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(139, 107, 27, 0.28);
+border-radius: 10px;
+}
+.lead-catch {
+font-size: 1.02rem; font-weight: 700; color: var(--color-gold-dark);
+line-height: 1.6; margin-bottom: 10px; text-align: center;
+}
+.lead-body { font-size: 0.87rem; line-height: 1.9; color: #4a3e36; text-align: justify; }
+.lead-cta { font-weight: 600; color: #3D322C; }
+
 .site-footer {
 width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3);
-padding: 24px 20px; text-align: center;
+padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 }
-.lang-switch { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; }
+.footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 12px; flex-wrap: wrap; }
+.footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
+.lang-switch { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
 .lang-link {
 display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
 color: #E2D9CE; font-size: 0.78rem; letter-spacing: 0.06em;
@@ -77,22 +246,193 @@ transition: color 0.3s, border-color 0.3s;
 .lang-globe { width: 20px; height: 20px; display: block; opacity: 0.85; }
 .lang-link:hover .lang-globe, .lang-link.is-current .lang-globe { opacity: 1; }
 .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); }
+
+@media (max-width: 640px) {
+.form-grid { grid-template-columns: 1fr; }
+.form-group.full-width { grid-column: span 1; }
+.about-section { padding: 28px 20px; }
+}
 </style>
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/rtl.css">
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'id',
+  menu: {
+    top: 'Beranda',
+    free: 'Pembacaan gratis',
+    about: 'Tentang Libertas Jyotish',
+    report: 'Laporan Seumur Hidup (sekali beli)',
+    calendar: 'Kalender Peruntungan Tahunan',
+    calendarNote: 'segera hadir',
+    mypage: 'Halaman anggota',
+    legal: 'Informasi hukum dan ketentuan',
+    toggleLabel: 'Menu',
+    navLabel: 'Menu situs'
+  },
+  price: {
+    premium: '{price} / bulan (termasuk pajak)',
+    pdf: '{price} sekali bayar (termasuk pajak)',
+    premiumApprox: 'Sekitar {price} / bulan (termasuk pajak) — jumlah akhir ditampilkan saat checkout',
+    pdfApprox: 'Sekitar {price} sekali bayar (termasuk pajak) — jumlah akhir ditampilkan saat checkout',
+    checkoutOnly: 'Jumlah dalam mata uang lokal Anda ditampilkan saat checkout'
+  }
+};
+</script>
+<script defer src="/js/site-menu.js"></script>
+<script src="/js/checkout-links.js"></script>
 </head>
 <body>
 
+<header class="site-header" data-site-header></header>
+
 <section class="hero-section">
-<div class="hero-container">
-<img class="logo-img" src="/img/libertas-logo.png" alt="Libertas Jyotish">
-<div class="brand">LIBERTAS JYOTISH</div>
-<span class="badge">Segera Hadir</span>
-<h1>Edisi bahasa Indonesia sedang dalam pembuatan.</h1>
-<p class="lead">Kami sedang menyiapkan pembacaan berdasarkan astrologi sidereal (Veda). Silakan kembali lagi nanti.</p>
-<a class="btn-ja" href="/ja" hreflang="ja">Kunjungi situs berbahasa Jepang</a>
+<!-- 上部：診断フォーム ＆ 有料会員入口（1箇所目） -->
+<div class="hero-container" id="form-area">
+<div class="logo-wrapper"><img src="/img/libertas-logo.png" alt="Logo" class="logo-img"></div>
+
+<span class="badge">Libertas Jyotish</span>
+<h1 class="main-title">Libertas Jyotish<br><span style="font-size: 1.15rem; line-height: 1.7; display: block; margin-top: 8px;">Jyotish, kebijaksanaan yang diwariskan sejak zaman kuno, membaca takdir yang tertulis di bintang dan membebaskan diri Anda yang sesungguhnya</span></h1>
+<p class="main-description">Layanan pembacaan pribadi menyeluruh yang menghitung dan menafsirkan peta jiwa Anda (kundali) dengan metode sidereal dari India kuno.</p>
+
+<div class="lead-block">
+<p class="lead-catch">Naluri tersembunyi Anda mungkin milik zodiak yang lain.</p>
+<p class="lead-body">Tahukah Anda bahwa astrologi Barat masih terpaku pada posisi bintang 2.000 tahun yang lalu? Karena kemiringan poros Bumi (presesi), zodiak kalender telah bergeser sekitar 24 derajat dari langit yang sebenarnya. Astrologi Veda membaca posisi bintang yang benar-benar Anda lihat lewat teleskop malam ini; karena itu, mengetahui zodiak Anda yang sesungguhnya akan menerangi alam bawah sadar, naluri, bakat, dan takdir Anda — termasuk rasa janggal yang selama ini Anda simpan.</p>
+</div>
+
+<p class="main-description lead-cta">Masukkan data kelahiran Anda dan kami akan menghitung zodiak Anda yang sebenarnya dengan ketepatan astronomis.</p>
+
+<form id="jyotish-form"><div class="form-grid">
+<div class="form-group full-width">
+<label for="user-email">Alamat email <span class="label-note">(digunakan untuk menyimpan hasil pembacaan dan menautkannya ke halaman anggota Anda)</span></label>
+<input type="email" id="user-email" placeholder="example@gmail.com" required>
+</div>
+
+<div class="form-group">
+<label for="birth-date">Tanggal lahir</label>
+<input type="date" id="birth-date" required>
+</div>
+<div class="form-group">
+<label for="birth-time">Jam lahir <span class="label-note">(jika tidak diketahui, isi 12:00)</span></label>
+<input type="time" id="birth-time">
+</div>
+<div class="form-group full-width">
+<label for="birth-place">Tempat lahir (kota, wilayah)</label>
+<input type="text" id="birth-place" placeholder="mis. Jakarta, Indonesia" required>
+</div>
+</div>
+
+<button type="submit" class="submit-btn" id="btn-submit">
+<span>Buka peta takdir saya</span>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</button></form>
+
+<!-- 有料プレミアム会員登録枠（上部・1箇所目） -->
+<div class="paid-member-box">
+<div class="paid-member-title">🌟 Tentang paket Premium</div>
+<p class="paid-member-desc">Buka seluruh isi pembacaan lengkap: prediksi rinci periode dasha, horoskop yang akurat, remedi yang sesuai, dan banyak lagi.</p>
+<p class="paid-member-price" data-price-label="premium"></p>
+<button type="button" class="paid-member-btn btn-upgrade-premium">Berlangganan Premium (pendaftaran dan pembayaran)</button>
+</div>
+
+<div class="member-portal-box">
+<div class="member-portal-title">🔑 Sudah pernah membaca atau sudah menjadi anggota Premium?</div>
+<div class="member-links">
+<a href="/id/mypage">Masuk ke halaman anggota</a>
+</div>
+</div>
+</div>
+
+<!-- 中部：サイト詳細・説明セクション -->
+<div class="about-section" id="about">
+<div class="about-header">
+<div class="about-header-sub">LIBERTAS JYOTISH</div>
+<h2 class="about-title">Agar Anda dapat merancang hidup Anda sendiri dengan bebas, bukan terbelenggu oleh takdir.</h2>
+</div>
+
+<div class="about-content">
+<div class="about-lead">
+Peta kosmis pribadi Anda, diungkap dengan ketepatan astronomis tertinggi
+</div>
+
+<p>Pernahkah zodiak matahari ala astrologi Barat benar-benar menjelaskan hidup Anda yang berlapis-lapis?<br>
+Jika ramalan biasa selalu menyisakan rasa tidak puas, ada alasan yang jelas: ramalan itu tidak mencerminkan posisi planet yang sesungguhnya di langit malam ini.</p>
+
+<p><strong>LIBERTAS JYOTISH</strong>memadukan kebijaksanaan Veda — kitab suci India yang berusia lebih dari 5.000 tahun — dengan logika perhitungan astronomi modern yang presisi. Seperti arti nama Libertas (kebebasan), situs ini hadir bukan untuk mengikat Anda pada takdir, melainkan untuk membantu Anda merebut kembali kendali atas hidup Anda dan membuka masa depan dengan kebijaksanaan bintang yang sejati.</p>
+
+<div class="about-block">
+<h3 class="about-h3">1. Perbedaan menentukan dari astrologi Barat: metode sidereal yang selaras dengan langit nyata</h3>
+<p>Perbedaan terbesar antara astrologi Barat dan astrologi Veda (Jyotish) terletak pada cara menghitung ekliptika — jalur peredaran bintang.</p>
+
+<div class="about-card">
+<div class="about-card-title">■ Astrologi Barat (metode tropis)</div>
+<p style="margin-bottom:0;">Dihitung dari titik ekuinoks musim semi sekitar 2.000 tahun lalu dan terpaku pada siklus musim.</p>
+</div>
+
+<div class="about-card">
+<div class="about-card-title">■ Astrologi Veda (metode sidereal)</div>
+<p style="margin-bottom:0;">Mengoreksi pergeseran akibat kemiringan poros Bumi (presesi) hingga satuan terkecil, lalu menghitung dari posisi planet yang sesungguhnya di langit malam ini.</p>
+</div>
+
+<p>Akibat presesi Bumi, langit yang sebenarnya dan zodiak kalender telah bergeser sekitar 24 derajat (nilai koreksi itu disebut Ayanamsa).</p>
+<p>LIBERTAS JYOTISH menghitung Ayanamsa astronomis secara ketat. Dari zodiak dan derajat planet yang benar-benar berada di langit di atas Anda malam ini, kami menyusun peta kosmis Anda (horoskop, Rashi Chakra) apa adanya — bukan sekadar kata-kata penghibur.</p>
+
+</div>
+
+<div class="about-block alt">
+<h3 class="about-h3">2. Tiga sistem penafsiran khusus di balik ketepatan itu</h3>
+<p>Kami menyebut ini pembacaan paling cermat di dunia karena kedalaman perhitungan berlapis dan logikanya.</p>
+
+<div class="about-card">
+<div class="about-card-title">① Dua puluh tujuh rumah bulan, Nakshatra</div>
+<p style="margin-bottom:0;">Melampaui dua belas zodiak astrologi Barat (pembagian kasar 30 derajat), kami menggunakan Nakshatra yang membagi jalur Bulan menjadi 27 wilayah yang lebih halus. Nakshatra menyoroti psikologi terdalam yang tersembunyi di dalam satu zodiak, kebiasaan bawah sadar Anda, pola Anda dalam hubungan, serta tujuan sejati jiwa Anda.</p>
+</div>
+
+<div class="about-card">
+<div class="about-card-title">② Vimshottari Dasha, garis waktu hidup Anda yang presisi</div>
+<p style="margin-bottom:0;">Dasha adalah sistem waktu khas astrologi Veda dan menunjukkan dengan ketepatan luar biasa kapan titik balik hidup Anda tiba. Berawal dari Nakshatra Bulan pada saat Anda lahir, sistem ini menghitung secara berlapis di bawah pengaruh planet mana Anda sedang hidup, lalu mengungkap saat-saat penentu dan strategi hidup Anda: kapan harus maju dan kapan harus memantapkan diri.</p>
+</div>
+
+<div class="about-card">
+<div class="about-card-title">③ Lagna, yang menentukan wadah jiwa Anda</div>
+<p style="margin-bottom:0;">Dengan menggunakan bukan hanya tanggal lahir, tetapi juga jam yang pasti serta garis lintang dan bujur tempat lahir yang tepat, kami menghitung ke titik mana cakrawala timur mengarah pada saat Anda lahir — yaitu Lagna (ascendant, rumah pertama) Anda. Dengan Lagna sebagai poros, struktur sejati seseorang yang dirajut oleh sembilan planet (Navagraha) dan dua belas rumah dapat dianalisis secara tiga dimensi.</p>
+</div>
+
+</div>
+
+<div class="about-block">
+<h3 class="about-h3">3. Remedi dan keselarasan: kebijaksanaan sejati yang membebaskan</h3>
+<p>Jyotish, yang di India kuno disebut ilmu cahaya, jauh lebih luas daripada sekadar meramal masa depan.</p>
+<p>Pembacaan kami menyertakan remedi Veda (upaya) sebagai standar untuk meringankan tekanan planet. Melalui mantra yang dipilih untuk Anda (frekuensi bunyi tertentu), penyesuaian warna, dan perubahan konstitusi ala Ayurveda (keseimbangan dosha), kami menawarkan solusi konkret yang menyelaraskan energi planet dan memunculkan seluruh potensi Anda.</p>
+
+</div>
+
+<div class="about-block alt">
+<h3 class="about-h3">4. Komitmen tanpa kompromi pada ketepatan matematis dan astronomis</h3>
+<p>Mesin perhitungan LIBERTAS JYOTISH dibangun di atas pustaka astronomi kelas dunia (setara Swiss Ephemeris). Mesin ini mengoreksi secara waktu nyata perubahan zona waktu historis, selisih kecil waktu musim panas, dan koordinat yang presisi.</p>
+<p>Kami tidak pernah menyajikan puisi abstrak atau naskah daur ulang yang cocok untuk siapa saja. Kami hanya menyaring fakta matematis dan astronomis yang diberikan alam semesta kepada Anda, lalu menyampaikannya sebagai cahaya sejati yang menerangi hidup Anda.</p>
+
+</div>
+
+<div class="about-cta">
+Siapkah Anda memecahkan posisi sejati Anda di antara bintang-bintang?<br>
+Masukkan data kelahiran Anda dan terimalah peta jalan otentik yang LIBERTAS JYOTISH ungkap hanya untuk Anda.
+</div>
+
+<!-- 有料プレミアム会員登録枠（下部・2箇所目） -->
+<div class="paid-member-box bottom-box">
+<div class="paid-member-title">🌟 Berlanggananlah Premium dan buka pembacaan lengkap</div>
+<p class="paid-member-desc">Terima kasih telah membaca sampai di sini. Dapatkan sekarang juga horoskop akurat, prediksi periode dasha, dan remedi pribadi Anda.</p>
+<p class="paid-member-price" data-price-label="premium"></p>
+<button type="button" class="paid-member-btn btn-upgrade-premium">Berlangganan Premium (pendaftaran dan pembayaran)</button>
+</div>
+</div>
 </div>
 </section>
 
 <footer class="site-footer">
+<div class="footer-links"><a href="/id/legal">Informasi hukum, Syarat Penggunaan, dan Kebijakan Privasi</a></div>
 <nav class="lang-switch" aria-label="Language">
 <a class="lang-link" href="/ja" hreflang="ja" lang="ja" title="日本語" aria-label="日本語"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">日本語</span></a>
 <a class="lang-link" href="/en" hreflang="en" lang="en" title="English" aria-label="English"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">English</span></a>
@@ -104,5 +444,96 @@ transition: color 0.3s, border-color 0.3s;
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 
+<script>
+    // ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
+    const LJ_APP_VERSION = 'v12'
+    const currentVersion = localStorage.getItem('lj_app_version');
+    if (currentVersion !== LJ_APP_VERSION) {
+      const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
+      localStorage.clear();
+      sessionStorage.clear();
+      if (email) localStorage.setItem('lj_user_email', email);
+      localStorage.setItem('lj_app_version', LJ_APP_VERSION);
+      location.reload();
+    }
+
+    if ('serviceWorker' in navigator) {
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        refreshing = true;
+        window.location.reload();
+      });
+    }
+
+// Stripe 決済リンク直接遷移
+function openStripeCheckout() {
+  const email = document.getElementById('user-email')?.value.trim() ||
+                localStorage.getItem('lj_user_email') ||
+                localStorage.getItem('email') || '';
+
+  // 訪問者の国の価格帯に応じた決済リンクを使う
+  const stripeUrl = `${window.LJCheckout.linkFor('premium')}?prefilled_email=${encodeURIComponent(email)}`;
+  window.open(stripeUrl, '_blank');
+}
+
+document.querySelectorAll('.btn-upgrade-premium').forEach(btn => {
+  btn.addEventListener('click', openStripeCheckout);
+});
+
+const form = document.getElementById('jyotish-form');
+form.addEventListener('submit', async (e) => {
+e.preventDefault();
+
+const email = document.getElementById('user-email').value.trim();
+const birthDate = document.getElementById('birth-date').value;
+const timeVal = document.getElementById('birth-time').value || "12:00";
+const birthPlace = document.getElementById('birth-place').value;
+
+const isoDatetime = `${birthDate}T${timeVal.length === 5 ? timeVal + ':00' : timeVal}+09:00`;
+
+localStorage.setItem('lj_user_email', email);
+localStorage.setItem('city', birthPlace);
+localStorage.setItem('dob', birthDate);
+localStorage.setItem('tob', timeVal);
+
+// jyotish_userキャッシュオブジェクトの事前構築
+const userData = {
+  email: email,
+  dob: birthDate,
+  tob: timeVal,
+  city: birthPlace,
+  language: 'id',
+  status: 'free',
+  lastResult: null
+};
+localStorage.setItem('jyotish_user', JSON.stringify(userData));
+
+const payload = {
+action: 'diagnosis',
+email: email,
+address: birthPlace,
+datetime: isoDatetime,
+city: birthPlace,
+dob: birthDate,
+tob: timeVal,
+status: 'free',
+language: 'id'
+};
+
+sessionStorage.removeItem('lj_diagnosis_result');
+sessionStorage.setItem('lj_user_input', JSON.stringify(payload));
+// ★超堅牢化：キャッシュクリアで道連れに消去されないよう、localStorageにも「絶対バックアップ」を二重保存！
+localStorage.setItem('lj_user_input_backup', JSON.stringify(payload));
+
+window.location.href = '/id/result';
+});
+
+if ('serviceWorker' in navigator) {
+window.addEventListener('load', () => {
+navigator.serviceWorker.register('/sw.js').catch(err => console.log(err));
+});
+}
+</script>
 </body>
 </html>

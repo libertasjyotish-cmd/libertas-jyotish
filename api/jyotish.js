@@ -27,6 +27,46 @@ const AUTH_MAIL = {
     expiry: 'This code is valid for 10 minutes. If it expires, please request a new one.',
     noreply: 'This message was sent automatically. Replies to this address are not monitored.',
     sendError: 'Email delivery error'
+  },
+  es: {
+    dir: 'ltr',
+    subject: '[Libertas Jyotish] Tu código de verificación',
+    heading: 'Verificación de Libertas Jyotish',
+    thanks: 'Gracias por usar Libertas Jyotish.',
+    lead: 'Este es tu código de verificación para entrar en tu página de socio y vincular este dispositivo.',
+    expiry: 'El código es válido durante 10 minutos. Si caduca, solicita uno nuevo.',
+    noreply: 'Este mensaje se ha enviado automáticamente. No se atienden las respuestas a esta dirección.',
+    sendError: 'Error de envío del correo'
+  },
+  pt: {
+    dir: 'ltr',
+    subject: '[Libertas Jyotish] O seu código de verificação',
+    heading: 'Verificação da Libertas Jyotish',
+    thanks: 'Obrigado por usar a Libertas Jyotish.',
+    lead: 'Este é o seu código de verificação para entrar na sua página de membro e vincular este dispositivo.',
+    expiry: 'O código é válido por 10 minutos. Se expirar, solicite um novo.',
+    noreply: 'Esta mensagem foi enviada automaticamente. Respostas a este endereço não são monitoradas.',
+    sendError: 'Erro no envio do e-mail'
+  },
+  ar: {
+    dir: 'rtl',
+    subject: '[Libertas Jyotish] رمز التحقق الخاص بك',
+    heading: 'تحقق Libertas Jyotish',
+    thanks: 'شكرًا لاستخدامك Libertas Jyotish.',
+    lead: 'هذا هو رمز التحقق لتسجيل الدخول إلى صفحة العضوية وربط هذا الجهاز.',
+    expiry: 'الرمز صالح لمدة 10 دقائق. إذا انتهت صلاحيته، فاطلب رمزًا جديدًا.',
+    noreply: 'أُرسلت هذه الرسالة تلقائيًا، ولا تُتابَع الردود على هذا العنوان.',
+    sendError: 'خطأ في إرسال البريد'
+  },
+  id: {
+    dir: 'ltr',
+    subject: '[Libertas Jyotish] Kode verifikasi Anda',
+    heading: 'Verifikasi Libertas Jyotish',
+    thanks: 'Terima kasih telah menggunakan Libertas Jyotish.',
+    lead: 'Berikut kode verifikasi untuk masuk ke halaman anggota dan menautkan perangkat ini.',
+    expiry: 'Kode ini berlaku selama 10 menit. Jika kedaluwarsa, silakan minta kode baru.',
+    noreply: 'Pesan ini dikirim secara otomatis. Balasan ke alamat ini tidak dibaca.',
+    sendError: 'Kesalahan pengiriman email'
   }
 };
 

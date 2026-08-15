@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A sua leitura | Libertas Jyotish</title>
+<!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
+<link rel="canonical" href="https://libertas-jyotish.com/pt/result">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0c1a1f">
+<link rel="icon" type="image/png" href="/img/libertas-logo.png">
+<link rel="apple-touch-icon" href="/img/libertas-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+--color-gold-light: #FDE047; --color-gold-main: #D4AF37; --color-gold-dark: #8B6B1B;
+--color-text-dark: #2C221E; --font-en: 'Cinzel', serif; --font-ja: 'Noto Serif', serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-ja); color: var(--color-text-dark); line-height: 1.8; min-height: 100vh; overflow-x: hidden; background-color: #0c1a1f; display: flex; flex-direction: column; }
+
+.site-header {
+position: fixed; top: 0; left: 0; width: 100%; z-index: 100; background: rgba(12, 26, 31, 0.92);
+backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid rgba(139, 107, 27, 0.3);
+padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
+}
+.header-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--color-gold-main); font-family: var(--font-en); font-weight: 600; font-size: 1.05rem; }
+.header-logo img { width: 32px; height: 32px; }
+.header-nav { display: flex; gap: 18px; align-items: center; }
+.header-nav a { color: #E2D9CE; text-decoration: none; font-size: 0.82rem; transition: color 0.3s; }
+.nav-btn-member { border: 1px solid var(--color-gold-main); color: var(--color-gold-main) !important; padding: 4px 12px; border-radius: 4px; background: rgba(212, 175, 55, 0.1); }
+
+.main-section {
+position: relative; flex: 1; display: flex; align-items: center; justify-content: center; padding: 100px 20px 60px;
+background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");
+background-size: cover; background-position: center; background-attachment: fixed;
+}
+
+/* 羊皮紙カードスタイル統一 */
+.result-container {
+position: relative; z-index: 2; width: 100%; max-width: 640px;
+background-image:
+radial-gradient(circle at 50% 25%, rgba(255, 253, 245, 0.98) 0%, rgba(245, 233, 208, 0.95) 55%, rgba(220, 200, 162, 0.96) 100%),
+linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.05) 100%);
+background-blend-mode: overlay, normal;
+backdrop-filter: blur(8px);-webkit-backdrop-filter: blur(8px);
+border-radius: 14px;
+border: 1px solid rgba(184, 142, 60, 0.65);
+outline: 1px solid rgba(212, 175, 55, 0.35); outline-offset: -7px;
+box-shadow:
+0 25px 50px -12px rgba(0, 0, 0, 0.75),
+0 0 20px rgba(212, 175, 55, 0.18),
+inset 0 0 35px rgba(139, 90, 43, 0.28),
+inset 0 2px 4px rgba(255, 255, 255, 0.8);
+padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
+}
+
+.header-area { text-align: center; margin-bottom: 25px; }
+.logo-img { width: 75px; height: auto; margin-bottom: 8px; filter: drop-shadow(0px 3px 6px rgba(139, 107, 27, 0.3)); }
+.badge { display: inline-block; font-family: var(--font-en); font-size: 0.75rem; letter-spacing: 0.2em; color: var(--color-gold-dark); border: 1px solid rgba(139, 107, 27, 0.4); background: rgba(212, 175, 55, 0.12); padding: 3px 14px; border-radius: 50px; margin-bottom: 10px; text-transform: uppercase; }
+
+.loading-box { text-align: center; padding: 40px 10px; }
+.spinner { width: 40px; height: 40px; margin: 0 auto 20px; border: 3px solid rgba(139, 107, 27, 0.2); border-top-color: var(--color-gold-dark); border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-title { font-size: 1rem; font-weight: 600; color: var(--color-gold-dark); margin-bottom: 6px; }
+
+.meta-card { text-align: left; font-size: 0.82rem; color: #5A4E48; background: rgba(212, 175, 55, 0.12); padding: 12px 16px; border-radius: 8px; margin-bottom: 24px; border: 1px solid rgba(139, 107, 27, 0.3); }
+.result-body { font-size: 0.95rem; line-height: 1.85; color: var(--color-text-dark); margin-bottom: 30px; text-align: left; }
+.result-body h2 { font-size: 1.35rem; color: var(--color-gold-dark); margin: 25px 0 12px; border-bottom: 1px dashed rgba(139, 107, 27, 0.4); padding-bottom: 6px; }
+.result-body h3 { font-size: 1.1rem; color: var(--color-gold-dark); margin: 20px 0 8px; border-left: 3px solid var(--color-gold-main); padding-left: 8px; }
+
+.cta-card { background: rgba(255, 253, 248, 0.85); border: 1px solid rgba(212, 175, 55, 0.6); border-radius: 12px; padding: 24px 20px; text-align: center; margin-top: 35px; }
+.btn-primary { display: inline-block; width: 100%; padding: 14px 20px; font-size: 1rem; font-weight: 600; color: #FFFDF9; background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%); border: none; border-radius: 8px; text-decoration: none; cursor: pointer; }
+.btn-secondary { display: block; width: 100%; margin-top: 15px; padding: 10px; background: transparent; border: 1px solid rgba(139, 107, 27, 0.4); color: var(--color-gold-dark); border-radius: 6px; font-size: 0.85rem; text-decoration: none; text-align: center; }
+
+/* 無料鑑定の下に「会員なら見られる内容」をぼかし表示して差分を可視化する */
+.locked-section { margin-top: 35px; text-align: left; }
+.locked-section-title { font-size: 1.05rem; color: var(--color-gold-dark); font-weight: 700; margin-bottom: 4px; }
+.locked-section-lead { font-size: 0.82rem; color: #5A4E48; margin-bottom: 14px; }
+.locked-wrapper { position: relative; border-radius: 10px; }
+.preview-card { background: rgba(255, 253, 248, 0.85); border: 1px solid rgba(139, 107, 27, 0.28); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
+.preview-card:last-child { margin-bottom: 0; }
+.preview-title { font-size: 0.92rem; font-weight: 700; color: var(--color-gold-dark); margin-bottom: 6px; }
+.preview-text { font-size: 0.84rem; color: #4a3e36; line-height: 1.75; }
+.preview-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.8rem; }
+.preview-table th, .preview-table td { padding: 6px 8px; border: 1px solid rgba(139, 107, 27, 0.3); text-align: left; }
+.preview-table th { background: rgba(212, 175, 55, 0.18); color: var(--color-gold-dark); }
+.blur-content { filter: blur(4px); user-select: none; pointer-events: none; opacity: 0.75; }
+.lock-overlay {
+margin-top: 14px; background: rgba(212, 175, 55, 0.14); border: 1px solid rgba(139, 107, 27, 0.35);
+border-radius: 10px; padding: 18px 16px; text-align: center;
+}
+.lock-overlay .lock-icon { font-size: 1.8rem; margin-bottom: 6px; }
+.lock-overlay .lock-title { font-weight: 700; color: var(--color-gold-dark); margin-bottom: 8px; }
+.lock-overlay .lock-note { font-size: 0.82rem; color: #5A4E48; margin-bottom: 15px; }
+
+.site-footer { width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3); padding: 24px 20px; text-align: center; position: relative; z-index: 10; }
+.footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
+.copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
+</style>
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/rtl.css">
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'pt',
+  menu: {
+    top: 'Início',
+    free: 'Leitura gratuita',
+    about: 'Sobre a Libertas Jyotish',
+    report: 'Relatório Vitalício (avulso)',
+    calendar: 'Calendário Anual da Fortuna',
+    calendarNote: 'em breve',
+    mypage: 'Página de membro',
+    legal: 'Informações legais e termos',
+    toggleLabel: 'Menu',
+    navLabel: 'Menu do site'
+  },
+  price: {
+    premium: '{price} / mês (impostos incl.)',
+    pdf: '{price} pagamento único (impostos incl.)',
+    premiumApprox: 'Cerca de {price} / mês (impostos incl.) — valor final exibido no checkout',
+    pdfApprox: 'Cerca de {price} pagamento único (impostos incl.) — valor final exibido no checkout',
+    checkoutOnly: 'O valor na sua moeda local é exibido no checkout'
+  }
+};
+</script>
+<script defer src="/js/site-menu.js"></script>
+<script src="/js/checkout-links.js"></script>
+</head>
+<body>
+
+<header class="site-header" data-site-header></header>
+
+<section class="main-section">
+<div class="result-container">
+<div class="header-area">
+<img src="/img/libertas-logo.png" alt="Logo" class="logo-img"><br>
+<span class="badge">Moon Sign Reading</span>
+</div>
+<div id="content-area">
+<div class="loading-box">
+<div class="spinner"></div><p class="loading-title" id="loading-title">Decifrando a posição cósmica (o seu signo lunar)...</p>
+<p id="loading-note" style="font-size:0.8rem; color:#7a6a58; margin-top:6px;">Escrever a sua leitura leva cerca de 30 a 60 segundos. Permaneça nesta página.</p>
+</div>
+</div>
+</div>
+</section>
+
+<footer class="site-footer">
+<div class="footer-links"><a href="/pt/legal">Informações legais, Termos de Uso e Política de Privacidade</a></div>
+<p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+</footer>
+
+<script>
+// ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
+const LJ_APP_VERSION = 'v12';
+const currentVersion = localStorage.getItem('lj_app_version');
+if (currentVersion !== LJ_APP_VERSION) {
+  console.log("App upgrade detected. Self-healing database caches but protecting active session inputs...");
+  const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
+  
+  // 💥 セッションに入っている貴重な入力データを一時メモリにレスキュー退避！
+  const savedInput = sessionStorage.getItem('lj_user_input');
+  const backupInput = localStorage.getItem('lj_user_input_backup');
+  
+  localStorage.clear();
+  sessionStorage.clear();
+  
+  // クリア後にデータを美しく復元
+  if (email) localStorage.setItem('lj_user_email', email);
+  if (savedInput) sessionStorage.setItem('lj_user_input', savedInput);
+  if (backupInput) {
+    localStorage.setItem('lj_user_input_backup', backupInput);
+    sessionStorage.setItem('lj_user_input', backupInput);
+  }
+  
+  localStorage.setItem('lj_app_version', LJ_APP_VERSION);
+  location.reload();
+}
+
+if ('serviceWorker' in navigator) {
+let refreshing = false;
+navigator.serviceWorker.addEventListener('controllerchange', () => {
+if (refreshing) return;
+refreshing = true;
+window.location.reload();
+});
+}
+
+const JYOTISH_API_URL = "/api/jyotish";
+// 決済リンクは訪問者の国の価格帯に応じて /js/checkout-links.js が解決する
+const premiumUpgradeUrl = () => window.LJCheckout.linkFor('premium');
+
+document.addEventListener('DOMContentLoaded', async () => {
+const contentArea = document.getElementById('content-area');
+let savedInput = sessionStorage.getItem('lj_user_input');
+if (!savedInput) {
+  // ★バックアップからの自動引き継ぎレスキューロジック
+  const backupInput = localStorage.getItem('lj_user_input_backup');
+  if (backupInput) {
+    console.log("[RECOVERY] sessionStorage was lost, but localStorage backup was restored successfully!");
+    sessionStorage.setItem('lj_user_input', backupInput);
+    savedInput = backupInput;
+  }
+}
+const savedResult = sessionStorage.getItem('lj_diagnosis_result');
+
+// ★自己修復：キャッシュデータ内に未展開 of バグ文字列がないか自動検査して破棄
+let isCorrupted = false;
+if (savedResult) {
+  try {
+    if (savedResult.includes('\\${') || savedResult.includes('${')) {
+      console.warn("Corrupt diagnosis cache detected. Self-healing by removing...");
+      sessionStorage.removeItem('lj_diagnosis_result');
+      isCorrupted = true;
+    }
+  } catch(e) {}
+}
+
+// 前日以前のキャッシュは「本日の運勢」として使わず、再取得する
+const jstToday = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+if (savedResult && !isCorrupted) {
+const parsedResult = JSON.parse(savedResult);
+if (parsedResult && parsedResult.reading_date === jstToday) {
+renderDiagnosis(parsedResult, savedInput ? JSON.parse(savedInput) : null);
+return;
+}
+sessionStorage.removeItem('lj_diagnosis_result');
+}
+
+if (savedInput) {
+const payload = JSON.parse(savedInput);
+
+// 鑑定生成は数十秒かかるため、進行状況を順に見せて無反応に見えないようにする
+const progressSteps = [
+  'Decifrando a posição cósmica (o seu signo lunar)...',
+  'Calculando as coordenadas do seu local de nascimento e o seu mapa natal...',
+  'Obtendo os trânsitos de hoje...',
+  'Escrevendo a sua leitura pessoal...'
+];
+let progressIndex = 0;
+const progressTimer = setInterval(() => {
+  progressIndex = Math.min(progressIndex + 1, progressSteps.length - 1);
+  const titleElem = document.getElementById('loading-title');
+  if (titleElem) titleElem.textContent = progressSteps[progressIndex];
+}, 9000);
+
+// ブラウザが無限に待たないよう自分で打ち切り、再試行を案内する
+const abortController = new AbortController();
+const clientTimeout = setTimeout(() => abortController.abort(), 90000);
+
+try {
+const response = await fetch(JYOTISH_API_URL, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(payload),
+signal: abortController.signal
+});
+
+if (!response.ok) {
+  let errMsg = `HTTP error! status: ${response.status}`;
+  try {
+    const errJson = await response.json();
+    if (errJson && errJson.error) errMsg = errJson.error;
+  } catch(e) {}
+  throw new Error(errMsg);
+}
+
+const data = await response.json();
+sessionStorage.setItem('lj_diagnosis_result', JSON.stringify(data));
+
+// ★マイページでの即時表示・データ引継ぎのために jyotish_user キャッシュを保存
+try {
+const userData = {
+email: payload.email,
+dob: payload.dob,
+tob: payload.tob,
+city: payload.city || payload.address,
+language: payload.language || 'pt',
+status: data.status || 'free',
+lastResult: data
+};
+localStorage.setItem('jyotish_user', JSON.stringify(userData));
+localStorage.setItem('lj_user_email', payload.email);
+} catch (e) {
+console.error("Failed to save jyotish_user:", e);
+}
+
+renderDiagnosis(data, payload);
+} catch (err) {
+console.error("Erro de conexão: ", err);
+const timedOut = err && err.name === 'AbortError';
+contentArea.innerHTML = `
+<div style="text-align:center; padding:20px;">
+<p style="color:#c0392b; font-weight:bold; font-size:1.05rem;">${timedOut ? 'A geração da sua leitura está demorando mais do que o normal.' : 'Não conseguimos obter os dados da sua leitura.'}</p>
+<p style="font-size:0.85rem; color:#5A4E48; margin-top:8px;">${timedOut ? 'O cálculo astrológico externo ou a geração por IA podem estar congestionados. Tentar de novo costuma funcionar.' : 'Lamentamos muito — tente novamente daqui a pouco.'}</p>
+<button id="retry-diagnosis" class="btn-primary" style="margin-top:15px; padding:12px 24px; border:none; border-radius:8px; font-weight:600; cursor:pointer;">Tentar novamente</button>
+<div><a href="/pt" class="btn-secondary" style="margin-top:12px; display:inline-block;">Voltar à tela de preenchimento</a></div>
+</div>
+`;
+const retryBtn = document.getElementById('retry-diagnosis');
+if (retryBtn) retryBtn.addEventListener('click', () => location.reload());
+} finally {
+clearInterval(progressTimer);
+clearTimeout(clientTimeout);
+}
+} else {
+  // ★強制送還をブロックして、画面上に丁寧な再入力を促すUIを自動描画！
+  console.error("[CRITICAL] Birth data input not found in sessionStorage or backup.");
+  contentArea.innerHTML = `
+    <div style="text-align:center; padding:30px 10px;">
+      <div style="font-size:2.5rem; margin-bottom:15px;">🔍💎</div>
+      <p style="color:#c0392b; font-weight:bold; font-size:1.1rem; margin-bottom:10px;">Não conseguimos ler os seus dados de nascimento</p>
+      <p style="font-size:0.85rem; color:#5A4E48; line-height:1.6; margin-bottom:20px;">
+        As configurações de segurança do navegador, a navegação anônima ou uma limpeza de cache podem ter apagado os dados temporários que você informou.
+      </p>
+      <a href="/pt" class="btn-primary" style="display:inline-block; text-decoration:none; padding:12px 24px; font-weight:600; border-radius:8px; width:auto; max-width:260px;">Informe os seus dados novamente a partir da página inicial</a>
+    </div>
+  `;
+}
+});
+
+function renderDiagnosis(result, input) {
+let readingContent = result.reading || result.result || JSON.stringify(result);
+
+// ★【拡張ロジック】新簡易鑑定の4大要素（free_reading）が返ってきた場合に綺麗にカードレイアウト化
+if (result.free_reading) {
+const fr = result.free_reading;
+readingContent = `
+<h2>A leitura mística que guia você</h2>
+
+<div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">O seu Signo Solar</p>
+<p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.sunSign || '-'}</p>
+</div>
+
+<div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">O seu Signo Lunar</p>
+<p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.moonSign || '-'}</p>
+</div>
+
+<div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">Nakshatra</p>
+<p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.nakshatra || '-'}</p>
+</div>
+
+<div style="margin-bottom:24px;">
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">① Horóscopo de hoje</p>
+<p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.horoscope || '-'}</p>
+</div>
+
+<div style="margin-bottom:24px;">
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">② Influência astral</p>
+<p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.influence || '-'}</p>
+</div>
+
+<div style="margin-bottom:24px;">
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">③ Orientação da Mahadasha atual</p>
+<p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.dasha_summary || '-'}</p>
+</div>
+
+<div style="margin-top:25px; padding:15px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:8px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">
+④ ${fr.lucky_element || '✨ Tema de sorte de hoje: silêncio e reflexão profunda'}
+</div>
+`;
+}
+
+document.getElementById('content-area').innerHTML = `
+${input ? `<div class="meta-card">✉️ E-mail: ${input.email || 'Não informado'}<br>📅 Data de nascimento: ${input.dob} ${input.tob || ''} | 📍 Local de nascimento: ${input.address || input.city}</div>` : ''}
+<div class="result-body">${readingContent}</div>
+${result.status === 'paid' ? '' : buildLockedPreview()}
+<div class="cta-card">
+<h3 style="color:var(--color-gold-dark); margin-bottom:8px;">✨ Veja a posição de todos os planetas na sua página de membro</h3>
+<p style="font-size:0.85rem; color:#5A4E48; margin-bottom:15px;">Na sua página de membro você pode consultar o seu mapa e o panorama de hoje quando quiser.</p>
+<a href="/pt/mypage" class="btn-primary">Ir para a minha página de membro</a>
+</div>
+`;
+
+window.LJCheckout.paint();
+
+const upgradeBtn = document.getElementById('btn-upgrade-preview');
+if (upgradeBtn) {
+upgradeBtn.addEventListener('click', () => {
+const email = (input && input.email) || localStorage.getItem('lj_user_email') || '';
+window.open(`${premiumUpgradeUrl()}?prefilled_email=${encodeURIComponent(email)}`, '_blank');
+});
+}
+}
+
+// 無料鑑定との差が伝わるよう、有料会員に開放される項目をサンプル表示＋ぼかしで見せる
+function buildLockedPreview() {
+return `
+<div class="locked-section">
+<div class="locked-section-title">🔒 O que os membros Premium podem ver</div>
+<p class="locked-section-lead">Abaixo está uma amostra de como fica. Depois da assinatura, o conteúdo passa a ser real, baseado no seu próprio mapa natal.</p>
+<div class="locked-wrapper">
+<div>
+<div class="preview-card">
+<div class="preview-title">🪐 Posição dos nove planetas</div>
+<table class="preview-table blur-content">
+<thead><tr><th>Planeta</th><th>Signo</th><th>Casa</th><th>Em resumo</th></tr></thead>
+<tbody>
+<tr><td>Sol</td><td>Capricórnio</td><td>Casa 10</td><td>Uma missão social e o senso de responsabilidade tornam-se o eixo da sua vida.</td></tr>
+<tr><td>Lua</td><td>Câncer</td><td>Casa 4</td><td>A estabilidade emocional nasce do lar e das pessoas mais próximas.</td></tr>
+<tr><td>Marte</td><td>Áries</td><td>Casa 7</td><td>Uma posição que facilita tomar a iniciativa nos relacionamentos.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="preview-card">
+<div class="preview-title">📜 Leitura do seu ciclo Maha Dasha</div>
+<p class="preview-text blur-content">Ciclo atual: período de Júpiter (2021–2037). É um tempo de aprendizado e expansão, em que o reconhecimento se acumula quanto mais fundo você vai na sua especialidade. Também lemos em detalhe onde começa o próximo subciclo e a estratégia a adotar nele.</p>
+</div>
+<div class="preview-card">
+<div class="preview-title">🔮 Kundali preciso: o destino escrito nos seus nove planetas</div>
+<p class="preview-text blur-content">A partir do Lagna (ascendente) e da interação dos nove planetas, lemos em três dimensões os seus talentos, o trabalho adequado a você e os seus padrões de relacionamento. É uma análise completa, incluindo os yogas (combinações planetárias) e as avaliações de dignidade que a leitura gratuita não cobre.</p>
+</div>
+<div class="preview-card">
+<div class="preview-title">📅 Panorama diário e semanal detalhado</div>
+<p class="preview-text blur-content">Junto com o mapa do dia, mostramos o fluxo da semana, os dias de atenção e os dias com o vento a favor. Também sugerimos remédios que aliviam a pressão dos planetas.</p>
+</div>
+</div>
+<div class="lock-overlay">
+<div class="lock-icon">🔒</div>
+<div class="lock-title">Exclusivo para membros Premium</div>
+<p class="lock-note">A posição completa dos planetas, os ciclos de dasha, o panorama detalhado e os remédios ficam liberados.</p>
+<p data-price-label="premium" style="font-size:0.9rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:12px;"></p>
+<button type="button" id="btn-upgrade-preview" class="btn-primary" style="width:auto; padding:12px 24px;">Assinar um plano pago</button>
+<a href="/pt/pdf-purchase" class="btn-secondary" style="width:auto; padding:8px 18px; margin-top:12px;">Conhecer o Relatório Vitalício avulso (PDF)</a>
+</div>
+</div>
+</div>
+`;
+}
+</script>
+</body>
+</html>

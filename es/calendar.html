@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendario Anual de la Fortuna | Libertas Jyotish</title>
+<meta name="description" content="El Calendario Anual de la Fortuna de Libertas Jyotish (en preparación). A partir de tus tránsitos y tu dasha calculamos el flujo del próximo año y los momentos que merecen acción.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://www.libertas-jyotish.com/es/calendar">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0c1a1f">
+<link rel="icon" type="image/png" href="/img/libertas-logo.png">
+<link rel="apple-touch-icon" href="/img/libertas-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+--color-gold-light: #FDE047;
+--color-gold-main: #D4AF37;
+--color-gold-dark: #8B6B1B;
+--color-text-dark: #2C221E;
+--font-en: 'Cinzel', serif;
+--font-ja: 'Noto Serif', serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+font-family: var(--font-ja); color: var(--color-text-dark); line-height: 1.8;
+min-height: 100vh; background-color: #0c1a1f;
+display: flex; flex-direction: column;
+}
+.site-header {
+position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+background: rgba(12, 26, 31, 0.92);
+backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+border-bottom: 1px solid rgba(139, 107, 27, 0.3);
+padding: 12px 20px;
+display: flex; justify-content: space-between; align-items: center;
+}
+.hero-section {
+flex: 1; display: flex; align-items: center; justify-content: center;
+padding: 100px 20px 60px;
+background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");
+background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed;
+}
+.hero-container {
+width: 100%; max-width: 620px; text-align: center;
+background-image:
+radial-gradient(circle at 50% 25%, rgba(255, 253, 245, 0.98) 0%, rgba(245, 233, 208, 0.95) 55%, rgba(220, 200, 162, 0.96) 100%),
+linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.05) 100%);
+border-radius: 14px;
+border: 1px solid rgba(184, 142, 60, 0.65);
+outline: 1px solid rgba(212, 175, 55, 0.35); outline-offset: -7px;
+box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75), inset 0 0 35px rgba(139, 90, 43, 0.28);
+padding: 45px 32px 38px;
+}
+.logo-img { width: 92px; height: auto; margin-bottom: 14px; filter: drop-shadow(0px 3px 6px rgba(139, 107, 27, 0.35)); }
+.badge {
+display: inline-block; font-family: var(--font-en); font-size: 0.78rem; letter-spacing: 0.22em;
+color: var(--color-gold-dark); border: 1px solid rgba(139, 107, 27, 0.4); background: rgba(212, 175, 55, 0.12);
+padding: 4px 16px; border-radius: 50px; margin-bottom: 18px; text-transform: uppercase;
+}
+h1 { font-size: 1.4rem; font-weight: 600; line-height: 1.6; margin-bottom: 14px; }
+p.lead { font-size: 0.92rem; color: #5A4E48; margin-bottom: 22px; }
+.plan-list { list-style: none; text-align: left; max-width: 420px; margin: 0 auto 26px; font-size: 0.88rem; color: #4a3e36; }
+.plan-list li { margin-bottom: 6px; }
+.btn-back {
+display: inline-block; text-decoration: none; font-size: 0.88rem; font-weight: 600;
+color: #2C221E; background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold-main));
+border-radius: 6px; padding: 11px 24px;
+}
+.site-footer {
+width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3);
+padding: 24px 20px; text-align: center;
+}
+.footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
+.copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
+</style>
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/rtl.css">
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'es',
+  menu: {
+    top: 'Inicio',
+    free: 'Lectura gratuita',
+    about: 'Sobre Libertas Jyotish',
+    report: 'Informe Vitalicio (pago único)',
+    calendar: 'Calendario Anual de la Fortuna',
+    calendarNote: 'próximamente',
+    mypage: 'Página de miembro',
+    legal: 'Información legal y términos',
+    toggleLabel: 'Menú',
+    navLabel: 'Menú del sitio'
+  },
+  price: {
+    premium: '{price} al mes (impuestos incl.)',
+    pdf: '{price} pago único (impuestos incl.)',
+    premiumApprox: 'Unos {price} al mes (impuestos incl.); el importe final se muestra al pagar',
+    pdfApprox: 'Unos {price} en pago único (impuestos incl.); el importe final se muestra al pagar',
+    checkoutOnly: 'El importe en tu moneda local se muestra al pagar'
+  }
+};
+</script>
+<script defer src="/js/site-menu.js"></script>
+</head>
+<body>
+
+<header class="site-header" data-site-header></header>
+
+<section class="hero-section">
+<div class="hero-container">
+<img class="logo-img" src="/img/libertas-logo.png" alt="Libertas Jyotish">
+<span class="badge">Coming Soon</span>
+<h1>Calendario Anual de la Fortuna<br>(En preparación)</h1>
+<p class="lead">Estamos preparando un producto que lee tus tránsitos (los planetas en movimiento) y tu dasha (los ciclos de la vida) para trazar el flujo del próximo año y los momentos que merecen acción.</p>
+<ul class="plan-list">
+<li>• Panorama mes a mes y periodos que piden cautela</li>
+<li>• Días favorables para contratos y nuevos comienzos (según los valores calculados)</li>
+<li>• Días en los que conviene no forzar (Chandrashtama y similares)</li>
+<li>• Cómo suben y bajan las áreas de tu vida (trabajo, dinero, relaciones, salud)</li>
+</ul>
+<p class="lead">Gracias por tu paciencia hasta el lanzamiento.</p>
+<a class="btn-back" href="/es">Volver a la página principal</a>
+</div>
+</section>
+
+<footer class="site-footer">
+<div class="footer-links"><a href="/es/legal">Información legal, Términos de uso y Política de privacidad</a></div>
+<p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+</footer>
+
+</body>
+</html>

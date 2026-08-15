@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tentang laporan PDF terperinci | Libertas Jyotish</title>
+  <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
+  <link rel="canonical" href="https://libertas-jyotish.com/id/pdf-purchase">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0c1a1f">
+  <link rel="icon" type="image/png" href="/img/libertas-logo.png">
+  <link rel="apple-touch-icon" href="/img/libertas-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --color-gold-light: #FDE047;
+      --color-gold-main: #D4AF37;
+      --color-gold-dark: #8B6B1B;
+      --color-text-dark: #2C221E;
+      --font-en: 'Cinzel', serif;
+      --font-ja: 'Noto Serif', serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-ja);
+      color: var(--color-text-dark);
+      line-height: 1.8;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-color: #0c1a1f;
+      display: flex; flex-direction: column;
+    }
+
+    .site-header {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+      background: rgba(12, 26, 31, 0.92);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(139, 107, 27, 0.3);
+      padding: 12px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .header-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--color-gold-main);
+      font-family: var(--font-en); font-weight: 600; font-size: 1.05rem;
+    }
+    .header-logo img { width: 32px; height: 32px; }
+    .header-nav { display: flex; gap: 18px; align-items: center; }
+    .header-nav a { color: #E2D9CE; text-decoration: none; font-size: 0.82rem; transition: color 0.3s; }
+    .header-nav a:hover { color: var(--color-gold-main); }
+
+    .main-section {
+      position: relative; flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 100px 20px 60px;
+      background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");
+      background-size: cover; background-position: center; background-attachment: fixed;
+    }
+
+    .card-container {
+      position: relative; z-index: 2; width: 100%; max-width: 680px;
+      background-image: 
+        radial-gradient(circle at 50% 25%, rgba(255, 253, 245, 0.98) 0%, rgba(245, 233, 208, 0.95) 55%, rgba(220, 200, 162, 0.96) 100%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.05) 100%);
+      background-blend-mode: overlay, normal;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-radius: 14px;
+      border: 1px solid rgba(184, 142, 60, 0.65);
+      outline: 1px solid rgba(212, 175, 55, 0.35); outline-offset: -7px;
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.75),
+        0 0 20px rgba(212, 175, 55, 0.18),
+        inset 0 0 35px rgba(139, 90, 43, 0.28),
+        inset 0 2px 4px rgba(255, 255, 255, 0.8);
+      padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
+    }
+
+    .data-confirm-box {
+      background: rgba(255, 252, 245, 0.85);
+      border: 1px solid rgba(139, 107, 27, 0.35); border-radius: 10px;
+      padding: 22px; margin-bottom: 25px; text-align: left;
+      box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.12);
+    }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px; }
+    .label-note { font-size: 0.72rem; font-weight: normal; color: #7a6a58; margin-left: 4px; }
+    
+    input[type="email"], input[type="text"], input[type="datetime-local"] {
+      width: 100%; padding: 11px 14px;
+      background-color: rgba(255, 252, 245, 0.85);
+      border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px;
+      font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none; transition: all 0.3s ease;
+      box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.12);
+    }
+    input:focus {
+      border-color: var(--color-gold-dark);
+      box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.15), 0 0 8px rgba(212, 175, 55, 0.3);
+      background-color: #FFFDF9;
+    }
+
+    .btn-purchase {
+      width: 100%; padding: 15px 28px; font-size: 1.05rem; font-weight: 600; font-family: var(--font-ja); color: #FFFDF9;
+      background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%); border: none; border-radius: 8px; cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4); transition: transform 0.2s;
+    }
+    .btn-purchase:hover { transform: translateY(-1px); }
+
+    .report-card {
+      background: rgba(255, 252, 245, 0.85);
+      border: 1px solid rgba(139, 107, 27, 0.35); border-radius: 10px;
+      padding: 22px; margin-bottom: 20px; text-align: left;
+      box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.12);
+    }
+    .report-card h3 { font-size: 1.05rem; color: var(--color-gold-dark); margin-bottom: 10px; border-bottom: 1px solid rgba(139, 107, 27, 0.2); padding-bottom: 5px; }
+    
+    .kundali-img-wrapper { text-align: center; padding: 12px; background: #FFFDF9; border: 1px solid rgba(139, 107, 27, 0.3); border-radius: 8px; margin-bottom: 15px; }
+    .kundali-img-wrapper img { max-width: 100%; height: auto; max-height: 280px; }
+
+    .timeline-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 8px; }
+    .timeline-table th, .timeline-table td { padding: 8px 10px; border: 1px solid rgba(139, 107, 27, 0.3); text-align: left; }
+    .timeline-table th { background: rgba(212, 175, 55, 0.15); color: var(--color-gold-dark); font-weight: 600; }
+
+    .site-footer { width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3); padding: 24px 20px; text-align: center; position: relative; z-index: 10; }
+    .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
+    .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
+
+    @media print {
+      .site-header, .site-footer, .btn-purchase, #btn-print-pdf { display: none !important; }
+      body { background: #ffffff !important; color: #000000 !important; }
+      .main-section { padding: 0 !important; background: none !important; }
+      .card-container { max-width: 100% !important; box-shadow: none !important; border: none !important; outline: none !important; background: #ffffff !important; padding: 0 !important; }
+      .report-card { background: #ffffff !important; border: 1px solid #ccc !important; page-break-inside: avoid; }
+    }
+  </style>
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/rtl.css">
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'id',
+  menu: {
+    top: 'Beranda',
+    free: 'Pembacaan gratis',
+    about: 'Tentang Libertas Jyotish',
+    report: 'Laporan Seumur Hidup (sekali beli)',
+    calendar: 'Kalender Peruntungan Tahunan',
+    calendarNote: 'segera hadir',
+    mypage: 'Halaman anggota',
+    legal: 'Informasi hukum dan ketentuan',
+    toggleLabel: 'Menu',
+    navLabel: 'Menu situs'
+  },
+  price: {
+    premium: '{price} / bulan (termasuk pajak)',
+    pdf: '{price} sekali bayar (termasuk pajak)',
+    premiumApprox: 'Sekitar {price} / bulan (termasuk pajak) — jumlah akhir ditampilkan saat checkout',
+    pdfApprox: 'Sekitar {price} sekali bayar (termasuk pajak) — jumlah akhir ditampilkan saat checkout',
+    checkoutOnly: 'Jumlah dalam mata uang lokal Anda ditampilkan saat checkout'
+  }
+};
+</script>
+<script defer src="/js/site-menu.js"></script>
+<script src="/js/checkout-links.js"></script>
+</head>
+<body>
+
+  <header class="site-header" data-site-header></header>
+
+  <section class="main-section">
+    <div class="card-container">
+      
+      <div id="purchased-view" style="display:none;">
+        <h1 style="font-size:1.5rem; color:var(--color-text-dark); margin-bottom:12px;">Terima kasih atas pembelian Anda</h1>
+        <p style="font-size:0.9rem; color:#5A4E48; margin-bottom:22px;">Anda sudah memiliki Laporan Seumur Hidup. Anda dapat membukanya kapan saja lewat tombol di bawah (laporan juga bisa disimpan sebagai PDF melalui fungsi cetak peramban).</p>
+        <a id="btn-open-report" class="btn-purchase" style="display:inline-block; text-decoration:none; text-align:center;" href="/id/pdf-report">📖 Buka Laporan Seumur Hidup</a>
+      </div>
+
+      <div id="purchase-form-view" style="display:none;">
+        <h1 style="font-size:1.5rem; color:var(--color-text-dark); margin-bottom:12px;">Laporan Seumur Hidup Anda (PDF)</h1>
+        <p style="font-size:0.88rem; color:#5A4E48; margin-bottom:25px; line-height:1.9; text-align:left;">Tema hidup, siklus dasha, dan panduan keberuntungan Anda dirangkum dalam laporan istimewa berpuluh halaman. Di India, pembacaan seperti ini dihadiahkan saat kelahiran dan disimpan sebagai penuntun seumur hidup. Semoga laporan ini menjadi harta bagi Anda sepanjang hidup.</p>
+
+        <div class="data-confirm-box">
+          <div class="form-group"><label for="user-email">Alamat email</label><input type="email" id="user-email" required></div>
+          <div class="form-group"><label for="user-birthdate">Tanggal dan jam lahir <span class="label-note">(jika jam lahir tidak diketahui, isi 12:00)</span></label><input type="datetime-local" id="user-birthdate" required></div>
+          <div class="form-group"><label for="user-birthplace">Tempat lahir</label><input type="text" id="user-birthplace" placeholder="mis. Jakarta, Indonesia" required></div>
+        </div>
+
+        <div id="price-label" style="font-size:1.3rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:15px;"></div>
+        <button id="btn-proceed-checkout" class="btn-purchase">💳 Lanjut ke pembayaran (Stripe)</button>
+        <p id="checkout-note" style="font-size:0.8rem; color:#6A5E58; margin-top:12px;">Setelah pembelian, Anda dapat membacanya kapan saja di halaman laporan situs ini (laporan juga bisa disimpan sebagai PDF melalui fungsi cetak peramban).</p>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-links"><a href="/id/legal">Informasi hukum, Syarat Penggunaan, dan Kebijakan Privasi</a></div>
+    <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    // 価格と買い切りPayment Linkは訪問者の国の価格帯に応じて /js/checkout-links.js が解決する
+    const pdfPriceLabel = () => window.LJCheckout.labelFor('pdf');
+    const pdfCheckoutUrl = () => window.LJCheckout.linkFor('pdf');
+
+    // 購入済みかどうかはサーバー（会員シート）だけを正とする。
+    // 購入済みなら購入フォームを出さず、鑑定書への導線に差し替える。
+    async function showPurchaseStateView() {
+      const formView = document.getElementById('purchase-form-view');
+      const purchasedView = document.getElementById('purchased-view');
+      const email = localStorage.getItem('lj_user_email') || '';
+
+      if (email) {
+        try {
+          const res = await fetch('/api/jyotish', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'purchase_status', email: email })
+          });
+          const data = await res.json().catch(() => null);
+          if (res.ok && data && data.pdf_purchased) {
+            purchasedView.style.display = 'block';
+            return;
+          }
+        } catch (err) {
+          console.error('purchase status check failed', err);
+        }
+      }
+      formView.style.display = 'block';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      showPurchaseStateView();
+      document.getElementById('price-label').textContent = pdfPriceLabel();
+      // 国判定が返ってきたら価格表示を確定させる
+      window.LJCheckout.ready.then(() => {
+        document.getElementById('price-label').textContent = pdfPriceLabel();
+      });
+      const savedEmail = localStorage.getItem('lj_user_email') || '';
+      const savedBirthdate = localStorage.getItem('lj_user_birthdate') || '';
+      const savedBirthplace = localStorage.getItem('lj_user_birthplace') || '';
+
+      if (savedEmail) document.getElementById('user-email').value = savedEmail;
+      if (savedBirthdate) document.getElementById('user-birthdate').value = savedBirthdate;
+      if (savedBirthplace) document.getElementById('user-birthplace').value = savedBirthplace;
+
+
+      document.getElementById('btn-proceed-checkout').addEventListener('click', () => {
+        const email = document.getElementById('user-email').value;
+        const birthdate = document.getElementById('user-birthdate').value;
+        const birthplace = document.getElementById('user-birthplace').value;
+
+        if (!email) { alert('Masukkan alamat email Anda.'); return; }
+        if (!birthdate) { alert('Masukkan tanggal dan jam lahir Anda.'); return; }
+        if (!birthplace) { alert('Masukkan tempat lahir Anda.'); return; }
+
+        localStorage.setItem('lj_user_email', email);
+        localStorage.setItem('lj_user_birthdate', birthdate);
+        localStorage.setItem('lj_user_birthplace', birthplace);
+        // 鑑定書ページと同じキーで出生データを保持する
+        const [datePart, timePart] = birthdate.split('T');
+        if (datePart) localStorage.setItem('dob', datePart);
+        if (timePart) localStorage.setItem('tob', timePart.slice(0, 5));
+        localStorage.setItem('city', birthplace);
+
+        const checkoutUrl = pdfCheckoutUrl();
+        const separator = checkoutUrl.includes('?') ? '&' : '?';
+        window.location.href = `${checkoutUrl}${separator}prefilled_email=${encodeURIComponent(email)}`;
+      });
+    });
+
+  </script>
+</body>
+</html>

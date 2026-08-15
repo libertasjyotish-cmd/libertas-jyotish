@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compra concluída | Libertas Jyotish</title>
+  <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
+  <link rel="canonical" href="https://libertas-jyotish.com/pt/pdf-success">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0c1a1f">
+  <link rel="icon" type="image/png" href="/img/libertas-logo.png">
+  <link rel="apple-touch-icon" href="/img/libertas-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --color-gold-light: #FDE047;
+      --color-gold-main: #D4AF37;
+      --color-gold-dark: #8B6B1B;
+      --color-text-dark: #2C221E;
+      --font-en: 'Cinzel', serif;
+      --font-ja: 'Noto Serif', serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-ja);
+      color: var(--color-text-dark);
+      line-height: 1.8;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-color: #0c1a1f;
+      display: flex; flex-direction: column;
+    }
+
+    .site-header {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+      background: rgba(12, 26, 31, 0.92);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(139, 107, 27, 0.3);
+      padding: 12px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .header-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--color-gold-main);
+      font-family: var(--font-en); font-weight: 600; font-size: 1.05rem;
+    }
+    .header-logo img { width: 32px; height: 32px; }
+
+    .main-section {
+      position: relative; flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 100px 20px 60px;
+      background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");
+      background-size: cover; background-position: center; background-attachment: fixed;
+    }
+
+    /* 羊皮紙カード質感 */
+    .success-card-container {
+      position: relative; z-index: 2; width: 100%; max-width: 600px;
+      background-image: 
+        radial-gradient(circle at 50% 25%, rgba(255, 253, 245, 0.98) 0%, rgba(245, 233, 208, 0.95) 55%, rgba(220, 200, 162, 0.96) 100%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.05) 100%);
+      background-blend-mode: overlay, normal;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-radius: 14px;
+      border: 1px solid rgba(184, 142, 60, 0.65);
+      outline: 1px solid rgba(212, 175, 55, 0.35); outline-offset: -7px;
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.75),
+        0 0 20px rgba(212, 175, 55, 0.18),
+        inset 0 0 35px rgba(139, 90, 43, 0.28),
+        inset 0 2px 4px rgba(255, 255, 255, 0.8);
+      padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
+    }
+
+    .btn-download {
+      display: inline-block; width: 100%; padding: 15px 28px; font-size: 1.05rem; font-weight: 600; font-family: var(--font-ja); color: #FFFDF9;
+      background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%); border-radius: 8px; text-decoration: none;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4); transition: transform 0.2s;
+    }
+    .btn-download:hover { transform: translateY(-1px); }
+
+    .site-footer { width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3); padding: 24px 20px; text-align: center; position: relative; z-index: 10; }
+    .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
+    .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
+  </style>
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/rtl.css">
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'pt',
+  menu: {
+    top: 'Início',
+    free: 'Leitura gratuita',
+    about: 'Sobre a Libertas Jyotish',
+    report: 'Relatório Vitalício (avulso)',
+    calendar: 'Calendário Anual da Fortuna',
+    calendarNote: 'em breve',
+    mypage: 'Página de membro',
+    legal: 'Informações legais e termos',
+    toggleLabel: 'Menu',
+    navLabel: 'Menu do site'
+  },
+  price: {
+    premium: '{price} / mês (impostos incl.)',
+    pdf: '{price} pagamento único (impostos incl.)',
+    premiumApprox: 'Cerca de {price} / mês (impostos incl.) — valor final exibido no checkout',
+    pdfApprox: 'Cerca de {price} pagamento único (impostos incl.) — valor final exibido no checkout',
+    checkoutOnly: 'O valor na sua moeda local é exibido no checkout'
+  }
+};
+</script>
+<script defer src="/js/site-menu.js"></script>
+</head>
+<body>
+
+  <header class="site-header" data-site-header></header>
+
+  <section class="main-section">
+    <div class="success-card-container">
+      <div style="font-size:3rem; margin-bottom:10px;">✨📜✨</div>
+      <h1 style="font-size:1.5rem; color:var(--color-text-dark); margin-bottom:12px;">Obrigado pelo seu pedido</h1>
+      <p id="success-note" style="font-size:0.88rem; color:#5A4E48; margin-bottom:25px;">Estamos confirmando o seu pagamento. Isso pode levar algumas dezenas de segundos.</p>
+
+      <a href="/pt/pdf-report" id="report-link" class="btn-download">📖 Abrir o Relatório Vitalício</a>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-links"><a href="/pt/legal">Informações legais, Termos de Uso e Política de Privacidade</a></div>
+    <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    // 購入状態は Stripe の Webhook を受けてサーバ側で記録される。この画面では購入済みの判定を行わない。
+    document.addEventListener('DOMContentLoaded', () => {
+      const note = document.getElementById('success-note');
+      const email = localStorage.getItem('lj_user_email');
+      const session = localStorage.getItem('lj_session');
+      if (!email || !session) {
+        note.innerHTML = 'Para ler o seu relatório, entre com o e-mail usado na compra. Entre pela sua <a href=\"/pt/mypage\">página de membro</a>.';
+      }
+    });
+  </script>
+</body>
+</html>
