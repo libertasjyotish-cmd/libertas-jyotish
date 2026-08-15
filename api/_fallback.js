@@ -1,6 +1,6 @@
 // 外部API障害時の退避鑑定を組み立てるレイヤー（CommonJS）
 // 星座・ナクシャトラは日本語表記を内部キーとして選び、表示だけ言語別に変換する。
-// 文面は api/fallback/<lang>.js に置く。未整備の言語は英語の文面で表示する。
+// 文面は api/_texts/fallback/<lang>.js に置く。未整備の言語は英語の文面で表示する。
 const { createTerms, normalizeLang } = require('./_terms');
 
 function load(require_) {
@@ -12,12 +12,12 @@ function load(require_) {
 }
 
 const TEXT = {
-  ja: require('./fallback/ja'),
-  en: require('./fallback/en'),
-  es: load(() => require('./fallback/es')),
-  pt: load(() => require('./fallback/pt')),
-  ar: load(() => require('./fallback/ar')),
-  id: load(() => require('./fallback/id'))
+  ja: require('./_texts/fallback/ja'),
+  en: require('./_texts/fallback/en'),
+  es: load(() => require('./_texts/fallback/es')),
+  pt: load(() => require('./_texts/fallback/pt')),
+  ar: load(() => require('./_texts/fallback/ar')),
+  id: load(() => require('./_texts/fallback/id'))
 };
 
 const MOON_SIGNS = ['牡羊座', '牡牛座', '双子座', '蟹座', '獅子座', '乙女座', '天秤座', '蠍座', '射手座', '山羊座', '水瓶座', '魚座'];
