@@ -617,6 +617,11 @@ const verified = await res.json().catch(() => ({}));
 // 鑑定書など購入者限定APIの本人確認に使うセッション
 if (verified.session) localStorage.setItem('lj_session', verified.session);
 completeLogin(email);
+// 認証待ちにしていた操作（プラン管理など）をそのまま続行する
+if (window.ljPendingAfterAuth === 'portal') {
+window.ljPendingAfterAuth = '';
+openBillingPortal();
+}
 } else {
 alert('認証コードが正しくないか、有効期限が切れています。');
 }
@@ -656,12 +661,28 @@ document.getElementById('auth-box').style.display = 'block';
 document.getElementById('today-transit-text').textContent = 'ログインすると、あなたの出生データに基づいた本日の運勢が表示されます。';
 }
 
+// 本人確認セッションが無い場合に、ログインカードを開いてメール認証を促す
+function requestReauth(pendingAction, email) {
+window.ljPendingAfterAuth = pendingAction;
+const box = document.getElementById('auth-box');
+if (box) box.style.display = 'block';
+const input = document.getElementById('login-email');
+if (input) {
+if (email) input.value = email;
+input.focus();
+}
+if (box) box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+alert('セキュリティ確認のため、メールに届く認証コードで本人確認をお願いします。下のフォームから「コード送信」を押してください。');
+}
+
 // Stripe カスタマーポータルへ遷移する（支払い方法の変更・サブスク解約）
 async function openBillingPortal() {
 const link = document.getElementById('btn-billing-portal');
 const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
 const session = localStorage.getItem('lj_session') || '';
-if (!email || !session) { alert('プランの管理には再度のログインが必要です。'); return; }
+if (!email) { alert('プランの管理にはログインが必要です。'); return; }
+// Google ログインや古い端末連携ではセッションが無いため、その場でメール認証を促して続行する
+if (!session) { requestReauth('portal', email); return; }
 
 const original = link ? link.textContent : '';
 if (link) { link.textContent = '読み込み中...'; link.style.pointerEvents = 'none'; }
@@ -676,7 +697,10 @@ if (res.ok && data && data.url) {
 window.location.href = data.url;
 return;
 }
-if (data && data.error === 'customer_not_found') {
+if (data && data.error === 'invalid_session') {
+localStorage.removeItem('lj_session');
+requestReauth('portal', email);
+} else if (data && data.error === 'customer_not_found') {
 alert('このメールアドレスでのお支払い情報が見つかりませんでした。決済時に入力したメールアドレスでログインしているかご確認ください。');
 } else {
 alert('プラン管理画面を開けませんでした。時間をおいてお試しください。');
