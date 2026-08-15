@@ -52,19 +52,20 @@ const LANGS = [
   }
 ];
 
+// 国旗は言語と国が1対1でなく誤解を招くため、共通の地球アイコン（/img/globe.svg）を使う
 const LANG_SWITCH = [
-  { code: 'ja', flag: '🇯🇵', label: '日本語' },
-  { code: 'en', flag: '🇬🇧', label: 'English' },
-  { code: 'es', flag: '🇪🇸', label: 'Español' },
-  { code: 'pt', flag: '🇵🇹', label: 'Português' },
-  { code: 'ar', flag: '🇸🇦', label: 'العربية' },
-  { code: 'id', flag: '🇮🇩', label: 'Bahasa Indonesia' }
+  { code: 'ja', label: '日本語', short: '日本語' },
+  { code: 'en', label: 'English', short: 'English' },
+  { code: 'es', label: 'Español', short: 'Español' },
+  { code: 'pt', label: 'Português', short: 'Português' },
+  { code: 'ar', label: 'العربية', short: 'العربية' },
+  { code: 'id', label: 'Bahasa Indonesia', short: 'Indonesia' }
 ];
 
 function switcher(current) {
   const items = LANG_SWITCH.map((l) => {
     const cls = l.code === current ? 'lang-link is-current' : 'lang-link';
-    return `<a class="${cls}" href="/${l.code}" hreflang="${l.code}" lang="${l.code}" title="${l.label}" aria-label="${l.label}"><span class="lang-flag">${l.flag}</span><span class="lang-code">${l.code.toUpperCase()}</span></a>`;
+    return `<a class="${cls}" href="/${l.code}" hreflang="${l.code}" lang="${l.code}" title="${l.label}" aria-label="${l.label}"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">${l.short}</span></a>`;
   }).join('\n');
   return `<nav class="lang-switch" aria-label="Language">\n${items}\n</nav>`;
 }
@@ -146,7 +147,8 @@ transition: color 0.3s, border-color 0.3s;
 }
 .lang-link:hover { color: var(--color-gold-main); border-color: var(--color-gold-main); }
 .lang-link.is-current { color: var(--color-gold-main); border-color: var(--color-gold-main); background: rgba(212, 175, 55, 0.12); }
-.lang-flag { font-size: 1rem; line-height: 1; }
+.lang-globe { width: 20px; height: 20px; display: block; opacity: 0.85; }
+.lang-link:hover .lang-globe, .lang-link.is-current .lang-globe { opacity: 1; }
 .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); }
 </style>
 </head>

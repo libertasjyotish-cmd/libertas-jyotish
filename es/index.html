@@ -74,7 +74,8 @@ transition: color 0.3s, border-color 0.3s;
 }
 .lang-link:hover { color: var(--color-gold-main); border-color: var(--color-gold-main); }
 .lang-link.is-current { color: var(--color-gold-main); border-color: var(--color-gold-main); background: rgba(212, 175, 55, 0.12); }
-.lang-flag { font-size: 1rem; line-height: 1; }
+.lang-globe { width: 20px; height: 20px; display: block; opacity: 0.85; }
+.lang-link:hover .lang-globe, .lang-link.is-current .lang-globe { opacity: 1; }
 .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); }
 </style>
 </head>
@@ -93,12 +94,12 @@ transition: color 0.3s, border-color 0.3s;
 
 <footer class="site-footer">
 <nav class="lang-switch" aria-label="Language">
-<a class="lang-link" href="/ja" hreflang="ja" lang="ja" title="日本語" aria-label="日本語"><span class="lang-flag">🇯🇵</span><span class="lang-code">JA</span></a>
-<a class="lang-link" href="/en" hreflang="en" lang="en" title="English" aria-label="English"><span class="lang-flag">🇬🇧</span><span class="lang-code">EN</span></a>
-<a class="lang-link is-current" href="/es" hreflang="es" lang="es" title="Español" aria-label="Español"><span class="lang-flag">🇪🇸</span><span class="lang-code">ES</span></a>
-<a class="lang-link" href="/pt" hreflang="pt" lang="pt" title="Português" aria-label="Português"><span class="lang-flag">🇵🇹</span><span class="lang-code">PT</span></a>
-<a class="lang-link" href="/ar" hreflang="ar" lang="ar" title="العربية" aria-label="العربية"><span class="lang-flag">🇸🇦</span><span class="lang-code">AR</span></a>
-<a class="lang-link" href="/id" hreflang="id" lang="id" title="Bahasa Indonesia" aria-label="Bahasa Indonesia"><span class="lang-flag">🇮🇩</span><span class="lang-code">ID</span></a>
+<a class="lang-link" href="/ja" hreflang="ja" lang="ja" title="日本語" aria-label="日本語"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">日本語</span></a>
+<a class="lang-link" href="/en" hreflang="en" lang="en" title="English" aria-label="English"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">English</span></a>
+<a class="lang-link is-current" href="/es" hreflang="es" lang="es" title="Español" aria-label="Español"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">Español</span></a>
+<a class="lang-link" href="/pt" hreflang="pt" lang="pt" title="Português" aria-label="Português"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">Português</span></a>
+<a class="lang-link" href="/ar" hreflang="ar" lang="ar" title="العربية" aria-label="العربية"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">العربية</span></a>
+<a class="lang-link" href="/id" hreflang="id" lang="id" title="Bahasa Indonesia" aria-label="Bahasa Indonesia"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">Indonesia</span></a>
 </nav>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
