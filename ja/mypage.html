@@ -217,6 +217,7 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 <div style="display:flex; align-items:center;">
 <span id="user-display-email" style="font-weight:600; font-size:0.95rem; color:var(--color-text-dark);">未ログイン（ゲスト）</span>
 <span id="btn-logout" class="btn-logout" style="display:none;" onclick="logout()">ログアウト</span>
+<span id="btn-billing-portal" class="btn-logout" style="display:none;" onclick="openBillingPortal()">プランの管理・解約</span>
 </div>
 </div>
 <span id="user-status-badge" class="user-badge free">無料プラン</span>
@@ -376,6 +377,7 @@ window.location.reload();
 }
 
 const JYOTISH_API_URL = "/api/jyotish";
+const STRIPE_PORTAL_API_URL = "/api/stripe-portal";
 const PREMIUM_UPGRADE_URL = "https://buy.stripe.com/dRmaEZ0I73Bx6g8auH24000";
 
 // JSTの今日の日付（YYYY-MM-DD）
@@ -648,8 +650,42 @@ document.getElementById('auth-box').style.display = 'none';
 function setLoggedOutState() {
 document.getElementById('user-display-email').textContent = '未ログイン（ゲスト）';
 document.getElementById('btn-logout').style.display = 'none';
+const portalLink = document.getElementById('btn-billing-portal');
+if (portalLink) portalLink.style.display = 'none';
 document.getElementById('auth-box').style.display = 'block';
 document.getElementById('today-transit-text').textContent = 'ログインすると、あなたの出生データに基づいた本日の運勢が表示されます。';
+}
+
+// Stripe カスタマーポータルへ遷移する（支払い方法の変更・サブスク解約）
+async function openBillingPortal() {
+const link = document.getElementById('btn-billing-portal');
+const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
+const session = localStorage.getItem('lj_session') || '';
+if (!email || !session) { alert('プランの管理には再度のログインが必要です。'); return; }
+
+const original = link ? link.textContent : '';
+if (link) { link.textContent = '読み込み中...'; link.style.pointerEvents = 'none'; }
+try {
+const res = await fetch(STRIPE_PORTAL_API_URL, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ email: email, session: session })
+});
+const data = await res.json().catch(() => null);
+if (res.ok && data && data.url) {
+window.location.href = data.url;
+return;
+}
+if (data && data.error === 'customer_not_found') {
+alert('このメールアドレスでのお支払い情報が見つかりませんでした。決済時に入力したメールアドレスでログインしているかご確認ください。');
+} else {
+alert('プラン管理画面を開けませんでした。時間をおいてお試しください。');
+}
+} catch (err) {
+alert('通信エラーが発生しました。しばらくしてからお試しください。');
+} finally {
+if (link) { link.textContent = original; link.style.pointerEvents = 'auto'; }
+}
 }
 
 function logout() {
@@ -888,6 +924,8 @@ if (badge) {
 badge.textContent = 'プレミアム';
 badge.className = 'user-badge paid';
 }
+const portalLink = document.getElementById('btn-billing-portal');
+if (portalLink) portalLink.style.display = 'inline';
 const overlay = document.getElementById('lock-overlay');
 if (overlay) overlay.style.display = 'none';
 const area = document.getElementById('premium-content-area');
@@ -903,6 +941,8 @@ unlockPaidContent();
 } else {
 document.getElementById('user-status-badge').textContent = '無料プラン';
 document.getElementById('user-status-badge').className = 'user-badge free';
+const portalLink = document.getElementById('btn-billing-portal');
+if (portalLink) portalLink.style.display = 'none';
 document.getElementById('lock-overlay').style.display = 'flex';
 document.getElementById('premium-content-area').classList.add('blur-content');
 }

@@ -193,6 +193,7 @@ async function getMemberRecord(email) {
     tob: row.get('tob') || '',
     city: row.get('city') || '',
     language: row.get('language') || 'ja',
+    stripeCustomerId: String(row.get('stripe_customer_id') || '').trim(),
     pdfPurchased: String(row.get('pdf_purchased') || '').trim().toLowerCase() === 'true',
     pdfPurchasedAt: row.get('pdf_purchased_at') || ''
   };
