@@ -200,6 +200,32 @@ border-radius: 8px; padding: 16px; margin-bottom: 16px; font-size: 0.88rem;
 }
 .about-card-title { font-weight: 700; color: #3D322C; margin-bottom: 6px; }
 
+/* 長い説明文を章ごとのブロックに区切り、交互の背景色で読みやすくする */
+.about-block {
+background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(139, 107, 27, 0.18);
+border-radius: 10px; padding: 6px 18px 2px; margin-bottom: 20px;
+}
+.about-block.alt { background: rgba(212, 175, 55, 0.09); }
+.about-block .about-h3 { margin-top: 18px; }
+.about-cta {
+text-align: center; margin-top: 30px; padding: 18px 16px;
+font-weight: 700; color: var(--color-gold-dark); font-size: 1.02rem; line-height: 1.8;
+background: rgba(212, 175, 55, 0.12); border: 1px solid rgba(139, 107, 27, 0.3); border-radius: 10px;
+}
+
+/* トップのリード文（キャッチ＋解説）を囲って視線を止める */
+.lead-block {
+text-align: left; margin: 0 0 24px; padding: 18px 18px 14px;
+background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(139, 107, 27, 0.28);
+border-radius: 10px;
+}
+.lead-catch {
+font-size: 1.02rem; font-weight: 700; color: var(--color-gold-dark);
+line-height: 1.6; margin-bottom: 10px; text-align: center;
+}
+.lead-body { font-size: 0.87rem; line-height: 1.9; color: #4a3e36; text-align: justify; }
+.lead-cta { font-weight: 600; color: #3D322C; }
+
 .site-footer {
 width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3);
 padding: 24px 20px; text-align: center; position: relative; z-index: 10;
@@ -238,12 +264,15 @@ transition: color 0.3s, border-color 0.3s;
 <div class="logo-wrapper"><img src="/img/libertas-logo.png" alt="Logo" class="logo-img"></div>
 
 <span class="badge">Libertas Jyotish</span>
-<h1 class="main-title">Libertas Jyotish<br><span style="font-size: 1.4rem;">星の宿命を紐解き、本当のあなたを解き放つ</span></h1>
+<h1 class="main-title">Libertas Jyotish<br><span style="font-size: 1.15rem; line-height: 1.7; display: block; margin-top: 8px;">古代から受け継がれる叡智「インド占星術」が星の宿命を紐解き、本当のあなたを解き放つ</span></h1>
 <p class="main-description">古代インドの叡智「サイデリアル式」で、あなたの魂の設計図（クンダリー）を算術・分析する本格個人鑑定サービスです。</p>
-<p class="main-description">あなたの「隠された本能」は、別の星座かもしれない。</p>
-<p class="main-description">西洋占星術は2000年前の星の位置で止まっていますが、
-地球の軸の傾き（歳差運動）により、暦の上での星座には約24度のズレが生じています。天体望遠鏡で夜空を見上げた「実際の星の位置」で占う精緻なインド占星術だからこそ、隠された「本当の月星座」を知ることで、あなたの「無意識・本能・才能・運命」や内面の違和感がすべて解き明かされます。</p>
-<p class="main-description">それでは、出生日時を入力して、天文学的に正確な「真の月星座」を算出しましょう。</p>
+
+<div class="lead-block">
+<p class="lead-catch">あなたの「隠された本能」は、別の星座かもしれない。</p>
+<p class="lead-body">西洋占星術は2000年前の星の位置で止まっていると知っていましたか？ 実際には地球の軸の傾き（歳差運動）により、暦の上での星座には約24度のズレが生じています。天体望遠鏡で夜空を見上げた「実際の星の位置」で占う精緻なインド占星術だからこそ、隠された「本当の星座」を知ることで、あなたの「無意識・本能・才能・運命」や内面の違和感がすべて解き明かされます。</p>
+</div>
+
+<p class="main-description lead-cta">それでは、出生日時を入力して、天文学的に正確な「真の星座」を算出しましょう。</p>
 
 <form id="jyotish-form"><div class="form-grid">
 <div class="form-group full-width">
@@ -302,6 +331,7 @@ transition: color 0.3s, border-color 0.3s;
 
 <p><strong>LIBERTAS JYOTISH（リベルタス・ジューティシュ）</strong>は、5,000年以上の歴史を誇る古代インドの聖典『ヴェーダ』の知恵と、現代天文学の精密な計算ロジックを融合させた最高峰の宇宙知性プラットフォームです。「Libertas（自由）」の名が示す通り、当サイトはあなたを運命論で縛るためではなく、本物の星の知恵によって自らの人生の主権を取り戻し、未来を自由に切り拓くために作られました。</p>
 
+<div class="about-block">
 <h3 class="about-h3">1. 西洋占星術との決定的な違い：実際の宇宙空間と同調する「サイデリアル方式」</h3>
 <p>西洋占星術とインド占星術（Jyotish）の最大の相違点は、黄道（星の通り道）の計算方法にあります。</p>
 
@@ -318,6 +348,9 @@ transition: color 0.3s, border-color 0.3s;
 <p>地球の歳差運動により、実際の星空と暦の上での星座には約24度のズレが生じています（この精密な補正数値をアヤナムシャ / Ayanamsaと呼びます）。</p>
 <p>LIBERTAS JYOTISHでは、天文学的なアヤナムシャ数値を極めて緻密に算出。今夜見上げた空に実際に滞在している「本物の星座と天体度数」から、気休めではない、あなただけのありのままの宇宙的設計図（ホロスコープ / ラーシ・チャクラ）を立ち上げます。</p>
 
+</div>
+
+<div class="about-block alt">
 <h3 class="about-h3">2. 緻密さを生み出す3つの専門的解釈体系</h3>
 <p>当サイトが「世界で最も精緻な占術」と確信を持って提示する理由は、多層的な計算とロジックの厚みにあります。</p>
 
@@ -336,15 +369,23 @@ transition: color 0.3s, border-color 0.3s;
 <p style="margin-bottom:0;">生年月日だけでなく、「確定的な出生時間」と「出生地の詳細な緯度経度」から、あなたが生まれた瞬間に東の地平線が指していた方位＝ラグナ（アセンダント / 第1ハウス）を厳密に算出します。ラグナを軸とすることで、9つの惑星（ナヴァグラハ）と12のハウスが織りなす真の人間構造を立体的に解析します。</p>
 </div>
 
+</div>
+
+<div class="about-block">
 <h3 class="about-h3">3. レメディ（処方）と調和：あなたを自由にする真の知恵</h3>
 <p>古代インドにおいて「光の科学」と称されたJyotishは、単なる未来の予知ではありません。</p>
 <p>当サイトでは、星の負荷を和らげる「ヴェーダのレメディ（Upaya：処方）」を標準的に組み込んでいます。あなたに最適化されたマントラ（特定の音の周波数）、色の調整、アーユルヴェーダ的な体質改善（ドーシャ調整）を通して、星のエネルギーを調和させ、潜在能力を最大限に引き出す「具体的な解決策」を提供します。</p>
 
+</div>
+
+<div class="about-block alt">
 <h3 class="about-h3">4. 妥協なき数学的・天文学的精度へのこだわり</h3>
 <p>LIBERTAS JYOTISHの計算エンジンは、世界最高峰の天文学ライブラリ（Swiss Ephemeris準拠）を搭載。歴史上の複雑なタイムゾーン変更、サマータイムの微差、正確な緯度経度データをリアルタイムで補正します。</p>
 <p>抽象的なポエムや、万人にあてはまる使い回しの診断テキストは一切出力しません。宇宙があなたに与えた数学的かつ天文学的な事実だけを抽出し、あなたの人生を照らす「真実の光」としてお届けします。</p>
 
-<div style="text-align: center; margin-top: 30px; font-weight: 700; color: var(--color-gold-dark); font-size: 1.05rem;">
+</div>
+
+<div class="about-cta">
 あなたの「真の星回り」を解読する準備はできましたか？<br>
 出生データを入力し、LIBERTAS JYOTISHが明かす、あなただけの本物のロードマップをお受け取りください。
 </div>
