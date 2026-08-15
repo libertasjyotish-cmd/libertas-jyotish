@@ -21,7 +21,10 @@ sw.js               Service Worker（CACHE_NAME = 'libertas-jyotish-v14'）
 vercel.json         cleanUrls / redirects / rewrites
 package.json        google-spreadsheet, google-auth-library
 api/jyotish.js      統合 API（4 アクション + フォールバック）
-ja/index.html       トップ・出生情報入力
+templates/*.html    全言語共通のページテンプレート（詳細は docs/I18N.md）
+locales/<lang>.json 言語別の文言とメタ情報
+scripts/build-i18n.mjs テンプレート＋文言から <lang>/*.html を生成する
+ja/index.html       トップ・出生情報入力（以下 ja/*.html は生成物。直接編集しない）
 ja/result.html      鑑定結果（無料/有料）
 ja/mypage.html      メール認証ログイン・マイページ
 ja/pdf-purchase.html 完全鑑定書（PDF）購入

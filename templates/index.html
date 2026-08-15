@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html {{htmlAttrs}}>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Libertas Jyotish - インド占星術ポータル</title>
-<meta name="description" content="Libertas Jyotish（リベルタス・ジューティシュ）は、古代インドの叡智「サイデリアル式」に基づいた月星座診断および個人鑑定を提供するWebサービスです。">
+<title>{{t.index.text01}}</title>
+<meta name="description" content="{{t.index.content01|attr}}">
 
 <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
-<link rel="canonical" href="https://libertas-jyotish.com/ja">
+<link rel="canonical" href="https://libertas-jyotish.com/{{lang}}">
 
 <!-- PWA & Theme Settings -->
 <link rel="manifest" href="/manifest.json">
@@ -18,7 +18,7 @@
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="{{fontHref}}" rel="stylesheet">
 
 
 
@@ -29,7 +29,7 @@
 --color-gold-dark: #8B6B1B;
 --color-text-dark: #2C221E;
 --font-en: 'Cinzel', serif;
---font-ja: 'Noto Serif JP', serif;
+--font-ja: {{fontFamily}};
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -265,52 +265,52 @@ transition: color 0.3s, border-color 0.3s;
 <div class="logo-wrapper"><img src="/img/libertas-logo.png" alt="Logo" class="logo-img"></div>
 
 <span class="badge">Libertas Jyotish</span>
-<h1 class="main-title">Libertas Jyotish<br><span style="font-size: 1.15rem; line-height: 1.7; display: block; margin-top: 8px;">古代より受け継がれる叡智「インド占星術」が星の宿命を紐解き、本当のあなたを解き放つ</span></h1>
-<p class="main-description">古代インドの叡智「サイデリアル式」で、あなたの魂の設計図（クンダリー）を算術・分析する本格個人鑑定サービスです。</p>
+<h1 class="main-title">Libertas Jyotish<br><span style="font-size: 1.15rem; line-height: 1.7; display: block; margin-top: 8px;">{{t.index.text02}}</span></h1>
+<p class="main-description">{{t.index.text03}}</p>
 
 <div class="lead-block">
-<p class="lead-catch">あなたの「隠された本能」は、別の星座かもしれない。</p>
-<p class="lead-body">西洋占星術は2000年前の星の位置で止まっていると知っていましたか？ 実際には地球の軸の傾き（歳差運動）により、暦の上での星座には約24度のズレが生じています。天体望遠鏡で夜空を見上げた「実際の星の位置」で占う精緻なインド占星術だからこそ、隠された「本当の星座」を知ることで、あなたの「無意識・本能・才能・運命」や内面の違和感がすべて解き明かされます。</p>
+<p class="lead-catch">{{t.index.text04}}</p>
+<p class="lead-body">{{t.index.text05}}</p>
 </div>
 
-<p class="main-description lead-cta">それでは、出生日時を入力して、天文学的に正確な「真の星座」を算出しましょう。</p>
+<p class="main-description lead-cta">{{t.index.text06}}</p>
 
 <form id="jyotish-form"><div class="form-grid">
 <div class="form-group full-width">
-<label for="user-email">メールアドレス <span class="label-note">（診断結果の保存・マイページ連携に使用）</span></label>
+<label for="user-email">{{t.index.text07}} <span class="label-note">{{t.index.text08}}</span></label>
 <input type="email" id="user-email" placeholder="example@gmail.com" required>
 </div>
 
 <div class="form-group">
-<label for="birth-date">生年月日</label>
+<label for="birth-date">{{t.index.text09}}</label>
 <input type="date" id="birth-date" required>
 </div>
 <div class="form-group">
-<label for="birth-time">出生時間 <span class="label-note">（不明な場合は空欄でOK）</span></label>
+<label for="birth-time">{{t.index.text10}} <span class="label-note">{{t.index.text11}}</span></label>
 <input type="time" id="birth-time">
 </div>
 <div class="form-group full-width">
-<label for="birth-place">出生地（都道府県・市区町村）</label>
-<input type="text" id="birth-place" placeholder="例：東京都千代田区" required>
+<label for="birth-place">{{t.index.text12}}</label>
+<input type="text" id="birth-place" placeholder="{{t.index.placeholder01|attr}}" required>
 </div>
 </div>
 
 <button type="submit" class="submit-btn" id="btn-submit">
-<span>運命の設計図を紐解く</span>
+<span>{{t.index.text13}}</span>
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
 </button></form>
 
 <!-- 有料プレミアム会員登録枠（上部・1箇所目） -->
 <div class="paid-member-box">
-<div class="paid-member-title">🌟 有料プレミアムプランのご案内</div>
-<p class="paid-member-desc">詳細なダシャー時期予測・精密ホロスコープ・レメディ処方など、すべての本格鑑定機能を開放します。</p>
-<button type="button" class="paid-member-btn btn-upgrade-premium">有料プレミアム会員に登録する（お申し込み・決済）</button>
+<div class="paid-member-title">{{t.index.text14}}</div>
+<p class="paid-member-desc">{{t.index.text15}}</p>
+<button type="button" class="paid-member-btn btn-upgrade-premium">{{t.index.text16}}</button>
 </div>
 
 <div class="member-portal-box">
-<div class="member-portal-title">🔑 すでに診断した方・有料会員の方</div>
+<div class="member-portal-title">{{t.index.text17}}</div>
 <div class="member-links">
-<a href="/ja/mypage">マイページログイン</a>
+<a href="/{{lang}}/mypage">{{t.index.text18}}</a>
 </div>
 </div>
 </div>
@@ -319,98 +319,91 @@ transition: color 0.3s, border-color 0.3s;
 <div class="about-section" id="about">
 <div class="about-header">
 <div class="about-header-sub">LIBERTAS JYOTISH</div>
-<h2 class="about-title">運命に縛られるのではなく、自らの人生を自由にデザインするために。</h2>
+<h2 class="about-title">{{t.index.text19}}</h2>
 </div>
 
 <div class="about-content">
 <div class="about-lead">
-最高峰の天文学的精度が明かす、あなただけの宇宙的設計図
+{{t.index.text20}}
 </div>
 
-<p>西洋占星術で語られる「太陽星座」だけで、あなたの複雑な人生のすべてを解き明かすことはできたでしょうか？<br>
-もしあなたが従来の星占いにどこか漠然とした物足りなさを感じていたなら、その理由は明確です。一般的な星占いは、いま実際の夜空に存在する本物の天体配置を反映していないからです。</p>
+<p>{{t.index.text21}}<br>
+{{t.index.text22}}</p>
 
-<p><strong>LIBERTAS JYOTISH（リベルタス・ジューティシュ）</strong>は、5,000年以上の歴史を誇る古代インドの聖典『ヴェーダ』の知恵と、現代天文学の精密な計算ロジックを融合させた最高峰の宇宙知性プラットフォームです。「Libertas（自由）」の名が示す通り、当サイトはあなたを運命論で縛るためではなく、本物の星の知恵によって自らの人生の主権を取り戻し、未来を自由に切り拓くために作られました。</p>
+<p><strong>{{t.index.text23}}</strong>{{t.index.text24}}</p>
 
 <div class="about-block">
-<h3 class="about-h3">1. 西洋占星術との決定的な違い：実際の宇宙空間と同調する「サイデリアル方式」</h3>
-<p>西洋占星術とインド占星術（Jyotish）の最大の相違点は、黄道（星の通り道）の計算方法にあります。</p>
+<h3 class="about-h3">{{t.index.text25}}</h3>
+<p>{{t.index.text26}}</p>
 
 <div class="about-card">
-<div class="about-card-title">■ 西洋占星術（トロピカル方式）</div>
-<p style="margin-bottom:0;">約2,000年前の春分点（季節のサイクル）に固定された計算。</p>
+<div class="about-card-title">{{t.index.text27}}</div>
+<p style="margin-bottom:0;">{{t.index.text28}}</p>
 </div>
 
 <div class="about-card">
-<div class="about-card-title">■ インド占星術（サイデリアル方式）</div>
-<p style="margin-bottom:0;">地球の軸の傾き（歳差運動）によるズレをミリ単位で補正し、「いま実際の夜空に存在する本物の天体位置」に基づく計算。</p>
+<div class="about-card-title">{{t.index.text29}}</div>
+<p style="margin-bottom:0;">{{t.index.text30}}</p>
 </div>
 
-<p>地球の歳差運動により、実際の星空と暦の上での星座には約24度のズレが生じています（この精密な補正数値をアヤナムシャ / Ayanamsaと呼びます）。</p>
-<p>LIBERTAS JYOTISHでは、天文学的なアヤナムシャ数値を極めて緻密に算出。今夜見上げた空に実際に滞在している「本物の星座と天体度数」から、気休めではない、あなただけのありのままの宇宙的設計図（ホロスコープ / ラーシ・チャクラ）を立ち上げます。</p>
+<p>{{t.index.text31}}</p>
+<p>{{t.index.text32}}</p>
 
 </div>
 
 <div class="about-block alt">
-<h3 class="about-h3">2. 緻密さを生み出す3つの専門的解釈体系</h3>
-<p>当サイトが「世界で最も精緻な占術」と確信を持って提示する理由は、多層的な計算とロジックの厚みにあります。</p>
+<h3 class="about-h3">{{t.index.text33}}</h3>
+<p>{{t.index.text34}}</p>
 
 <div class="about-card">
-<div class="about-card-title">① 27の星宿「ナクシャトラ（Nakshatra）」</div>
-<p style="margin-bottom:0;">西洋占星術の12星座（30度ずつの大雑把な分割）を超え、月が辿る軌道をさらに細かく27の領域に分けた「ナクシャトラ（月宿）」を使用します。ひとつの星座の奥深くに秘められたあなたの深層心理、潜在意識の癖、人間関係のパターン、そして魂の真の目的をミクロの精度で浮き彫りにします。</p>
+<div class="about-card-title">{{t.index.text35}}</div>
+<p style="margin-bottom:0;">{{t.index.text36}}</p>
 </div>
 
 <div class="about-card">
-<div class="about-card-title">② 精密な人生のタイムライン「ヴィムショッタリ・ダシャー（Vimshottari Dasha）」</div>
-<p style="margin-bottom:0;">「人生の転機がいつ訪れるのか」を圧倒的な精度で特定するのが、インド占星術独自の時期予測システム「ダシャー」です。あなたが生まれた瞬間の「月のナクシャトラ」を起点に、どの惑星の影響を受けるかを階層的に算出。「いつ攻めるべきか」「いつ整えるべきか」という人生の決定的瞬間と戦略を割り出します。</p>
+<div class="about-card-title">{{t.index.text37}}</div>
+<p style="margin-bottom:0;">{{t.index.text38}}</p>
 </div>
 
 <div class="about-card">
-<div class="about-card-title">③ 魂の器を定義する「ラグナ（Lagna）」</div>
-<p style="margin-bottom:0;">生年月日だけでなく、「確定的な出生時間」と「出生地の詳細な緯度経度」から、あなたが生まれた瞬間に東の地平線が指していた方位＝ラグナ（アセンダント / 第1ハウス）を厳密に算出します。ラグナを軸とすることで、9つの惑星（ナヴァグラハ）と12のハウスが織りなす真の人間構造を立体的に解析します。</p>
+<div class="about-card-title">{{t.index.text39}}</div>
+<p style="margin-bottom:0;">{{t.index.text40}}</p>
 </div>
 
 </div>
 
 <div class="about-block">
-<h3 class="about-h3">3. レメディ（処方）と調和：あなたを自由にする真の知恵</h3>
-<p>古代インドにおいて「光の科学」と称されたJyotishは、単なる未来の予知ではありません。</p>
-<p>当サイトでは、星の負荷を和らげる「ヴェーダのレメディ（Upaya：処方）」を標準的に組み込んでいます。あなたに最適化されたマントラ（特定の音の周波数）、色の調整、アーユルヴェーダ的な体質改善（ドーシャ調整）を通して、星のエネルギーを調和させ、潜在能力を最大限に引き出す「具体的な解決策」を提供します。</p>
+<h3 class="about-h3">{{t.index.text41}}</h3>
+<p>{{t.index.text42}}</p>
+<p>{{t.index.text43}}</p>
 
 </div>
 
 <div class="about-block alt">
-<h3 class="about-h3">4. 妥協なき数学的・天文学的精度へのこだわり</h3>
-<p>LIBERTAS JYOTISHの計算エンジンは、世界最高峰の天文学ライブラリ（Swiss Ephemeris準拠）を搭載。歴史上の複雑なタイムゾーン変更、サマータイムの微差、正確な緯度経度データをリアルタイムで補正します。</p>
-<p>抽象的なポエムや、万人にあてはまる使い回しの診断テキストは一切出力しません。宇宙があなたに与えた数学的かつ天文学的な事実だけを抽出し、あなたの人生を照らす「真実の光」としてお届けします。</p>
+<h3 class="about-h3">{{t.index.text44}}</h3>
+<p>{{t.index.text45}}</p>
+<p>{{t.index.text46}}</p>
 
 </div>
 
 <div class="about-cta">
-あなたの「真の星回り」を解読する準備はできましたか？<br>
-出生データを入力し、LIBERTAS JYOTISHが明かす、あなただけの本物のロードマップをお受け取りください。
+{{t.index.text47}}<br>
+{{t.index.text48}}
 </div>
 
 <!-- 有料プレミアム会員登録枠（下部・2箇所目） -->
 <div class="paid-member-box bottom-box">
-<div class="paid-member-title">🌟 本格鑑定を開放するプレミアム会員登録</div>
-<p class="paid-member-desc">説明をお読みいただきありがとうございます。あなただけの精密なホロスコープ・ダシャー時期予測・各種レメディを今すぐ手に入れましょう。</p>
-<button type="button" class="paid-member-btn btn-upgrade-premium">有料プレミアム会員に登録する（お申し込み・決済）</button>
+<div class="paid-member-title">{{t.index.text49}}</div>
+<p class="paid-member-desc">{{t.index.text50}}</p>
+<button type="button" class="paid-member-btn btn-upgrade-premium">{{t.index.text51}}</button>
 </div>
 </div>
 </div>
 </section>
 
 <footer class="site-footer">
-<div class="footer-links"><a href="/ja/legal">特定商取引法に基づく表記・利用規約・プライバシーポリシー</a></div>
-<nav class="lang-switch" aria-label="Language">
-<a class="lang-link is-current" href="/ja" hreflang="ja" lang="ja" title="日本語" aria-label="日本語"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">日本語</span></a>
-<a class="lang-link" href="/en" hreflang="en" lang="en" title="English" aria-label="English"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">English</span></a>
-<a class="lang-link" href="/es" hreflang="es" lang="es" title="Español" aria-label="Español"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">Español</span></a>
-<a class="lang-link" href="/pt" hreflang="pt" lang="pt" title="Português" aria-label="Português"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">Português</span></a>
-<a class="lang-link" href="/ar" hreflang="ar" lang="ar" title="العربية" aria-label="العربية"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">العربية</span></a>
-<a class="lang-link" href="/id" hreflang="id" lang="id" title="Bahasa Indonesia" aria-label="Bahasa Indonesia"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">Indonesia</span></a>
-</nav>
+<div class="footer-links"><a href="/{{lang}}/legal">{{t.index.text52}}</a></div>
+{{langSwitcher}}
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 
@@ -473,7 +466,7 @@ const userData = {
   dob: birthDate,
   tob: timeVal,
   city: birthPlace,
-  language: 'ja',
+  language: '{{lang}}',
   status: 'free',
   lastResult: null
 };
@@ -488,7 +481,7 @@ city: birthPlace,
 dob: birthDate,
 tob: timeVal,
 status: 'free',
-language: 'ja'
+language: '{{lang}}'
 };
 
 sessionStorage.removeItem('lj_diagnosis_result');
@@ -496,7 +489,7 @@ sessionStorage.setItem('lj_user_input', JSON.stringify(payload));
 // ★超堅牢化：キャッシュクリアで道連れに消去されないよう、localStorageにも「絶対バックアップ」を二重保存！
 localStorage.setItem('lj_user_input_backup', JSON.stringify(payload));
 
-window.location.href = '/ja/result';
+window.location.href = '/{{lang}}/result';
 });
 
 if ('serviceWorker' in navigator) {

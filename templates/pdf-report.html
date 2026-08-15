@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html {{htmlAttrs}}>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>完全鑑定書 | Libertas Jyotish</title>
-  <link rel="canonical" href="https://www.libertas-jyotish.com/ja/pdf-report">
+  <title>{{t.pdf-report.text01}}</title>
+  <link rel="canonical" href="https://www.libertas-jyotish.com/{{lang}}/pdf-report">
   <meta name="robots" content="noindex">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0c1a1f">
   <link rel="icon" type="image/png" href="/img/libertas-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="{{fontHref}}" rel="stylesheet">
 
   <style>
     /* 背景画像はここだけを差し替えれば全ページに反映される */
@@ -25,7 +25,7 @@
       --color-ink: #2C221E;
       --color-paper: #FFFDF7;
       --font-en: 'Cinzel', serif;
-      --font-ja: 'Noto Serif JP', serif;
+      --font-ja: {{fontFamily}};
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -132,15 +132,15 @@
 <body>
 
   <div class="toolbar">
-    <a href="/ja" class="brand">Libertas Jyotish</a>
+    <a href="/{{lang}}" class="brand">Libertas Jyotish</a>
     <div>
       <span id="progress" style="color:#E2D9CE; font-size:0.78rem; margin-right:16px;"></span>
-      <a href="/ja/mypage" style="margin-right:16px;">マイページ</a>
-      <button class="btn" id="btn-print">PDFとして保存・印刷</button>
+      <a href="/{{lang}}/mypage" style="margin-right:16px;">{{t.pdf-report.text02}}</a>
+      <button class="btn" id="btn-print">{{t.pdf-report.text03}}</button>
     </div>
   </div>
 
-  <div id="status" class="status">鑑定書を読み込んでいます...</div>
+  <div id="status" class="status">{{t.pdf-report.text04}}</div>
   <div class="book" id="book" style="display:none;"></div>
 
   <script>
@@ -176,14 +176,14 @@
 
       if (res.status === 401) {
         localStorage.removeItem('lj_session');
-        throw new Error('ログインの有効期限が切れています。<br><a href=\"/ja/mypage?next=pdf-report\">再ログインして鑑定書を開く</a>');
+        throw new Error('{{t.pdf-report.js01|js}}');
       }
-      if (res.status === 403) throw new Error('この鑑定書はご購入者様限定です。<br><a href=\"/ja/pdf-purchase\">完全鑑定書のご案内</a>');
+      if (res.status === 403) throw new Error('{{t.pdf-report.js02|js}}');
       if (!res.ok) {
         const detail = await res.json().catch(() => ({}));
         throw new Error(detail.error === 'missing_birth_data'
-          ? '出生データが登録されていません。<br><a href=\"/ja/mypage\">マイページ</a>で生年月日・出生地をご登録ください。'
-          : '鑑定書を準備できませんでした。時間をおいて再読み込みしてください。');
+          ? '{{t.pdf-report.js03|js}}'
+          : '{{t.pdf-report.js04|js}}');
       }
       return res.json();
     }
@@ -192,13 +192,13 @@
       const email = localStorage.getItem('lj_user_email');
       const session = localStorage.getItem('lj_session');
       if (!email) {
-        setStatus('鑑定書の閲覧にはログインが必要です。<br><a href=\"/ja/mypage\">マイページからログイン</a>してください。');
+        setStatus('{{t.pdf-report.js05|js}}');
         return;
       }
       // Google ログインだと本人確認セッションが無いため、マイページでメール認証してここに戻す
       if (!session) {
-        setStatus('本人確認のため、メールに届く認証コードでの確認画面へ移動します...');
-        window.location.href = '/ja/mypage?next=pdf-report';
+        setStatus('{{t.pdf-report.js06|js}}');
+        window.location.href = '/{{lang}}/mypage?next=pdf-report';
         return;
       }
 
@@ -212,7 +212,7 @@
           data = await requestReport(email, session);
         } catch (err) {
           if (rendered) return;
-          setStatus(err.message || '通信に失敗しました。時間をおいて再読み込みしてください。');
+          setStatus(err.message || '{{t.pdf-report.js07|js}}');
           return;
         }
 
@@ -226,7 +226,7 @@
           progressEl.textContent = '';
           return;
         }
-        progressEl.textContent = `残り${data.pending.length}章を執筆中です...`;
+        progressEl.textContent = `{{t.pdf-report.writingPrefix|tpl}}${data.pending.length}{{t.pdf-report.writingSuffix|tpl}}`;
       }
     }
 
@@ -239,21 +239,21 @@
       html.push(toc());
       if (c.summary) html.push(summaryPage(c.summary, a));
       if (c.ch1) html.push(page(`<h2 class="chapter-title">${esc(c.ch1.title)}</h2>
-        <h3>ラグナ ― 表に出るあなた</h3>${para(c.ch1.lagna)}
-        <h3>月 ― 内側のあなた</h3>${para(c.ch1.moon)}
-        <h3>太陽 ― 目指す方向</h3>${para(c.ch1.sun)}
-        <h3>三層の噛み合わせ</h3>${para(c.ch1.integration)}`));
+        <h3>{{t.pdf-report.tpl01|tpl}}</h3>${para(c.ch1.lagna)}
+        <h3>{{t.pdf-report.tpl02|tpl}}</h3>${para(c.ch1.moon)}
+        <h3>{{t.pdf-report.tpl03|tpl}}</h3>${para(c.ch1.sun)}
+        <h3>{{t.pdf-report.tpl04|tpl}}</h3>${para(c.ch1.integration)}`));
       if (c.ch2) html.push(strengthPage(c.ch2, a));
       if (c.ch3) html.push(yogaPage(c.ch3, a));
       if (c.ch4) html.push(monoPage(c.ch4, a));
       if (c.ch5) html.push(kotoPage(c.ch5, a));
       if (c.ch6) html.push(bashoPage(c.ch6, a));
       if (c.ch7) html.push(page(`<h2 class="chapter-title">${esc(c.ch7.title)}</h2>
-        <div class="fact">働き方の型: <strong>${esc(c.ch7.type)}</strong>
+        <div class="fact">{{t.pdf-report.tpl05|tpl}} <strong>${esc(c.ch7.type)}</strong>
           <span class="reason">${esc(a.boosters?.koto?.workStyle?.reason || '')}</span></div>
         ${para(c.ch7.text)}
-        <h3>力を発揮しやすい環境</h3>${para(c.ch7.environment)}
-        <h3>消耗しやすい働き方</h3>${para(c.ch7.caution)}`));
+        <h3>{{t.pdf-report.tpl06|tpl}}</h3>${para(c.ch7.environment)}
+        <h3>{{t.pdf-report.tpl07|tpl}}</h3>${para(c.ch7.caution)}`));
       if (c.ch8) html.push(wealthPage(c.ch8, a));
       if (c.ch9) html.push(timelinePage(c.ch9, a));
       if (c.ch10) html.push(nowPage(c.ch10, a));
@@ -272,46 +272,46 @@
         <div><img class="logo" src="/img/libertas-logo.png" alt="Libertas Jyotish"></div>
         <div>
           <h1>Libertas Jyotish</h1>
-          <div class="sub">生涯総合鑑定書</div>
+          <div class="sub">{{t.pdf-report.tpl08|tpl}}</div>
         </div>
         <div class="owner">
-          出生日時　${birth}<br>
-          出生地　${esc(a.city || '')}<br>
-          ラグナ　${esc(a.ascendant?.sign || '')}　／　月　${esc(a.moon?.sign || '')}　／　${esc(a.nakshatra || '')}
+          {{t.pdf-report.coverBirth|tpl}}${birth}<br>
+          {{t.pdf-report.coverCity|tpl}}${esc(a.city || '')}<br>
+          {{t.pdf-report.coverLagna|tpl}}${esc(a.ascendant?.sign || '')}{{t.pdf-report.coverMoon|tpl}}${esc(a.moon?.sign || '')}{{t.pdf-report.coverSep|tpl}}${esc(a.nakshatra || '')}
         </div>
       </section>`;
     }
 
     function toc() {
       const items = [
-        '1枚でわかる、あなたの取扱説明書',
-        '第1章 あなたという設計図',
-        '第2章 あなたの中で最も強い星',
-        '第3章 持って生まれた強運の型',
-        '第4章 「モノ」— 石と色',
-        '第5章 「コト」— 習慣と働き方',
-        '第6章 「場所」— 方位と環境',
-        '第7章 天職と才能の使い道',
-        '第8章 豊かさのルート',
-        '第9章 運命の地図（生涯年表）',
-        '第10章 いま立っている場所',
-        '第11章 これから訪れる黄金期',
-        '第12章 試練を土台に変える時期',
-        '巻末 データ集'
+        '{{t.pdf-report.js08|js}}',
+        '{{t.pdf-report.js09|js}}',
+        '{{t.pdf-report.js10|js}}',
+        '{{t.pdf-report.js11|js}}',
+        '{{t.pdf-report.js12|js}}',
+        '{{t.pdf-report.js13|js}}',
+        '{{t.pdf-report.js14|js}}',
+        '{{t.pdf-report.js15|js}}',
+        '{{t.pdf-report.js16|js}}',
+        '{{t.pdf-report.js17|js}}',
+        '{{t.pdf-report.js18|js}}',
+        '{{t.pdf-report.js19|js}}',
+        '{{t.pdf-report.js20|js}}',
+        '{{t.pdf-report.js21|js}}'
       ];
-      return page(`<h2 class="chapter-title">目次</h2><ul class="toc">${items.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`);
+      return page(`<h2 class="chapter-title">{{t.pdf-report.tpl09|tpl}}</h2><ul class="toc">${items.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`);
     }
 
     function summaryPage(s, a) {
       const list = (arr) => (Array.isArray(arr) ? `<ul>${arr.filter(Boolean).map((v) => `<li>${esc(v)}</li>`).join('')}</ul>` : '');
       const dasha = a.dasha?.current?.maha;
-      return page(`<h2 class="chapter-title">1枚でわかる、あなたの取扱説明書</h2>
+      return page(`<h2 class="chapter-title">{{t.pdf-report.tpl10|tpl}}</h2>
         <div class="lead">${esc(s.catchphrase)}</div>
         ${para(s.essence)}
-        <h3>武器になる資質</h3>${list(s.weapons)}
-        <h3>伸びしろとなる領域</h3>${list(s.growth)}
-        ${dasha ? `<div class="fact">現在の大周期: ${esc(dasha.lordJa)}期（${esc(dasha.start)} 〜 ${esc(dasha.end)}）
-          <span class="reason">ヴィムショッタリー・ダシャーの計算値</span></div>` : ''}
+        <h3>{{t.pdf-report.tpl11|tpl}}</h3>${list(s.weapons)}
+        <h3>{{t.pdf-report.tpl12|tpl}}</h3>${list(s.growth)}
+        ${dasha ? `<div class="fact">{{t.pdf-report.mahaLabel|tpl}}${esc(dasha.lordJa)}{{t.pdf-report.periodSuffix|tpl}}${esc(dasha.start)}{{t.pdf-report.periodRange|tpl}}${esc(dasha.end)}{{t.pdf-report.periodClose|tpl}}
+          <span class="reason">{{t.pdf-report.tpl13|tpl}}</span></div>` : ''}
         ${para(s.now)}`);
     }
 
@@ -323,9 +323,9 @@
       const block = (arr) => (Array.isArray(arr) ? arr.map((i) => `<h3>${esc(i.planet)}</h3>${para(i.text)}`).join('') : '');
       return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
         ${para(ch.intro)}
-        <h3>9天体の強弱</h3>${rows}
-        <h3>あなたの武器</h3>${block(ch.strong)}
-        <h3>伸びしろ</h3>${block(ch.weak)}
+        <h3>{{t.pdf-report.tpl14|tpl}}</h3>${rows}
+        <h3>{{t.pdf-report.tpl15|tpl}}</h3>${block(ch.strong)}
+        <h3>{{t.pdf-report.tpl16|tpl}}</h3>${block(ch.weak)}
         ${para(ch.closing)}`);
     }
 
@@ -344,13 +344,13 @@
       const colors = mono.colors || {};
       const chip = (c) => (c ? `<span class="color-chip" style="background:${esc(c.hex)}"></span>${esc(c.name)}` : '');
       return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
-        ${stone ? `<div class="fact">ライフストーン: <strong>${esc(stone.stone)}</strong>
-          ${stone.alternatives?.length ? `（代替: ${esc(stone.alternatives.join('・'))}）` : ''}
+        ${stone ? `<div class="fact">{{t.pdf-report.tpl17|tpl}} <strong>${esc(stone.stone)}</strong>
+          ${stone.alternatives?.length ? `{{t.pdf-report.altPrefix|tpl}}${esc(stone.alternatives.join('{{t.pdf-report.listSep|js}}'))}{{t.pdf-report.altSuffix|tpl}}` : ''}
           <span class="reason">${esc(stone.reason)}</span></div>` : ''}
         ${para(ch.stone)}
-        ${mono.supportStone ? `<div class="fact">現在の周期を支える石: <strong>${esc(mono.supportStone.stone)}</strong>
+        ${mono.supportStone ? `<div class="fact">{{t.pdf-report.tpl18|tpl}} <strong>${esc(mono.supportStone.stone)}</strong>
           <span class="reason">${esc(mono.supportStone.reason)}</span></div>${para(ch.support)}` : ''}
-        <h3>勝負カラー</h3>
+        <h3>{{t.pdf-report.tpl19|tpl}}</h3>
         <div class="fact">${chip(colors.main)}${colors.support ? `　／　${chip(colors.support)}` : ''}
           <span class="reason">${esc(colors.reason || '')}</span></div>
         ${para(ch.color)}
@@ -361,12 +361,12 @@
       const koto = a.boosters?.koto || {};
       const list = (arr) => (Array.isArray(arr) ? `<ul>${arr.map((v) => `<li>${esc(v)}</li>`).join('')}</ul>` : '');
       return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
-        ${koto.workStyle ? `<div class="fact">働き方の型: <strong>${esc(koto.workStyle.type)}</strong>　${esc(koto.workStyle.detail)}
+        ${koto.workStyle ? `<div class="fact">{{t.pdf-report.tpl20|tpl}} <strong>${esc(koto.workStyle.type)}</strong>　${esc(koto.workStyle.detail)}
           <span class="reason">${esc(koto.workStyle.reason)}</span></div>` : ''}
         ${para(ch.work)}
-        <h3>朝の習慣</h3>${list(koto.rhythm?.morning)}${para(ch.morning)}
-        <h3>夜の習慣</h3>${list(koto.rhythm?.night)}${para(ch.night)}
-        <h3>集中しやすい時間帯</h3>
+        <h3>{{t.pdf-report.tpl21|tpl}}</h3>${list(koto.rhythm?.morning)}${para(ch.morning)}
+        <h3>{{t.pdf-report.tpl22|tpl}}</h3>${list(koto.rhythm?.night)}${para(ch.night)}
+        <h3>{{t.pdf-report.tpl23|tpl}}</h3>
         ${koto.rhythm ? `<div class="fact">${esc(koto.rhythm.focus)}<span class="reason">${esc(koto.rhythm.reason)}</span></div>` : ''}
         ${para(ch.focus)}`);
     }
@@ -374,12 +374,12 @@
     function bashoPage(ch, a) {
       const b = a.boosters?.basho || {};
       const box = (d, label, text) => (d ? `<h3>${label}</h3>
-        <div class="fact">方位: <strong>${esc(d.direction)}</strong>　環境: ${esc((d.environment || []).join('・'))}
+        <div class="fact">{{t.pdf-report.tpl24|tpl}} <strong>${esc(d.direction)}</strong>{{t.pdf-report.envLabel|tpl}}${esc((d.environment || []).join('{{t.pdf-report.js22|js}}'))}
           <span class="reason">${esc(d.reason)}</span></div>${para(text)}` : '');
       return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
-        ${box(b.primary, '本来の方位', ch.primary)}
-        ${box(b.career, '仕事で力が出る環境', ch.career)}
-        ${box(b.rest, '回復に向く環境', ch.rest)}`);
+        ${box(b.primary, '{{t.pdf-report.js23|js}}', ch.primary)}
+        ${box(b.career, '{{t.pdf-report.js24|js}}', ch.career)}
+        ${box(b.rest, '{{t.pdf-report.js25|js}}', ch.rest)}`);
     }
 
     function wealthPage(ch, a) {
@@ -387,39 +387,39 @@
       const rows = av ? av.houses.map((h) => `<div class="bar-row">
         <span>${esc(h.label)}</span>
         <span class="bar"><span style="width:${Math.max(0, Math.min(100, Math.round(h.score / 50 * 100)))}%"></span></span>
-        <span>${esc(h.score)}点</span></div>`).join('') : '';
+        <span>${esc(h.score)}{{t.pdf-report.pointUnit|tpl}}</span></div>`).join('') : '';
       return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
         ${para(ch.intro)}
-        ${av ? `<div class="fact">12分野の合計は337点、平均は${esc(av.average)}点です。
-          <span class="reason">サルヴァアシュタカヴァルガの計算値</span></div>${rows}` : ''}
-        <h3>強い分野</h3>${para(ch.strong)}
-        <h3>補いたい分野</h3>${para(ch.weak)}
-        <h3>豊かさの入り口</h3>${para(ch.money)}
-        <h3>支出の整え方</h3>${para(ch.spending)}`);
+        ${av ? `<div class="fact">{{t.pdf-report.avgPrefix|tpl}}${esc(av.average)}{{t.pdf-report.avgSuffix|tpl}}
+          <span class="reason">{{t.pdf-report.tpl25|tpl}}</span></div>${rows}` : ''}
+        <h3>{{t.pdf-report.tpl26|tpl}}</h3>${para(ch.strong)}
+        <h3>{{t.pdf-report.tpl27|tpl}}</h3>${para(ch.weak)}
+        <h3>{{t.pdf-report.tpl28|tpl}}</h3>${para(ch.money)}
+        <h3>{{t.pdf-report.tpl29|tpl}}</h3>${para(ch.spending)}`);
     }
 
     function timelinePage(ch, a) {
       const map = new Map((ch.periods || []).map((p) => [p.lord, p.text]));
       const rows = (a.dasha?.timeline || []).map((t) => `<tr>
-        <td>${esc(t.lordJa)}期</td><td>${esc(t.start)} 〜 ${esc(t.end)}</td>
-        <td>${esc(t.season)}${t.isCurrent ? '（現在）' : ''}</td>
+        <td>${esc(t.lordJa)}{{t.pdf-report.periodOnly|tpl}}</td><td>${esc(t.start)}{{t.pdf-report.periodRange2|tpl}}${esc(t.end)}</td>
+        <td>${esc(t.season)}${t.isCurrent ? '{{t.pdf-report.js26|js}}' : ''}</td>
         <td>${esc(map.get(t.lordJa) || map.get(t.lord) || '')}</td></tr>`).join('');
       return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
         ${para(ch.intro)}
-        <table><thead><tr><th>周期</th><th>期間</th><th>性質</th><th>主題</th></tr></thead><tbody>${rows}</tbody></table>
-        <h3>これまでの切り替わり</h3>${para(ch.past)}`);
+        <table><thead><tr><th>{{t.pdf-report.tpl30|tpl}}</th><th>{{t.pdf-report.tpl31|tpl}}</th><th>{{t.pdf-report.tpl32|tpl}}</th><th>{{t.pdf-report.tpl33|tpl}}</th></tr></thead><tbody>${rows}</tbody></table>
+        <h3>{{t.pdf-report.tpl34|tpl}}</h3>${para(ch.past)}`);
     }
 
     function nowPage(ch, a) {
       const cur = a.dasha?.current;
       const list = (arr) => (Array.isArray(arr) ? `<ul>${arr.filter(Boolean).map((v) => `<li>${esc(v)}</li>`).join('')}</ul>` : '');
-      const line = (label, d) => (d ? `${label}: ${esc(d.lordJa)}期（${esc(d.start)} 〜 ${esc(d.end)}）<br>` : '');
+      const line = (label, d) => (d ? `${label}: ${esc(d.lordJa)}{{t.pdf-report.periodSuffix2|tpl}}${esc(d.start)}{{t.pdf-report.periodRange3|tpl}}${esc(d.end)}{{t.pdf-report.periodClose2|tpl}}<br>` : '');
       return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
-        ${cur ? `<div class="fact">${line('大周期', cur.maha)}${line('中周期', cur.antar)}${line('小周期', cur.pratyantar)}
-          <span class="reason">ヴィムショッタリー・ダシャーの計算値</span></div>` : ''}
+        ${cur ? `<div class="fact">${line('{{t.pdf-report.js27|js}}', cur.maha)}${line('{{t.pdf-report.js28|js}}', cur.antar)}${line('{{t.pdf-report.js29|js}}', cur.pratyantar)}
+          <span class="reason">{{t.pdf-report.tpl35|tpl}}</span></div>` : ''}
         ${para(ch.text)}
-        <h3>この時期に有効なこと</h3>${list(ch.todo)}
-        <h3>避けたい判断</h3>${list(ch.avoid)}`);
+        <h3>{{t.pdf-report.tpl36|tpl}}</h3>${list(ch.todo)}
+        <h3>{{t.pdf-report.tpl37|tpl}}</h3>${list(ch.avoid)}`);
     }
 
     function futurePage(ch, a) {
@@ -428,40 +428,40 @@
       const blocks = (ch.periods || []).map((p) => `<h3>${esc(p.label)}</h3>${para(p.text)}`).join('');
       return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
         ${para(ch.intro)}
-        <table><thead><tr><th>大周期 / 中周期</th><th>期間</th></tr></thead><tbody>${rows}</tbody></table>
+        <table><thead><tr><th>{{t.pdf-report.tpl38|tpl}}</th><th>{{t.pdf-report.tpl39|tpl}}</th></tr></thead><tbody>${rows}</tbody></table>
         ${blocks}${para(ch.closing)}`);
     }
 
     function trialPage(ch, a) {
       const ss = a.sadeSati;
-      const rows = ss?.transits?.length ? `<table><thead><tr><th>段階</th><th>土星の位置</th><th>期間</th></tr></thead><tbody>
+      const rows = ss?.transits?.length ? `<table><thead><tr><th>{{t.pdf-report.tpl40|tpl}}</th><th>{{t.pdf-report.tpl41|tpl}}</th><th>{{t.pdf-report.tpl42|tpl}}</th></tr></thead><tbody>
         ${ss.transits.map((t) => `<tr><td>${esc(t.phase)}</td><td>${esc(t.sign)}</td><td>${esc(t.start)} 〜 ${esc(t.end)}</td></tr>`).join('')}
         </tbody></table>` : '';
       const list = (arr) => (Array.isArray(arr) ? `<ul>${arr.filter(Boolean).map((v) => `<li>${esc(v)}</li>`).join('')}</ul>` : '');
       return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>
         ${para(ch.intro)}
-        <h3>サディサティ（土星の調整期）</h3>
-        ${ss ? `<div class="fact">該当: ${ss.active ? 'あり' : 'なし'}${ss.phase ? `（${esc(ss.phase)}）` : ''}
-          <span class="reason">sade-sati の計算値</span></div>` : ''}
+        <h3>{{t.pdf-report.tpl43|tpl}}</h3>
+        ${ss ? `<div class="fact">{{t.pdf-report.applicable|tpl}}${ss.active ? '{{t.pdf-report.yes|js}}' : '{{t.pdf-report.no|js}}'}${ss.phase ? `{{t.pdf-report.parenOpen|tpl}}${esc(ss.phase)}{{t.pdf-report.parenClose|tpl}}` : ''}
+          <span class="reason">{{t.pdf-report.tpl44|tpl}}</span></div>` : ''}
         ${rows}${para(ch.sadeSati)}
-        <h3>マンガル・ドーシャ（火星の強い配置）</h3>
-        ${a.mangalDosha ? `<div class="fact">該当: ${a.mangalDosha.hasDosha ? 'あり' : 'なし'}
-          <span class="reason">mangal-dosha の判定値</span></div>` : ''}
+        <h3>{{t.pdf-report.tpl45|tpl}}</h3>
+        ${a.mangalDosha ? `<div class="fact">{{t.pdf-report.applicable|tpl}}${a.mangalDosha.hasDosha ? '{{t.pdf-report.js30|js}}' : '{{t.pdf-report.js31|js}}'}
+          <span class="reason">{{t.pdf-report.tpl46|tpl}}</span></div>` : ''}
         ${para(ch.mangal)}
-        <h3>今日から実行できること</h3>${list(ch.actions)}
+        <h3>{{t.pdf-report.tpl47|tpl}}</h3>${list(ch.actions)}
         ${para(ch.closing)}`);
     }
 
     function chartsPage(a) {
       const box = (svg, caption) => (svg ? `<figure class="chart-box">${svg}<figcaption>${esc(caption)}</figcaption></figure>` : '');
       const charts = a.charts || {};
-      return page(`<h2 class="chapter-title">巻末 チャート集</h2>
+      return page(`<h2 class="chapter-title">{{t.pdf-report.tpl48|tpl}}</h2>
         <div class="chart-grid">
-          ${box(charts.d1, 'D1 ラーシ（人生全体）')}
-          ${box(charts.d9, 'D9 ナヴァムシャ（後半生・伴侶）')}
-          ${box(charts.d10, 'D10 ダシャムシャ（仕事・社会）')}
+          ${box(charts.d1, '{{t.pdf-report.js32|js}}')}
+          ${box(charts.d9, '{{t.pdf-report.js33|js}}')}
+          ${box(charts.d10, '{{t.pdf-report.js34|js}}')}
         </div>
-        <p class="disclaimer">チャートは北インド式です。中央の数字はハウス（部屋）の番号を、記号は在住する天体を表します。</p>`);
+        <p class="disclaimer">{{t.pdf-report.tpl49|tpl}}</p>`);
     }
 
     function planetsPage(a) {
@@ -469,21 +469,18 @@
       const rows = (a.planets || []).map((p) => `<tr>
         <td>${esc(p.name)}</td><td>${esc(p.sign)}</td><td>${p.degree == null ? '' : esc(p.degree)}</td>
         <td>${p.house == null ? '' : esc(p.house)}</td><td>${esc(p.nakshatra)}</td>
-        <td>${p.retrograde ? '逆行' : ''}</td><td>${esc(dignity.get(p.key) || '')}</td></tr>`).join('');
-      return page(`<h2 class="chapter-title">巻末 惑星データ</h2>
-        <table><thead><tr><th>天体</th><th>星座</th><th>度数</th><th>ハウス</th><th>ナクシャトラ</th><th>逆行</th><th>品位</th></tr></thead>
+        <td>${p.retrograde ? '{{t.pdf-report.js35|js}}' : ''}</td><td>${esc(dignity.get(p.key) || '')}</td></tr>`).join('');
+      return page(`<h2 class="chapter-title">{{t.pdf-report.tpl50|tpl}}</h2>
+        <table><thead><tr><th>{{t.pdf-report.tpl51|tpl}}</th><th>{{t.pdf-report.tpl52|tpl}}</th><th>{{t.pdf-report.tpl53|tpl}}</th><th>{{t.pdf-report.tpl54|tpl}}</th><th>{{t.pdf-report.tpl55|tpl}}</th><th>{{t.pdf-report.tpl56|tpl}}</th><th>{{t.pdf-report.tpl57|tpl}}</th></tr></thead>
         <tbody>${rows}</tbody></table>`);
     }
 
     function disclaimerPage(data) {
-      return page(`<h2 class="chapter-title">ご利用にあたって</h2>
+      return page(`<h2 class="chapter-title">{{t.pdf-report.tpl58|tpl}}</h2>
         <p class="disclaimer">
-          本鑑定書は、ご提供いただいた出生データをもとにインド占星術（ヴェーダ占星術）の計算値から作成した読み物です。
-          記載内容は医療・投資・法律に関する助言ではなく、診断・治療・売買判断・法的判断の根拠として用いることはできません。
-          健康・資産・契約に関する判断は、必ず各分野の専門家にご相談ください。<br><br>
-          記載の時期区分はヴィムショッタリー・ダシャーの計算値に基づくもので、特定の日付の吉凶を示すものではありません。
-          石・色・方位は古典の対応表に基づく提案であり、効果を保証するものではありません。<br><br>
-          作成日: ${esc((data.astro?.generated_at || '').slice(0, 10))}<br>
+          {{t.pdf-report.tpl59|tpl}}<br><br>
+          {{t.pdf-report.tpl60|tpl}}<br><br>
+          {{t.pdf-report.createdAt|tpl}}${esc((data.astro?.generated_at || '').slice(0, 10))}<br>
           &copy; Libertas Jyotish
         </p>`);
     }

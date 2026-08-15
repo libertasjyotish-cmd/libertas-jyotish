@@ -1,0 +1,23 @@
+name: i18n build check
+
+# templates/ と locales/ から生成される言語別HTMLが、コミット済みの内容と一致するかを検査する。
+# 生成を忘れたままマージされるのを防ぐ。
+
+on:
+  pull_request:
+    paths:
+      - 'templates/**'
+      - 'locales/**'
+      - 'scripts/build-i18n.mjs'
+      - '*/*.html'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm run check:i18n
