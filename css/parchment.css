@@ -1,64 +1,36 @@
-/* 羊皮紙の質感。中央が明るく外周に向かって濃くなる紙のテクスチャ画像（img/parchment.jpg）を
-   カード面に敷き、四隅に軽い折りを重ねる。文字色や配置は変更しない。 */
+/* 既存のベージュ面はそのままに、外周だけを濃くして紙のような陰影を足すレイヤー。
+   中央は完全に透明なので、内側の明るさは変わらない。 */
 
-.hero-container,
-.about-section {
-  background-image: url("/img/parchment.jpg");
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  background-blend-mode: normal;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border-radius: 14px;
-  border: 1px solid rgba(150, 112, 52, 0.55);
-  outline-color: rgba(190, 152, 78, 0.35);
-  box-shadow:
-    0 25px 50px -12px rgba(0, 0, 0, 0.7),
-    0 0 20px rgba(212, 175, 55, 0.12),
-    inset 0 1px 2px rgba(255, 255, 255, 0.5);
-}
-
-/* 四隅の軽い折り返し */
-.hero-container::after,
-.about-section::after {
+.hero-container::before,
+.about-section::before {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 0;
   pointer-events: none;
   border-radius: inherit;
-  background-repeat: no-repeat;
+  mix-blend-mode: multiply;
   background-image:
-    linear-gradient(135deg,
-      rgba(244, 234, 212, 0.98) 40%,
-      rgba(214, 186, 137, 0.92) 46%,
-      rgba(150, 114, 60, 0.5) 49%,
-      rgba(110, 82, 40, 0.15) 51%,
-      rgba(0, 0, 0, 0) 53%),
-    linear-gradient(225deg,
-      rgba(244, 234, 212, 0.95) 42%,
-      rgba(214, 186, 137, 0.88) 47%,
-      rgba(150, 114, 60, 0.42) 50%,
-      rgba(0, 0, 0, 0) 52%),
-    linear-gradient(45deg,
-      rgba(244, 234, 212, 0.95) 42%,
-      rgba(214, 186, 137, 0.88) 47%,
-      rgba(150, 114, 60, 0.42) 50%,
-      rgba(0, 0, 0, 0) 52%),
-    linear-gradient(315deg,
-      rgba(244, 234, 212, 0.98) 40%,
-      rgba(214, 186, 137, 0.92) 46%,
-      rgba(150, 114, 60, 0.5) 49%,
-      rgba(110, 82, 40, 0.15) 51%,
-      rgba(0, 0, 0, 0) 53%);
-  background-position: left top, right top, left bottom, right bottom;
-  background-size: 46px 46px, 34px 34px, 34px 34px, 52px 52px;
-  filter: drop-shadow(0 1px 2px rgba(110, 82, 40, 0.3));
+    /* 中央は透明、外周に向かって濃く */
+    radial-gradient(125% 105% at 50% 48%,
+      rgba(168, 128, 68, 0) 0%,
+      rgba(168, 128, 68, 0) 55%,
+      rgba(168, 128, 68, 0.12) 74%,
+      rgba(154, 114, 56, 0.30) 89%,
+      rgba(134, 96, 44, 0.48) 100%),
+    /* 左右の縁 */
+    linear-gradient(to right,
+      rgba(146, 106, 50, 0.42) 0, rgba(146, 106, 50, 0) 90px,
+      rgba(146, 106, 50, 0) calc(100% - 90px), rgba(146, 106, 50, 0.42) 100%),
+    /* 上下の縁 */
+    linear-gradient(to bottom,
+      rgba(146, 106, 50, 0.34) 0, rgba(146, 106, 50, 0) 100px,
+      rgba(146, 106, 50, 0) calc(100% - 100px), rgba(146, 106, 50, 0.40) 100%);
 }
 
-/* 折りの上に本文が乗らないよう本文を前面に */
+/* 陰影の上に本文が乗るようにする */
 .hero-container > *,
 .about-section > * {
   position: relative;
-  z-index: 2;
+  z-index: 1;
 }
