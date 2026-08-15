@@ -1,0 +1,53 @@
+/* 全ページ共通のヘッダー（ロゴ＋会員マイページ＋プルダウンメニュー）。
+   メニュー項目の追加・変更は /js/site-menu.js の LINKS だけを編集する。 */
+.lj-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; color: #D4AF37;
+  font-family: 'Cinzel', serif; font-weight: 600; font-size: 1.05rem;
+  white-space: nowrap;
+}
+.lj-logo img { width: 32px; height: 32px; }
+.lj-logo span { line-height: 1.2; }
+
+.lj-header-right { display: flex; align-items: center; gap: 10px; }
+
+.lj-btn-member {
+  border: 1px solid #D4AF37; color: #D4AF37; text-decoration: none;
+  padding: 5px 12px; border-radius: 4px; font-size: 0.8rem; white-space: nowrap;
+  background: rgba(212, 175, 55, 0.1);
+}
+.lj-btn-member:hover { background: rgba(212, 175, 55, 0.2); }
+
+.lj-menu-toggle {
+  width: 38px; height: 34px; padding: 8px 7px; cursor: pointer;
+  display: flex; flex-direction: column; justify-content: space-between;
+  background: transparent; border: 1px solid rgba(212, 175, 55, 0.5); border-radius: 4px;
+}
+.lj-menu-toggle span { display: block; height: 2px; width: 100%; background: #D4AF37; border-radius: 2px; }
+
+.lj-menu {
+  position: fixed; top: 58px; right: 12px; z-index: 200;
+  min-width: 220px; padding: 8px;
+  background: rgba(12, 26, 31, 0.98);
+  border: 1px solid rgba(139, 107, 27, 0.5); border-radius: 8px;
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.9);
+}
+.lj-menu[hidden] { display: none; }
+.lj-menu a {
+  display: block; padding: 10px 12px; border-radius: 6px;
+  color: #E2D9CE; text-decoration: none; font-size: 0.86rem;
+}
+.lj-menu a:hover { background: rgba(212, 175, 55, 0.14); color: #D4AF37; }
+.lj-menu a.is-current { color: #D4AF37; }
+.lj-menu .lj-menu-note { font-size: 0.7rem; color: #8A9A9E; margin-left: 6px; }
+.lj-menu-divider { height: 1px; margin: 6px 4px; background: rgba(139, 107, 27, 0.35); }
+
+@media (max-width: 640px) {
+  .lj-logo { font-size: 0.9rem; }
+  .lj-logo img { width: 26px; height: 26px; }
+  .lj-btn-member { font-size: 0.72rem; padding: 4px 9px; }
+}
+
+@media print {
+  .lj-menu, .lj-menu-toggle { display: none !important; }
+}

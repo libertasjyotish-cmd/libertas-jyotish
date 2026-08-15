@@ -174,7 +174,10 @@
         })
       });
 
-      if (res.status === 401) throw new Error('ログインの有効期限が切れています。<br><a href="/ja/mypage">マイページから再ログイン</a>してください。');
+      if (res.status === 401) {
+        localStorage.removeItem('lj_session');
+        throw new Error('ログインの有効期限が切れています。<br><a href="/ja/mypage?next=pdf-report">再ログインして鑑定書を開く</a>');
+      }
       if (res.status === 403) throw new Error('この鑑定書はご購入者様限定です。<br><a href="/ja/pdf-purchase">完全鑑定書のご案内</a>');
       if (!res.ok) {
         const detail = await res.json().catch(() => ({}));
@@ -188,8 +191,14 @@
     async function load() {
       const email = localStorage.getItem('lj_user_email');
       const session = localStorage.getItem('lj_session');
-      if (!email || !session) {
+      if (!email) {
         setStatus('鑑定書の閲覧にはログインが必要です。<br><a href="/ja/mypage">マイページからログイン</a>してください。');
+        return;
+      }
+      // Google ログインだと本人確認セッションが無いため、マイページでメール認証してここに戻す
+      if (!session) {
+        setStatus('本人確認のため、メールに届く認証コードでの確認画面へ移動します...');
+        window.location.href = '/ja/mypage?next=pdf-report';
         return;
       }
 

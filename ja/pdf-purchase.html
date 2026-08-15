@@ -134,23 +134,23 @@
       .report-card { background: #ffffff !important; border: 1px solid #ccc !important; page-break-inside: avoid; }
     }
   </style>
+<link rel="stylesheet" href="/css/site-menu.css">
+<script defer src="/js/site-menu.js"></script>
 </head>
 <body>
 
-  <header class="site-header">
-    <a href="/ja" class="header-logo"><img src="/img/libertas-logo.png" alt="Logo"><span>Libertas Jyotish</span></a>
-    <nav class="header-nav">
-      <a href="/ja">トップ</a>
-      <a href="/ja/result">無料診断</a>
-      <a href="/ja/mypage">マイページ</a>
-      <a href="/ja/pdf-purchase" style="color:var(--color-gold-main);">完全鑑定書</a>
-    </nav>
-  </header>
+  <header class="site-header" data-site-header></header>
 
   <section class="main-section">
     <div class="card-container">
       
-      <div id="purchase-form-view">
+      <div id="purchased-view" style="display:none;">
+        <h1 style="font-size:1.5rem; color:var(--color-text-dark); margin-bottom:12px;">ご購入ありがとうございます</h1>
+        <p style="font-size:0.9rem; color:#5A4E48; margin-bottom:22px;">完全鑑定書はご購入済みです。下のボタンからいつでも閲覧できます（ブラウザの印刷機能でPDF保存も可能です）。</p>
+        <a id="btn-open-report" class="btn-purchase" style="display:inline-block; text-decoration:none; text-align:center;" href="/ja/pdf-report">📖 完全鑑定書を開く</a>
+      </div>
+
+      <div id="purchase-form-view" style="display:none;">
         <h1 style="font-size:1.5rem; color:var(--color-text-dark); margin-bottom:12px;">あなただけの完全鑑定書（PDF）</h1>
         <p style="font-size:0.88rem; color:#5A4E48; margin-bottom:25px;">人生のテーマ、ダシャー周期、開運アドバイスを1冊の特別レポートにまとめてお届けします。</p>
 
@@ -178,7 +178,34 @@
     const PDF_PRICE_LABEL = '買い切り 4,980円（税込）';
     const PDF_CHECKOUT_URL = 'https://buy.stripe.com/3cI14paiHegb480fP124001';
 
+    // 購入済みかどうかはサーバー（会員シート）だけを正とする。
+    // 購入済みなら購入フォームを出さず、鑑定書への導線に差し替える。
+    async function showPurchaseStateView() {
+      const formView = document.getElementById('purchase-form-view');
+      const purchasedView = document.getElementById('purchased-view');
+      const email = localStorage.getItem('lj_user_email') || '';
+
+      if (email) {
+        try {
+          const res = await fetch('/api/jyotish', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'purchase_status', email: email })
+          });
+          const data = await res.json().catch(() => null);
+          if (res.ok && data && data.pdf_purchased) {
+            purchasedView.style.display = 'block';
+            return;
+          }
+        } catch (err) {
+          console.error('purchase status check failed', err);
+        }
+      }
+      formView.style.display = 'block';
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+      showPurchaseStateView();
       document.getElementById('price-label').textContent = PDF_PRICE_LABEL;
       if (!PDF_CHECKOUT_URL) {
         const btn = document.getElementById('btn-proceed-checkout');
