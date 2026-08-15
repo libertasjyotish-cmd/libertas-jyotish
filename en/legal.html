@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html {{htmlAttrs}}>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{t.legal.text01}}</title>
+  <title>Legal notice and Terms of Service | Libertas Jyotish</title>
   <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
-  <link rel="canonical" href="https://libertas-jyotish.com/{{lang}}/legal">
+  <link rel="canonical" href="https://libertas-jyotish.com/en/legal">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0c1a1f">
   <link rel="icon" type="image/png" href="/img/libertas-logo.png">
   <link rel="apple-touch-icon" href="/img/libertas-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="{{fontHref}}" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
   
   <style>
     :root {
@@ -21,7 +21,7 @@
       --color-gold-dark: #8B6B1B;
       --color-text-dark: #2C221E;
       --font-en: 'Cinzel', serif;
-      --font-ja: {{fontFamily}};
+      --font-ja: 'Noto Serif', serif;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -100,7 +100,28 @@
     }
   </style>
 <link rel="stylesheet" href="/css/site-menu.css">
-{{>i18n-globals}}
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'en',
+  menu: {
+    top: 'Home',
+    free: 'Free reading',
+    about: 'About Libertas Jyotish',
+    report: 'Lifetime Report (one-off)',
+    calendar: 'Annual Fortune Calendar',
+    calendarNote: 'coming soon',
+    mypage: 'Member page',
+    legal: 'Legal notice and terms',
+    toggleLabel: 'Menu',
+    navLabel: 'Site menu'
+  },
+  price: {
+    premium: '{price} / month (tax incl.)',
+    pdf: '{price} one-off (tax incl.)'
+  }
+};
+</script>
 <script defer src="/js/site-menu.js"></script>
 </head>
 <body>
@@ -109,33 +130,33 @@
 
   <section class="main-section">
     <div class="legal-card-container">
-      <h1>{{t.legal.text02}}</h1>
+      <h1>Legal notice and Terms of Service</h1>
 
-      <h2>{{t.legal.text03}}</h2>
+      <h2>Notice based on the Japanese Act on Specified Commercial Transactions</h2>
       <table>
-        <tr><th>{{t.legal.text04}}</th><td>{{t.legal.text05}}</td></tr>
-        <tr><th>{{t.legal.text06}}</th><td>{{t.legal.text07}}</td></tr>
-        <tr><th>{{t.legal.text08}}</th><td>{{t.legal.text09}}</td></tr>
-        <tr><th>{{t.legal.text10}}</th><td>{{t.legal.text11}}</td></tr>
-        <tr><th>{{t.legal.text12}}</th><td>{{t.legal.text13}}</td></tr>
-        <tr><th>{{t.legal.text14}}</th><td>{{t.legal.text15}}</td></tr>
-        <tr><th>{{t.legal.text16}}</th><td>{{t.legal.text17}}</td></tr>
-        <tr><th>{{t.legal.text18}}</th><td>{{t.legal.text19}}</td></tr>
-        <tr><th>{{t.legal.text20}}</th><td>{{t.legal.text21}}</td></tr>
+        <tr><th>Business name</th><td>Libertas Jyotish Administration Office</td></tr>
+        <tr><th>Representative</th><td>Libertas Jyotish operations manager (full details disclosed without delay upon request)</td></tr>
+        <tr><th>Address</th><td>Disclosed without delay upon request (please contact us through our contact address).</td></tr>
+        <tr><th>Contact</th><td>info@libertas-jyotish.com (email, accepted 24 hours a day)</td></tr>
+        <tr><th>Price</th><td>The price shown on each product or service purchase page (tax included)</td></tr>
+        <tr><th>Costs other than the product price</th><td>Internet connection charges</td></tr>
+        <tr><th>Delivery</th><td>Immediately after payment (on a dedicated page or by automated email). The Lifetime Report is provided for viewing and printing on a dedicated page inside the member area (no PDF file is sent).</td></tr>
+        <tr><th>Payment method</th><td>Credit card payment (Stripe)</td></tr>
+        <tr><th>Returns and cancellation</th><td>Because of the nature of digital content, we cannot accept returns, refunds or cancellations once payment is complete.</td></tr>
       </table>
 
-      <h2>{{t.legal.text22}}</h2>
-      <p><strong>{{t.legal.text23}}</strong><br>{{t.legal.text24}}</p>
-      <p><strong>{{t.legal.text25}}</strong><br>{{t.legal.text26}}</p>
-      <p><strong>{{t.legal.text27}}</strong><br>{{t.legal.text28}}</p>
+      <h2>Terms of Service</h2>
+      <p><strong>Article 1 (Scope)</strong><br>These terms set out the conditions of use for all content provided by Libertas Jyotish.</p>
+      <p><strong>Article 2 (Disclaimer)</strong><br>Readings and advice based on Vedic astrology do not guarantee future events or results.</p>
+      <p><strong>Article 3 (Prohibited acts)</strong><br>Reproduction, resale and secondary use of our content without permission are strictly prohibited.</p>
 
-      <h2>{{t.legal.text29}}</h2>
-      <p>{{t.legal.text30}}</p>
+      <h2>Privacy Policy</h2>
+      <p>Personal information we collect is used only to generate readings automatically, to send email and for customer support.</p>
     </div>
   </section>
 
   <footer class="site-footer">
-    <div class="footer-links"><a href="/{{lang}}/legal">{{t.legal.text31}}</a></div>
+    <div class="footer-links"><a href="/en/legal">Legal notice, Terms of Service and Privacy Policy</a></div>
     <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
   </footer>
 

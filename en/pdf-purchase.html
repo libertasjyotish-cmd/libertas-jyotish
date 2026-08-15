@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html {{htmlAttrs}}>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{t.pdf-purchase.text01}}</title>
+  <title>About the detailed PDF report | Libertas Jyotish</title>
   <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
-  <link rel="canonical" href="https://libertas-jyotish.com/{{lang}}/pdf-purchase">
+  <link rel="canonical" href="https://libertas-jyotish.com/en/pdf-purchase">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0c1a1f">
   <link rel="icon" type="image/png" href="/img/libertas-logo.png">
   <link rel="apple-touch-icon" href="/img/libertas-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="{{fontHref}}" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
   
   <style>
     :root {
@@ -21,7 +21,7 @@
       --color-gold-dark: #8B6B1B;
       --color-text-dark: #2C221E;
       --font-en: 'Cinzel', serif;
-      --font-ja: {{fontFamily}};
+      --font-ja: 'Noto Serif', serif;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -135,7 +135,28 @@
     }
   </style>
 <link rel="stylesheet" href="/css/site-menu.css">
-{{>i18n-globals}}
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'en',
+  menu: {
+    top: 'Home',
+    free: 'Free reading',
+    about: 'About Libertas Jyotish',
+    report: 'Lifetime Report (one-off)',
+    calendar: 'Annual Fortune Calendar',
+    calendarNote: 'coming soon',
+    mypage: 'Member page',
+    legal: 'Legal notice and terms',
+    toggleLabel: 'Menu',
+    navLabel: 'Site menu'
+  },
+  price: {
+    premium: '{price} / month (tax incl.)',
+    pdf: '{price} one-off (tax incl.)'
+  }
+};
+</script>
 <script defer src="/js/site-menu.js"></script>
 <script src="/js/checkout-links.js"></script>
 </head>
@@ -147,31 +168,31 @@
     <div class="card-container">
       
       <div id="purchased-view" style="display:none;">
-        <h1 style="font-size:1.5rem; color:var(--color-text-dark); margin-bottom:12px;">{{t.pdf-purchase.text02}}</h1>
-        <p style="font-size:0.9rem; color:#5A4E48; margin-bottom:22px;">{{t.pdf-purchase.text03}}</p>
-        <a id="btn-open-report" class="btn-purchase" style="display:inline-block; text-decoration:none; text-align:center;" href="/{{lang}}/pdf-report">{{t.pdf-purchase.text04}}</a>
+        <h1 style="font-size:1.5rem; color:var(--color-text-dark); margin-bottom:12px;">Thank you for your purchase</h1>
+        <p style="font-size:0.9rem; color:#5A4E48; margin-bottom:22px;">You already own the Lifetime Report. You can open it at any time with the button below (you can also save it as a PDF with your browser's print function).</p>
+        <a id="btn-open-report" class="btn-purchase" style="display:inline-block; text-decoration:none; text-align:center;" href="/en/pdf-report">📖 Open the Lifetime Report</a>
       </div>
 
       <div id="purchase-form-view" style="display:none;">
-        <h1 style="font-size:1.5rem; color:var(--color-text-dark); margin-bottom:12px;">{{t.pdf-purchase.text05}}</h1>
-        <p style="font-size:0.88rem; color:#5A4E48; margin-bottom:25px; line-height:1.9; text-align:left;">{{t.pdf-purchase.text06}}</p>
+        <h1 style="font-size:1.5rem; color:var(--color-text-dark); margin-bottom:12px;">Your own Lifetime Report (PDF)</h1>
+        <p style="font-size:0.88rem; color:#5A4E48; margin-bottom:25px; line-height:1.9; text-align:left;">Your life themes, dasha cycles and guidance for good fortune, gathered into a single special report of dozens of pages. In India such a reading has long been given as a gift at birth and treasured as a guide for a whole lifetime. May it serve you as a lifelong treasure.</p>
 
         <div class="data-confirm-box">
-          <div class="form-group"><label for="user-email">{{t.pdf-purchase.text07}}</label><input type="email" id="user-email" required></div>
-          <div class="form-group"><label for="user-birthdate">{{t.pdf-purchase.text08}}</label><input type="datetime-local" id="user-birthdate" required></div>
-          <div class="form-group"><label for="user-birthplace">{{t.pdf-purchase.text09}}</label><input type="text" id="user-birthplace" placeholder="{{t.pdf-purchase.placeholder01|attr}}" required></div>
+          <div class="form-group"><label for="user-email">Email address</label><input type="email" id="user-email" required></div>
+          <div class="form-group"><label for="user-birthdate">Date and time of birth</label><input type="datetime-local" id="user-birthdate" required></div>
+          <div class="form-group"><label for="user-birthplace">Place of birth</label><input type="text" id="user-birthplace" placeholder="e.g. London, United Kingdom" required></div>
         </div>
 
         <div id="price-label" style="font-size:1.3rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:15px;"></div>
-        <button id="btn-proceed-checkout" class="btn-purchase">{{t.pdf-purchase.text10}}</button>
-        <p id="checkout-note" style="font-size:0.8rem; color:#6A5E58; margin-top:12px;">{{t.pdf-purchase.text11}}</p>
+        <button id="btn-proceed-checkout" class="btn-purchase">💳 Continue to payment (Stripe)</button>
+        <p id="checkout-note" style="font-size:0.8rem; color:#6A5E58; margin-top:12px;">After purchase you can read it at any time on the report page of this site (you can also save it as a PDF with your browser's print function).</p>
       </div>
 
     </div>
   </section>
 
   <footer class="site-footer">
-    <div class="footer-links"><a href="/{{lang}}/legal">{{t.pdf-purchase.text12}}</a></div>
+    <div class="footer-links"><a href="/en/legal">Legal notice, Terms of Service and Privacy Policy</a></div>
     <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
   </footer>
 
@@ -227,9 +248,9 @@
         const birthdate = document.getElementById('user-birthdate').value;
         const birthplace = document.getElementById('user-birthplace').value;
 
-        if (!email) { alert('{{t.pdf-purchase.js01|js}}'); return; }
-        if (!birthdate) { alert('{{t.pdf-purchase.js02|js}}'); return; }
-        if (!birthplace) { alert('{{t.pdf-purchase.js03|js}}'); return; }
+        if (!email) { alert('Please enter your email address.'); return; }
+        if (!birthdate) { alert('Please enter your date and time of birth.'); return; }
+        if (!birthplace) { alert('Please enter your place of birth.'); return; }
 
         localStorage.setItem('lj_user_email', email);
         localStorage.setItem('lj_user_birthdate', birthdate);

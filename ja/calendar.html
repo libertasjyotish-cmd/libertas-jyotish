@@ -77,6 +77,28 @@ padding: 24px 20px; text-align: center;
 .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
 </style>
 <link rel="stylesheet" href="/css/site-menu.css">
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'ja',
+  menu: {
+    top: 'トップ',
+    free: '無料診断',
+    about: 'Libertas Jyotishとは',
+    report: '完全鑑定書（買い切り）',
+    calendar: '年間運勢カレンダー',
+    calendarNote: '準備中',
+    mypage: '会員マイページ',
+    legal: '特定商取引法・利用規約',
+    toggleLabel: 'メニュー',
+    navLabel: 'サイトメニュー'
+  },
+  price: {
+    premium: '月額 {price}（税込）',
+    pdf: '買い切り {price}（税込）'
+  }
+};
+</script>
 <script defer src="/js/site-menu.js"></script>
 </head>
 <body>

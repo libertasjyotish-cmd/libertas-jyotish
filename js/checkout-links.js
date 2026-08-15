@@ -8,7 +8,9 @@
       premium: 'https://buy.stripe.com/dRmaEZ0I73Bx6g8auH24000',
       pdf: 'https://buy.stripe.com/3cI14paiHegb480fP124001'
     },
-    labels: { premium: '月額 500円（税込）', pdf: '買い切り 4,980円（税込）' }
+    labels: { premium: '月額 500円（税込）', pdf: '買い切り 4,980円（税込）' },
+    currency: 'JPY',
+    amounts: { premium: 500, pdf: 4980 }
   };
   var CACHE_KEY = 'lj_checkout_links';
   var resolved = FALLBACK;
@@ -40,7 +42,21 @@
     linkFor: function (product) {
       return resolved.links[product] || FALLBACK.links[product];
     },
+    // 日本語ページは API の日本語ラベル、他言語は金額を閲覧言語の書式に整形して返す。
     labelFor: function (product) {
+      var i18n = window.LJ_I18N;
+      var amount = (resolved.amounts && resolved.amounts[product]) || FALLBACK.amounts[product];
+      var template = i18n && i18n.price && i18n.price[product];
+      if (i18n && i18n.lang && i18n.lang !== 'ja' && template && amount) {
+        var currency = resolved.currency || FALLBACK.currency;
+        var price;
+        try {
+          price = new Intl.NumberFormat(i18n.lang, { style: 'currency', currency: currency, maximumFractionDigits: 0 }).format(amount);
+        } catch (e) {
+          price = amount + ' ' + currency;
+        }
+        return template.replace('{price}', price);
+      }
       return (resolved.labels && resolved.labels[product]) || FALLBACK.labels[product];
     }
   };

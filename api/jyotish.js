@@ -6,6 +6,34 @@ const { issueSession } = require('./_auth');
 
 const AUTH_SECRET = process.env.AUTH_SECRET;
 
+// 認証コードメールの文面。未対応の言語は英語にフォールバックする。
+const AUTH_MAIL = {
+  ja: {
+    dir: 'ltr',
+    subject: '【Libertas Jyotish】マイページログイン認証コード',
+    heading: 'Libertas Jyotish 認証',
+    thanks: 'Libertas Jyotish をご利用いただきありがとうございます。',
+    lead: 'マイページログインおよび端末連携用の認証コードをお知らせいたします。',
+    expiry: '※認証コードの有効期限は10分間です。期限が切れた場合は再度コードをリクエストしてください。',
+    noreply: '本メールはシステムによる自動送信です。返信は受け付けておりません。',
+    sendError: 'メール送信エラー'
+  },
+  en: {
+    dir: 'ltr',
+    subject: '[Libertas Jyotish] Your sign-in verification code',
+    heading: 'Libertas Jyotish verification',
+    thanks: 'Thank you for using Libertas Jyotish.',
+    lead: 'Here is your verification code for signing in to your member page and linking this device.',
+    expiry: 'This code is valid for 10 minutes. If it expires, please request a new one.',
+    noreply: 'This message was sent automatically. Replies to this address are not monitored.',
+    sendError: 'Email delivery error'
+  }
+};
+
+function authMailText(lang) {
+  return AUTH_MAIL[lang] || (lang && lang !== 'ja' ? AUTH_MAIL.en : AUTH_MAIL.ja);
+}
+
 // 外部APIが応答しない場合に実行時間を食い潰さないよう、必ず打ち切る。
 async function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
   const controller = new AbortController();
@@ -47,6 +75,8 @@ module.exports = async function handler(req, res) {
         return res.status(400).json({ error: 'Invalid email address' });
       }
 
+      const mailText = authMailText(language);
+
       const verificationCode = String(crypto.randomInt(100000, 1000000));
       const expiry = Date.now() + 10 * 60 * 1000;
 
@@ -70,17 +100,17 @@ module.exports = async function handler(req, res) {
           body: JSON.stringify({
             from: "Libertas Jyotish <info@libertas-jyotish.com>",
             to: [email],
-            subject: "【Libertas Jyotish】マイページログイン認証コード",
+            subject: mailText.subject,
             html: `
-              <div style="font-family:'Noto Serif JP', serif; max-width:500px; margin:0 auto; padding:20px; border:1px solid #dc08a2; border-radius:10px; background-color:#fffdf9;">
-                <h2 style="color:#8B6B1B; text-align:center; border-bottom:1px dashed rgba(139,107,27,0.3); padding-bottom:10px;">Libertas Jyotish 認証</h2>
-                <p>Libertas Jyotish をご利用いただきありがとうございます。</p>
-                <p>マイページログインおよび端末連携用の認証コードをお知らせいたします。</p>
+              <div dir="${mailText.dir}" style="font-family:'Noto Serif JP', serif; max-width:500px; margin:0 auto; padding:20px; border:1px solid #dc08a2; border-radius:10px; background-color:#fffdf9;">
+                <h2 style="color:#8B6B1B; text-align:center; border-bottom:1px dashed rgba(139,107,27,0.3); padding-bottom:10px;">${mailText.heading}</h2>
+                <p>${mailText.thanks}</p>
+                <p>${mailText.lead}</p>
                 <div style="background-color:rgba(212,175,55,0.12); padding:15px; border-radius:8px; text-align:center; margin:20px 0;">
                   <span style="font-size:24px; font-weight:bold; letter-spacing:8px; color:#8B6B1B;">${verificationCode}</span>
                 </div>
-                <p style="font-size:12px; color:#7a6a58;">※認証コードの有効期限は10分間です。期限が切れた場合は再度コードをリクエストしてください。</p>
-                <p style="font-size:12px; color:#7a6a58; border-top:1px dashed rgba(139,107,27,0.3); padding-top:10px; margin-top:20px;">本メールはシステムによる自動送信です。返信は受け付けておりません。</p>
+                <p style="font-size:12px; color:#7a6a58;">${mailText.expiry}</p>
+                <p style="font-size:12px; color:#7a6a58; border-top:1px dashed rgba(139,107,27,0.3); padding-top:10px; margin-top:20px;">${mailText.noreply}</p>
               </div>
             `
           })
@@ -96,7 +126,7 @@ module.exports = async function handler(req, res) {
         }
       } catch (mailErr) {
         console.error("Mail send error:", mailErr);
-        return res.status(400).json({ error: `メール送信エラー: ${mailErr.message}` });
+        return res.status(400).json({ error: `${mailText.sendError}: ${mailErr.message}` });
       }
 
       return res.status(200).json({ status: 'success', token: securityToken });
@@ -198,7 +228,11 @@ module.exports = async function handler(req, res) {
         try {
           const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(finalCity)}&format=json&limit=1`;
           const geoRes = await fetchWithTimeout(nominatimUrl, {
-            headers: { 'User-Agent': 'LibertasJyotishApp/2.0 (info@libertas-jyotish.com)' }
+            headers: {
+              'User-Agent': 'LibertasJyotishApp/2.0 (info@libertas-jyotish.com)',
+              // 入力は閲覧言語の表記になるため、その言語と英語で地名を拾えるようにする。
+              'Accept-Language': finalLang === 'en' ? 'en' : `${finalLang},en`
+            }
           }, 8000);
           const geoData = await geoRes.json();
           if (geoData && geoData.length > 0) {
@@ -335,7 +369,7 @@ module.exports = async function handler(req, res) {
 
         // 星座・ナクシャトラは Prokerala の算出値が正。生成AIが「不明」等に取りこぼすことがあるので上書きする。
         if (prokeralaData) {
-          const computed = computeSigns(prokeralaData);
+          const computed = computeSigns(prokeralaData, finalLang);
           if (computed.sunSign) cleanJsonResult.sunSign = computed.sunSign;
           if (computed.moonSign) cleanJsonResult.moonSign = computed.moonSign;
           if (computed.nakshatra) cleanJsonResult.nakshatra = computed.nakshatra;
@@ -505,6 +539,22 @@ function toJapaneseSign(sign) {
   return SIGN_JA[sign] || SIGN_SA_JA[sign] || sign;
 }
 
+// Gemini に指示する出力言語。ページの言語コードから引く。
+const OUTPUT_LANGUAGE = {
+  ja: 'Japanese', en: 'English', es: 'Spanish', pt: 'Portuguese', ar: 'Arabic', id: 'Indonesian'
+};
+
+// 日本語以外は Prokerala の英語表記をそのまま使う（占星用語は英語が国際的な標準表記のため）。
+function signFor(sign, lang) {
+  if (lang === 'ja') return toJapaneseSign(sign);
+  return sign || 'Unknown';
+}
+
+function nakshatraFor(name, lang) {
+  if (lang === 'ja') return toJapaneseNakshatra(name);
+  return name || '';
+}
+
 // Prokerala のナクシャトラ名（英字表記・表記ゆれあり）を日本語へ変換する
 const NAKSHATRA_JA = {
   ashwini: 'アシュヴィニー', ashvini: 'アシュヴィニー', bharani: 'バラニー',
@@ -530,14 +580,14 @@ function toJapaneseNakshatra(name) {
 }
 
 // Prokerala の出生図から太陽星座・月星座・ナクシャトラを求める（表示の正となる値）
-function computeSigns(prokeralaData) {
+function computeSigns(prokeralaData, lang = 'ja') {
   const planets = extractPlanets(prokeralaData);
   const moon = planets.find(p => p.name === 'Moon') || {};
   const sun = planets.find(p => p.name === 'Sun') || {};
   return {
-    sunSign: sun.sign ? toJapaneseSign(sun.sign) : '',
-    moonSign: moon.sign ? toJapaneseSign(moon.sign) : '',
-    nakshatra: toJapaneseNakshatra(moon.nakshatra)
+    sunSign: sun.sign ? signFor(sun.sign, lang) : '',
+    moonSign: moon.sign ? signFor(moon.sign, lang) : '',
+    nakshatra: nakshatraFor(moon.nakshatra, lang)
   };
 }
 
@@ -561,20 +611,21 @@ function extractPlanets(prokeralaData) {
 function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section = 'all') {
   const planetList = extractPlanets(prokeralaData);
   const ascRaw = prokeralaData.data?.ascendant || planetList.find(p => p.name === 'Ascendant') || {};
-  const ascendantData = { sign: toJapaneseSign(ascRaw.rasi?.name || ascRaw.sign) };
+  const outputLanguage = OUTPUT_LANGUAGE[lang] || OUTPUT_LANGUAGE.ja;
+  const ascendantData = { sign: signFor(ascRaw.rasi?.name || ascRaw.sign, lang) };
 
   if (!planetList.length) {
     console.error('Prokerala response keys (planets not found):', Object.keys(prokeralaData?.data || {}));
   }
 
   const moonData = planetList.find(p => p.name === 'Moon') || {};
-  const moonSign = toJapaneseSign(moonData.sign);
-  const nakshatra = toJapaneseNakshatra(moonData.nakshatra) || '不明';
+  const moonSign = signFor(moonData.sign, lang);
+  const nakshatra = nakshatraFor(moonData.nakshatra, lang) || (lang === 'ja' ? '不明' : 'Unknown');
 
 
   // インド占星術（サイデリアル）の太陽星座
   const sunData = planetList.find(p => p.name === 'Sun') || {};
-  const sunSign = toJapaneseSign(sunData.sign);
+  const sunSign = signFor(sunData.sign, lang);
 
   const transitPlanets = extractPlanets(transitData);
   const todayJst = toJstIsoString(new Date()).slice(0, 10);
@@ -583,7 +634,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
   let formatSchema = '';
   if (isPaid && section === 'premium') {
     formatSchema = `
-    以下のJSONスキーマに従って日本語で100%出力してください（他のキーは出力しないこと）：
+    以下のJSONスキーマに従って ${outputLanguage} で100%出力してください（他のキーは出力しないこと）：
     {
       "premium_reading": {
         "kundali_reading": "精密クンダリー・9天体配置の宿命解読（300文字以上の詳細解説）",
@@ -593,7 +644,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
     }`;
   } else if (isPaid) {
     formatSchema = `
-    以下のJSONスキーマに従って日本語で100%出力してください：
+    以下のJSONスキーマに従って ${outputLanguage} で100%出力してください：
     {
       "moonSign": "${moonSign}",
       "sunSign": "${sunSign}",
@@ -617,7 +668,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
     }`;
   } else {
     formatSchema = `
-    以下のJSONスキーマに従って日本語で100%出力してください：
+    以下のJSONスキーマに従って ${outputLanguage} で100%出力してください：
     {
       "moonSign": "${moonSign}",
       "sunSign": "${sunSign}",
@@ -646,13 +697,19 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
 
   【${todayJst} 現在のトランジット天体配置】
   ${transitPlanets.length ? JSON.stringify(transitPlanets) : '取得できませんでした'}
-  【本日のトランジット月】 ${toJapaneseSign(transitMoon.sign)} / ナクシャトラ: ${transitMoon.nakshatra || '不明'}
+  【本日のトランジット月】 ${signFor(transitMoon.sign, lang)} / ナクシャトラ: ${transitMoon.nakshatra || '不明'}
 
   【鑑定執筆の基本ガイドライン】
   - 「本日の運勢」「本日受ける星の影響」は、必ず ${todayJst} のトランジット天体配置と出生図の関係（アスペクト・在住ハウス）から導くこと。日付が変われば内容も変わるのが正しい振る舞いです。
   - ポエムや使い回しの文章は一切禁止。本当に天体配置と月の位置、ナクシャトラの特徴から、相談者の心へ誠実かつ深い内省を促すように語りかけてください。
-  - トーンは高貴で、神秘的でありながら、現実的で温かい励ましに満ちた言葉遣い（日本語）。
+  - トーンは高貴で、神秘的でありながら、現実的で温かい励ましに満ちた言葉遣い。
   - 有料鑑定の場合は、プロフェッショナル鑑定書に相応しい、各セクションの最低文字数を必ず厳守して、重厚かつ詳細に運命を紐解いてください。
+
+  【出力言語 / Output language】
+  Write every narrative value in ${outputLanguage}. JSON keys must stay exactly as specified in English.
+  Do not mix other languages, and do not translate the JSON keys.
+  ${lang === 'ja' ? '' : `Sign, nakshatra and planet names must be written in ${outputLanguage} (use the standard romanised Sanskrit names where no common translation exists).`}
+  文字数の指定は日本語を基準とした目安です。他言語では同等の情報量になる長さで書いてください。
 
   【出力フォーマット】
   ${formatSchema}

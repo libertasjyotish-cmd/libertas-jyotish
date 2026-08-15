@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html {{htmlAttrs}}>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{t.result.text01}}</title>
+<title>Your reading | Libertas Jyotish</title>
 <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
-<link rel="canonical" href="https://libertas-jyotish.com/{{lang}}/result">
+<link rel="canonical" href="https://libertas-jyotish.com/en/result">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#0c1a1f">
 <link rel="icon" type="image/png" href="/img/libertas-logo.png">
 <link rel="apple-touch-icon" href="/img/libertas-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="{{fontHref}}" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
 --color-gold-light: #FDE047; --color-gold-main: #D4AF37; --color-gold-dark: #8B6B1B;
---color-text-dark: #2C221E; --font-en: 'Cinzel', serif; --font-ja: {{fontFamily}};
+--color-text-dark: #2C221E; --font-en: 'Cinzel', serif; --font-ja: 'Noto Serif', serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--font-ja); color: var(--color-text-dark); line-height: 1.8; min-height: 100vh; overflow-x: hidden; background-color: #0c1a1f; display: flex; flex-direction: column; }
@@ -102,7 +102,28 @@ border-radius: 10px; padding: 18px 16px; text-align: center;
 .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
 </style>
 <link rel="stylesheet" href="/css/site-menu.css">
-{{>i18n-globals}}
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'en',
+  menu: {
+    top: 'Home',
+    free: 'Free reading',
+    about: 'About Libertas Jyotish',
+    report: 'Lifetime Report (one-off)',
+    calendar: 'Annual Fortune Calendar',
+    calendarNote: 'coming soon',
+    mypage: 'Member page',
+    legal: 'Legal notice and terms',
+    toggleLabel: 'Menu',
+    navLabel: 'Site menu'
+  },
+  price: {
+    premium: '{price} / month (tax incl.)',
+    pdf: '{price} one-off (tax incl.)'
+  }
+};
+</script>
 <script defer src="/js/site-menu.js"></script>
 <script src="/js/checkout-links.js"></script>
 </head>
@@ -118,15 +139,15 @@ border-radius: 10px; padding: 18px 16px; text-align: center;
 </div>
 <div id="content-area">
 <div class="loading-box">
-<div class="spinner"></div><p class="loading-title" id="loading-title">{{t.result.text02}}</p>
-<p id="loading-note" style="font-size:0.8rem; color:#7a6a58; margin-top:6px;">{{t.result.text03}}</p>
+<div class="spinner"></div><p class="loading-title" id="loading-title">Decoding the cosmic placement (your moon sign)...</p>
+<p id="loading-note" style="font-size:0.8rem; color:#7a6a58; margin-top:6px;">Writing your reading takes about 30 to 60 seconds. Please stay on this page.</p>
 </div>
 </div>
 </div>
 </section>
 
 <footer class="site-footer">
-<div class="footer-links"><a href="/{{lang}}/legal">{{t.result.text04}}</a></div>
+<div class="footer-links"><a href="/en/legal">Legal notice, Terms of Service and Privacy Policy</a></div>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 
@@ -212,10 +233,10 @@ const payload = JSON.parse(savedInput);
 
 // 鑑定生成は数十秒かかるため、進行状況を順に見せて無反応に見えないようにする
 const progressSteps = [
-  '{{t.result.js01|js}}',
-  '{{t.result.js02|js}}',
-  '{{t.result.js03|js}}',
-  '{{t.result.js04|js}}'
+  'Decoding the cosmic placement (your moon sign)...',
+  'Calculating the coordinates of your birthplace and your birth chart...',
+  'Retrieving today\'s transits...',
+  'Writing your personal reading...'
 ];
 let progressIndex = 0;
 const progressTimer = setInterval(() => {
@@ -255,7 +276,7 @@ email: payload.email,
 dob: payload.dob,
 tob: payload.tob,
 city: payload.city || payload.address,
-language: payload.language || '{{lang}}',
+language: payload.language || 'en',
 status: data.status || 'free',
 lastResult: data
 };
@@ -267,14 +288,14 @@ console.error("Failed to save jyotish_user:", e);
 
 renderDiagnosis(data, payload);
 } catch (err) {
-console.error("{{t.result.js05|js}}", err);
+console.error("Connection error: ", err);
 const timedOut = err && err.name === 'AbortError';
 contentArea.innerHTML = `
 <div style="text-align:center; padding:20px;">
-<p style="color:#c0392b; font-weight:bold; font-size:1.05rem;">${timedOut ? '{{t.result.js06|js}}' : '{{t.result.js07|js}}'}</p>
-<p style="font-size:0.85rem; color:#5A4E48; margin-top:8px;">${timedOut ? '{{t.result.js08|js}}' : '{{t.result.js09|js}}'}</p>
-<button id="retry-diagnosis" class="btn-primary" style="margin-top:15px; padding:12px 24px; border:none; border-radius:8px; font-weight:600; cursor:pointer;">{{t.result.tpl01|tpl}}</button>
-<div><a href="/{{lang}}" class="btn-secondary" style="margin-top:12px; display:inline-block;">{{t.result.tpl02|tpl}}</a></div>
+<p style="color:#c0392b; font-weight:bold; font-size:1.05rem;">${timedOut ? 'Generating your reading is taking longer than usual.' : 'We could not retrieve your reading data.'}</p>
+<p style="font-size:0.85rem; color:#5A4E48; margin-top:8px;">${timedOut ? 'The external astrology calculation or AI generation may be busy. Trying again often succeeds.' : 'We are very sorry — please try again after a little while.'}</p>
+<button id="retry-diagnosis" class="btn-primary" style="margin-top:15px; padding:12px 24px; border:none; border-radius:8px; font-weight:600; cursor:pointer;">Try again</button>
+<div><a href="/en" class="btn-secondary" style="margin-top:12px; display:inline-block;">Back to the input screen</a></div>
 </div>
 `;
 const retryBtn = document.getElementById('retry-diagnosis');
@@ -289,11 +310,11 @@ clearTimeout(clientTimeout);
   contentArea.innerHTML = `
     <div style="text-align:center; padding:30px 10px;">
       <div style="font-size:2.5rem; margin-bottom:15px;">🔍💎</div>
-      <p style="color:#c0392b; font-weight:bold; font-size:1.1rem; margin-bottom:10px;">{{t.result.tpl03|tpl}}</p>
+      <p style="color:#c0392b; font-weight:bold; font-size:1.1rem; margin-bottom:10px;">We could not read your birth data</p>
       <p style="font-size:0.85rem; color:#5A4E48; line-height:1.6; margin-bottom:20px;">
-        {{t.result.tpl04|tpl}}
+        Your browser's security settings, private browsing or a cache refresh may have cleared the temporary data you entered.
       </p>
-      <a href="/{{lang}}" class="btn-primary" style="display:inline-block; text-decoration:none; padding:12px 24px; font-weight:600; border-radius:8px; width:auto; max-width:260px;">{{t.result.tpl05|tpl}}</a>
+      <a href="/en" class="btn-primary" style="display:inline-block; text-decoration:none; padding:12px 24px; font-weight:600; border-radius:8px; width:auto; max-width:260px;">Enter your details again from the top page</a>
     </div>
   `;
 }
@@ -306,52 +327,52 @@ let readingContent = result.reading || result.result || JSON.stringify(result);
 if (result.free_reading) {
 const fr = result.free_reading;
 readingContent = `
-<h2>{{t.result.tpl06|tpl}}</h2>
+<h2>The mystic reading that guides you</h2>
 
 <div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
-<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">{{t.result.tpl07|tpl}}</p>
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">Your Sun Sign</p>
 <p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.sunSign || '-'}</p>
 </div>
 
 <div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
-<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">{{t.result.tpl08|tpl}}</p>
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">Your Moon Sign</p>
 <p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.moonSign || '-'}</p>
 </div>
 
 <div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
-<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">{{t.result.tpl09|tpl}}</p>
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">Nakshatra</p>
 <p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.nakshatra || '-'}</p>
 </div>
 
 <div style="margin-bottom:24px;">
-<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">{{t.result.tpl10|tpl}}</p>
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">① Today's Horoscope</p>
 <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.horoscope || '-'}</p>
 </div>
 
 <div style="margin-bottom:24px;">
-<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">{{t.result.tpl11|tpl}}</p>
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">② Astro Influence</p>
 <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.influence || '-'}</p>
 </div>
 
 <div style="margin-bottom:24px;">
-<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">{{t.result.tpl12|tpl}}</p>
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">③ Current Mahadasha Guidance</p>
 <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.dasha_summary || '-'}</p>
 </div>
 
 <div style="margin-top:25px; padding:15px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:8px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">
-④ ${fr.lucky_element || '{{t.result.js10|js}}'}
+④ ${fr.lucky_element || '✨ Today\'s lucky theme: silence and deep reflection'}
 </div>
 `;
 }
 
 document.getElementById('content-area').innerHTML = `
-${input ? `<div class="meta-card">✉️ {{t.result.metaEmail|tpl}}${input.email || '{{t.result.metaUnset|js}}'}<br>📅 {{t.result.metaDob|tpl}}${input.dob} ${input.tob || ''} | 📍 {{t.result.metaCity|tpl}}${input.address || input.city}</div>` : ''}
+${input ? `<div class="meta-card">✉️ Email: ${input.email || 'Not set'}<br>📅 Date of birth: ${input.dob} ${input.tob || ''} | 📍 Place of birth: ${input.address || input.city}</div>` : ''}
 <div class="result-body">${readingContent}</div>
 ${result.status === 'paid' ? '' : buildLockedPreview()}
 <div class="cta-card">
-<h3 style="color:var(--color-gold-dark); margin-bottom:8px;">{{t.result.tpl13|tpl}}</h3>
-<p style="font-size:0.85rem; color:#5A4E48; margin-bottom:15px;">{{t.result.tpl14|tpl}}</p>
-<a href="/{{lang}}/mypage" class="btn-primary">{{t.result.tpl15|tpl}}</a>
+<h3 style="color:var(--color-gold-dark); margin-bottom:8px;">✨ See every planetary placement on your member page</h3>
+<p style="font-size:0.85rem; color:#5A4E48; margin-bottom:15px;">On your member page you can check your chart and today's outlook at any time.</p>
+<a href="/en/mypage" class="btn-primary">Go to my member page</a>
 </div>
 `;
 
@@ -368,40 +389,40 @@ window.open(`${premiumUpgradeUrl()}?prefilled_email=${encodeURIComponent(email)}
 function buildLockedPreview() {
 return `
 <div class="locked-section">
-<div class="locked-section-title">{{t.result.tpl16|tpl}}</div>
-<p class="locked-section-lead">{{t.result.tpl17|tpl}}</p>
+<div class="locked-section-title">🔒 What Premium members can see</div>
+<p class="locked-section-lead">Below is a sample of how it looks. Once you join, it shows real content based on your own birth chart.</p>
 <div class="locked-wrapper">
 <div>
 <div class="preview-card">
-<div class="preview-title">{{t.result.tpl18|tpl}}</div>
+<div class="preview-title">🪐 Placement of all nine planets</div>
 <table class="preview-table blur-content">
-<thead><tr><th>{{t.result.tpl19|tpl}}</th><th>{{t.result.tpl20|tpl}}</th><th>{{t.result.tpl21|tpl}}</th><th>{{t.result.tpl22|tpl}}</th></tr></thead>
+<thead><tr><th>Planet</th><th>Sign</th><th>House</th><th>In brief</th></tr></thead>
 <tbody>
-<tr><td>{{t.result.tpl23|tpl}}</td><td>{{t.result.tpl24|tpl}}</td><td>{{t.result.tpl25|tpl}}</td><td>{{t.result.tpl26|tpl}}</td></tr>
-<tr><td>{{t.result.tpl27|tpl}}</td><td>{{t.result.tpl28|tpl}}</td><td>{{t.result.tpl29|tpl}}</td><td>{{t.result.tpl30|tpl}}</td></tr>
-<tr><td>{{t.result.tpl31|tpl}}</td><td>{{t.result.tpl32|tpl}}</td><td>{{t.result.tpl33|tpl}}</td><td>{{t.result.tpl34|tpl}}</td></tr>
+<tr><td>Sun</td><td>Capricorn</td><td>10th house</td><td>A social mission and a sense of responsibility become the axis of your life.</td></tr>
+<tr><td>Moon</td><td>Cancer</td><td>4th house</td><td>Emotional stability grows out of home and the people closest to you.</td></tr>
+<tr><td>Mars</td><td>Aries</td><td>7th house</td><td>A placement that makes it easy to take the lead in relationships.</td></tr>
 </tbody>
 </table>
 </div>
 <div class="preview-card">
-<div class="preview-title">{{t.result.tpl35|tpl}}</div>
-<p class="preview-text blur-content">{{t.result.tpl36|tpl}}</p>
+<div class="preview-title">📜 Reading of your Maha Dasha cycle</div>
+<p class="preview-text blur-content">Current cycle: Jupiter period (2021–2037). This is a time of learning and expansion, where recognition builds up the deeper you go into your speciality. We also read in detail where the next sub-cycle begins and the strategy to take there.</p>
 </div>
 <div class="preview-card">
-<div class="preview-title">{{t.result.tpl37|tpl}}</div>
-<p class="preview-text blur-content">{{t.result.tpl38|tpl}}</p>
+<div class="preview-title">🔮 Precise kundali: the destiny written in your nine planets</div>
+<p class="preview-text blur-content">From the Lagna (ascendant) and the interplay of the nine planets, we read your talents, suitable work and relationship patterns in three dimensions. This is a full analysis, including yogas (planetary combinations) and dignity assessments that the free reading does not cover.</p>
 </div>
 <div class="preview-card">
-<div class="preview-title">{{t.result.tpl39|tpl}}</div>
-<p class="preview-text blur-content">{{t.result.tpl40|tpl}}</p>
+<div class="preview-title">📅 Detailed daily and weekly outlook</div>
+<p class="preview-text blur-content">Alongside the day's chart, we show the flow of the week, the days to watch and the days with the wind behind you. We also suggest remedies that ease the pressure of the planets.</p>
 </div>
 </div>
 <div class="lock-overlay">
 <div class="lock-icon">🔒</div>
-<div class="lock-title">{{t.result.tpl41|tpl}}</div>
-<p class="lock-note">{{t.result.tpl42|tpl}}</p>
-<button type="button" id="btn-upgrade-preview" class="btn-primary" style="width:auto; padding:12px 24px;">{{t.result.tpl43|tpl}}</button>
-<a href="/{{lang}}/pdf-purchase" class="btn-secondary" style="width:auto; padding:8px 18px; margin-top:12px;">{{t.result.tpl44|tpl}}</a>
+<div class="lock-title">Premium members only</div>
+<p class="lock-note">Full planetary placement, dasha cycles, detailed outlook and remedies are unlocked.</p>
+<button type="button" id="btn-upgrade-preview" class="btn-primary" style="width:auto; padding:12px 24px;">Join a paid plan</button>
+<a href="/en/pdf-purchase" class="btn-secondary" style="width:auto; padding:8px 18px; margin-top:12px;">See the one-off Lifetime Report (PDF)</a>
 </div>
 </div>
 </div>

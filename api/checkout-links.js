@@ -17,10 +17,17 @@ const LINKS = {
   }
 };
 
-// 表示用の価格ラベル（税込）。リンクの金額と必ず揃える。
+// 表示用の価格ラベル（税込・日本語）。リンクの金額と必ず揃える。
 const LABELS = {
   premium: { T1: '月額 750円（税込）', T2: '月額 500円（税込）', T3: '月額 300円（税込）' },
   pdf: { T1: '買い切り 7,480円（税込）', T2: '買い切り 4,980円（税込）', T3: '買い切り 2,980円（税込）' }
+};
+
+// 日本語以外のページは、この金額を閲覧言語の書式に整形して表示する。
+const CURRENCY = 'JPY';
+const AMOUNTS = {
+  premium: { T1: 750, T2: 500, T3: 300 },
+  pdf: { T1: 7480, T2: 4980, T3: 2980 }
 };
 
 function resolveTier(country) {
@@ -38,6 +45,8 @@ module.exports = (req, res) => {
     country,
     tier,
     links: { premium: LINKS.premium[tier], pdf: LINKS.pdf[tier] },
-    labels: { premium: LABELS.premium[tier], pdf: LABELS.pdf[tier] }
+    labels: { premium: LABELS.premium[tier], pdf: LABELS.pdf[tier] },
+    currency: CURRENCY,
+    amounts: { premium: AMOUNTS.premium[tier], pdf: AMOUNTS.pdf[tier] }
   });
 };
