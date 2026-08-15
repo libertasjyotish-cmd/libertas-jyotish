@@ -12,6 +12,10 @@
 //   {{t.some.key|tpl}}          … テンプレートリテラル（バッククォート）内に埋め込む場合
 //   {{t.some.key|attr}}         … HTML属性値に埋め込む場合
 //
+//   {{>name}}                  … templates/partials/name.html を展開する
+//
+// 文言の中に %LANG% と書くと、その言語コードに置き換わる（文言内リンク用）。
+//
 // 文言が未翻訳の言語では、既定言語（ja）の文言をそのまま使って生成を続ける。
 
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync } from 'node:fs';
@@ -23,6 +27,8 @@ const TEMPLATE_DIR = join(ROOT, 'templates');
 const LOCALE_DIR = join(ROOT, 'locales');
 const BASE_LANG = 'ja';
 
+const PARTIAL_DIR = join(TEMPLATE_DIR, 'partials');
+const PARTIAL = /\{\{>\s*([a-zA-Z0-9_-]+)\s*\}\}/g;
 const PLACEHOLDER = /\{\{\s*([a-zA-Z0-9_.-]+)\s*(?:\|\s*(js|attr|tpl)\s*)?\}\}/g;
 
 // フッターの言語切替。表示順と表記はここだけで管理する。
@@ -65,8 +71,13 @@ function escapeAttr(value) {
   return String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 }
 
+function expandPartials(template) {
+  return template.replace(PARTIAL, (match, name) => readFileSync(join(PARTIAL_DIR, `${name}.html`), 'utf8').replace(/\n$/, ''));
+}
+
 function render(template, locale, base, context) {
   const missing = [];
+  template = expandPartials(template);
   const output = template.replace(PLACEHOLDER, (match, path, filter) => {
     let value;
     if (path.startsWith('t.')) {
@@ -77,6 +88,7 @@ function render(template, locale, base, context) {
         if (value === undefined) throw new Error(`${context}: 文言キー ${key} が ${BASE_LANG} にも存在しません`);
         missing.push(key);
       }
+      value = String(value).split('%LANG%').join(locale.meta.lang);
     } else if (path === 'langSwitcher') {
       value = buildLangSwitcher(locale.meta.lang);
     } else {

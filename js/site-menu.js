@@ -1,20 +1,35 @@
 // 全ページ共通のヘッダーを組み立てる。
 // <header class="site-header" data-site-header></header> があれば中身を差し込む。
 // メニュー項目の追加はこの LINKS だけを編集すれば全ページに反映される。
+// 文言は各ページが埋め込む window.LJ_I18N（locales/<lang>.json 由来）から取る。
 (function () {
+  const FALLBACK = {
+    lang: 'ja',
+    menu: {
+      top: 'トップ', free: '無料診断', about: 'Libertas Jyotishとは',
+      report: '完全鑑定書（買い切り）', calendar: '年間運勢カレンダー', calendarNote: '準備中',
+      mypage: '会員マイページ', legal: '特定商取引法・利用規約',
+      toggleLabel: 'メニュー', navLabel: 'サイトメニュー'
+    }
+  };
+  const i18n = window.LJ_I18N || FALLBACK;
+  const t = Object.assign({}, FALLBACK.menu, i18n.menu);
+  const lang = i18n.lang || FALLBACK.lang;
+  const home = '/' + lang;
+
   const LINKS = [
-    { href: '/ja', label: 'トップ' },
-    { href: '/ja#form-area', label: '無料診断' },
-    { href: '/ja#about', label: 'Libertas Jyotishとは' },
-    { href: '/ja/pdf-purchase', label: '完全鑑定書（買い切り）' },
-    { href: '/ja/calendar', label: '年間運勢カレンダー', note: '準備中' },
+    { href: home, label: t.top },
+    { href: home + '#form-area', label: t.free },
+    { href: home + '#about', label: t.about },
+    { href: home + '/pdf-purchase', label: t.report },
+    { href: home + '/calendar', label: t.calendar, note: t.calendarNote },
     { divider: true },
-    { href: '/ja/mypage', label: '会員マイページ' },
-    { href: '/ja/legal', label: '特定商取引法・利用規約' }
+    { href: home + '/mypage', label: t.mypage },
+    { href: home + '/legal', label: t.legal }
   ];
 
   function currentPath() {
-    return window.location.pathname.replace(/\/$/, '') || '/ja';
+    return window.location.pathname.replace(/\/$/, '') || home;
   }
 
   function render(header) {
@@ -22,7 +37,7 @@
 
     const logo = document.createElement('a');
     logo.className = 'lj-logo';
-    logo.href = '/ja';
+    logo.href = home;
     logo.innerHTML = '<img src="/img/libertas-logo.png" alt="Libertas Jyotish"><span>Libertas Jyotish</span>';
 
     const right = document.createElement('div');
@@ -30,13 +45,13 @@
 
     const member = document.createElement('a');
     member.className = 'lj-btn-member';
-    member.href = '/ja/mypage';
-    member.textContent = '会員マイページ';
+    member.href = home + '/mypage';
+    member.textContent = t.mypage;
 
     const toggle = document.createElement('button');
     toggle.type = 'button';
     toggle.className = 'lj-menu-toggle';
-    toggle.setAttribute('aria-label', 'メニュー');
+    toggle.setAttribute('aria-label', t.toggleLabel);
     toggle.setAttribute('aria-expanded', 'false');
     toggle.setAttribute('aria-controls', 'lj-menu');
     toggle.innerHTML = '<span></span><span></span><span></span>';
@@ -48,7 +63,7 @@
     menu.id = 'lj-menu';
     menu.className = 'lj-menu';
     menu.hidden = true;
-    menu.setAttribute('aria-label', 'サイトメニュー');
+    menu.setAttribute('aria-label', t.navLabel);
 
     for (const item of LINKS) {
       if (item.divider) {
@@ -63,7 +78,7 @@
       if (item.note) {
         const note = document.createElement('span');
         note.className = 'lj-menu-note';
-        note.textContent = `（${item.note}）`;
+        note.textContent = lang === 'ja' ? `（${item.note}）` : ` (${item.note})`;
         a.appendChild(note);
       }
       if (item.href.split('#')[0] === path) a.classList.add('is-current');
