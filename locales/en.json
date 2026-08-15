@@ -212,6 +212,7 @@
     "pdf-purchase.text10": "💳 Continue to payment (Stripe)",
     "pdf-purchase.text11": "After purchase you can read it at any time on the report page of this site (you can also save it as a PDF with your browser's print function).",
     "pdf-purchase.text12": "Legal notice, Terms of Service and Privacy Policy",
+    "pdf-purchase.text13": "(if the time is unknown, enter 12:00)",
     "pdf-purchase.placeholder01": "e.g. London, United Kingdom",
     "pdf-purchase.js01": "Please enter your email address.",
     "pdf-purchase.js02": "Please enter your date and time of birth.",
