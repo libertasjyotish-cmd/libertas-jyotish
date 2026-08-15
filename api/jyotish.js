@@ -1,6 +1,6 @@
 // Vercel Serverless Function 統合API: /api/jyotish.js (CommonJS 完全自律救済版)
 const crypto = require('crypto');
-const { getMemberSheet, getLastSheetIssue } = require('./_sheets');
+const { getMemberSheet, getLastSheetIssue, getMemberRecord } = require('./_sheets');
 const { listGeminiModels, generateWithGemini } = require('./_gemini');
 const { issueSession } = require('./_auth');
 
@@ -137,6 +137,25 @@ module.exports = async function handler(req, res) {
         return res.status(200).json({ ...userProfile, session: authSession });
       } else {
         return res.status(200).json({ status: 'free', message: 'new_user', session: authSession });
+      }
+    }
+
+    // ②-2 買い切り（完全鑑定書）の購入状態の照会 (action: purchase_status)
+    // 購入ページで「購入済みの人に購入フォームを見せない」ためだけに使う。
+    // 返すのは真偽値のみで、出生データなどの個人情報は返さない。
+    if (action === 'purchase_status') {
+      if (!email || !email.includes('@')) {
+        return res.status(400).json({ error: 'Invalid email address' });
+      }
+      try {
+        const member = await getMemberRecord(email);
+        return res.status(200).json({
+          status: member ? member.status : 'free',
+          pdf_purchased: Boolean(member && member.pdfPurchased)
+        });
+      } catch (err) {
+        console.error('Purchase status lookup failed:', err?.message);
+        return res.status(503).json({ error: 'member_lookup_failed' });
       }
     }
 

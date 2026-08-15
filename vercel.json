@@ -14,6 +14,7 @@
     { "source": "/success", "destination": "/ja/success", "permanent": false },
     { "source": "/pdf-purchase", "destination": "/ja/pdf-purchase", "permanent": false },
     { "source": "/pdf-success", "destination": "/ja/pdf-success", "permanent": false },
-    { "source": "/pdf-report", "destination": "/ja/pdf-report", "permanent": false }
+    { "source": "/pdf-report", "destination": "/ja/pdf-report", "permanent": false },
+    { "source": "/calendar", "destination": "/ja/calendar", "permanent": false }
   ]
 }

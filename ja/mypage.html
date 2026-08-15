@@ -177,6 +177,27 @@ transition: transform 0.2s;
 .planet-table th { background: rgba(212, 175, 55, 0.15); color: var(--color-gold-dark); font-weight: 600; }
 .planet-table td.planet-name { font-weight: 600; white-space: nowrap; color: #3A2E2B; }
 
+/* スマホでは横スクロールをやめ、1天体 = 1カードの縦並びにして全項目を読めるようにする */
+@media (max-width: 640px) {
+.planet-table, .planet-table tbody, .planet-table tr, .planet-table td { display: block; width: 100%; }
+.planet-table thead { display: none; }
+.planet-table tr {
+border: 1px solid rgba(139, 107, 27, 0.35); border-radius: 8px;
+background: rgba(255, 253, 247, 0.6); margin-bottom: 10px; padding: 4px 0;
+}
+.planet-table td {
+border: none; border-bottom: 1px dashed rgba(139, 107, 27, 0.25);
+display: flex; gap: 12px; align-items: baseline; padding: 7px 12px;
+white-space: normal; word-break: break-word;
+}
+.planet-table tr td:last-child { border-bottom: none; }
+.planet-table td::before {
+content: attr(data-label); flex: 0 0 6.5em;
+font-size: 0.75rem; font-weight: 600; color: var(--color-gold-dark);
+}
+.planet-table td.planet-name { font-size: 0.95rem; }
+}
+
 .site-footer {
 width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3);
 padding: 24px 20px; text-align: center; position: relative; z-index: 10;
@@ -185,27 +206,21 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
 
 @media (max-width: 640px) {
-.header-nav { gap: 10px; }
-.header-nav a { font-size: 0.75rem; }
-.hero-container { padding: 35px 20px 30px; }
+/* Google ログインボタン（固定幅320px）がはみ出して横スクロールが出ないよう余白を詰める */
+body { overflow-x: hidden; }
+.main-section { padding: 90px 10px 40px; }
+.hero-container { padding: 30px 12px 26px; }
+.card-box { padding: 16px 12px; }
+.google-btn-container { max-width: 100%; overflow: hidden; }
 .login-form-group { flex-direction: column; }
 }
 </style>
+<link rel="stylesheet" href="/css/site-menu.css">
+<script defer src="/js/site-menu.js"></script>
 </head>
 <body>
 
-<header class="site-header">
-<a href="/ja" class="header-logo">
-<img src="/img/libertas-logo.png" alt="Logo">
-<span>Libertas Jyotish</span>
-</a>
-<nav class="header-nav">
-<a href="/ja">トップ</a>
-<a href="/ja#form-area">無料診断</a>
-<a href="/ja/mypage" style="color:var(--color-gold-main);">マイページ</a>
-<a href="/ja/pdf-purchase">完全鑑定書</a>
-</nav>
-</header>
+<header class="site-header" data-site-header></header>
 
 <section class="main-section">
 <div class="hero-container">
@@ -218,6 +233,7 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 <span id="user-display-email" style="font-weight:600; font-size:0.95rem; color:var(--color-text-dark);">未ログイン（ゲスト）</span>
 <span id="btn-logout" class="btn-logout" style="display:none;" onclick="logout()">ログアウト</span>
 <span id="btn-billing-portal" class="btn-logout" style="display:none;" onclick="openBillingPortal()">プランの管理・解約</span>
+<a id="btn-open-pdf-report" class="btn-logout" style="display:none; text-decoration:none;" href="/ja/pdf-report">完全鑑定書を開く</a>
 </div>
 </div>
 <span id="user-status-badge" class="user-badge free">無料プラン</span>
@@ -496,6 +512,19 @@ showBirthSetupUI();
 setLoggedOutState();
 }
 
+// 買い切りの完全鑑定書を購入済みなら、マイページから直接開けるようにする
+if (savedEmail) showPdfReportLinkIfPurchased(savedEmail);
+
+// 鑑定書ページなど、本人確認セッションが必要なページから ?next= 付きで戻ってきた場合
+const nextTarget = new URLSearchParams(window.location.search).get('next');
+if (nextTarget === 'pdf-report') {
+if (localStorage.getItem('lj_session')) {
+window.location.replace('/ja/pdf-report');
+return;
+}
+requestReauth('pdf-report', savedEmail);
+}
+
 // 出生データ手動登録フォームのサブミット制御
 document.getElementById('form-birth-setup').addEventListener('submit', (e) => {
 e.preventDefault();
@@ -621,6 +650,9 @@ completeLogin(email);
 if (window.ljPendingAfterAuth === 'portal') {
 window.ljPendingAfterAuth = '';
 openBillingPortal();
+} else if (window.ljPendingAfterAuth === 'pdf-report') {
+window.ljPendingAfterAuth = '';
+window.location.href = '/ja/pdf-report';
 }
 } else {
 alert('認証コードが正しくないか、有効期限が切れています。');
@@ -667,7 +699,10 @@ window.ljPendingAfterAuth = pendingAction;
 const box = document.getElementById('auth-box');
 if (box) box.style.display = 'block';
 const title = box ? box.querySelector('.card-title') : null;
-if (title) title.textContent = '🔑 本人確認（プランの管理・解約）';
+const titleText = pendingAction === 'pdf-report'
+? '🔑 本人確認（完全鑑定書の閲覧）'
+: '🔑 本人確認（プランの管理・解約）';
+if (title) title.textContent = titleText;
 const input = document.getElementById('login-email');
 if (input) {
 if (email) input.value = email;
@@ -680,6 +715,24 @@ if (email && sendBtn && !sendBtn.disabled) {
 sendBtn.click();
 } else {
 alert('セキュリティ確認のため、メールに届く認証コードで本人確認をお願いします。下のフォームから「コード送信」を押してください。');
+}
+}
+
+// 購入状態はサーバー（会員シート）だけを正とする
+async function showPdfReportLinkIfPurchased(email) {
+try {
+const res = await fetch(JYOTISH_API_URL, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ action: 'purchase_status', email: email })
+});
+const data = await res.json().catch(() => null);
+if (res.ok && data && data.pdf_purchased) {
+const link = document.getElementById('btn-open-pdf-report');
+if (link) link.style.display = 'inline';
+}
+} catch (e) {
+console.error('purchase status check failed', e);
 }
 }
 
@@ -1063,10 +1116,10 @@ tbody.innerHTML = '';
 planets.forEach(p => {
 const tr = document.createElement('tr');
 tr.innerHTML = `
-<td class="planet-name">${p.name || '-'}</td>
-<td>${p.sign || '-'}</td>
-<td>第${p.house || '-'}ハウス</td>
-<td>${p.comment || p.nakshatra || '-'}</td>
+<td class="planet-name" data-label="天体">${p.name || '-'}</td>
+<td data-label="サイン（星座）">${p.sign || '-'}</td>
+<td data-label="ハウス">第${p.house || '-'}ハウス</td>
+<td data-label="一言解説">${p.comment || p.nakshatra || '-'}</td>
 `;
 tbody.appendChild(tr);
 });
