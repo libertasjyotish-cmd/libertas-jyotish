@@ -8,13 +8,12 @@ const path = require('path');
 const INDICATOR = 'NY.GNP.PCAP.PP.CD';
 const OUT_FILE = path.join(__dirname, '..', 'data', 'price-tiers.json');
 
-// 一人当たりGNI(PPP)の下限値で4段階に区分する。日本(約58,900)が基準の T2。
-// factor は日本の価格を1.0としたときの推奨倍率。
+// 一人当たりGNI(PPP)の下限値で3段階に区分する。日本(約58,900)が基準の T2。
+// factor は日本の価格を1.0としたときの推奨倍率。T3 が下限（これ以上は下げない）。
 const TIERS = [
   { tier: 'T1', min: 75000, factor: 1.5 },
   { tier: 'T2', min: 40000, factor: 1.0 },
-  { tier: 'T3', min: 18000, factor: 0.6 },
-  { tier: 'T4', min: 0, factor: 0.35 }
+  { tier: 'T3', min: 0, factor: 0.6 }
 ];
 
 // データが無い国のフォールバック（基準国と同等に扱わないため中位に寄せる）。
