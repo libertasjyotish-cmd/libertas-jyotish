@@ -1,7 +1,7 @@
 // 完全鑑定書（PDF）の表示語彙を言語別に解決するレイヤー（CommonJS）
 // 計算とデータ構造は日本語表記を内部キーとして維持し、ここで表示言語へ変換する。
 // 日本語のときは恒等変換になるため、既存の出力は変わらない。
-// 語彙は api/terms/<lang>.js に1ファイルずつ置く。未整備の言語は英語の語彙で表示する。
+// 語彙は api/_texts/terms/<lang>.js に1ファイルずつ置く。未整備の言語は英語の語彙で表示する。
 
 // AI に渡す出力言語の指定（プロンプト本体は日本語のまま、言語だけを切り替える）
 const OUTPUT_LANGUAGE = {
@@ -38,11 +38,11 @@ function load(require_) {
 }
 
 const VOCAB = {
-  en: require('./terms/en'),
-  es: load(() => require('./terms/es')),
-  pt: load(() => require('./terms/pt')),
-  ar: load(() => require('./terms/ar')),
-  id: load(() => require('./terms/id'))
+  en: require('./_texts/terms/en'),
+  es: load(() => require('./_texts/terms/es')),
+  pt: load(() => require('./_texts/terms/pt')),
+  ar: load(() => require('./_texts/terms/ar')),
+  id: load(() => require('./_texts/terms/id'))
 };
 
 // 対応外の値は日本語に倒す（言語は表示・生成にのみ影響し、計算値は変えない）

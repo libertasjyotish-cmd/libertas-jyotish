@@ -1,5 +1,5 @@
 // 英語の表示語彙（完全鑑定書）。キーは計算用の内部表記（日本語 / Prokerala の英字キー）。
-// 他言語を追加するときは、このファイルを api/terms/<lang>.js にコピーして値だけを訳す。
+// 他言語を追加するときは、このファイルを api/_texts/terms/<lang>.js にコピーして値だけを訳す。
 
 const SIGN = {
   牡羊座: 'Aries', 牡牛座: 'Taurus', 双子座: 'Gemini', 蟹座: 'Cancer',
