@@ -1,40 +1,21 @@
-/* 羊皮紙の質感（中央は明るく、外周に向かって濃くなるグラデーションと、ごく薄い繊維の粒子、角の軽い折り）。
-   装飾レイヤーのみで、文字色や配置は変えない。 */
+/* 羊皮紙の質感。中央が明るく外周に向かって濃くなる紙のテクスチャ画像（img/parchment.jpg）を
+   カード面に敷き、四隅に軽い折りを重ねる。文字色や配置は変更しない。 */
 
 .hero-container,
 .about-section {
-  /* 紙の縁らしく、わずかに不揃いな丸み */
-  border-radius: 16px 8px 18px 10px / 10px 18px 8px 16px;
-  border-color: rgba(163, 124, 62, 0.55);
-}
-
-/* 外周の焼け（中央は透明、縁に向かって濃くなる） */
-.hero-container::before,
-.about-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  mix-blend-mode: multiply;
-  background-image:
-    radial-gradient(120% 100% at 50% 45%,
-      rgba(196, 155, 92, 0) 0%,
-      rgba(196, 155, 92, 0) 48%,
-      rgba(186, 143, 80, 0.20) 70%,
-      rgba(166, 122, 62, 0.40) 87%,
-      rgba(138, 96, 44, 0.58) 100%),
-    linear-gradient(to right,
-      rgba(146, 105, 50, 0.46) 0, rgba(146, 105, 50, 0) 84px,
-      rgba(146, 105, 50, 0) calc(100% - 84px), rgba(146, 105, 50, 0.46) 100%),
-    linear-gradient(to bottom,
-      rgba(146, 105, 50, 0.40) 0, rgba(146, 105, 50, 0) 96px,
-      rgba(146, 105, 50, 0) calc(100% - 96px), rgba(146, 105, 50, 0.44) 100%),
-    linear-gradient(rgba(206, 174, 122, 0.16), rgba(206, 174, 122, 0.16)),
-    /* ごく薄い繊維の粒子 */
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='0.16'/%3E%3C/svg%3E");
-  background-size: auto, auto, auto, auto, 260px 260px;
+  background-image: url("/img/parchment.jpg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-blend-mode: normal;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: 14px;
+  border: 1px solid rgba(150, 112, 52, 0.55);
+  outline-color: rgba(190, 152, 78, 0.35);
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.7),
+    0 0 20px rgba(212, 175, 55, 0.12),
+    inset 0 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 /* 四隅の軽い折り返し */
@@ -49,44 +30,35 @@
   background-repeat: no-repeat;
   background-image:
     linear-gradient(135deg,
-      rgba(243, 232, 208, 0.98) 40%,
-      rgba(214, 188, 141, 0.9) 46%,
-      rgba(158, 122, 66, 0.45) 49%,
-      rgba(120, 90, 44, 0.12) 51%,
+      rgba(244, 234, 212, 0.98) 40%,
+      rgba(214, 186, 137, 0.92) 46%,
+      rgba(150, 114, 60, 0.5) 49%,
+      rgba(110, 82, 40, 0.15) 51%,
       rgba(0, 0, 0, 0) 53%),
     linear-gradient(225deg,
-      rgba(243, 232, 208, 0.95) 42%,
-      rgba(214, 188, 141, 0.85) 47%,
-      rgba(158, 122, 66, 0.38) 50%,
+      rgba(244, 234, 212, 0.95) 42%,
+      rgba(214, 186, 137, 0.88) 47%,
+      rgba(150, 114, 60, 0.42) 50%,
       rgba(0, 0, 0, 0) 52%),
     linear-gradient(45deg,
-      rgba(243, 232, 208, 0.95) 42%,
-      rgba(214, 188, 141, 0.85) 47%,
-      rgba(158, 122, 66, 0.38) 50%,
+      rgba(244, 234, 212, 0.95) 42%,
+      rgba(214, 186, 137, 0.88) 47%,
+      rgba(150, 114, 60, 0.42) 50%,
       rgba(0, 0, 0, 0) 52%),
     linear-gradient(315deg,
-      rgba(243, 232, 208, 0.98) 40%,
-      rgba(214, 188, 141, 0.9) 46%,
-      rgba(158, 122, 66, 0.45) 49%,
-      rgba(120, 90, 44, 0.12) 51%,
+      rgba(244, 234, 212, 0.98) 40%,
+      rgba(214, 186, 137, 0.92) 46%,
+      rgba(150, 114, 60, 0.5) 49%,
+      rgba(110, 82, 40, 0.15) 51%,
       rgba(0, 0, 0, 0) 53%);
   background-position: left top, right top, left bottom, right bottom;
   background-size: 46px 46px, 34px 34px, 34px 34px, 52px 52px;
-  filter: drop-shadow(0 1px 2px rgba(120, 90, 44, 0.28));
+  filter: drop-shadow(0 1px 2px rgba(110, 82, 40, 0.3));
 }
 
-/* 装飾レイヤーより本文を前面に */
+/* 折りの上に本文が乗らないよう本文を前面に */
 .hero-container > *,
 .about-section > * {
   position: relative;
   z-index: 2;
-}
-
-.hero-container,
-.about-section {
-  box-shadow:
-    0 25px 50px -12px rgba(0, 0, 0, 0.7),
-    0 0 20px rgba(212, 175, 55, 0.14),
-    inset 0 0 40px rgba(150, 110, 54, 0.18),
-    inset 0 1px 2px rgba(255, 255, 255, 0.75);
 }
