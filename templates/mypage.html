@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html {{htmlAttrs}}>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>マイページ | Libertas Jyotish</title>
+<title>{{t.mypage.text01}}</title>
 
 <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
-<link rel="canonical" href="https://libertas-jyotish.com/ja/mypage">
+<link rel="canonical" href="https://libertas-jyotish.com/{{lang}}/mypage">
 
 <!-- PWA & Theme Settings -->
 <link rel="manifest" href="/manifest.json">
@@ -17,7 +17,7 @@
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="{{fontHref}}" rel="stylesheet">
 
 
 
@@ -32,7 +32,7 @@
 --color-bg-dark: #0c1a1f;
 --color-text-dark: #2C221E;
 --font-en: 'Cinzel', serif;
---font-ja: 'Noto Serif JP', serif;
+--font-ja: {{fontFamily}};
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -234,18 +234,18 @@ body { overflow-x: hidden; }
 <div style="text-align:left;">
 <div style="font-size:0.75rem; color:#7a6a58; font-family:var(--font-en);">MEMBERSHIP PORTAL</div>
 <div style="display:flex; align-items:center;">
-<span id="user-display-email" style="font-weight:600; font-size:0.95rem; color:var(--color-text-dark);">未ログイン（ゲスト）</span>
-<span id="btn-logout" class="btn-logout" style="display:none;" onclick="logout()">ログアウト</span>
-<span id="btn-billing-portal" class="btn-logout" style="display:none;" onclick="openBillingPortal()">プランの管理・解約</span>
-<a id="btn-open-pdf-report" class="btn-logout" style="display:none; text-decoration:none;" href="/ja/pdf-report">完全鑑定書を開く</a>
+<span id="user-display-email" style="font-weight:600; font-size:0.95rem; color:var(--color-text-dark);">{{t.mypage.text02}}</span>
+<span id="btn-logout" class="btn-logout" style="display:none;" onclick="logout()">{{t.mypage.text03}}</span>
+<span id="btn-billing-portal" class="btn-logout" style="display:none;" onclick="openBillingPortal()">{{t.mypage.text04}}</span>
+<a id="btn-open-pdf-report" class="btn-logout" style="display:none; text-decoration:none;" href="/{{lang}}/pdf-report">{{t.mypage.text05}}</a>
 </div>
 </div>
-<span id="user-status-badge" class="user-badge free">無料プラン</span>
+<span id="user-status-badge" class="user-badge free">{{t.mypage.text06}}</span>
 </div>
 
 <!-- ログイン・端末連携カード -->
 <div id="auth-box" class="card-box">
-<div class="card-title">🔑 マイページへログイン・端末連携</div>
+<div class="card-title">{{t.mypage.text07}}</div>
 
 <!-- Google 公式認証ボタン領域 --><div class="google-btn-container">
 <div id="g_id_onload"
@@ -264,89 +264,89 @@ data-width="320">
 </div>
 </div>
 
-<div class="auth-divider">─ またはメールアドレスで認証 ─</div>
+<div class="auth-divider">{{t.mypage.text08}}</div>
 
 <div id="step-email" class="login-form-group">
-<input type="email" id="login-email" placeholder="メールアドレスを入力" required>
-<button id="btn-send-code" class="btn-action">コード送信</button>
+<input type="email" id="login-email" placeholder="{{t.mypage.placeholder01|attr}}" required>
+<button id="btn-send-code" class="btn-action">{{t.mypage.text09}}</button>
 </div>
 
 <div id="step-code" class="login-form-group" style="display:none; margin-top:10px;">
-<input type="text" id="login-code" placeholder="6桁の認証コードを入力" maxlength="6">
-<button id="btn-verify-code" class="btn-action" style="background:#2C5282;">認証する</button>
+<input type="text" id="login-code" placeholder="{{t.mypage.placeholder02|attr}}" maxlength="6">
+<button id="btn-verify-code" class="btn-action" style="background:#2C5282;">{{t.mypage.text10}}</button>
 </div>
 </div>
 
 <!-- 出生データ登録カード（初回ログイン時・データ欠落時の自律復元用） -->
 <div id="birth-setup-box" class="card-box" style="display: none;">
-<div class="card-title">📅 出生データの登録</div>
+<div class="card-title">{{t.mypage.text11}}</div>
 <p style="font-size: 0.82rem; color: #5A4E48; margin-bottom: 15px; line-height: 1.6; text-align: left;">
-このデバイスでの最初のログイン、または出生データが登録されていません。<br>
-正確な星回り情報と本日の運勢を表示するため、あなたの出生データを入力してください。<br>
-※一度設定すると、次回からは自動的にログインして表示されます。
+{{t.mypage.text12}}<br>
+{{t.mypage.text13}}<br>
+{{t.mypage.text14}}
 </p>
 <form id="form-birth-setup">
 <div style="margin-bottom: 12px; text-align: left;">
-<label style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px;">生年月日</label>
+<label style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px;">{{t.mypage.text15}}</label>
 <input type="date" id="setup-dob" required style="width: 100%; padding: 11px 14px; background-color: rgba(255, 252, 245, 0.85); border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px; font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none;">
 </div>
 <div style="margin-bottom: 12px; text-align: left;">
-<label style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px;">出生時間 <span style="font-weight: normal; font-size: 0.72rem; color: #7a6a58; margin-left: 4px;">（不明な場合は空欄でOK：12:00補填）</span></label>
+<label style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px;">{{t.mypage.text16}} <span style="font-weight: normal; font-size: 0.72rem; color: #7a6a58; margin-left: 4px;">{{t.mypage.text17}}</span></label>
 <input type="time" id="setup-tob" style="width: 100%; padding: 11px 14px; background-color: rgba(255, 252, 245, 0.85); border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px; font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none;">
 </div>
 <div style="margin-bottom: 18px; text-align: left;">
-<label style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px;">出生地（都道府県・市区町村）</label>
-<input type="text" id="setup-city" placeholder="例：東京都千代田区" required style="width: 100%; padding: 11px 14px; background-color: rgba(255, 252, 245, 0.85); border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px; font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none;">
+<label style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px;">{{t.mypage.text18}}</label>
+<input type="text" id="setup-city" placeholder="{{t.mypage.placeholder03|attr}}" required style="width: 100%; padding: 11px 14px; background-color: rgba(255, 252, 245, 0.85); border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px; font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none;">
 </div>
-<button type="submit" class="btn-action" style="width: 100%; padding: 13px; font-size: 0.95rem; font-weight: 600; text-align: center; border-radius: 8px; background: var(--color-gold-dark); color: #FFFDF9; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">データを登録して占う</button>
+<button type="submit" class="btn-action" style="width: 100%; padding: 13px; font-size: 0.95rem; font-weight: 600; text-align: center; border-radius: 8px; background: var(--color-gold-dark); color: #FFFDF9; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">{{t.mypage.text19}}</button>
 </form>
 </div>
 
 <!-- 本日の月星座運勢 -->
 <div class="card-box">
-<div class="card-title">🌟 本日の月星座運勢</div>
+<div class="card-title">{{t.mypage.text20}}</div>
 <div id="sign-summary" style="display:none; gap:16px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px dashed rgba(139,107,27,0.25);">
 <div style="flex:1;">
-<div style="font-size:0.72rem; color:var(--color-gold-dark); font-weight:700;">太陽星座 (Sun Sign)</div>
+<div style="font-size:0.72rem; color:var(--color-gold-dark); font-weight:700;">{{t.mypage.text21}}</div>
 <div id="sun-sign-text" style="font-size:1.05rem; font-weight:700; color:var(--color-text-dark);">-</div>
 </div>
 <div style="flex:1;">
-<div style="font-size:0.72rem; color:var(--color-gold-dark); font-weight:700;">月星座 (Moon Sign)</div>
+<div style="font-size:0.72rem; color:var(--color-gold-dark); font-weight:700;">{{t.mypage.text22}}</div>
 <div id="moon-sign-text" style="font-size:1.05rem; font-weight:700; color:var(--color-text-dark);">-</div>
 </div>
 <div style="flex:1;">
-<div style="font-size:0.72rem; color:var(--color-gold-dark); font-weight:700;">ナクシャトラ（27の星宿）</div>
+<div style="font-size:0.72rem; color:var(--color-gold-dark); font-weight:700;">{{t.mypage.text23}}</div>
 <div id="nakshatra-text" style="font-size:1.05rem; font-weight:700; color:var(--color-text-dark);">-</div>
 </div>
 </div>
 <p id="today-transit-text" style="font-size:0.88rem; color:#4a3e36; min-height: 48px;">
-本日の星回りデータを読み込んでいます...
+{{t.mypage.text24}}
 </p>
 </div>
 
 <!-- プレミアム鑑定カルテ -->
-<h2 style="font-size:1.15rem; color:var(--color-gold-dark); text-align:left; margin-bottom:12px;">📜 プレミアム鑑定カルテ</h2>
-<p id="premium-sample-lead" style="display:none; font-size:0.82rem; color:#5A4E48; text-align:left; margin-bottom:12px;">以下は表示イメージ（サンプル）です。プラン登録後、あなたの出生図に基づいた実際の内容に切り替わります。</p>
+<h2 style="font-size:1.15rem; color:var(--color-gold-dark); text-align:left; margin-bottom:12px;">{{t.mypage.text25}}</h2>
+<p id="premium-sample-lead" style="display:none; font-size:0.82rem; color:#5A4E48; text-align:left; margin-bottom:12px;">{{t.mypage.text26}}</p>
 
 <div id="premium-gatekeeper" class="locked-wrapper">
 <div id="premium-content-area">
 
 <div class="card-box">
-<div class="card-title">マハー・ダシャー周期の解読</div>
-<p id="dasha-period-title" style="font-weight:600; font-size:0.9rem; color:#3A2E2B; margin-bottom:6px;">現在の周期：取得中...</p>
-<p id="dasha-description" style="font-size:0.88rem; color:#4a3e36;">データ読み込み中...</p>
+<div class="card-title">{{t.mypage.text27}}</div>
+<p id="dasha-period-title" style="font-weight:600; font-size:0.9rem; color:#3A2E2B; margin-bottom:6px;">{{t.mypage.text28}}</p>
+<p id="dasha-description" style="font-size:0.88rem; color:#4a3e36;">{{t.mypage.text29}}</p>
 </div>
 
 <div class="card-box" style="margin-bottom:0;">
-<div class="card-title">🪐 全天体（9天体）配置表</div>
+<div class="card-title">{{t.mypage.text30}}</div>
 <div style="overflow-x: auto;">
 <table class="planet-table">
 <thead>
 <tr>
-<th>天体</th>
-<th>サイン（星座）</th>
-<th>ハウス</th>
-<th>一言解説</th>
+<th>{{t.mypage.text31}}</th>
+<th>{{t.mypage.text32}}</th>
+<th>{{t.mypage.text33}}</th>
+<th>{{t.mypage.text34}}</th>
 </tr>
 </thead>
 <tbody id="planet-table-body">
@@ -360,10 +360,10 @@ data-width="320">
 <!-- ロックオーバーレイ -->
 <div id="lock-overlay" class="lock-overlay">
 <div style="font-size:1.8rem; margin-bottom:6px;">🔒</div>
-<div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:8px;">有料会員限定コンテンツ</div>
-<p style="font-size:0.82rem; color:#5A4E48; margin-bottom:15px;">全天体配置・ダシャー周期の解読にはプラン登録が必要です。</p>
-<p id="paid-sync-notice" style="display:none; font-size:0.82rem; color:#8a3b2f; margin-bottom:15px;">お支払いは確認できましたが、この会員アカウントにまだ反映されていません。決済時に入力したメールアドレスでログインしているかご確認ください（反映に数分かかる場合があります）。</p>
-<button id="btn-upgrade-premium" class="btn-upgrade">有料プランに登録する</button>
+<div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:8px;">{{t.mypage.text35}}</div>
+<p style="font-size:0.82rem; color:#5A4E48; margin-bottom:15px;">{{t.mypage.text36}}</p>
+<p id="paid-sync-notice" style="display:none; font-size:0.82rem; color:#8a3b2f; margin-bottom:15px;">{{t.mypage.text37}}</p>
+<button id="btn-upgrade-premium" class="btn-upgrade">{{t.mypage.text38}}</button>
 </div>
 </div>
 
@@ -371,7 +371,7 @@ data-width="320">
 </section>
 
 <footer class="site-footer">
-<div class="footer-links"><a href="/ja/legal">特定商取引法に基づく表記・利用規約・プライバシーポリシー</a></div>
+<div class="footer-links"><a href="/{{lang}}/legal">{{t.mypage.text39}}</a></div>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 
@@ -525,7 +525,7 @@ if (savedEmail) showPdfReportLinkIfPurchased(savedEmail);
 const nextTarget = new URLSearchParams(window.location.search).get('next');
 if (nextTarget === 'pdf-report') {
 if (localStorage.getItem('lj_session')) {
-window.location.replace('/ja/pdf-report');
+window.location.replace('/{{lang}}/pdf-report');
 return;
 }
 requestReauth('pdf-report', savedEmail);
@@ -539,7 +539,7 @@ const tob = document.getElementById('setup-tob').value || '12:00'; // 不明時�
 const city = document.getElementById('setup-city').value.trim();
 
 if (!dob || !city) {
-alert('生年月日と出生地は必須項目です。');
+alert('{{t.mypage.js01|js}}');
 return;
 }
 
@@ -588,12 +588,12 @@ const email = emailInput.value.trim();
 const btnSend = document.getElementById('btn-send-code');
 
 if (!email || !email.includes('@')) {
-alert('有効なメールアドレスを入力してください。');
+alert('{{t.mypage.js02|js}}');
 return;
 }
 
 btnSend.disabled = true;
-btnSend.textContent = '送信中...';
+btnSend.textContent = '{{t.mypage.js03|js}}';
 
 try {
 const res = await fetch(JYOTISH_API_URL, {
@@ -606,7 +606,7 @@ if (res.ok) {
 const data = await res.json();
 currentAuthToken = data.token;
 sessionStorage.setItem('lj_auth_token', data.token);
-alert('認証コードを送信しました。届いた6桁の数字を入力してください。');
+alert('{{t.mypage.js04|js}}');
 document.getElementById('step-code').style.display = 'flex';
 } else {
 let errMsg = 'API Error';
@@ -617,10 +617,10 @@ if (errJson && errJson.error) errMsg = errJson.error;
 throw new Error(errMsg);
 }
 } catch(e) {
-alert('送信に失敗しました：' + e.message);
+alert('{{t.mypage.js05|js}}' + e.message);
 } finally {
 btnSend.disabled = false;
-btnSend.textContent = 'コード送信';
+btnSend.textContent = '{{t.mypage.js06|js}}';
 }
 });
 
@@ -632,12 +632,12 @@ const code = codeInput.value.trim();
 const btnVerify = document.getElementById('btn-verify-code');
 
 if (!code || code.length !== 6) {
-alert('6桁の認証コードを正確に入力してください。');
+alert('{{t.mypage.js07|js}}');
 return;
 }
 
 btnVerify.disabled = true;
-btnVerify.textContent = '検証中...';
+btnVerify.textContent = '{{t.mypage.js08|js}}';
 
 try {
 const token = currentAuthToken || sessionStorage.getItem('lj_auth_token');
@@ -658,16 +658,16 @@ window.ljPendingAfterAuth = '';
 openBillingPortal();
 } else if (window.ljPendingAfterAuth === 'pdf-report') {
 window.ljPendingAfterAuth = '';
-window.location.href = '/ja/pdf-report';
+window.location.href = '/{{lang}}/pdf-report';
 }
 } else {
-alert('認証コードが正しくないか、有効期限が切れています。');
+alert('{{t.mypage.js09|js}}');
 }
 } catch(e) {
-alert('検証に失敗しました。通信状況をご確認の上、再度お試しください。');
+alert('{{t.mypage.js10|js}}');
 } finally {
 btnVerify.disabled = false;
-btnVerify.textContent = '認証する';
+btnVerify.textContent = '{{t.mypage.js11|js}}';
 }
 });
 });
@@ -691,12 +691,12 @@ document.getElementById('auth-box').style.display = 'none';
 }
 
 function setLoggedOutState() {
-document.getElementById('user-display-email').textContent = '未ログイン（ゲスト）';
+document.getElementById('user-display-email').textContent = '{{t.mypage.js12|js}}';
 document.getElementById('btn-logout').style.display = 'none';
 const portalLink = document.getElementById('btn-billing-portal');
 if (portalLink) portalLink.style.display = 'none';
 document.getElementById('auth-box').style.display = 'block';
-document.getElementById('today-transit-text').textContent = 'ログインすると、あなたの出生データに基づいた本日の運勢が表示されます。';
+document.getElementById('today-transit-text').textContent = '{{t.mypage.js13|js}}';
 }
 
 // 本人確認セッションが無い場合に、ログインカードを開いてメール認証を促す
@@ -706,8 +706,8 @@ const box = document.getElementById('auth-box');
 if (box) box.style.display = 'block';
 const title = box ? box.querySelector('.card-title') : null;
 const titleText = pendingAction === 'pdf-report'
-? '🔑 本人確認（完全鑑定書の閲覧）'
-: '🔑 本人確認（プランの管理・解約）';
+? '{{t.mypage.js14|js}}'
+: '{{t.mypage.js15|js}}';
 if (title) title.textContent = titleText;
 const input = document.getElementById('login-email');
 if (input) {
@@ -720,7 +720,7 @@ const sendBtn = document.getElementById('btn-send-code');
 if (email && sendBtn && !sendBtn.disabled) {
 sendBtn.click();
 } else {
-alert('セキュリティ確認のため、メールに届く認証コードで本人確認をお願いします。下のフォームから「コード送信」を押してください。');
+alert('{{t.mypage.js16|js}}');
 }
 }
 
@@ -747,12 +747,12 @@ async function openBillingPortal() {
 const link = document.getElementById('btn-billing-portal');
 const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
 const session = localStorage.getItem('lj_session') || '';
-if (!email) { alert('プランの管理にはログインが必要です。'); return; }
+if (!email) { alert('{{t.mypage.js17|js}}'); return; }
 // Google ログインや古い端末連携ではセッションが無いため、その場でメール認証を促して続行する
 if (!session) { requestReauth('portal', email); return; }
 
 const original = link ? link.textContent : '';
-if (link) { link.textContent = '読み込み中...'; link.style.pointerEvents = 'none'; }
+if (link) { link.textContent = '{{t.mypage.js18|js}}'; link.style.pointerEvents = 'none'; }
 try {
 const res = await fetch(STRIPE_PORTAL_API_URL, {
 method: 'POST',
@@ -768,12 +768,12 @@ if (data && data.error === 'invalid_session') {
 localStorage.removeItem('lj_session');
 requestReauth('portal', email);
 } else if (data && data.error === 'customer_not_found') {
-alert('このメールアドレスでのお支払い情報が見つかりませんでした。決済時に入力したメールアドレスでログインしているかご確認ください。');
+alert('{{t.mypage.js19|js}}');
 } else {
-alert('プラン管理画面を開けませんでした。時間をおいてお試しください。');
+alert('{{t.mypage.js20|js}}');
 }
 } catch (err) {
-alert('通信エラーが発生しました。しばらくしてからお試しください。');
+alert('{{t.mypage.js21|js}}');
 } finally {
 if (link) { link.textContent = original; link.style.pointerEvents = 'auto'; }
 }
@@ -859,7 +859,7 @@ userTob = localStorage.getItem('tob') ||
           localStorage.getItem('lj_tob') || '12:00';
 }
 
-// 旧システムのダミー値 1970-01-01 を排除（'東京都' は実在の出生地なので保持）
+// 旧システムのダミー値 1970-01-01 を排除（'{{t.mypage.js22|js}}' は実在の出生地なので保持）
 if (userDob === '1970-01-01') userDob = '';
 
 // 万が一データが揃っていない場合は、送信せずに登録画面を出す
@@ -873,9 +873,9 @@ const currentJstISO = getJstIsoString();
 
 // 鑑定生成は数十秒かかるので進行状況を見せ、ブラウザが無限に待ち続けないよう自分で打ち切る
 const progressSteps = [
-  '本日の星回りデータを読み込んでいます...',
-  '出生図と本日のトランジットを計算しています...',
-  'あなた専用の鑑定文を執筆しています（最大約60秒）...'
+  '{{t.mypage.js23|js}}',
+  '{{t.mypage.js24|js}}',
+  '{{t.mypage.js25|js}}'
 ];
 let progressIndex = 0;
 const initialTextElem = document.getElementById('today-transit-text');
@@ -883,7 +883,7 @@ if (initialTextElem) initialTextElem.textContent = progressSteps[0];
 const progressTimer = setInterval(() => {
   progressIndex = Math.min(progressIndex + 1, progressSteps.length - 1);
   const textElem = document.getElementById('today-transit-text');
-  if (textElem && textElem.textContent.includes('しています')) {
+  if (textElem && textElem.textContent.includes('{{t.mypage.js26|js}}')) {
     textElem.textContent = progressSteps[progressIndex];
   }
 }, 12000);
@@ -903,7 +903,7 @@ city: userAddress,
 dob: userDob,
 tob: userTob,
 datetime: currentJstISO,
-language: 'ja'
+language: '{{lang}}'
 })
 });
 
@@ -929,7 +929,7 @@ makeRetryCount++;
 const delay = 6000;
 data = {
 status: "free",
-fortune: `宇宙の星々の配置をデータベース（会員DB）と照合・同期しています。約10秒ほどで自動更新されますので、このまましばらくお待ちください...（同期チェック中：試行 ${makeRetryCount}/5）`
+fortune: `{{t.mypage.tplSyncing|tpl}}${makeRetryCount}{{t.mypage.tplSyncingSuffix|tpl}}`
 };
 setTimeout(() => {
 fetchUserDataAndRender(email, true);
@@ -937,7 +937,7 @@ fetchUserDataAndRender(email, true);
 } else {
 data = {
 status: "free",
-fortune: "⚠️ 同期に失敗しました。マイページを再読み込みしてください。"
+fortune: "{{t.mypage.js27|js}}"
 };
 }
 } else {
@@ -949,7 +949,7 @@ data = { fortune: responseText };
 if (new URLSearchParams(location.search).get('status') === 'paid' && data.status !== 'paid' && paidSyncRetry < 5) {
 paidSyncRetry++;
 const textElem = document.getElementById('today-transit-text');
-if (textElem) textElem.textContent = `決済情報を確認しています...（${paidSyncRetry}/5）`;
+if (textElem) textElem.textContent = `{{t.mypage.tplPaymentCheck|tpl}}${paidSyncRetry}{{t.mypage.tplPaymentCheckSuffix|tpl}}`;
 setTimeout(() => { fetchUserDataAndRender(email, true); }, 4000);
 return;
 }
@@ -987,16 +987,16 @@ const timedOut = err && err.name === 'AbortError';
 const textElem = document.getElementById('today-transit-text');
 if (textElem) {
 textElem.textContent = timedOut
-  ? '⚠️ 鑑定文の生成に時間がかかっています。もう一度お試しください。'
-  : '⚠️ データの取得に失敗しました。通信環境をご確認のうえ、再度お試しください。';
+  ? '{{t.mypage.js28|js}}'
+  : '{{t.mypage.js29|js}}';
 if (!document.getElementById('retry-profile')) {
 const retryBtn = document.createElement('button');
 retryBtn.id = 'retry-profile';
-retryBtn.textContent = 'もう一度試す';
+retryBtn.textContent = '{{t.mypage.js30|js}}';
 retryBtn.style.cssText = 'margin-top:12px; padding:10px 20px; border:none; border-radius:8px; font-weight:600; cursor:pointer; background:#8B6B1B; color:#fff;';
 retryBtn.addEventListener('click', () => {
 retryBtn.remove();
-textElem.textContent = '本日の星回りデータを読み込んでいます...';
+textElem.textContent = '{{t.mypage.js31|js}}';
 fetchUserDataAndRender(email, true);
 });
 textElem.parentNode.appendChild(retryBtn);
@@ -1012,7 +1012,7 @@ clearTimeout(clientTimeout);
 function unlockPaidContent() {
 const badge = document.getElementById('user-status-badge');
 if (badge) {
-badge.textContent = 'プレミアム';
+badge.textContent = '{{t.mypage.js32|js}}';
 badge.className = 'user-badge paid';
 }
 const portalLink = document.getElementById('btn-billing-portal');
@@ -1033,7 +1033,7 @@ function renderUserData(data) {
 if (data.status === 'paid') {
 unlockPaidContent();
 } else {
-document.getElementById('user-status-badge').textContent = '無料プラン';
+document.getElementById('user-status-badge').textContent = '{{t.mypage.js33|js}}';
 document.getElementById('user-status-badge').className = 'user-badge free';
 const portalLink = document.getElementById('btn-billing-portal');
 if (portalLink) portalLink.style.display = 'none';
@@ -1057,16 +1057,16 @@ const fortuneContent = data.fortune || data.dailyMessage || data.text || data.me
 if (data.free_reading) {
 const fr = data.free_reading;
 let html = '';
-if (fr.horoscope) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>① 本日の運勢 (Today's Horoscope):</strong><br>${fr.horoscope}</div>`;
-if (fr.influence) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>② 本日受ける星の影響 (Astro Influence):</strong><br>${fr.influence}</div>`;
-if (fr.dasha_summary) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>③ 支配星周期の過ごし方 (Current Mahadasha Guidance):</strong><br>${fr.dasha_summary}</div>`;
+if (fr.horoscope) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>{{t.mypage.tpl01|tpl}}</strong><br>${fr.horoscope}</div>`;
+if (fr.influence) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>{{t.mypage.tpl02|tpl}}</strong><br>${fr.influence}</div>`;
+if (fr.dasha_summary) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>{{t.mypage.tpl03|tpl}}</strong><br>${fr.dasha_summary}</div>`;
 if (fr.lucky_element) html += `<div style="margin-top:15px; padding:10px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:6px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">④ ${fr.lucky_element}</div>`;
 document.getElementById('today-transit-text').innerHTML = html;
 } else {
 if (fortuneContent && typeof fortuneContent === 'string' && fortuneContent.trim() !== '') {
 document.getElementById('today-transit-text').innerHTML = fortuneContent.replace(/\\n/g, '<br>');
 } else if (data.moonSign) {
-document.getElementById('today-transit-text').textContent = `本日の月星座：${data.moonSign}`;
+document.getElementById('today-transit-text').textContent = `{{t.mypage.tplMoonToday|tpl}}${data.moonSign}`;
 }
 }
 
@@ -1094,7 +1094,7 @@ let detailHtml = '';
 if (pr.kundali_reading) {
 detailHtml += `
 <div class="card-box" style="margin-top:22px;">
-<div class="card-title">🔮 精密クンダリー・9天体配置の宿命解読</div>
+<div class="card-title">{{t.mypage.tpl04|tpl}}</div>
 <div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">${pr.kundali_reading}</div>
 </div>
 `;
@@ -1102,7 +1102,7 @@ detailHtml += `
 if (pr.detailed_horoscope) {
 detailHtml += `
 <div class="card-box">
-<div class="card-title">📅 本日の日次＆週次詳細運勢レポート</div>
+<div class="card-title">{{t.mypage.tpl05|tpl}}</div>
 <div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">${pr.detailed_horoscope}</div>
 </div>
 `;
@@ -1110,7 +1110,7 @@ detailHtml += `
 if (pr.lifetime_dasha) {
 detailHtml += `
 <div class="card-box">
-<div class="card-title">📜 108区分生涯カルテ＆支配星詳細解読</div>
+<div class="card-title">{{t.mypage.tpl06|tpl}}</div>
 <div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">${pr.lifetime_dasha}</div>
 </div>
 `;
@@ -1123,17 +1123,17 @@ if (data.status !== 'paid') applyPremiumSample();
 
 // 無料会員には有料項目の中身をサンプル文言で見せる（APIは呼ばず固定のダミー）
 const PREMIUM_SAMPLE = {
-dashaTitle: '現在の周期：木星期（2021年〜2037年）',
-dashaDesc: '学びと拡大の時期にあたり、専門性を深めるほど評価が積み上がる流れです。次の転機となる副周期の入り口と、そこで取るべき戦略まで詳細に解読します。',
+dashaTitle: '{{t.mypage.js34|js}}',
+dashaDesc: '{{t.mypage.js35|js}}',
 planets: [
-{ name: '太陽', sign: '山羊座', house: 10, comment: '社会的な使命と責任感が人生の軸になります。' },
-{ name: '月', sign: '蟹座', house: 4, comment: '心の安定は家庭と身近な人との絆から生まれます。' },
-{ name: '火星', sign: '牡羊座', house: 7, comment: '対人関係で主導権を握りやすい配置です。' }
+{ name: '{{t.mypage.js36|js}}', sign: '{{t.mypage.js37|js}}', house: 10, comment: '{{t.mypage.js38|js}}' },
+{ name: '{{t.mypage.js39|js}}', sign: '{{t.mypage.js40|js}}', house: 4, comment: '{{t.mypage.js41|js}}' },
+{ name: '{{t.mypage.js42|js}}', sign: '{{t.mypage.js43|js}}', house: 7, comment: '{{t.mypage.js44|js}}' }
 ],
 cards: [
-{ title: '🔮 精密クンダリー・9天体配置の宿命解読', text: 'ラグナ（アセンダント）と9天体の相互関係から、才能・適職・人間関係の傾向を立体的に読み解きます。無料鑑定では扱わないヨーガ（星の組み合わせ）や品位の判定まで含めた本格的な解析です。' },
-{ title: '📅 本日の日次＆週次詳細運勢レポート', text: 'その日の星回りに加え、1週間の流れと注意日、追い風となる日を具体的に提示します。あわせて星の負荷を和らげるレメディ（処方）もご案内します。' },
-{ title: '📜 108区分生涯カルテ＆支配星詳細解読', text: '生涯を108区分に分けた周期表から、転機となる年と取るべき行動を時系列で示します。人生の山と谷を先回りして準備できる内容です。' }
+{ title: '{{t.mypage.js45|js}}', text: '{{t.mypage.js46|js}}' },
+{ title: '{{t.mypage.js47|js}}', text: '{{t.mypage.js48|js}}' },
+{ title: '{{t.mypage.js49|js}}', text: '{{t.mypage.js50|js}}' }
 ]
 };
 
@@ -1175,10 +1175,10 @@ tbody.innerHTML = '';
 planets.forEach(p => {
 const tr = document.createElement('tr');
 tr.innerHTML = `
-<td class="planet-name" data-label="天体">${p.name || '-'}</td>
-<td data-label="サイン（星座）">${p.sign || '-'}</td>
-<td data-label="ハウス">第${p.house || '-'}ハウス</td>
-<td data-label="一言解説">${p.comment || p.nakshatra || '-'}</td>
+<td class="planet-name" data-label="{{t.mypage.js51|js}}">${p.name || '-'}</td>
+<td data-label="{{t.mypage.js52|js}}">${p.sign || '-'}</td>
+<td data-label="{{t.mypage.js53|js}}">{{t.mypage.tplHousePrefix|tpl}}${p.house || '-'}{{t.mypage.tplHouseSuffix|tpl}}</td>
+<td data-label="{{t.mypage.js54|js}}">${p.comment || p.nakshatra || '-'}</td>
 `;
 tbody.appendChild(tr);
 });

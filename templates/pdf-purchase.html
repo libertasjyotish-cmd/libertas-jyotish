@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html {{htmlAttrs}}>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>詳細鑑定PDFのご案内 | Libertas Jyotish</title>
+  <title>{{t.pdf-purchase.text01}}</title>
   <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
-  <link rel="canonical" href="https://libertas-jyotish.com/ja/pdf-purchase">
+  <link rel="canonical" href="https://libertas-jyotish.com/{{lang}}/pdf-purchase">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0c1a1f">
   <link rel="icon" type="image/png" href="/img/libertas-logo.png">
   <link rel="apple-touch-icon" href="/img/libertas-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="{{fontHref}}" rel="stylesheet">
   
   <style>
     :root {
@@ -21,7 +21,7 @@
       --color-gold-dark: #8B6B1B;
       --color-text-dark: #2C221E;
       --font-en: 'Cinzel', serif;
-      --font-ja: 'Noto Serif JP', serif;
+      --font-ja: {{fontFamily}};
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -146,31 +146,31 @@
     <div class="card-container">
       
       <div id="purchased-view" style="display:none;">
-        <h1 style="font-size:1.5rem; color:var(--color-text-dark); margin-bottom:12px;">ご購入ありがとうございます</h1>
-        <p style="font-size:0.9rem; color:#5A4E48; margin-bottom:22px;">完全鑑定書はご購入済みです。下のボタンからいつでも閲覧できます（ブラウザの印刷機能でPDF保存も可能です）。</p>
-        <a id="btn-open-report" class="btn-purchase" style="display:inline-block; text-decoration:none; text-align:center;" href="/ja/pdf-report">📖 完全鑑定書を開く</a>
+        <h1 style="font-size:1.5rem; color:var(--color-text-dark); margin-bottom:12px;">{{t.pdf-purchase.text02}}</h1>
+        <p style="font-size:0.9rem; color:#5A4E48; margin-bottom:22px;">{{t.pdf-purchase.text03}}</p>
+        <a id="btn-open-report" class="btn-purchase" style="display:inline-block; text-decoration:none; text-align:center;" href="/{{lang}}/pdf-report">{{t.pdf-purchase.text04}}</a>
       </div>
 
       <div id="purchase-form-view" style="display:none;">
-        <h1 style="font-size:1.5rem; color:var(--color-text-dark); margin-bottom:12px;">あなただけの完全鑑定書（PDF）</h1>
-        <p style="font-size:0.88rem; color:#5A4E48; margin-bottom:25px; line-height:1.9; text-align:left;">人生のテーマ、ダシャー周期、開運アドバイスを数十ページに渡る1冊の特別レポートにまとめてお届けします。古来よりインドでは出生祝いとして送られ、生涯に渡り自身の指針として大切にされてきた鑑定書です。一生の宝物としてご活用ください。</p>
+        <h1 style="font-size:1.5rem; color:var(--color-text-dark); margin-bottom:12px;">{{t.pdf-purchase.text05}}</h1>
+        <p style="font-size:0.88rem; color:#5A4E48; margin-bottom:25px; line-height:1.9; text-align:left;">{{t.pdf-purchase.text06}}</p>
 
         <div class="data-confirm-box">
-          <div class="form-group"><label for="user-email">メールアドレス</label><input type="email" id="user-email" required></div>
-          <div class="form-group"><label for="user-birthdate">生年月日・時間</label><input type="datetime-local" id="user-birthdate" required></div>
-          <div class="form-group"><label for="user-birthplace">出生地</label><input type="text" id="user-birthplace" placeholder="例: 東京都千代田区" required></div>
+          <div class="form-group"><label for="user-email">{{t.pdf-purchase.text07}}</label><input type="email" id="user-email" required></div>
+          <div class="form-group"><label for="user-birthdate">{{t.pdf-purchase.text08}}</label><input type="datetime-local" id="user-birthdate" required></div>
+          <div class="form-group"><label for="user-birthplace">{{t.pdf-purchase.text09}}</label><input type="text" id="user-birthplace" placeholder="{{t.pdf-purchase.placeholder01|attr}}" required></div>
         </div>
 
         <div id="price-label" style="font-size:1.3rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:15px;"></div>
-        <button id="btn-proceed-checkout" class="btn-purchase">💳 決済に進む（Stripe）</button>
-        <p id="checkout-note" style="font-size:0.8rem; color:#6A5E58; margin-top:12px;">ご購入後、サイト内の鑑定書ページでいつでも閲覧できます（ブラウザの印刷機能でPDF保存も可能です）。</p>
+        <button id="btn-proceed-checkout" class="btn-purchase">{{t.pdf-purchase.text10}}</button>
+        <p id="checkout-note" style="font-size:0.8rem; color:#6A5E58; margin-top:12px;">{{t.pdf-purchase.text11}}</p>
       </div>
 
     </div>
   </section>
 
   <footer class="site-footer">
-    <div class="footer-links"><a href="/ja/legal">特定商取引法に基づく表記・利用規約・プライバシーポリシー</a></div>
+    <div class="footer-links"><a href="/{{lang}}/legal">{{t.pdf-purchase.text12}}</a></div>
     <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
   </footer>
 
@@ -226,9 +226,9 @@
         const birthdate = document.getElementById('user-birthdate').value;
         const birthplace = document.getElementById('user-birthplace').value;
 
-        if (!email) { alert('メールアドレスを入力してください。'); return; }
-        if (!birthdate) { alert('生年月日・時間を入力してください。'); return; }
-        if (!birthplace) { alert('出生地を入力してください。'); return; }
+        if (!email) { alert('{{t.pdf-purchase.js01|js}}'); return; }
+        if (!birthdate) { alert('{{t.pdf-purchase.js02|js}}'); return; }
+        if (!birthplace) { alert('{{t.pdf-purchase.js03|js}}'); return; }
 
         localStorage.setItem('lj_user_email', email);
         localStorage.setItem('lj_user_birthdate', birthdate);

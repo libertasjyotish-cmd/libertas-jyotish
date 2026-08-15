@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html {{htmlAttrs}}>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>鑑定結果 | Libertas Jyotish</title>
+<title>{{t.result.text01}}</title>
 <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
-<link rel="canonical" href="https://libertas-jyotish.com/ja/result">
+<link rel="canonical" href="https://libertas-jyotish.com/{{lang}}/result">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#0c1a1f">
 <link rel="icon" type="image/png" href="/img/libertas-logo.png">
 <link rel="apple-touch-icon" href="/img/libertas-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="{{fontHref}}" rel="stylesheet">
 
 <style>
 :root {
 --color-gold-light: #FDE047; --color-gold-main: #D4AF37; --color-gold-dark: #8B6B1B;
---color-text-dark: #2C221E; --font-en: 'Cinzel', serif; --font-ja: 'Noto Serif JP', serif;
+--color-text-dark: #2C221E; --font-en: 'Cinzel', serif; --font-ja: {{fontFamily}};
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--font-ja); color: var(--color-text-dark); line-height: 1.8; min-height: 100vh; overflow-x: hidden; background-color: #0c1a1f; display: flex; flex-direction: column; }
@@ -117,15 +117,15 @@ border-radius: 10px; padding: 18px 16px; text-align: center;
 </div>
 <div id="content-area">
 <div class="loading-box">
-<div class="spinner"></div><p class="loading-title" id="loading-title">宇宙の配置（月星座）を解読中...</p>
-<p id="loading-note" style="font-size:0.8rem; color:#7a6a58; margin-top:6px;">鑑定文の生成に30～60秒ほどかかります。このままお待ちください。</p>
+<div class="spinner"></div><p class="loading-title" id="loading-title">{{t.result.text02}}</p>
+<p id="loading-note" style="font-size:0.8rem; color:#7a6a58; margin-top:6px;">{{t.result.text03}}</p>
 </div>
 </div>
 </div>
 </section>
 
 <footer class="site-footer">
-<div class="footer-links"><a href="/ja/legal">特定商取引法に基づく表記・利用規約・プライバシーポリシー</a></div>
+<div class="footer-links"><a href="/{{lang}}/legal">{{t.result.text04}}</a></div>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 
@@ -211,10 +211,10 @@ const payload = JSON.parse(savedInput);
 
 // 鑑定生成は数十秒かかるため、進行状況を順に見せて無反応に見えないようにする
 const progressSteps = [
-  '宇宙の配置（月星座）を解読中...',
-  '出生地の座標と出生図を計算しています...',
-  '本日のトランジット（星回り）を取得しています...',
-  'あなた専用の鑑定文を執筆しています...'
+  '{{t.result.js01|js}}',
+  '{{t.result.js02|js}}',
+  '{{t.result.js03|js}}',
+  '{{t.result.js04|js}}'
 ];
 let progressIndex = 0;
 const progressTimer = setInterval(() => {
@@ -254,7 +254,7 @@ email: payload.email,
 dob: payload.dob,
 tob: payload.tob,
 city: payload.city || payload.address,
-language: payload.language || 'ja',
+language: payload.language || '{{lang}}',
 status: data.status || 'free',
 lastResult: data
 };
@@ -266,14 +266,14 @@ console.error("Failed to save jyotish_user:", e);
 
 renderDiagnosis(data, payload);
 } catch (err) {
-console.error("通信エラー:", err);
+console.error("{{t.result.js05|js}}", err);
 const timedOut = err && err.name === 'AbortError';
 contentArea.innerHTML = `
 <div style="text-align:center; padding:20px;">
-<p style="color:#c0392b; font-weight:bold; font-size:1.05rem;">${timedOut ? '鑑定文の生成に時間がかかっています。' : '鑑定データの取得に失敗しました。'}</p>
-<p style="font-size:0.85rem; color:#5A4E48; margin-top:8px;">${timedOut ? '外部の占星計算・AI生成が混雑している可能性があります。再試行すると成功することが多いです。' : '大変恐れ入りますが、しばらく時間をおいてから再度お試しください。'}</p>
-<button id="retry-diagnosis" class="btn-primary" style="margin-top:15px; padding:12px 24px; border:none; border-radius:8px; font-weight:600; cursor:pointer;">もう一度試す</button>
-<div><a href="/ja" class="btn-secondary" style="margin-top:12px; display:inline-block;">入力画面に戻る</a></div>
+<p style="color:#c0392b; font-weight:bold; font-size:1.05rem;">${timedOut ? '{{t.result.js06|js}}' : '{{t.result.js07|js}}'}</p>
+<p style="font-size:0.85rem; color:#5A4E48; margin-top:8px;">${timedOut ? '{{t.result.js08|js}}' : '{{t.result.js09|js}}'}</p>
+<button id="retry-diagnosis" class="btn-primary" style="margin-top:15px; padding:12px 24px; border:none; border-radius:8px; font-weight:600; cursor:pointer;">{{t.result.tpl01|tpl}}</button>
+<div><a href="/{{lang}}" class="btn-secondary" style="margin-top:12px; display:inline-block;">{{t.result.tpl02|tpl}}</a></div>
 </div>
 `;
 const retryBtn = document.getElementById('retry-diagnosis');
@@ -288,11 +288,11 @@ clearTimeout(clientTimeout);
   contentArea.innerHTML = `
     <div style="text-align:center; padding:30px 10px;">
       <div style="font-size:2.5rem; margin-bottom:15px;">🔍💎</div>
-      <p style="color:#c0392b; font-weight:bold; font-size:1.1rem; margin-bottom:10px;">出生データが読み取れませんでした</p>
+      <p style="color:#c0392b; font-weight:bold; font-size:1.1rem; margin-bottom:10px;">{{t.result.tpl03|tpl}}</p>
       <p style="font-size:0.85rem; color:#5A4E48; line-height:1.6; margin-bottom:20px;">
-        ブラウザのセキュリティ設定、プライベートモードの利用、またはキャッシュの更新により、入力した一時データが消去された可能性があります。
+        {{t.result.tpl04|tpl}}
       </p>
-      <a href="/ja" class="btn-primary" style="display:inline-block; text-decoration:none; padding:12px 24px; font-weight:600; border-radius:8px; width:auto; max-width:260px;">もう一度TOPから入力する</a>
+      <a href="/{{lang}}" class="btn-primary" style="display:inline-block; text-decoration:none; padding:12px 24px; font-weight:600; border-radius:8px; width:auto; max-width:260px;">{{t.result.tpl05|tpl}}</a>
     </div>
   `;
 }
@@ -305,52 +305,52 @@ let readingContent = result.reading || result.result || JSON.stringify(result);
 if (result.free_reading) {
 const fr = result.free_reading;
 readingContent = `
-<h2>あなたを導く神秘の鑑定書</h2>
+<h2>{{t.result.tpl06|tpl}}</h2>
 
 <div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
-<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">あなたの太陽星座 (Sun Sign)</p>
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">{{t.result.tpl07|tpl}}</p>
 <p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.sunSign || '-'}</p>
 </div>
 
 <div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
-<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">あなたの月星座 (Moon Sign)</p>
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">{{t.result.tpl08|tpl}}</p>
 <p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.moonSign || '-'}</p>
 </div>
 
 <div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
-<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">ナクシャトラ (Nakshatra)</p>
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">{{t.result.tpl09|tpl}}</p>
 <p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.nakshatra || '-'}</p>
 </div>
 
 <div style="margin-bottom:24px;">
-<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">① 本日の運勢 (Today's Horoscope)</p>
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">{{t.result.tpl10|tpl}}</p>
 <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.horoscope || '-'}</p>
 </div>
 
 <div style="margin-bottom:24px;">
-<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">② 本日受ける星の影響 (Astro Influence)</p>
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">{{t.result.tpl11|tpl}}</p>
 <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.influence || '-'}</p>
 </div>
 
 <div style="margin-bottom:24px;">
-<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">③ 支配星周期の過ごし方 (Current Mahadasha Guidance)</p>
+<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">{{t.result.tpl12|tpl}}</p>
 <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.dasha_summary || '-'}</p>
 </div>
 
 <div style="margin-top:25px; padding:15px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:8px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">
-④ ${fr.lucky_element || '✨ 本日のラッキーテーマ: 沈黙と深い内省'}
+④ ${fr.lucky_element || '{{t.result.js10|js}}'}
 </div>
 `;
 }
 
 document.getElementById('content-area').innerHTML = `
-${input ? `<div class="meta-card">✉️ メール: ${input.email || '未設定'}<br>📅 生年月日: ${input.dob} ${input.tob || ''} | 📍 出生地: ${input.address || input.city}</div>` : ''}
+${input ? `<div class="meta-card">✉️ {{t.result.metaEmail|tpl}}${input.email || '{{t.result.metaUnset|js}}'}<br>📅 {{t.result.metaDob|tpl}}${input.dob} ${input.tob || ''} | 📍 {{t.result.metaCity|tpl}}${input.address || input.city}</div>` : ''}
 <div class="result-body">${readingContent}</div>
 ${result.status === 'paid' ? '' : buildLockedPreview()}
 <div class="cta-card">
-<h3 style="color:var(--color-gold-dark); margin-bottom:8px;">✨ マイページで全ての星の配置を確認</h3>
-<p style="font-size:0.85rem; color:#5A4E48; margin-bottom:15px;">会員マイページにて、いつでもカルテや本日の運勢を確認できます。</p>
-<a href="/ja/mypage" class="btn-primary">マイページへアクセスする</a>
+<h3 style="color:var(--color-gold-dark); margin-bottom:8px;">{{t.result.tpl13|tpl}}</h3>
+<p style="font-size:0.85rem; color:#5A4E48; margin-bottom:15px;">{{t.result.tpl14|tpl}}</p>
+<a href="/{{lang}}/mypage" class="btn-primary">{{t.result.tpl15|tpl}}</a>
 </div>
 `;
 
@@ -367,40 +367,40 @@ window.open(`${premiumUpgradeUrl()}?prefilled_email=${encodeURIComponent(email)}
 function buildLockedPreview() {
 return `
 <div class="locked-section">
-<div class="locked-section-title">🔒 プレミアム会員になると見られる内容</div>
-<p class="locked-section-lead">以下は表示イメージ（サンプル）です。ご登録いただくと、あなたの出生図に基づいた実際の内容が表示されます。</p>
+<div class="locked-section-title">{{t.result.tpl16|tpl}}</div>
+<p class="locked-section-lead">{{t.result.tpl17|tpl}}</p>
 <div class="locked-wrapper">
 <div>
 <div class="preview-card">
-<div class="preview-title">🪐 全天体（9天体）配置表</div>
+<div class="preview-title">{{t.result.tpl18|tpl}}</div>
 <table class="preview-table blur-content">
-<thead><tr><th>天体</th><th>サイン（星座）</th><th>ハウス</th><th>一言解説</th></tr></thead>
+<thead><tr><th>{{t.result.tpl19|tpl}}</th><th>{{t.result.tpl20|tpl}}</th><th>{{t.result.tpl21|tpl}}</th><th>{{t.result.tpl22|tpl}}</th></tr></thead>
 <tbody>
-<tr><td>太陽</td><td>山羊座</td><td>第10ハウス</td><td>社会的な使命と責任感が人生の軸になります。</td></tr>
-<tr><td>月</td><td>蟹座</td><td>第4ハウス</td><td>心の安定は家庭と身近な人との絆から生まれます。</td></tr>
-<tr><td>火星</td><td>牡羊座</td><td>第7ハウス</td><td>対人関係で主導権を握りやすい配置です。</td></tr>
+<tr><td>{{t.result.tpl23|tpl}}</td><td>{{t.result.tpl24|tpl}}</td><td>{{t.result.tpl25|tpl}}</td><td>{{t.result.tpl26|tpl}}</td></tr>
+<tr><td>{{t.result.tpl27|tpl}}</td><td>{{t.result.tpl28|tpl}}</td><td>{{t.result.tpl29|tpl}}</td><td>{{t.result.tpl30|tpl}}</td></tr>
+<tr><td>{{t.result.tpl31|tpl}}</td><td>{{t.result.tpl32|tpl}}</td><td>{{t.result.tpl33|tpl}}</td><td>{{t.result.tpl34|tpl}}</td></tr>
 </tbody>
 </table>
 </div>
 <div class="preview-card">
-<div class="preview-title">📜 マハー・ダシャー周期の解読</div>
-<p class="preview-text blur-content">現在の周期：木星期（2021年〜2037年）。学びと拡大の時期にあたり、専門性を深めるほど評価が積み上がる流れです。次の転機となる副周期の入り口と、そこで取るべき戦略まで詳細に解読します。</p>
+<div class="preview-title">{{t.result.tpl35|tpl}}</div>
+<p class="preview-text blur-content">{{t.result.tpl36|tpl}}</p>
 </div>
 <div class="preview-card">
-<div class="preview-title">🔮 精密クンダリー・9天体配置の宿命解読</div>
-<p class="preview-text blur-content">ラグナ（アセンダント）と9天体の相互関係から、才能・適職・人間関係の傾向を立体的に読み解きます。無料鑑定では扱わないヨーガ（星の組み合わせ）や品位の判定まで含めた本格的な解析です。</p>
+<div class="preview-title">{{t.result.tpl37|tpl}}</div>
+<p class="preview-text blur-content">{{t.result.tpl38|tpl}}</p>
 </div>
 <div class="preview-card">
-<div class="preview-title">📅 本日の日次＆週次詳細運勢レポート</div>
-<p class="preview-text blur-content">その日の星回りに加え、1週間の流れと注意日、追い風となる日を具体的に提示します。あわせて星の負荷を和らげるレメディ（処方）もご案内します。</p>
+<div class="preview-title">{{t.result.tpl39|tpl}}</div>
+<p class="preview-text blur-content">{{t.result.tpl40|tpl}}</p>
 </div>
 </div>
 <div class="lock-overlay">
 <div class="lock-icon">🔒</div>
-<div class="lock-title">有料会員限定コンテンツ</div>
-<p class="lock-note">全天体配置・ダシャー周期・詳細運勢・レメディが開放されます。</p>
-<button type="button" id="btn-upgrade-preview" class="btn-primary" style="width:auto; padding:12px 24px;">有料プランに登録する</button>
-<a href="/ja/pdf-purchase" class="btn-secondary" style="width:auto; padding:8px 18px; margin-top:12px;">買い切りの完全鑑定書（PDF）を見る</a>
+<div class="lock-title">{{t.result.tpl41|tpl}}</div>
+<p class="lock-note">{{t.result.tpl42|tpl}}</p>
+<button type="button" id="btn-upgrade-preview" class="btn-primary" style="width:auto; padding:12px 24px;">{{t.result.tpl43|tpl}}</button>
+<a href="/{{lang}}/pdf-purchase" class="btn-secondary" style="width:auto; padding:8px 18px; margin-top:12px;">{{t.result.tpl44|tpl}}</a>
 </div>
 </div>
 </div>

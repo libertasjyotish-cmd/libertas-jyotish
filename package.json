@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Vercel integration for Libertas Jyotish",
   "main": "index.html",
+  "scripts": {
+    "build:i18n": "node scripts/build-i18n.mjs",
+    "check:i18n": "node scripts/build-i18n.mjs --check"
+  },
   "dependencies": {
     "google-auth-library": "^9.14.0",
     "google-spreadsheet": "^4.1.4"

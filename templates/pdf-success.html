@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html {{htmlAttrs}}>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDFご購入完了 | Libertas Jyotish</title>
+  <title>{{t.pdf-success.text01}}</title>
   <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
-  <link rel="canonical" href="https://libertas-jyotish.com/ja/pdf-success">
+  <link rel="canonical" href="https://libertas-jyotish.com/{{lang}}/pdf-success">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0c1a1f">
   <link rel="icon" type="image/png" href="/img/libertas-logo.png">
   <link rel="apple-touch-icon" href="/img/libertas-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="{{fontHref}}" rel="stylesheet">
   
   <style>
     :root {
@@ -21,7 +21,7 @@
       --color-gold-dark: #8B6B1B;
       --color-text-dark: #2C221E;
       --font-en: 'Cinzel', serif;
-      --font-ja: 'Noto Serif JP', serif;
+      --font-ja: {{fontFamily}};
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -97,15 +97,15 @@
   <section class="main-section">
     <div class="success-card-container">
       <div style="font-size:3rem; margin-bottom:10px;">✨📜✨</div>
-      <h1 style="font-size:1.5rem; color:var(--color-text-dark); margin-bottom:12px;">ご注文ありがとうございます</h1>
-      <p id="success-note" style="font-size:0.88rem; color:#5A4E48; margin-bottom:25px;">ご入金の確認を行っています。反映まで数十秒かかることがあります。</p>
+      <h1 style="font-size:1.5rem; color:var(--color-text-dark); margin-bottom:12px;">{{t.pdf-success.text02}}</h1>
+      <p id="success-note" style="font-size:0.88rem; color:#5A4E48; margin-bottom:25px;">{{t.pdf-success.text03}}</p>
 
-      <a href="/ja/pdf-report" id="report-link" class="btn-download">📖 完全鑑定書を開く</a>
+      <a href="/{{lang}}/pdf-report" id="report-link" class="btn-download">{{t.pdf-success.text04}}</a>
     </div>
   </section>
 
   <footer class="site-footer">
-    <div class="footer-links"><a href="/ja/legal">特定商取引法に基づく表記・利用規約・プライバシーポリシー</a></div>
+    <div class="footer-links"><a href="/{{lang}}/legal">{{t.pdf-success.text05}}</a></div>
     <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
   </footer>
 
@@ -116,7 +116,7 @@
       const email = localStorage.getItem('lj_user_email');
       const session = localStorage.getItem('lj_session');
       if (!email || !session) {
-        note.innerHTML = '鑑定書の閲覧にはご購入時のメールアドレスでのログインが必要です。<a href=\"/ja/mypage\">マイページ</a>からログインしてください。';
+        note.innerHTML = '{{t.pdf-success.js01|js}}';
       }
     });
   </script>
