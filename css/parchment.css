@@ -1,0 +1,76 @@
+/* 羊皮紙の質感（繊維のムラ・四隅の焼け・めくれ）を、既存のベージュ面に重ねるレイヤー。
+   実体のない装飾なので pointer-events は無効にし、文字のコントラストは保つ。 */
+
+.hero-container,
+.about-section {
+  /* 直線ではなく、わずかに歪んだ紙の縁 */
+  border-radius: 18px 7px 20px 9px / 9px 20px 7px 18px;
+}
+
+.hero-container::before,
+.about-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  mix-blend-mode: multiply;
+  background-image:
+    /* 四隅の焼け */
+    radial-gradient(220px 170px at 0% 0%, rgba(120, 84, 36, 0.42), rgba(120, 84, 36, 0) 75%),
+    radial-gradient(200px 160px at 100% 0%, rgba(120, 84, 36, 0.36), rgba(120, 84, 36, 0) 75%),
+    radial-gradient(240px 185px at 0% 100%, rgba(104, 71, 28, 0.46), rgba(104, 71, 28, 0) 75%),
+    radial-gradient(220px 175px at 100% 100%, rgba(104, 71, 28, 0.40), rgba(104, 71, 28, 0) 75%),
+    /* 縁の陰り */
+    linear-gradient(to right, rgba(120, 88, 42, 0.28), rgba(120, 88, 42, 0) 9%, rgba(120, 88, 42, 0) 91%, rgba(120, 88, 42, 0.26)),
+    linear-gradient(to bottom, rgba(120, 88, 42, 0.22), rgba(120, 88, 42, 0) 7%, rgba(120, 88, 42, 0) 93%, rgba(120, 88, 42, 0.26)),
+    /* 経年のムラ・染み */
+    radial-gradient(40% 30% at 74% 66%, rgba(160, 124, 66, 0.30), rgba(160, 124, 66, 0) 70%),
+    radial-gradient(26% 20% at 18% 62%, rgba(150, 116, 60, 0.24), rgba(150, 116, 60, 0) 72%),
+    radial-gradient(22% 16% at 60% 14%, rgba(150, 116, 60, 0.22), rgba(150, 116, 60, 0) 72%),
+    radial-gradient(30% 24% at 34% 88%, rgba(140, 106, 52, 0.22), rgba(140, 106, 52, 0) 74%),
+    /* 繊維のざらつき（SVGノイズ） */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  background-size: auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, 240px 240px;
+}
+
+/* 四隅のよれ（右下と左上を軽くめくる） */
+.hero-container::after,
+.about-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  background-repeat: no-repeat;
+  background-image:
+    /* 左上 */
+    linear-gradient(135deg, rgba(232, 220, 193, 0.95) 38%, rgba(198, 176, 132, 0.9) 44%, rgba(122, 92, 46, 0.7) 47%, rgba(90, 66, 30, 0.28) 50%, rgba(0, 0, 0, 0) 52%),
+    /* 右上 */
+    linear-gradient(225deg, rgba(232, 220, 193, 0.9) 40%, rgba(198, 176, 132, 0.85) 45%, rgba(122, 92, 46, 0.6) 48%, rgba(90, 66, 30, 0.22) 50%, rgba(0, 0, 0, 0) 52%),
+    /* 左下 */
+    linear-gradient(45deg, rgba(232, 220, 193, 0.9) 40%, rgba(198, 176, 132, 0.85) 45%, rgba(122, 92, 46, 0.6) 48%, rgba(90, 66, 30, 0.22) 50%, rgba(0, 0, 0, 0) 52%),
+    /* 右下 */
+    linear-gradient(315deg, rgba(232, 220, 193, 0.95) 38%, rgba(198, 176, 132, 0.9) 44%, rgba(122, 92, 46, 0.7) 47%, rgba(90, 66, 30, 0.28) 50%, rgba(0, 0, 0, 0) 52%);
+  background-position: left top, right top, left bottom, right bottom;
+  background-size: 62px 62px, 46px 46px, 46px 46px, 70px 70px;
+  filter: drop-shadow(0 1px 2px rgba(70, 48, 18, 0.35));
+}
+
+/* 影の上に本文が乗るようにする（::before は z-index 0 のため） */
+.hero-container > *,
+.about-section > * {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-container,
+.about-section {
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.75),
+    0 0 20px rgba(212, 175, 55, 0.18),
+    inset 0 0 60px rgba(112, 76, 30, 0.42),
+    inset 0 1px 2px rgba(255, 255, 255, 0.7);
+}
