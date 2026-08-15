@@ -173,6 +173,9 @@ CORS は全オリジン許可。`OPTIONS` は 200、`POST` 以外は 405。
   - サブスク昇格時に `stripe_customer_id` を会員行へ記録する（解約イベントにはメールが載らないため）
   - `customer.subscription.deleted` / `customer.subscription.updated` で `status` が `canceled` / `unpaid` / `incomplete_expired` になった場合、`status` を `free` に戻す（`cancel_at_period_end` の予約状態では降格しない。`pdf_purchased` は買い切りの権利なので残す）
   - 解約イベントの会員特定は `stripe_customer_id` → メールの順。`STRIPE_SECRET_KEY` が設定されていれば、顧客IDからメールを引くフォールバックが働く
+- 解約導線: マイページのステータス行に「プランの管理・解約」（有料会員のみ表示）→ `POST /api/stripe-portal`（`verifySession` で本人確認）→ Stripe カスタマーポータルへ遷移
+  - 顧客IDは会員行の `stripe_customer_id`、無ければ `STRIPE_SECRET_KEY` で Stripe の顧客検索（メール一致）にフォールバック
+  - Stripe ダッシュボードでカスタマーポータルの有効化が必要
 - 課金状態は **Sheets のみを正** とし、`/api/jyotish` はリクエストボディの `status` を無視する（改ざんによる昇格と、診断時の `free` 上書きによる降格の両方を防止）
 - 決済直後は `/ja/mypage?status=paid` で Webhook 反映待ちのリトライ（最大 5 回 / 4 秒間隔）を行う
 
