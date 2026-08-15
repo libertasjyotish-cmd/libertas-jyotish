@@ -155,12 +155,13 @@ white-space: nowrap;
 .btn-action:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .locked-wrapper { position: relative; overflow: hidden; border-radius: 10px; }
-.blur-content { filter: blur(6px); user-select: none; pointer-events: none; opacity: 0.5; transition: filter 0.5s ease; }
+.locked-wrapper.preview-capped { max-height: 560px; }
+.blur-content { filter: blur(3.5px); user-select: none; pointer-events: none; opacity: 0.8; transition: filter 0.5s ease; }
 .lock-overlay {
-position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-background: rgba(242, 231, 207, 0.82);
-display: flex; flex-direction: column; align-items: center; justify-content: center;
-padding: 20px; text-align: center; z-index: 10;
+position: absolute; left: 0; bottom: 0; width: 100%;
+background: linear-gradient(to bottom, rgba(242, 231, 207, 0) 0%, rgba(242, 231, 207, 0.95) 40%);
+display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+padding: 90px 20px 22px; text-align: center; z-index: 10;
 }
 
 .btn-upgrade {
@@ -328,13 +329,13 @@ data-width="320">
 <div id="premium-gatekeeper" class="locked-wrapper">
 <div id="premium-content-area">
 
-<div class="card-box blur-content">
+<div class="card-box">
 <div class="card-title">マハー・ダシャー周期の解読</div>
 <p id="dasha-period-title" style="font-weight:600; font-size:0.9rem; color:#3A2E2B; margin-bottom:6px;">現在の周期：取得中...</p>
 <p id="dasha-description" style="font-size:0.88rem; color:#4a3e36;">データ読み込み中...</p>
 </div>
 
-<div class="card-box blur-content" style="margin-bottom:0;">
+<div class="card-box" style="margin-bottom:0;">
 <div class="card-title">🪐 全天体（9天体）配置表</div>
 <div style="overflow-x: auto;">
 <table class="planet-table">
@@ -1016,6 +1017,7 @@ const portalLink = document.getElementById('btn-billing-portal');
 if (portalLink) portalLink.style.display = 'inline';
 const overlay = document.getElementById('lock-overlay');
 if (overlay) overlay.style.display = 'none';
+document.getElementById('premium-gatekeeper')?.classList.remove('preview-capped');
 const area = document.getElementById('premium-content-area');
 if (area) {
 area.classList.remove('blur-content');
@@ -1033,6 +1035,7 @@ const portalLink = document.getElementById('btn-billing-portal');
 if (portalLink) portalLink.style.display = 'none';
 document.getElementById('lock-overlay').style.display = 'flex';
 document.getElementById('premium-content-area').classList.add('blur-content');
+document.getElementById('premium-gatekeeper')?.classList.add('preview-capped');
 }
 
 // インド占星術（サイデリアル）の太陽星座・月星座・ナクシャトラ
