@@ -10,18 +10,17 @@ const LINKS = {
     T2: 'https://buy.stripe.com/dRmaEZ0I73Bx6g8auH24000',
     T3: 'https://buy.stripe.com/3cIfZjaiH5JF33WbyL24002'
   },
-  // 完全鑑定書は価格帯別リンクが未作成のため、当面は全帯で既存リンクを使う。
   pdf: {
-    T1: 'https://buy.stripe.com/3cI14paiHegb480fP124001',
+    T1: 'https://buy.stripe.com/cNi00l62r8VRfQI0U724004',
     T2: 'https://buy.stripe.com/3cI14paiHegb480fP124001',
-    T3: 'https://buy.stripe.com/3cI14paiHegb480fP124001'
+    T3: 'https://buy.stripe.com/aFa8wRfD12xteME8mz24005'
   }
 };
 
 // 表示用の価格ラベル（税込）。リンクの金額と必ず揃える。
 const LABELS = {
   premium: { T1: '月額 750円（税込）', T2: '月額 500円（税込）', T3: '月額 300円（税込）' },
-  pdf: { T1: '買い切り 4,980円（税込）', T2: '買い切り 4,980円（税込）', T3: '買い切り 4,980円（税込）' }
+  pdf: { T1: '買い切り 7,480円（税込）', T2: '買い切り 4,980円（税込）', T3: '買い切り 2,980円（税込）' }
 };
 
 function resolveTier(country) {
