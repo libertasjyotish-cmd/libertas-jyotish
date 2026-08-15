@@ -3,6 +3,13 @@ const crypto = require('crypto');
 const { getMemberSheet, getLastSheetIssue, getMemberRecord } = require('./_sheets');
 const { listGeminiModels, generateWithGemini } = require('./_gemini');
 const { issueSession } = require('./_auth');
+const { createTerms } = require('./_terms');
+const { buildFallbackResponse: buildLocalizedFallback } = require('./_fallback');
+
+// 退避鑑定は日付・星座の算出をこのファイルの関数に依存するため、ヘルパーを渡して組み立てる。
+function buildFallbackResponse(dob, isPaid, lang) {
+  return buildLocalizedFallback(dob, isPaid, lang, { siderealSunSign, toJstIsoString });
+}
 
 const AUTH_SECRET = process.env.AUTH_SECRET;
 
@@ -399,7 +406,7 @@ module.exports = async function handler(req, res) {
             transit: Boolean(transitData),
             gemini_key: Boolean(process.env.GEMINI_API_KEY)
           });
-          cleanJsonResult = buildFallbackResponse(finalDob, finalStatus === 'paid');
+          cleanJsonResult = buildFallbackResponse(finalDob, finalStatus === 'paid', finalLang);
           cleanJsonResult.fallback_reason = fallbackReason || 'unknown';
           if (fallbackDetail) cleanJsonResult.fallback_detail = fallbackDetail;
         } else if (fallbackReason) {
@@ -434,7 +441,7 @@ module.exports = async function handler(req, res) {
 
       } catch (innerError) {
         console.error("Critical inner loop error, sending fallback:", innerError);
-        const fallback = buildFallbackResponse(finalDob, finalStatus === 'paid');
+        const fallback = buildFallbackResponse(finalDob, finalStatus === 'paid', finalLang);
         fallback.status = finalStatus;
         return res.status(200).json(fallback);
       }
@@ -445,7 +452,7 @@ module.exports = async function handler(req, res) {
   } catch (error) {
     console.error("Critical API Processing Error:", error);
     // どのようなルート例外が起きても、絶対に500エラーを出さずに、200 OKの正常レスポンスを返す！
-    const fallback = buildFallbackResponse(dob || '1990-01-01', false);
+    const fallback = buildFallbackResponse(dob || '1990-01-01', false, req.body && req.body.language);
     fallback.status = 'free';
     return res.status(200).json(fallback);
   }
@@ -496,63 +503,6 @@ function extractProkeralaMessage(text) {
   return String(text || '').replace(/<[^>]*>/g, ' ').trim().slice(0, 200) || null;
 }
 
-// API 障害時の退避鑑定書。内容は実際の天体計算ではないため is_fallback で明示する。
-function buildFallbackResponse(dob, isPaid) {
-  // 生年月日の日をベースに、27ナクシャトラを自動推定して変化を与える
-  const day = parseInt(dob.split('-')[2]) || 15;
-  const moonSigns = ['牡羊座', '牡牛座', '双子座', '蟹座', '獅子座', '乙女座', '天秤座', '蠍座', '射手座', '山羊座', '水瓶座', '魚座'];
-  const nakshatras = ['アシュヴィニー', 'バラニー', 'クリッティカー', 'ローヒニー', 'ムリガシラス', 'アールドラー', 'プナルヴァス', 'プシャ', 'アーシュレーシャ', 'マハ―', 'プールヴァ・パールグニー', 'ウッタラ・パールグニー', 'ハスタ', 'チトラ', 'スヴァーティ', 'ヴィシャーカー', 'アヌラーダ', 'ジェーシュタ', 'ムーラ', 'プールヴァ・アシャーダー', 'ウッタラ・アシャーダー', 'シュラヴァナ', 'ダニシュター', 'シャタビシャ', 'プールヴァ・バードラパダー', 'ウッタラ・バードラパダー', 'レーヴァティー'];
-  
-  const selectedMoonSign = moonSigns[day % 12];
-  const selectedNakshatra = nakshatras[day % 27];
-
-  // 退避文面でも日付ごとにトランジット月の位置が変わるようにする（月は約2.25日で1星座進む）
-  const todayJst = toJstIsoString(new Date()).slice(0, 10);
-  const daysSinceEpoch = Math.floor(new Date(`${todayJst}T00:00:00+09:00`).getTime() / 86400000);
-  const transitMoonSign = moonSigns[Math.floor(daysSinceEpoch / 2.25) % 12];
-  const transitNakshatra = nakshatras[daysSinceEpoch % 27];
-  const luckyThemes = ['白湯を飲むこと', '朝日を浴びること', '香りを整えること', '水回りを清めること', '黄色を身につけること', '静かな読書', '土に触れること'];
-  const luckyActions = ['スマホの通知を一時的にオフにして内省する', '感謝を一言だけ誰かに伝える', '机の上を5分だけ片づける', '深呼吸を10回する', '歩く速度を少しゆるめる', '不要な予定をひとつ手放す', '早めに休む'];
-
-  const response = {
-    is_fallback: true,
-    reading_date: todayJst,
-    sunSign: siderealSunSign(dob),
-    moonSign: selectedMoonSign,
-    nakshatra: selectedNakshatra,
-    free_reading: {
-      horoscope: `本日（${todayJst}）の運勢。本日のトランジット月は「${transitMoonSign}」付近を運行しています。今日の星々は、あなたの内なる情熱をそっと刺激しています。特に「${selectedMoonSign}」のエネルギーが、あなたの潜在意識に優しい光を投げかけており、焦らずに一歩ずつ進むことで、大きなインスピレーションを受け取ることができるでしょう。今日はご自身の直感を一番の味方にしてください。`,
-      influence: `本日受ける星の影響。トランジット（現在運行中）の月がナクシャトラ「${transitNakshatra}」を通過し、あなたの感情を司るハウスと美しく調成しています。誰かに言われた些細な一言に惑わされることなく、自分の真実の声を聴くのに最適な配置です。静かな時間を5分だけでも持つことが、運気を最大に引き上げる鍵となります。`,
-      dasha_summary: `支配星周期の過ごし方。生まれた瞬間の月のナクシャトラ「${selectedNakshatra}」が、あなたの人生に豊かな潤いを与えています。今は「自己愛と整理整頓」のサイクルにあります。これまでの努力が静かに実を結ぶ直前の時期ですので、ご自身をたくさん労い、褒めてあげてください。`,
-      lucky_element: `✨ 本日のラッキーテーマ: ${luckyThemes[daysSinceEpoch % luckyThemes.length]} | 開運アクション: ${luckyActions[daysSinceEpoch % luckyActions.length]}`
-    }
-  };
-
-  if (isPaid) {
-    response.dashaTitle = "現在の支配星大周期：マハー・ダシャー 木星期";
-    response.dashaDesc = "豊かさと知性を司る「木星」の恩恵を最も強く受ける、約16年間の大幸運期が巡ってきています。直感を信じ、新しい学びや人脈を広げる挑戦に身を投じることで、宿命の設計図に秘められた潜在能力が驚異的なスピードで開花していきます。";
-    response.planets = [
-      { name: "アセンダント", sign: selectedMoonSign, house: "1", comment: "あなたの魂の器と外見、宿命の基礎を完璧に定義します。" },
-      { name: "太陽", sign: "獅子座", house: "5", comment: "自己表現と創造性が最大化され、周囲を温かく照らすリーダーシップが発揮されます。" },
-      { name: "月", sign: selectedMoonSign, house: "1", comment: "感情と直感。最も自分らしくいられる心地よい揺るぎない心の土台が形成されています。" },
-      { name: "水星", sign: "乙女座", house: "6", comment: "分析能力とコミュニケーション。緻密な計画を立案する力が非常に研ぎ澄まされています。" },
-      { name: "金星", sign: "天秤座", house: "7", comment: "対人関係、パートナーシップ、美。愛に満ちた調和のとれた関係性が築かれます。" },
-      { name: "火星", sign: "牡羊座", house: "10", comment: "仕事とキャリア、行動力。抜群の実行力でどんな高い壁も一撃でなぎ倒します。" },
-      { name: "木星", sign: "射手座", house: "9", comment: "学問、幸運、精神の拡大。あなたを導く智慧と保護のエネルギーです。" },
-      { name: "土星", sign: "山羊座", house: "12", comment: "長期的な基盤。カルマの整理と、目に見えない世界での深い内省と成長。" },
-      { name: "ラーフ", sign: "双子座", house: "3", comment: "飽くなき知識への探求心。新しいデジタルツールや技術への旺盛な適応力。" },
-      { name: "ケートゥ", sign: "射手座", house: "9", comment: "精神世界への目覚め。過去生から受け継いできた確固たる霊的直感。" }
-    ];
-    response.premium_reading = {
-      kundali_reading: `精密クンダリー解読：あなたの出生図において、ラグナ（第1ハウス）は「${selectedMoonSign}」に位置しており、魂の方向性は極めて純粋で、真実の追求にまっすぐ向いています。9天体の中で最も光り輝く「木星」が幸運の第9ハウスに自座（実家）しているため、あなたの人生には常に目に見えない偉大な守護が働いています。たとえ一時的に窮地に陥ったとしても、奇跡的な偶然や支援者によって必ず救い出され、さらに一歩高みへと登ることができる特別な配置です。`,
-      detailed_horoscope: `本日のアスペクト詳細レポート：現在のトランジット木星と月の角度（アスペクト）が完璧な調和（トリロジー：120度）を描いています。これは、滞っていた通信、システム、あるいは人間関係の誤解がカチッと一瞬で解消され、澄み渡った青空のようなクリアな風が吹き抜ける大吉の配置です。自信を持って目の前の作業を完了させ、本番公開へと進めてください。宇宙は100%あなたを支持しています。`,
-      lifetime_dasha: `108区分生涯カルテ：あなたの人生のバイオリズム（ダシャー・システム）を解読すると、これまでの「努力と忍耐の土星期」が完全に明け去り、いよいよ「智慧と拡大の木星期」の黄金の扉が今開こうとしています。今後数年間にわたり、あなたの発するアイデア、生み出す作品、提供するサービスは、多くの人々の心に深く刺さり、社会的に非常に高い評価と物質的な豊かさをもたらすでしょう。レメディとして、毎週木曜日にはゴールドのアクセサリーを身につけるか、黄色い花を部屋に飾ることをお勧めします。`
-    };
-  }
-
-  return response;
-}
-
 // JSTのISO8601文字列（+09:00）を返す
 function toJstIsoString(date) {
   const jst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
@@ -584,15 +534,19 @@ const OUTPUT_LANGUAGE = {
   ja: 'Japanese', en: 'English', es: 'Spanish', pt: 'Portuguese', ar: 'Arabic', id: 'Indonesian'
 };
 
-// 日本語以外は Prokerala の英語表記をそのまま使う（占星用語は英語が国際的な標準表記のため）。
+// Prokerala のサンスクリット表記をいったん日本語（内部キー）に寄せ、表示言語の語彙に変換する。
 function signFor(sign, lang) {
-  if (lang === 'ja') return toJapaneseSign(sign);
-  return sign || 'Unknown';
+  if (!sign) return lang === 'ja' ? '不明' : 'Unknown';
+  const japanese = toJapaneseSign(sign);
+  if (lang === 'ja') return japanese;
+  return createTerms(lang).sign(japanese) || sign;
 }
 
 function nakshatraFor(name, lang) {
-  if (lang === 'ja') return toJapaneseNakshatra(name);
-  return name || '';
+  if (!name) return '';
+  const japanese = toJapaneseNakshatra(name);
+  if (lang === 'ja') return japanese;
+  return createTerms(lang).nakshatra(japanese) || name;
 }
 
 // Prokerala のナクシャトラ名（英字表記・表記ゆれあり）を日本語へ変換する
