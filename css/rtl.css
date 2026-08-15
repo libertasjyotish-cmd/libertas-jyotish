@@ -1,0 +1,82 @@
+/* 右横書き（アラビア語）専用の調整。dir="rtl" のページだけに効く。
+   各ページの <style> は左横書き前提の指定（text-align: left、border-left など）を
+   含むため、ここで論理方向に読み替える。 */
+
+[dir="rtl"] body,
+[dir="rtl"] .meta-card,
+[dir="rtl"] .result-body,
+[dir="rtl"] .locked-section,
+[dir="rtl"] .form-grid,
+[dir="rtl"] .form-group,
+[dir="rtl"] .plan-list,
+[dir="rtl"] .info-card,
+[dir="rtl"] .premium-card,
+[dir="rtl"] .report-card {
+  text-align: right;
+}
+
+/* インラインの text-align: left は個別に上書きできないため属性で拾う。 */
+[dir="rtl"] [style*="text-align:left"],
+[dir="rtl"] [style*="text-align: left"] {
+  text-align: right !important;
+}
+
+[dir="rtl"] th,
+[dir="rtl"] td,
+[dir="rtl"] .planet-table th,
+[dir="rtl"] .planet-table td,
+[dir="rtl"] .preview-table th,
+[dir="rtl"] .preview-table td,
+[dir="rtl"] .timeline-table th,
+[dir="rtl"] .timeline-table td {
+  text-align: right;
+}
+
+/* 見出しの飾り罫と字下げを右側へ。 */
+[dir="rtl"] h2[style*="border-left"],
+[dir="rtl"] .result-body h3,
+[dir="rtl"] .section-title,
+[dir="rtl"] .quote {
+  border-left: 0;
+  border-right: 3px solid var(--color-gold-main, #D4AF37);
+  padding-left: 0;
+  padding-right: 12px;
+}
+
+[dir="rtl"] ul,
+[dir="rtl"] ol {
+  padding-left: 0;
+  padding-right: 20px;
+}
+
+[dir="rtl"] .label-note,
+[dir="rtl"] .lj-menu .lj-menu-note {
+  margin-left: 0;
+  margin-right: 6px;
+}
+
+[dir="rtl"] [style*="margin-left:8px"],
+[dir="rtl"] [style*="margin-left: 8px"] {
+  margin-left: 0 !important;
+  margin-right: 8px;
+}
+
+[dir="rtl"] .color-chip {
+  margin-right: 0;
+  margin-left: 6px;
+}
+
+/* メニューは右上固定なので、RTL では左上へ。 */
+[dir="rtl"] .lj-menu {
+  right: auto;
+  left: 12px;
+}
+
+/* 数字・英字混じりの識別子（日時やメールなど）は左横書きのまま読ませる。 */
+[dir="rtl"] input[type="date"],
+[dir="rtl"] input[type="time"],
+[dir="rtl"] input[type="email"],
+[dir="rtl"] .code-input {
+  direction: ltr;
+  text-align: left;
+}

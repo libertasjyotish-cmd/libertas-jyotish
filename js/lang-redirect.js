@@ -3,7 +3,7 @@
 (function () {
   // 公開済みの言語ディレクトリのみを列挙する。
   // 新しい言語（/en/, /es/, /pt/, /ar/, /id/）を公開したらここに追加すれば自動判定に載る。
-  var AVAILABLE_LANGS = ['ja', 'en'];
+  var AVAILABLE_LANGS = ['ja', 'en', 'es', 'pt', 'ar', 'id'];
   var FALLBACK_LANG = 'ja';
 
   var userLang = (navigator.language || navigator.userLanguage || FALLBACK_LANG).toLowerCase();

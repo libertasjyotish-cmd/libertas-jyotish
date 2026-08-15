@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Página de miembro | Libertas Jyotish</title>
+
+<!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
+<link rel="canonical" href="https://libertas-jyotish.com/es/mypage">
+
+<!-- PWA & Theme Settings -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0c1a1f">
+<link rel="icon" type="image/png" href="/img/libertas-logo.png">
+<link rel="apple-touch-icon" href="/img/libertas-logo.png">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+
+
+<!-- Google Identity Services SDK -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+:root {
+--color-gold-light: #FDE047;
+--color-gold-main: #D4AF37;
+--color-gold-dark: #8B6B1B;
+--color-bg-dark: #0c1a1f;
+--color-text-dark: #2C221E;
+--font-en: 'Cinzel', serif;
+--font-ja: 'Noto Serif', serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+font-family: var(--font-ja);
+color: var(--color-text-dark);
+line-height: 1.8;
+min-height: 100vh;
+overflow-x: hidden;
+background-color: var(--color-bg-dark);
+display: flex;
+flex-direction: column;
+}
+
+.site-header {
+position: fixed;
+top: 0; left: 0; width: 100%; z-index: 100;
+background: rgba(12, 26, 31, 0.92);
+backdrop-filter: blur(8px);
+-webkit-backdrop-filter: blur(8px);
+border-bottom: 1px solid rgba(139, 107, 27, 0.3);
+padding: 12px 20px;
+display: flex; justify-content: space-between; align-items: center;
+}
+
+.header-logo {
+display: flex; align-items: center; gap: 10px;
+text-decoration: none; color: var(--color-gold-main);
+font-family: var(--font-en); font-weight: 600; font-size: 1.05rem;
+}
+
+.header-logo img { width: 32px; height: 32px; }
+
+.header-nav { display: flex; gap: 18px; align-items: center; }
+.header-nav a { color: #E2D9CE; text-decoration: none; font-size: 0.82rem; transition: color 0.3s; }
+.header-nav a:hover { color: var(--color-gold-main); }
+
+.main-section {
+position: relative; flex: 1;
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+padding: 100px 20px 60px;
+background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");
+background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed;
+}
+
+.hero-container {
+position: relative; z-index: 2; width: 100%; max-width: 680px;
+background-image:
+radial-gradient(circle at 50% 25%, rgba(255, 253, 245, 0.98) 0%, rgba(245, 233, 208, 0.95) 55%, rgba(220, 200, 162, 0.96) 100%),
+linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.05) 100%);
+background-blend-mode: overlay, normal;
+backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+border-radius: 14px;
+border: 1px solid rgba(184, 142, 60, 0.65);
+outline: 1px solid rgba(212, 175, 55, 0.35);
+outline-offset: -7px;
+box-shadow:
+0 25px 50px -12px rgba(0, 0, 0, 0.75),
+0 0 20px rgba(212, 175, 55, 0.18),
+inset 0 0 35px rgba(139, 90, 43, 0.28),
+inset 0 2px 4px rgba(255, 255, 255, 0.8);
+padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
+}
+
+.status-bar {
+display: flex; justify-content: space-between; align-items: center;padding-bottom: 15px; margin-bottom: 25px; border-bottom: 1px dashed rgba(139, 107, 27, 0.35);
+}
+.user-badge { font-size: 0.78rem; font-weight: 600; padding: 4px 14px; border-radius: 20px; }
+.user-badge.free { background: rgba(139, 107, 27, 0.15); color: var(--color-gold-dark); border: 1px solid rgba(139, 107, 27, 0.4); }
+.user-badge.paid { background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%); color: #FFFDF9; }
+
+.btn-logout {
+font-size: 0.75rem; color: #8B6B1B; text-decoration: underline; cursor: pointer; margin-left: 10px; transition: color 0.2s;
+}
+.btn-logout:hover { color: #5A4E48; }
+
+.card-box {
+background: rgba(255, 252, 245, 0.85);
+border: 1px solid rgba(139, 107, 27, 0.35); border-radius: 10px;
+padding: 22px; margin-bottom: 22px; text-align: left;
+box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.12);
+position: relative; overflow: hidden;
+}
+
+.card-title {font-size: 1.05rem; color: var(--color-gold-dark); font-weight: 600;
+margin-bottom: 10px; border-bottom: 1px solid rgba(139, 107, 27, 0.2); padding-bottom: 5px;
+}
+
+input[type="email"], input[type="text"] {
+width: 100%; padding: 11px 14px;
+background-color: rgba(255, 252, 245, 0.85);
+border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px;
+font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none; transition: all 0.3s ease;
+box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.12);
+}
+input[type="email"]:focus, input[type="text"]:focus {
+border-color: var(--color-gold-dark);
+box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.15), 0 0 8px rgba(212, 175, 55, 0.3);
+background-color: #FFFDF9;
+}
+
+.google-btn-container {
+width: 100%; display: flex; justify-content: center; margin-bottom: 12px; min-height: 44px;
+}
+
+.auth-divider {
+text-align: center; font-size: 0.78rem; color: #8B6B1B; margin: 14px 0;
+}
+
+.login-form-group { display: flex; gap: 8px; margin-top: 8px; }
+
+.btn-action {
+padding: 11px 20px; background: var(--color-gold-dark); color: #FFFDF9;
+border: none; border-radius: 8px; cursor: pointer; font-size: 0.88rem; font-weight: 600;
+box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: background 0.2s, opacity 0.2s;
+white-space: nowrap;
+}
+.btn-action:hover { background: #735715; }
+.btn-action:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.locked-wrapper { position: relative; overflow: hidden; border-radius: 10px; }
+.blur-content { filter: blur(3.5px); user-select: none; pointer-events: none; opacity: 0.8; transition: filter 0.5s ease; }
+/* 項目名は読める状態にして、中身だけをぼかす（有料で何が読めるか伝えるため） */
+.preview-blur { filter: blur(3.5px); user-select: none; pointer-events: none; opacity: 0.75; }
+.locked-wrapper.preview-mode .lock-overlay { position: static; padding: 18px 16px; background: rgba(212, 175, 55, 0.14); border: 1px solid rgba(139, 107, 27, 0.35); border-radius: 10px; margin-top: 16px; }
+.lock-overlay {
+position: absolute; left: 0; bottom: 0; width: 100%;
+background: linear-gradient(to bottom, rgba(242, 231, 207, 0) 0%, rgba(242, 231, 207, 0.95) 40%);
+display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+padding: 90px 20px 22px; text-align: center; z-index: 10;
+}
+
+.btn-upgrade {
+display: inline-block; padding: 12px 24px; font-size: 0.95rem; font-weight: 600;
+color: #FFFDF9; background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%);
+border: none; border-radius: 8px; cursor: pointer; text-decoration: none;
+box-shadow: 0 8px 20px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+transition: transform 0.2s;
+}
+.btn-upgrade:hover { transform: translateY(-1px); }
+
+.planet-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+.planet-table th, .planet-table td { padding: 8px 10px; border: 1px solid rgba(139, 107, 27, 0.3); text-align: left; }
+.planet-table th { background: rgba(212, 175, 55, 0.15); color: var(--color-gold-dark); font-weight: 600; }
+.planet-table td.planet-name { font-weight: 600; white-space: nowrap; color: #3A2E2B; }
+
+/* スマホでは横スクロールをやめ、1天体 = 1カードの縦並びにして全項目を読めるようにする */
+@media (max-width: 640px) {
+.planet-table, .planet-table tbody, .planet-table tr, .planet-table td { display: block; width: 100%; }
+.planet-table thead { display: none; }
+.planet-table tr {
+border: 1px solid rgba(139, 107, 27, 0.35); border-radius: 8px;
+background: rgba(255, 253, 247, 0.6); margin-bottom: 10px; padding: 4px 0;
+}
+.planet-table td {
+border: none; border-bottom: 1px dashed rgba(139, 107, 27, 0.25);
+display: flex; gap: 12px; align-items: baseline; padding: 7px 12px;
+white-space: normal; word-break: break-word;
+}
+.planet-table tr td:last-child { border-bottom: none; }
+.planet-table td::before {
+content: attr(data-label); flex: 0 0 6.5em;
+font-size: 0.75rem; font-weight: 600; color: var(--color-gold-dark);
+}
+.planet-table td.planet-name { font-size: 0.95rem; }
+}
+
+.site-footer {
+width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3);
+padding: 24px 20px; text-align: center; position: relative; z-index: 10;
+}
+.footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
+.copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
+
+@media (max-width: 640px) {
+/* Google ログインボタン（固定幅320px）がはみ出して横スクロールが出ないよう余白を詰める */
+body { overflow-x: hidden; }
+.main-section { padding: 90px 10px 40px; }
+.hero-container { padding: 30px 12px 26px; }
+.card-box { padding: 16px 12px; }
+.google-btn-container { max-width: 100%; overflow: hidden; }
+.login-form-group { flex-direction: column; }
+}
+</style>
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/rtl.css">
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'es',
+  menu: {
+    top: 'Inicio',
+    free: 'Lectura gratuita',
+    about: 'Sobre Libertas Jyotish',
+    report: 'Informe Vitalicio (pago único)',
+    calendar: 'Calendario Anual de la Fortuna',
+    calendarNote: 'próximamente',
+    mypage: 'Página de miembro',
+    legal: 'Información legal y términos',
+    toggleLabel: 'Menú',
+    navLabel: 'Menú del sitio'
+  },
+  price: {
+    premium: '{price} al mes (impuestos incl.)',
+    pdf: '{price} pago único (impuestos incl.)',
+    premiumApprox: 'Unos {price} al mes (impuestos incl.); el importe final se muestra al pagar',
+    pdfApprox: 'Unos {price} en pago único (impuestos incl.); el importe final se muestra al pagar',
+    checkoutOnly: 'El importe en tu moneda local se muestra al pagar'
+  }
+};
+</script>
+<script defer src="/js/site-menu.js"></script>
+<script src="/js/checkout-links.js"></script>
+</head>
+<body>
+
+<header class="site-header" data-site-header></header>
+
+<section class="main-section">
+<div class="hero-container">
+
+<!-- ステータス表示エリア -->
+<div class="status-bar">
+<div style="text-align:left;">
+<div style="font-size:0.75rem; color:#7a6a58; font-family:var(--font-en);">MEMBERSHIP PORTAL</div>
+<div style="display:flex; align-items:center;">
+<span id="user-display-email" style="font-weight:600; font-size:0.95rem; color:var(--color-text-dark);">Sin iniciar sesión (invitado)</span>
+<span id="btn-logout" class="btn-logout" style="display:none;" onclick="logout()">Cerrar sesión</span>
+<span id="btn-billing-portal" class="btn-logout" style="display:none;" onclick="openBillingPortal()">Gestionar o cancelar el plan</span>
+<a id="btn-open-pdf-report" class="btn-logout" style="display:none; text-decoration:none;" href="/es/pdf-report">Abrir el Informe Vitalicio</a>
+</div>
+</div>
+<span id="user-status-badge" class="user-badge free">Plan gratuito</span>
+</div>
+
+<!-- ログイン・端末連携カード -->
+<div id="auth-box" class="card-box">
+<div class="card-title">🔑 Iniciar sesión y vincular este dispositivo</div>
+
+<!-- Google 公式認証ボタン領域 --><div class="google-btn-container">
+<div id="g_id_onload"
+data-client_id="789459066589-2tla7ubk127eic0g5aekql75ohdejnto.apps.googleusercontent.com"
+data-callback="handleCredentialResponse"
+data-auto_prompt="false">
+</div>
+<div class="g_id_signin"
+data-type="standard"
+data-size="large"
+data-theme="outline"
+data-text="sign_in_with"
+data-shape="rectangular"
+data-logo_alignment="left"
+data-width="320">
+</div>
+</div>
+
+<div class="auth-divider">─ o verificar por correo ─</div>
+
+<div id="step-email" class="login-form-group">
+<input type="email" id="login-email" placeholder="Introduce tu correo" required>
+<button id="btn-send-code" class="btn-action">Enviar código</button>
+</div>
+
+<div id="step-code" class="login-form-group" style="display:none; margin-top:10px;">
+<input type="text" id="login-code" placeholder="Escribe el código de 6 dígitos" maxlength="6">
+<button id="btn-verify-code" class="btn-action" style="background:#2C5282;">Verificar</button>
+</div>
+</div>
+
+<!-- 出生データ登録カード（初回ログイン時・データ欠落時の自律復元用） -->
+<div id="birth-setup-box" class="card-box" style="display: none;">
+<div class="card-title">📅 Registra tus datos de nacimiento</div>
+<p style="font-size: 0.82rem; color: #5A4E48; margin-bottom: 15px; line-height: 1.6; text-align: left;">
+Es tu primera visita en este dispositivo, o tus datos de nacimiento aún no están registrados.<br>
+Introduce tus datos de nacimiento para que podamos mostrarte tu mapa exacto y el panorama de hoy.<br>
+Una vez guardados, iniciarás sesión automáticamente la próxima vez.
+</p>
+<form id="form-birth-setup">
+<div style="margin-bottom: 12px; text-align: left;">
+<label style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px;">Fecha de nacimiento</label>
+<input type="date" id="setup-dob" required style="width: 100%; padding: 11px 14px; background-color: rgba(255, 252, 245, 0.85); border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px; font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none;">
+</div>
+<div style="margin-bottom: 12px; text-align: left;">
+<label style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px;">Hora de nacimiento <span style="font-weight: normal; font-size: 0.72rem; color: #7a6a58; margin-left: 4px;">(si no la sabes, introduce 12:00)</span></label>
+<input type="time" id="setup-tob" style="width: 100%; padding: 11px 14px; background-color: rgba(255, 252, 245, 0.85); border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px; font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none;">
+</div>
+<div style="margin-bottom: 18px; text-align: left;">
+<label style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px;">Lugar de nacimiento (ciudad, región)</label>
+<input type="text" id="setup-city" placeholder="p. ej., Madrid, España" required style="width: 100%; padding: 11px 14px; background-color: rgba(255, 252, 245, 0.85); border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px; font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none;">
+</div>
+<button type="submit" class="btn-action" style="width: 100%; padding: 13px; font-size: 0.95rem; font-weight: 600; text-align: center; border-radius: 8px; background: var(--color-gold-dark); color: #FFFDF9; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">Guardar mis datos y leer mi mapa</button>
+</form>
+</div>
+
+<!-- 本日の月星座運勢 -->
+<div class="card-box">
+<div class="card-title">🌟 Panorama de hoy según tu signo lunar</div>
+<div id="sign-summary" style="display:none; gap:16px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px dashed rgba(139,107,27,0.25);">
+<div style="flex:1;">
+<div style="font-size:0.72rem; color:var(--color-gold-dark); font-weight:700;">Signo solar</div>
+<div id="sun-sign-text" style="font-size:1.05rem; font-weight:700; color:var(--color-text-dark);">-</div>
+</div>
+<div style="flex:1;">
+<div style="font-size:0.72rem; color:var(--color-gold-dark); font-weight:700;">Signo lunar</div>
+<div id="moon-sign-text" style="font-size:1.05rem; font-weight:700; color:var(--color-text-dark);">-</div>
+</div>
+<div style="flex:1;">
+<div style="font-size:0.72rem; color:var(--color-gold-dark); font-weight:700;">Nakshatra (27 mansiones lunares)</div>
+<div id="nakshatra-text" style="font-size:1.05rem; font-weight:700; color:var(--color-text-dark);">-</div>
+</div>
+</div>
+<p id="today-transit-text" style="font-size:0.88rem; color:#4a3e36; min-height: 48px;">
+Cargando los datos del mapa de hoy...
+</p>
+</div>
+
+<!-- プレミアム鑑定カルテ -->
+<h2 style="font-size:1.15rem; color:var(--color-gold-dark); text-align:left; margin-bottom:12px;">📜 Mapa de la lectura Premium</h2>
+<p id="premium-sample-lead" style="display:none; font-size:0.82rem; color:#5A4E48; text-align:left; margin-bottom:12px;">Abajo tienes una muestra de cómo se ve. Tras la suscripción, el contenido pasa a ser real, basado en tu propia carta natal.</p>
+
+<div id="premium-gatekeeper" class="locked-wrapper">
+<div id="premium-content-area">
+
+<div class="card-box">
+<div class="card-title">Lectura de tu ciclo Maha Dasha</div>
+<p id="dasha-period-title" style="font-weight:600; font-size:0.9rem; color:#3A2E2B; margin-bottom:6px;">Ciclo actual: cargando...</p>
+<p id="dasha-description" style="font-size:0.88rem; color:#4a3e36;">Cargando los datos...</p>
+</div>
+
+<div class="card-box" style="margin-bottom:0;">
+<div class="card-title">🪐 Posición de los nueve planetas</div>
+<div style="overflow-x: auto;">
+<table class="planet-table">
+<thead>
+<tr>
+<th>Planeta</th>
+<th>Signo</th>
+<th>Casa</th>
+<th>En resumen</th>
+</tr>
+</thead>
+<tbody id="planet-table-body">
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<!-- ロックオーバーレイ -->
+<div id="lock-overlay" class="lock-overlay">
+<div style="font-size:1.8rem; margin-bottom:6px;">🔒</div>
+<div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:8px;">Exclusivo para miembros Premium</div>
+<p style="font-size:0.82rem; color:#5A4E48; margin-bottom:15px;">Se necesita un plan de pago para leer la posición completa de los planetas y los ciclos de dasha.</p>
+<p id="paid-sync-notice" style="display:none; font-size:0.82rem; color:#8a3b2f; margin-bottom:15px;">Hemos localizado tu pago, pero todavía no se ha aplicado a esta cuenta de miembro. Comprueba que has iniciado sesión con el mismo correo que usaste en la compra (la actualización puede tardar unos minutos).</p>
+<p data-price-label="premium" style="font-size:0.9rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:12px;"></p>
+<button id="btn-upgrade-premium" class="btn-upgrade">Suscribirme a un plan de pago</button>
+</div>
+</div>
+
+</div>
+</section>
+
+<footer class="site-footer">
+<div class="footer-links"><a href="/es/legal">Información legal, Términos de uso y Política de privacidad</a></div>
+<p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+</footer>
+
+<script>
+// ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
+const LJ_APP_VERSION = 'v12'
+const currentVersion = localStorage.getItem('lj_app_version');
+if (currentVersion !== LJ_APP_VERSION) {
+const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
+localStorage.clear();
+sessionStorage.clear();
+if (email) localStorage.setItem('lj_user_email', email);
+localStorage.setItem('lj_app_version', LJ_APP_VERSION);
+location.reload();
+}
+
+if ('serviceWorker' in navigator) {
+let refreshing = false;
+navigator.serviceWorker.addEventListener('controllerchange', () => {
+if (refreshing) return;
+refreshing = true;
+window.location.reload();
+});
+}
+
+const JYOTISH_API_URL = "/api/jyotish";
+const STRIPE_PORTAL_API_URL = "/api/stripe-portal";
+// 決済リンクは訪問者の国の価格帯に応じて /js/checkout-links.js が解決する
+const premiumUpgradeUrl = () => window.LJCheckout.linkFor('premium');
+
+// JSTの今日の日付（YYYY-MM-DD）
+function getJstDateString() {
+return new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+}
+
+// 前日以前の鑑定結果を「本日の運勢」として描画しないための判定
+function isTodaysReading(result) {
+return Boolean(result && result.reading_date === getJstDateString());
+}
+
+// 鑑定は生成に数十秒かかるので、同じ日の結果は一定時間使い回す（日付が変われば必ず再取得）。
+const READING_TTL_MS = 30 * 60 * 1000;
+
+function isFreshReading(user) {
+if (!user || !user.lastResult || !isTodaysReading(user.lastResult)) return false;
+const fetchedAt = Number(user.lastFetchedAt || 0);
+return fetchedAt > 0 && Date.now() - fetchedAt < READING_TTL_MS;
+}
+
+// キャッシュを表示していることと、手動で取り直せることを明示する。
+function showReadingFreshness(fetchedAt, email) {
+const anchor = document.getElementById('today-transit-text');
+if (!anchor || document.getElementById('reading-freshness')) return;
+
+const box = document.createElement('p');
+box.id = 'reading-freshness';
+box.style.cssText = 'margin-top:10px; font-size:0.78rem; color:#7a6a58;';
+
+const time = new Date(Number(fetchedAt) || Date.now())
+  .toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' });
+box.textContent = 'Mostrando la lectura obtenida a las {time}.'.replace('{time}', time) + ' ';
+
+const button = document.createElement('button');
+button.type = 'button';
+button.textContent = 'Actualizar ahora';
+button.style.cssText = 'background:none; border:none; padding:0; color:#8B6B1B; text-decoration:underline; cursor:pointer; font-size:0.78rem;';
+button.addEventListener('click', () => {
+box.remove();
+fetchUserDataAndRender(email, true);
+});
+
+box.appendChild(button);
+anchor.parentNode.appendChild(box);
+}
+
+
+// Google Identity Services JWT デコード関数
+function parseJwt(token) {
+try {
+const base64Url = token.split('.')[1];
+const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);}).join(''));
+return JSON.parse(jsonPayload);
+} catch (e) {
+return null;
+}
+}
+
+// Google Sign-In 成功時の自動コールバック
+function handleCredentialResponse(response) {
+const responsePayload = parseJwt(response.credential);
+if (responsePayload && responsePayload.email) {
+completeLogin(responsePayload.email);
+}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+// ★ハイブリッド互換：jyotish_user（JSON型）または古い個別キーからログイン状態を復元
+const savedUserStr = localStorage.getItem('jyotish_user');
+let savedEmail = '';
+let cachedUser = null;
+
+if (savedUserStr) {
+try {
+cachedUser = JSON.parse(savedUserStr);
+
+// ★自己修復：マイページのキャッシュに未展開のバグ文字列が含まれている場合は自動排除して再取得
+if (cachedUser && cachedUser.lastResult) {
+const lastResultStr = JSON.stringify(cachedUser.lastResult);
+if (lastResultStr.includes('\\${') || lastResultStr.includes('${')) {
+console.warn("Corrupt cached result detected in MyPage. Self-healing by purging...");
+cachedUser.lastResult = null;
+localStorage.setItem('jyotish_user', JSON.stringify(cachedUser));
+}
+}
+
+savedEmail = cachedUser.email || '';
+} catch (e) {
+console.error("jyotish_user parse error:", e);
+}
+}
+
+// 古い個別キーへのフォールバック
+if (!savedEmail) {
+savedEmail = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
+}
+
+if (savedEmail) {
+setLoggedInState(savedEmail);
+
+// ★出生データ（生年月日・出生地）がLocalStorageに実在するか厳密に死活チェック
+let hasBirthData = false;
+let localDob = '';
+let localCity = '';
+
+if (cachedUser) {
+if (cachedUser.dob && cachedUser.city && cachedUser.dob !== '1970-01-01') {
+hasBirthData = true;
+localDob = cachedUser.dob;
+localCity = cachedUser.city;
+}
+}
+
+if (!hasBirthData) {
+localDob = localStorage.getItem('dob') || localStorage.getItem('lj_dob') || '';
+localCity = localStorage.getItem('city') || localStorage.getItem('lj_user_city') || localStorage.getItem('lj_city') || localStorage.getItem('address') || localStorage.getItem('user_city') || '';
+
+if (localDob === '1970-01-01') localDob = '';
+
+if (localDob && localCity) {
+hasBirthData = true;
+}
+}
+
+if (hasBirthData) {
+// 出生データが揃っている場合は通常の先行表示＆バックグラウンド更新を実行
+document.getElementById('birth-setup-box').style.display = 'none';
+
+// 決済直後や手動更新はキャッシュを使わず必ず取り直す。
+const pageQuery = new URLSearchParams(window.location.search);
+const forceRefresh = pageQuery.get('refresh') === '1' || pageQuery.get('status') === 'paid';
+
+if (!forceRefresh && isFreshReading(cachedUser)) {
+console.log("Fresh cached reading reused (within TTL).");
+renderUserData(cachedUser.lastResult);
+showReadingFreshness(cachedUser.lastFetchedAt, savedEmail);
+} else {
+if (cachedUser && cachedUser.lastResult && isTodaysReading(cachedUser.lastResult)) {
+console.log("Cached diagnostic data restored immediately.");
+renderUserData(cachedUser.lastResult);
+} else {
+const savedResult = sessionStorage.getItem('lj_diagnosis_result');
+if (savedResult) {
+try {
+const parsed = JSON.parse(savedResult);
+if (isTodaysReading(parsed)) renderUserData(parsed);
+} catch(e) {}
+}
+}
+fetchUserDataAndRender(savedEmail);
+}
+} else {
+// 出生データがない場合（新規ログイン、他デバイスからの引き継ぎ直後）は
+// 勝手に1970年のダミー計算をVercelへ送らず、美しくデザインされた入力フォームを提示
+showBirthSetupUI();
+}
+} else {
+setLoggedOutState();
+}
+
+// 買い切りの完全鑑定書を購入済みなら、マイページから直接開けるようにする
+if (savedEmail) showPdfReportLinkIfPurchased(savedEmail);
+
+// 鑑定書ページなど、本人確認セッションが必要なページから ?next= 付きで戻ってきた場合
+const nextTarget = new URLSearchParams(window.location.search).get('next');
+if (nextTarget === 'pdf-report') {
+if (localStorage.getItem('lj_session')) {
+window.location.replace('/es/pdf-report');
+return;
+}
+requestReauth('pdf-report', savedEmail);
+}
+
+// 出生データ手動登録フォームのサブミット制御
+document.getElementById('form-birth-setup').addEventListener('submit', (e) => {
+e.preventDefault();
+const dob = document.getElementById('setup-dob').value;
+const tob = document.getElementById('setup-tob').value || '12:00'; // 不明時の12:00補填のみ許可
+const city = document.getElementById('setup-city').value.trim();
+
+if (!dob || !city) {
+alert('La fecha y el lugar de nacimiento son obligatorios.');
+return;
+}
+
+// ローカルキャッシュの再構築
+const savedUserStr = localStorage.getItem('jyotish_user');
+let savedUser = {};
+if (savedUserStr) {
+try { savedUser = JSON.parse(savedUserStr); } catch(err) {}
+}
+savedUser.email = savedEmail;
+savedUser.dob = dob;
+savedUser.tob = tob;
+savedUser.city = city;
+savedUser.status = savedUser.status || 'free';
+
+localStorage.setItem('jyotish_user', JSON.stringify(savedUser));
+localStorage.setItem('lj_user_email', savedEmail);
+localStorage.setItem('dob', dob);
+localStorage.setItem('tob', tob);
+localStorage.setItem('city', city);
+
+// UIを通常描画モードに切り替え
+document.getElementById('birth-setup-box').style.display = 'none';
+document.getElementById('today-transit-text').parentNode.style.display = 'block';
+const premiumGate = document.getElementById('premium-gatekeeper');
+if (premiumGate) premiumGate.style.display = 'block';
+const premiumTitle = document.querySelector('section.main-section h2');
+if (premiumTitle) premiumTitle.style.display = 'block';
+
+// 最新情報を取得してマイページを描画
+fetchUserDataAndRender(savedEmail);
+});
+
+// Stripe 決済ページ呼び出し
+document.getElementById('btn-upgrade-premium')?.addEventListener('click', () => {
+  const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
+  window.open(`${premiumUpgradeUrl()}?prefilled_email=${encodeURIComponent(email)}`, '_blank');
+});
+
+let currentAuthToken = '';
+
+// メール認証コード送信処理
+document.getElementById('btn-send-code').addEventListener('click', async () => {
+const emailInput = document.getElementById('login-email');
+const email = emailInput.value.trim();
+const btnSend = document.getElementById('btn-send-code');
+
+if (!email || !email.includes('@')) {
+alert('Introduce una dirección de correo válida.');
+return;
+}
+
+btnSend.disabled = true;
+btnSend.textContent = 'Enviando...';
+
+try {
+const res = await fetch(JYOTISH_API_URL, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ action: 'send_code', email: email, language: 'es' })
+});
+
+if (res.ok) {
+const data = await res.json();
+currentAuthToken = data.token;
+sessionStorage.setItem('lj_auth_token', data.token);
+alert('Hemos enviado tu código de verificación. Escribe los 6 dígitos que has recibido.');
+document.getElementById('step-code').style.display = 'flex';
+} else {
+let errMsg = 'API Error';
+try {
+const errJson = await res.json();
+if (errJson && errJson.error) errMsg = errJson.error;
+} catch(e) {}
+throw new Error(errMsg);
+}
+} catch(e) {
+alert('Error al enviar: ' + e.message);
+} finally {
+btnSend.disabled = false;
+btnSend.textContent = 'Enviar código';
+}
+});
+
+// 認証コード検証処理
+document.getElementById('btn-verify-code').addEventListener('click', async () => {
+const email = document.getElementById('login-email').value.trim();
+const codeInput = document.getElementById('login-code');
+const code = codeInput.value.trim();
+const btnVerify = document.getElementById('btn-verify-code');
+
+if (!code || code.length !== 6) {
+alert('Escribe exactamente los 6 dígitos del código de verificación.');
+return;
+}
+
+btnVerify.disabled = true;
+btnVerify.textContent = 'Verificando...';
+
+try {
+const token = currentAuthToken || sessionStorage.getItem('lj_auth_token');
+const res = await fetch(JYOTISH_API_URL, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ action: 'verify_code', email: email, code: code, token: token })
+});
+
+if (res.ok) {
+const verified = await res.json().catch(() => ({}));
+// 鑑定書など購入者限定APIの本人確認に使うセッション
+if (verified.session) localStorage.setItem('lj_session', verified.session);
+completeLogin(email);
+// 認証待ちにしていた操作（プラン管理など）をそのまま続行する
+if (window.ljPendingAfterAuth === 'portal') {
+window.ljPendingAfterAuth = '';
+openBillingPortal();
+} else if (window.ljPendingAfterAuth === 'pdf-report') {
+window.ljPendingAfterAuth = '';
+window.location.href = '/es/pdf-report';
+}
+} else {
+alert('Ese código de verificación es incorrecto o ha caducado.');
+}
+} catch(e) {
+alert('La verificación ha fallado. Comprueba tu conexión e inténtalo de nuevo.');
+} finally {
+btnVerify.disabled = false;
+btnVerify.textContent = 'Verificar';
+}
+});
+});
+
+function completeLogin(email) {
+// jyotish_userキーの初期化
+const savedUserStr = localStorage.getItem('jyotish_user');
+let savedUser = savedUserStr ? JSON.parse(savedUserStr) : {};
+savedUser.email = email;
+localStorage.setItem('jyotish_user', JSON.stringify(savedUser));
+
+localStorage.setItem('lj_user_email', email);
+setLoggedInState(email);
+fetchUserDataAndRender(email);
+}
+
+function setLoggedInState(email) {
+document.getElementById('user-display-email').textContent = email;
+document.getElementById('btn-logout').style.display = 'inline';
+document.getElementById('auth-box').style.display = 'none';
+}
+
+function setLoggedOutState() {
+document.getElementById('user-display-email').textContent = 'Sin iniciar sesión (invitado)';
+document.getElementById('btn-logout').style.display = 'none';
+const portalLink = document.getElementById('btn-billing-portal');
+if (portalLink) portalLink.style.display = 'none';
+document.getElementById('auth-box').style.display = 'block';
+document.getElementById('today-transit-text').textContent = 'Inicia sesión para ver el panorama de hoy a partir de tus propios datos de nacimiento.';
+}
+
+// 本人確認セッションが無い場合に、ログインカードを開いてメール認証を促す
+function requestReauth(pendingAction, email) {
+window.ljPendingAfterAuth = pendingAction;
+const box = document.getElementById('auth-box');
+if (box) box.style.display = 'block';
+const title = box ? box.querySelector('.card-title') : null;
+const titleText = pendingAction === 'pdf-report'
+? '🔑 Confirmación de identidad (para abrir el Informe Vitalicio)'
+: '🔑 Confirmación de identidad (para gestionar o cancelar el plan)';
+if (title) title.textContent = titleText;
+const input = document.getElementById('login-email');
+if (input) {
+if (email) input.value = email;
+input.focus();
+}
+if (box) box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+// メールアドレスが分かっているので、認証コードの送信までこちらで行う
+const sendBtn = document.getElementById('btn-send-code');
+if (email && sendBtn && !sendBtn.disabled) {
+sendBtn.click();
+} else {
+alert('Por seguridad, confirma tu identidad con el código que te enviamos por correo. Pulsa Enviar código en el formulario de abajo.');
+}
+}
+
+// 購入状態はサーバー（会員シート）だけを正とする
+async function showPdfReportLinkIfPurchased(email) {
+try {
+const res = await fetch(JYOTISH_API_URL, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ action: 'purchase_status', email: email })
+});
+const data = await res.json().catch(() => null);
+if (res.ok && data && data.pdf_purchased) {
+const link = document.getElementById('btn-open-pdf-report');
+if (link) link.style.display = 'inline';
+}
+} catch (e) {
+console.error('purchase status check failed', e);
+}
+}
+
+// Stripe カスタマーポータルへ遷移する（支払い方法の変更・サブスク解約）
+async function openBillingPortal() {
+const link = document.getElementById('btn-billing-portal');
+const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
+const session = localStorage.getItem('lj_session') || '';
+if (!email) { alert('Necesitas iniciar sesión para gestionar tu plan.'); return; }
+// Google ログインや古い端末連携ではセッションが無いため、その場でメール認証を促して続行する
+if (!session) { requestReauth('portal', email); return; }
+
+const original = link ? link.textContent : '';
+if (link) { link.textContent = 'Cargando...'; link.style.pointerEvents = 'none'; }
+try {
+const res = await fetch(STRIPE_PORTAL_API_URL, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ email: email, session: session })
+});
+const data = await res.json().catch(() => null);
+if (res.ok && data && data.url) {
+window.location.href = data.url;
+return;
+}
+if (data && data.error === 'invalid_session') {
+localStorage.removeItem('lj_session');
+requestReauth('portal', email);
+} else if (data && data.error === 'customer_not_found') {
+alert('No hemos encontrado ningún pago para este correo. Comprueba que has iniciado sesión con la dirección usada en la compra.');
+} else {
+alert('No hemos podido abrir la pantalla de gestión del plan. Inténtalo más tarde.');
+}
+} catch (err) {
+alert('Se ha producido un error de conexión. Inténtalo de nuevo en un momento.');
+} finally {
+if (link) { link.textContent = original; link.style.pointerEvents = 'auto'; }
+}
+}
+
+function logout() {
+localStorage.removeItem('jyotish_user');
+localStorage.removeItem('lj_session');
+localStorage.removeItem('lj_user_email');
+localStorage.removeItem('email');
+setLoggedOutState();
+}
+
+function getJstIsoString() {
+const now = new Date();
+const jstOffset = 9 * 60;
+const localTime = now.getTime();
+const localOffset = now.getTimezoneOffset() * 60000;
+const utc = localTime + localOffset;
+const jstTime = new Date(utc + (jstOffset * 60000));
+
+const YYYY = jstTime.getFullYear();
+const MM = String(jstTime.getMonth() + 1).padStart(2, '0');
+const DD = String(jstTime.getDate()).padStart(2, '0');
+const hh = String(jstTime.getHours()).padStart(2, '0');
+const mm = String(jstTime.getMinutes()).padStart(2, '0');
+const ss = String(jstTime.getSeconds()).padStart(2, '0');
+
+return `${YYYY}-${MM}-${DD}T${hh}:${mm}:${ss}+09:00`;
+}
+
+function showBirthSetupUI() {
+document.getElementById('birth-setup-box').style.display = 'block';
+document.getElementById('auth-box').style.display = 'none';
+
+// 読み込み中カードおよびプレミアム枠を隠す
+const horoCard = document.getElementById('today-transit-text').parentNode;
+if (horoCard) horoCard.style.display = 'none';
+
+const premiumGate = document.getElementById('premium-gatekeeper');
+if (premiumGate) premiumGate.style.display = 'none';
+
+const premiumTitle = document.querySelector('section.main-section h2');
+if (premiumTitle) premiumTitle.style.display = 'none';
+}
+
+let makeRetryCount = 0; // 同期失敗時のリトライ回数
+let paidSyncRetry = 0; // Stripe決済直後、Webhook反映待ちのリトライ回数
+
+async function fetchUserDataAndRender(email, isRetry = false) {
+if (!isRetry) {
+makeRetryCount = 0; // 通常の呼び出し時はリトライをリセット
+}
+// ★ハイブリッド・ローカルストレージパース
+const savedUserStr = localStorage.getItem('jyotish_user');
+let userAddress = '';
+let userDob = '';
+let userTob = '12:00'; // デフォルトは正午補正のみ
+
+if (savedUserStr) {
+try {
+const user = JSON.parse(savedUserStr);
+if (user.city) userAddress = user.city;
+if (user.dob) userDob = user.dob;
+if (user.tob) userTob = user.tob || '12:00';
+} catch(e) {}
+}
+
+// 古い個別キーからのフォールバック
+if (!userAddress) {
+userAddress = localStorage.getItem('city') ||
+              localStorage.getItem('lj_user_city') ||
+              localStorage.getItem('lj_city') ||
+              localStorage.getItem('address') ||
+              localStorage.getItem('user_city') || '';
+}
+if (!userDob) {
+userDob = localStorage.getItem('dob') ||
+          localStorage.getItem('lj_dob') || '';
+}
+if (!userTob) {
+userTob = localStorage.getItem('tob') ||
+          localStorage.getItem('lj_tob') || '12:00';
+}
+
+// 旧システムのダミー値 1970-01-01 を排除（'Tokio' は実在の出生地なので保持）
+if (userDob === '1970-01-01') userDob = '';
+
+// 万が一データが揃っていない場合は、送信せずに登録画面を出す
+if (!userDob || !userAddress) {
+console.warn("Required birth data missing in fetchUserDataAndRender. Showing setup form.");
+showBirthSetupUI();
+return;
+}
+
+const currentJstISO = getJstIsoString();
+
+// 鑑定生成は数十秒かかるので進行状況を見せ、ブラウザが無限に待ち続けないよう自分で打ち切る
+const progressSteps = [
+  'Cargando los datos del mapa de hoy...',
+  'Calculando tu carta natal y los tránsitos de hoy...',
+  'Escribiendo tu lectura personal (hasta unos 60 segundos)...'
+];
+let progressIndex = 0;
+const initialTextElem = document.getElementById('today-transit-text');
+if (initialTextElem) initialTextElem.textContent = progressSteps[0];
+const progressTimer = setInterval(() => {
+  progressIndex = Math.min(progressIndex + 1, progressSteps.length - 1);
+  const textElem = document.getElementById('today-transit-text');
+  if (textElem && textElem.textContent.includes('...')) {
+    textElem.textContent = progressSteps[progressIndex];
+  }
+}, 12000);
+const abortController = new AbortController();
+const clientTimeout = setTimeout(() => abortController.abort(), 90000);
+
+try {
+const response = await fetch(JYOTISH_API_URL, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+signal: abortController.signal,
+body: JSON.stringify({
+action: 'fetch_profile',
+email: email,
+address: userAddress,
+city: userAddress,
+dob: userDob,
+tob: userTob,
+datetime: currentJstISO,
+language: 'es'
+})
+});
+
+if (!response.ok) {
+  let errMsg = `HTTP error! status: ${response.status}`;
+  try {
+    const errJson = await response.json();
+    if (errJson && errJson.error) errMsg = errJson.error;
+  } catch(e) {}
+  throw new Error(errMsg);
+}
+
+const responseText = await response.text();
+let data = {};
+
+try {
+data = JSON.parse(responseText);
+} catch (pErr) {
+if (responseText.trim() === "Accepted") {
+console.warn("Database record sync pending.");
+if (makeRetryCount < 5) {
+makeRetryCount++;
+const delay = 6000;
+data = {
+status: "free",
+fortune: `Estamos cruzando la posición de las estrellas con nuestra base de miembros. La actualización es automática en unos 10 segundos, así que permanece en esta página... (comprobación de sincronización: intento ${makeRetryCount}/5)`
+};
+setTimeout(() => {
+fetchUserDataAndRender(email, true);
+}, delay);
+} else {
+data = {
+status: "free",
+fortune: "⚠️ Fallo de sincronización. Vuelve a cargar tu página de miembro."
+};
+}
+} else {
+data = { fortune: responseText };
+}
+}
+
+// Stripe決済直後は Webhook による paid 反映に数秒かかることがあるため待ち受ける
+if (new URLSearchParams(location.search).get('status') === 'paid' && data.status !== 'paid' && paidSyncRetry < 5) {
+paidSyncRetry++;
+const textElem = document.getElementById('today-transit-text');
+if (textElem) textElem.textContent = `Comprobando los datos de tu pago... (${paidSyncRetry}/5)`;
+setTimeout(() => { fetchUserDataAndRender(email, true); }, 4000);
+return;
+}
+
+// 決済直後なのに反映されないままリトライを使い切った場合は理由を明示する
+if (new URLSearchParams(location.search).get('status') === 'paid' && data.status !== 'paid' && paidSyncRetry >= 5) {
+const notice = document.getElementById('paid-sync-notice');
+if (notice) notice.style.display = 'block';
+}
+
+// 描画ヘルパーを呼び出して最新データを画面に完全反映！
+renderUserData(data);
+
+// ★最新の鑑定データとステータスを `jyotish_user` キャッシュに安全にマージ保存（UX超高速化・呼びっぱなし防止）
+let savedUser = {};
+if (savedUserStr) {
+try { savedUser = JSON.parse(savedUserStr); } catch(e) {}
+}
+savedUser.email = email;
+savedUser.status = data.status || "free";
+savedUser.lastResult = data;
+savedUser.lastFetchedAt = Date.now();
+if (userDob && userDob !== '1970-01-01') savedUser.dob = userDob;
+if (userTob) savedUser.tob = userTob;
+if (userAddress) savedUser.city = userAddress;
+
+localStorage.setItem('jyotish_user', JSON.stringify(savedUser));
+localStorage.setItem('lj_user_email', email);
+if (data.status === 'paid') {
+localStorage.setItem('lj_status', 'paid');
+}
+
+} catch (err) {
+console.error('Fetch Error:', err);
+const timedOut = err && err.name === 'AbortError';
+const textElem = document.getElementById('today-transit-text');
+if (textElem) {
+textElem.textContent = timedOut
+  ? '⚠️ La generación de tu lectura está tardando más de lo normal. Inténtalo de nuevo.'
+  : '⚠️ No hemos podido cargar tus datos. Comprueba tu conexión e inténtalo de nuevo.';
+if (!document.getElementById('retry-profile')) {
+const retryBtn = document.createElement('button');
+retryBtn.id = 'retry-profile';
+retryBtn.textContent = 'Reintentar';
+retryBtn.style.cssText = 'margin-top:12px; padding:10px 20px; border:none; border-radius:8px; font-weight:600; cursor:pointer; background:#8B6B1B; color:#fff;';
+retryBtn.addEventListener('click', () => {
+retryBtn.remove();
+textElem.textContent = 'Cargando los datos del mapa de hoy...';
+fetchUserDataAndRender(email, true);
+});
+textElem.parentNode.appendChild(retryBtn);
+}
+}
+} finally {
+clearInterval(progressTimer);
+clearTimeout(clientTimeout);
+}
+}
+
+// 有料会員向けにバッジ・ぼかし・ロックオーバーレイを解除する
+function unlockPaidContent() {
+const badge = document.getElementById('user-status-badge');
+if (badge) {
+badge.textContent = 'Premium';
+badge.className = 'user-badge paid';
+}
+const portalLink = document.getElementById('btn-billing-portal');
+if (portalLink) portalLink.style.display = 'inline';
+const overlay = document.getElementById('lock-overlay');
+if (overlay) overlay.style.display = 'none';
+document.getElementById('premium-gatekeeper')?.classList.remove('preview-mode');
+const lead = document.getElementById('premium-sample-lead');
+if (lead) lead.style.display = 'none';
+const area = document.getElementById('premium-content-area');
+if (area) {
+area.classList.remove('blur-content');
+area.querySelectorAll('.blur-content, .preview-blur').forEach(el => el.classList.remove('blur-content', 'preview-blur'));
+}
+}
+
+function renderUserData(data) {
+if (data.status === 'paid') {
+unlockPaidContent();
+} else {
+document.getElementById('user-status-badge').textContent = 'Plan gratuito';
+document.getElementById('user-status-badge').className = 'user-badge free';
+const portalLink = document.getElementById('btn-billing-portal');
+if (portalLink) portalLink.style.display = 'none';
+document.getElementById('lock-overlay').style.display = 'flex';
+document.getElementById('premium-gatekeeper')?.classList.add('preview-mode');
+}
+
+// インド占星術（サイデリアル）の太陽星座・月星座・ナクシャトラ
+if (data.sunSign || data.moonSign || data.nakshatra) {
+const summary = document.getElementById('sign-summary');
+if (summary) {
+summary.style.display = 'flex';
+document.getElementById('sun-sign-text').textContent = data.sunSign || '-';
+document.getElementById('moon-sign-text').textContent = data.moonSign || '-';
+document.getElementById('nakshatra-text').textContent = data.nakshatra || '-';
+}
+}
+
+const fortuneContent = data.fortune || data.dailyMessage || data.text || data.message || data.response || data.result;
+
+if (data.free_reading) {
+const fr = data.free_reading;
+let html = '';
+if (fr.horoscope) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>① Horóscopo de hoy:</strong><br>${fr.horoscope}</div>`;
+if (fr.influence) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>② Influencia astral:</strong><br>${fr.influence}</div>`;
+if (fr.dasha_summary) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>③ Orientación de la Mahadasha actual:</strong><br>${fr.dasha_summary}</div>`;
+if (fr.lucky_element) html += `<div style="margin-top:15px; padding:10px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:6px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">④ ${fr.lucky_element}</div>`;
+document.getElementById('today-transit-text').innerHTML = html;
+} else {
+if (fortuneContent && typeof fortuneContent === 'string' && fortuneContent.trim() !== '') {
+document.getElementById('today-transit-text').innerHTML = fortuneContent.replace(/\\n/g, '<br>');
+} else if (data.moonSign) {
+document.getElementById('today-transit-text').textContent = `Signo lunar de hoy: ${data.moonSign}`;
+}
+}
+
+if (data.dashaTitle) {
+document.getElementById('dasha-period-title').textContent = data.dashaTitle;
+}
+if (data.dashaDesc) {
+document.getElementById('dasha-description').textContent = data.dashaDesc;
+}
+
+if (data.planets && Array.isArray(data.planets)) {
+renderPlanetTable(data.planets);
+}
+
+if (data.status === 'paid' && data.premium_reading) {
+const pr = data.premium_reading;
+let detailContainer = document.getElementById('premium-detail-container');
+if (!detailContainer) {
+detailContainer = document.createElement('div');
+detailContainer.id = 'premium-detail-container';
+document.getElementById('premium-content-area').appendChild(detailContainer);
+}
+
+let detailHtml = '';
+if (pr.kundali_reading) {
+detailHtml += `
+<div class="card-box" style="margin-top:22px;">
+<div class="card-title">🔮 Kundali preciso: el destino escrito en tus nueve planetas</div>
+<div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">${pr.kundali_reading}</div>
+</div>
+`;
+}
+if (pr.detailed_horoscope) {
+detailHtml += `
+<div class="card-box">
+<div class="card-title">📅 Panorama diario y semanal detallado</div>
+<div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">${pr.detailed_horoscope}</div>
+</div>
+`;
+}
+if (pr.lifetime_dasha) {
+detailHtml += `
+<div class="card-box">
+<div class="card-title">📜 Mapa de la vida en 108 divisiones y lectura detallada de los planetas regentes</div>
+<div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">${pr.lifetime_dasha}</div>
+</div>
+`;
+}
+detailContainer.innerHTML = detailHtml;
+}
+
+if (data.status !== 'paid') applyPremiumSample();
+}
+
+// 無料会員には有料項目の中身をサンプル文言で見せる（APIは呼ばず固定のダミー）
+const PREMIUM_SAMPLE = {
+dashaTitle: 'Ciclo actual: periodo de Júpiter (2021-2037)',
+dashaDesc: 'Es un tiempo de aprendizaje y expansión, en el que el reconocimiento se acumula cuanto más profundizas en tu especialidad. También leemos en detalle dónde empieza el siguiente subciclo y qué estrategia adoptar en él.',
+planets: [
+{ name: 'Sol', sign: 'Capricornio', house: 10, comment: 'Una misión social y el sentido de la responsabilidad se convierten en el eje de tu vida.' },
+{ name: 'Luna', sign: 'Cáncer', house: 4, comment: 'La estabilidad emocional nace del hogar y de las personas más cercanas.' },
+{ name: 'Marte', sign: 'Aries', house: 7, comment: 'Una posición que facilita tomar la iniciativa en las relaciones.' }
+],
+cards: [
+{ title: '🔮 Kundali preciso: el destino escrito en tus nueve planetas', text: 'A partir del Lagna (ascendente) y de la interacción de los nueve planetas, leemos en tres dimensiones tus talentos, el trabajo que te conviene y tus patrones de relación. Es un análisis completo que incluye los yogas (combinaciones planetarias) y las valoraciones de dignidad que la lectura gratuita no cubre.' },
+{ title: '📅 Panorama diario y semanal detallado', text: 'Junto al mapa del día, te mostramos el flujo de la semana, los días de atención y los días con el viento a favor. También sugerimos remedios que alivian la presión de los planetas.' },
+{ title: '📜 Mapa de la vida en 108 divisiones y lectura detallada de los planetas regentes', text: 'A partir de una tabla de ciclos que divide tu vida en 108 partes, mostramos en orden cronológico los años que marcan puntos de inflexión y las acciones que conviene tomar. Así puedes prepararte con antelación para los altibajos de la vida.' }
+]
+};
+
+function applyPremiumSample() {
+const lead = document.getElementById('premium-sample-lead');
+if (lead) lead.style.display = 'block';
+
+const title = document.getElementById('dasha-period-title');
+if (title) {
+title.textContent = PREMIUM_SAMPLE.dashaTitle;
+title.classList.add('preview-blur');
+}
+const desc = document.getElementById('dasha-description');
+if (desc) {
+desc.textContent = PREMIUM_SAMPLE.dashaDesc;
+desc.classList.add('preview-blur');
+}
+
+renderPlanetTable(PREMIUM_SAMPLE.planets);
+document.getElementById('planet-table-body')?.classList.add('preview-blur');
+
+let detailContainer = document.getElementById('premium-detail-container');
+if (!detailContainer) {
+detailContainer = document.createElement('div');
+detailContainer.id = 'premium-detail-container';
+document.getElementById('premium-content-area').appendChild(detailContainer);
+}
+detailContainer.innerHTML = PREMIUM_SAMPLE.cards.map(c => `
+<div class="card-box" style="margin-top:22px;">
+<div class="card-title">${c.title}</div>
+<div class="preview-blur" style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">${c.text}</div>
+</div>
+`).join('');
+}
+
+function renderPlanetTable(planets) {
+const tbody = document.getElementById('planet-table-body');
+tbody.innerHTML = '';
+planets.forEach(p => {
+const tr = document.createElement('tr');
+tr.innerHTML = `
+<td class="planet-name" data-label="Planeta">${p.name || '-'}</td>
+<td data-label="Signo">${p.sign || '-'}</td>
+<td data-label="Casa">Casa ${p.house || '-'}</td>
+<td data-label="En resumen">${p.comment || p.nakshatra || '-'}</td>
+`;
+tbody.appendChild(tr);
+});
+}
+</script>
+</body>
+</html>
