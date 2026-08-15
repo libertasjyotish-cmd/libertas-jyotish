@@ -666,13 +666,21 @@ function requestReauth(pendingAction, email) {
 window.ljPendingAfterAuth = pendingAction;
 const box = document.getElementById('auth-box');
 if (box) box.style.display = 'block';
+const title = box ? box.querySelector('.card-title') : null;
+if (title) title.textContent = '🔑 本人確認（プランの管理・解約）';
 const input = document.getElementById('login-email');
 if (input) {
 if (email) input.value = email;
 input.focus();
 }
 if (box) box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+// メールアドレスが分かっているので、認証コードの送信までこちらで行う
+const sendBtn = document.getElementById('btn-send-code');
+if (email && sendBtn && !sendBtn.disabled) {
+sendBtn.click();
+} else {
 alert('セキュリティ確認のため、メールに届く認証コードで本人確認をお願いします。下のフォームから「コード送信」を押してください。');
+}
 }
 
 // Stripe カスタマーポータルへ遷移する（支払い方法の変更・サブスク解約）
