@@ -6,6 +6,7 @@ const {
   HOUSE_DOMAIN, DASHA_SEASON, EXALTATION, DEBILITATION, OWN_SIGNS, MOOLATRIKONA,
   NATURAL_FRIENDS, NATURAL_ENEMIES, YOGA_JA, SADE_SATI_PHASE_JA
 } = require('./_dictionaries');
+const { createTerms } = require('./_terms');
 
 const API_BASE = 'https://api.prokerala.com';
 
@@ -116,26 +117,33 @@ function nakshatraFromLongitude(longitude) {
   return NAKSHATRA_ORDER[index] || '';
 }
 
-function normalizePlanets(planetPosition) {
+// 計算に使うキー（signKey / nakshatraKey）は日本語表記のまま固定し、表示用の値だけを言語別に解決する
+function normalizePlanets(planetPosition, terms) {
   const d = planetPosition?.data || {};
   const raw = d.planet_position || d.planets || d.planet_positions || [];
   if (!Array.isArray(raw)) return [];
 
-  const base = raw.map((p) => ({
-    key: p.name,
-    name: PLANET_JA[p.name] || p.name,
-    sign: toJapaneseSign(p.rasi?.name || p.sign?.name || p.sign || p.zodiac || ''),
-    nakshatra: p.nakshatra?.name
+  const base = raw.map((p) => {
+    const signKey = toJapaneseSign(p.rasi?.name || p.sign?.name || p.sign || p.zodiac || '');
+    const nakshatraKey = p.nakshatra?.name
       ? toJapaneseNakshatra(p.nakshatra.name)
-      : nakshatraFromLongitude(p.longitude),
-    degree: typeof p.degree === 'number' ? Math.round(p.degree * 100) / 100 : null,
-    retrograde: Boolean(p.is_retrograde)
-  }));
+      : nakshatraFromLongitude(p.longitude);
+    return {
+      key: p.name,
+      name: terms.planet(p.name, PLANET_JA[p.name] || p.name),
+      signKey,
+      sign: terms.sign(signKey),
+      nakshatraKey,
+      nakshatra: terms.nakshatra(nakshatraKey),
+      degree: typeof p.degree === 'number' ? Math.round(p.degree * 100) / 100 : null,
+      retrograde: Boolean(p.is_retrograde)
+    };
+  });
 
   // Prokerala の position は「牡羊座から数えたサイン番号」なので、ラグナ基準のハウスに変換する
-  const ascIndex = SIGN_ORDER.indexOf(base.find((p) => p.key === 'Ascendant')?.sign || '');
+  const ascIndex = SIGN_ORDER.indexOf(base.find((p) => p.key === 'Ascendant')?.signKey || '');
   return base.map((p) => {
-    const signIndex = SIGN_ORDER.indexOf(p.sign);
+    const signIndex = SIGN_ORDER.indexOf(p.signKey);
     const house = ascIndex >= 0 && signIndex >= 0 ? ((signIndex - ascIndex + 12) % 12) + 1 : null;
     return { ...p, house };
   });
@@ -155,22 +163,22 @@ function dignityOf(planetKey, sign) {
   return 'neutral';
 }
 
-function normalizeDignity(planets) {
+function normalizeDignity(planets, terms) {
   return planets
     .filter((p) => p.key !== 'Ascendant')
     .map((p) => {
-      const dignity = dignityOf(p.key, p.sign);
+      const dignity = dignityOf(p.key, p.signKey);
       const score = DIGNITY_SCORE[dignity] ?? 50;
       return {
         key: p.key,
         name: p.name,
         sign: p.sign,
         house: p.house,
-        dignity: DIGNITY_JA[dignity] || '中立',
+        dignity: terms.dignity(dignity, DIGNITY_JA[dignity] || '中立'),
         nakshatra: p.nakshatra,
         retrograde: p.retrograde,
         score,
-        domain: PLANET_DOMAIN[p.key] || null
+        domain: PLANET_DOMAIN[p.key] ? terms.planetDomain(p.key, PLANET_DOMAIN[p.key]) : null
       };
     })
     .sort((a, b) => b.score - a.score);
@@ -192,7 +200,7 @@ function isAuspiciousGroup(name) {
   return !/inauspicious|dosha/i.test(String(name || ''));
 }
 
-function normalizeYogas(yoga, rajaYoga) {
+function normalizeYogas(yoga, rajaYoga, terms) {
   const collect = (payload) => {
     const groups = payload?.data?.yoga_details || payload?.data?.yogas || [];
     const out = [];
@@ -202,8 +210,8 @@ function normalizeYogas(yoga, rajaYoga) {
       if (Array.isArray(list) && list.length) {
         for (const y of list) {
           out.push({
-            group: YOGA_GROUP_JA[String(g.name || '').toLowerCase()] || g.name || '',
-            name: YOGA_JA[String(y.name || '').toLowerCase()] || y.name || '',
+            group: terms.yogaGroup(g.name, YOGA_GROUP_JA[String(g.name || '').toLowerCase()] || g.name || ''),
+            name: terms.yogaName(y.name, YOGA_JA[String(y.name || '').toLowerCase()] || y.name || ''),
             nameEn: y.name || '',
             description: y.description || '',
             auspicious: isAuspiciousGroup(g.name),
@@ -213,7 +221,7 @@ function normalizeYogas(yoga, rajaYoga) {
       } else if (g.name) {
         out.push({
           group: '',
-          name: YOGA_JA[String(g.name).toLowerCase()] || g.name,
+          name: terms.yogaName(g.name, YOGA_JA[String(g.name).toLowerCase()] || g.name),
           nameEn: g.name,
           description: g.description || '',
           auspicious: true,
@@ -235,7 +243,7 @@ function normalizeYogas(yoga, rajaYoga) {
 }
 
 // サルヴァアシュタカヴァルガ: ハウスごとの点数（合計337点）。平均28点との差で強弱を判定する。
-function normalizeAshtakavarga(sarva, ascendantSign) {
+function normalizeAshtakavarga(sarva, ascendantSign, terms) {
   const houses = sarva?.data?.sarvashtakavarga?.prastara?.houses
     || sarva?.data?.sarvashtakavarga?.houses
     || sarva?.data?.houses
@@ -250,10 +258,11 @@ function normalizeAshtakavarga(sarva, ascendantSign) {
       const idx = SIGN_ORDER.indexOf(rasi);
       houseNo = idx >= 0 ? ((idx - ascIndex + 12) % 12) + 1 : i + 1;
     }
-    const domain = HOUSE_DOMAIN.find((d) => d.house === houseNo) || HOUSE_DOMAIN[i] || null;
+    const domainJa = HOUSE_DOMAIN.find((d) => d.house === houseNo) || HOUSE_DOMAIN[i] || null;
+    const domain = domainJa ? terms.houseDomain(houseNo, domainJa) : null;
     return {
       house: houseNo || i + 1,
-      sign: rasi,
+      sign: terms.sign(rasi),
       score: Number(h.score) || 0,
       label: domain?.label || '',
       note: domain?.note || ''
@@ -270,16 +279,17 @@ function normalizeAshtakavarga(sarva, ascendantSign) {
 }
 
 // ヴィムショッタリー・ダシャー。現在地の特定と、今後15年の抽出まで行う。
-function normalizeDasha(kundli) {
+function normalizeDasha(kundli, terms) {
   const periods = kundli?.data?.dasha_periods || [];
   if (!Array.isArray(periods) || !periods.length) return null;
 
   const now = Date.now();
   const toYear = (s) => String(s || '').slice(0, 10);
+  const lordName = (key) => terms.planet(key, PLANET_JA[key] || key);
   const timeline = periods.map((p) => ({
     lord: p.name,
-    lordJa: PLANET_JA[p.name] || p.name,
-    season: DASHA_SEASON[p.name] || '',
+    lordJa: lordName(p.name),
+    season: terms.dashaSeason(p.name, DASHA_SEASON[p.name] || ''),
     start: toYear(p.start),
     end: toYear(p.end),
     isCurrent: new Date(p.start).getTime() <= now && now < new Date(p.end).getTime()
@@ -297,10 +307,10 @@ function normalizeDasha(kundli) {
       )
       : null;
     current = {
-      maha: { lord: currentRaw.name, lordJa: PLANET_JA[currentRaw.name] || currentRaw.name, start: toYear(currentRaw.start), end: toYear(currentRaw.end) },
-      antar: antar ? { lord: antar.name, lordJa: PLANET_JA[antar.name] || antar.name, start: toYear(antar.start), end: toYear(antar.end) } : null,
-      pratyantar: praty ? { lord: praty.name, lordJa: PLANET_JA[praty.name] || praty.name, start: toYear(praty.start), end: toYear(praty.end) } : null,
-      season: DASHA_SEASON[currentRaw.name] || ''
+      maha: { lord: currentRaw.name, lordJa: lordName(currentRaw.name), start: toYear(currentRaw.start), end: toYear(currentRaw.end) },
+      antar: antar ? { lord: antar.name, lordJa: lordName(antar.name), start: toYear(antar.start), end: toYear(antar.end) } : null,
+      pratyantar: praty ? { lord: praty.name, lordJa: lordName(praty.name), start: toYear(praty.start), end: toYear(praty.end) } : null,
+      season: terms.dashaSeason(currentRaw.name, DASHA_SEASON[currentRaw.name] || '')
     };
   }
 
@@ -313,8 +323,8 @@ function normalizeDasha(kundli) {
       const end = new Date(a.end).getTime();
       if (end > now && start < horizon) {
         upcoming.push({
-          maha: PLANET_JA[p.name] || p.name,
-          antar: PLANET_JA[a.name] || a.name,
+          maha: lordName(p.name),
+          antar: lordName(a.name),
           mahaKey: p.name,
           antarKey: a.name,
           start: toYear(a.start),
@@ -332,92 +342,112 @@ function normalizeDasha(kundli) {
   return { timeline, current, upcoming: upcoming.slice(0, 12), pastSwitches };
 }
 
-function normalizeSadeSati(sadeSati) {
+function normalizeSadeSati(sadeSati, terms) {
   const d = sadeSati?.data;
   if (!d) return null;
   const phaseJa = (phase) => SADE_SATI_PHASE_JA[String(phase || '').toLowerCase()] || phase || '';
+  const phaseName = (phase) => terms.sadeSatiPhase(phase, phaseJa(phase));
   const transits = (d.transits || []).map((t) => ({
-    phase: phaseJa(t.phase),
-    sign: toJapaneseSign(t.saturn_sign || ''),
+    phase: phaseName(t.phase),
+    sign: terms.sign(toJapaneseSign(t.saturn_sign || '')),
     start: String(t.start?.date || t.start || '').slice(0, 10),
     end: String(t.end?.date || t.end || '').slice(0, 10),
     retrograde: t.is_retrograde === true || t.is_retrograde === 'true'
   }));
   return {
     active: Boolean(d.is_in_sade_sati),
-    phase: phaseJa(d.transit_phase),
+    phase: phaseName(d.transit_phase),
     transits
   };
 }
 
 // 【モノ・コト・場所】をラグナ支配星などから一意に決定する（AIには選ばせない）
-function buildBoosters(planets, dasha) {
+function buildBoosters(planets, dasha, terms) {
   const asc = planets.find((p) => p.key === 'Ascendant');
-  const ascSign = asc?.sign || '';
-  const lagnaLord = SIGN_LORD[ascSign] || null;
+  const ascSignKey = asc?.signKey || '';
+  const lagnaLord = SIGN_LORD[ascSignKey] || null;
   const moon = planets.find((p) => p.key === 'Moon');
-  const element = SIGN_ELEMENT[moon?.sign] || '地';
-  const tenthSign = ascSign ? SIGN_ORDER[(SIGN_ORDER.indexOf(ascSign) + 9) % 12] : '';
-  const tenthLord = SIGN_LORD[tenthSign] || null;
+  const elementKey = SIGN_ELEMENT[moon?.signKey] || '地';
+  const tenthSignKey = ascSignKey ? SIGN_ORDER[(SIGN_ORDER.indexOf(ascSignKey) + 9) % 12] : '';
+  const tenthLord = SIGN_LORD[tenthSignKey] || null;
   const currentLord = dasha?.current?.maha?.lord || null;
 
   const stone = lagnaLord ? LIFE_STONE[lagnaLord] : null;
   const supportStone = currentLord ? LIFE_STONE[currentLord] : null;
+  const planetName = (key) => terms.planet(key, PLANET_JA[key] || key);
+  const ascSign = terms.sign(ascSignKey);
+  const tenthSign = terms.sign(tenthSignKey);
+  const workStyle = (key, reason) => ({
+    type: terms.workStyleType(WORK_STYLE[key].type),
+    detail: terms.workStyleDetail(key, WORK_STYLE[key].detail),
+    reason
+  });
+  const place = (key, reason) => ({
+    direction: terms.direction(PLANET_DIRECTION[key].direction),
+    environment: terms.environment(PLANET_DIRECTION[key].environment),
+    reason
+  });
+  const color = (key) => (key
+    ? { name: terms.color(PLANET_COLOR[key].name), hex: PLANET_COLOR[key].hex }
+    : null);
 
   return {
     lagnaSign: ascSign,
-    lagnaLord: lagnaLord ? PLANET_JA[lagnaLord] : '',
+    lagnaLord: lagnaLord ? planetName(lagnaLord) : '',
     tenthSign,
-    tenthLord: tenthLord ? PLANET_JA[tenthLord] : '',
+    tenthLord: tenthLord ? planetName(tenthLord) : '',
     mono: {
       lifeStone: stone
         ? {
-          stone: stone.stone,
-          alternatives: stone.alternatives,
-          metal: stone.metal,
-          reason: `ラグナ（1室）が${ascSign}で、その支配星が${PLANET_JA[lagnaLord]}であるため`
+          stone: terms.stone(stone.stone),
+          alternatives: terms.stones(stone.alternatives),
+          metal: terms.metal(stone.metal),
+          reason: terms.reason.lifeStone(ascSign, planetName(lagnaLord))
         }
         : null,
       supportStone: supportStone && currentLord !== lagnaLord
         ? {
-          stone: supportStone.stone,
-          reason: `現在の大周期の支配星が${PLANET_JA[currentLord]}であるため（${dasha?.current?.maha?.start}〜${dasha?.current?.maha?.end}）`
+          stone: terms.stone(supportStone.stone),
+          reason: terms.reason.supportStone(
+            planetName(currentLord), dasha?.current?.maha?.start, dasha?.current?.maha?.end
+          )
         }
         : null,
       colors: {
-        main: lagnaLord ? PLANET_COLOR[lagnaLord] : null,
-        support: currentLord ? PLANET_COLOR[currentLord] : null,
-        reason: lagnaLord ? `1室支配星${PLANET_JA[lagnaLord]}の色属性` : ''
+        main: color(lagnaLord),
+        support: color(currentLord),
+        reason: lagnaLord ? terms.reason.color(planetName(lagnaLord)) : ''
       }
     },
     koto: {
       workStyle: tenthLord
-        ? { ...WORK_STYLE[tenthLord], reason: `10室（仕事）が${tenthSign}で、その支配星が${PLANET_JA[tenthLord]}であるため` }
+        ? workStyle(tenthLord, terms.reason.workStyle(tenthSign, planetName(tenthLord)))
         : null,
       selfStyle: lagnaLord
-        ? { ...WORK_STYLE[lagnaLord], reason: `1室支配星が${PLANET_JA[lagnaLord]}であるため` }
+        ? workStyle(lagnaLord, terms.reason.selfStyle(planetName(lagnaLord)))
         : null,
       rhythm: {
-        ...RHYTHM_BY_ELEMENT[element],
-        reason: `月が${moon?.sign || ''}（${element}のサイン）にあるため`
+        ...terms.rhythm(elementKey, RHYTHM_BY_ELEMENT[elementKey]),
+        reason: terms.reason.rhythm(terms.sign(moon?.signKey || ''), terms.element(elementKey))
       }
     },
     basho: {
       primary: lagnaLord
-        ? { ...PLANET_DIRECTION[lagnaLord], reason: `1室支配星${PLANET_JA[lagnaLord]}の方位属性` }
+        ? place(lagnaLord, terms.reason.direction1st(planetName(lagnaLord)))
         : null,
       career: tenthLord
-        ? { ...PLANET_DIRECTION[tenthLord], reason: `10室支配星${PLANET_JA[tenthLord]}の方位属性` }
+        ? place(tenthLord, terms.reason.direction10th(planetName(tenthLord)))
         : null,
-      rest: moon?.sign
-        ? { ...PLANET_DIRECTION.Moon, reason: '月（休息・回復）の方位属性' }
+      rest: moon?.signKey
+        ? place('Moon', terms.reason.directionRest())
         : null
     }
   };
 }
 
 // 鑑定書1冊分のデータを一括取得する。個々の失敗は null として扱い、該当章のみ省略する。
-async function fetchReportData({ dob, tob, lat, lon }) {
+async function fetchReportData({ dob, tob, lat, lon, lang }) {
+  const terms = createTerms(lang);
   const token = await getAccessToken();
   const time = tob && tob.length === 5 ? `${tob}:00` : (tob || '12:00:00');
   const datetime = `${dob}T${time}+09:00`;
@@ -445,29 +475,33 @@ async function fetchReportData({ dob, tob, lat, lon }) {
 
   if (!planetPosition) throw new Error('prokerala_position_failed');
 
-  const planets = normalizePlanets(planetPosition);
+  const planets = normalizePlanets(planetPosition, terms);
   const asc = planets.find((p) => p.key === 'Ascendant');
-  const dasha = normalizeDasha(kundli);
+  const dasha = normalizeDasha(kundli, terms);
   const birthDetails = kundli?.data?.nakshatra_details || null;
+  const birthNakshatra = birthDetails?.nakshatra?.name
+    ? toJapaneseNakshatra(birthDetails.nakshatra.name)
+    : planets.find((p) => p.key === 'Moon')?.nakshatraKey || '';
 
   return {
     generated_at: toJstIsoString(new Date()),
+    lang: terms.lang,
     birth: { dob, tob: tob || '12:00', lat, lon },
     planets,
     ascendant: asc ? { sign: asc.sign, degree: asc.degree } : null,
     moon: planets.find((p) => p.key === 'Moon') || null,
     sun: planets.find((p) => p.key === 'Sun') || null,
-    nakshatra: toJapaneseNakshatra(birthDetails?.nakshatra?.name || planets.find((p) => p.key === 'Moon')?.nakshatra || ''),
+    nakshatra: terms.nakshatra(birthNakshatra),
     nakshatraPada: birthDetails?.nakshatra?.pada || null,
-    strength: normalizeDignity(planets),
-    yogas: normalizeYogas(yoga, rajaYoga),
-    ashtakavarga: normalizeAshtakavarga(sarva, asc?.sign || ''),
+    strength: normalizeDignity(planets, terms),
+    yogas: normalizeYogas(yoga, rajaYoga, terms),
+    ashtakavarga: normalizeAshtakavarga(sarva, asc?.signKey || '', terms),
     dasha,
-    sadeSati: normalizeSadeSati(sadeSati),
+    sadeSati: normalizeSadeSati(sadeSati, terms),
     mangalDosha: kundli?.data?.mangal_dosha
       ? { hasDosha: Boolean(kundli.data.mangal_dosha.has_dosha), description: kundli.data.mangal_dosha.description || '' }
       : null,
-    boosters: buildBoosters(planets, dasha),
+    boosters: buildBoosters(planets, dasha, terms),
     charts: { d1: chartD1 || null, d9: chartD9 || null, d10: chartD10 || null }
   };
 }

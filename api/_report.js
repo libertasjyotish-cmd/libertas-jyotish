@@ -1,10 +1,11 @@
 // 完全鑑定書（PDF）の章別生成レイヤー（CommonJS）
-// AI の役割は「コード側で確定した値を日本語で意味づけする」ことだけ。
+// AI の役割は「コード側で確定した値を指定言語で意味づけする」ことだけ。
 // 数値・年号・期間・惑星名・星座名・石・方位はすべて astro（計算値）から差し込み、AI には書かせない。
 const { generateWithGemini } = require('./_gemini');
 const { REMEDY_MODERN } = require('./_dictionaries');
+const { createTerms } = require('./_terms');
 
-const COMMON_RULES = `
+const COMMON_RULES_JA = `
 あなたは一流のインド占星術カウンセラーです。以下の【確定データ】だけに基づいて日本語の解説文を書いてください。
 
 厳守事項:
@@ -17,6 +18,24 @@ const COMMON_RULES = `
 7. 文体は知性的で品格のある「です・ます」調に統一すること。
 8. 指定した JSON スキーマのキーのみを出力すること。
 `;
+
+// 日本語以外は同じ安全規則を英語で与え、出力言語だけを差し替える（スキーマの説明文は日本語のまま共用する）
+function commonRulesFor(outputLanguage) {
+  return `
+You are a first-class Vedic astrology counsellor. Write the commentary in ${outputLanguage}, based only on the confirmed data given below.
+
+Strict rules:
+1. Never write a planetary placement, degree, house, sign, year, date, period or proper noun that is not in the confirmed data.
+2. Never write a specific calendar date ("3 March" etc.). For timing, use only the year boundaries contained in the confirmed data.
+3. Never use a Sanskrit term on its own; always add a plain modern explanation.
+4. Never give medical, investment or legal advice (diagnosis, treatment, named securities, tax, whether a contract is valid).
+5. Never assert specific foods, supplements, health regimes, tourist spots, temples, company names or job titles.
+6. Never induce fear; write constructively and practically ("a period of adjustment", "a time to build foundations").
+7. Keep the register intelligent, dignified and polite.
+8. Output only the keys of the given JSON schema.
+9. The schema descriptions are written in Japanese, but every value must be written in ${outputLanguage}. Treat any "○○文字程度" length guide as an equivalent volume of text in ${outputLanguage}, not as a character count.
+`;
+}
 
 // 章ごとの定義。data は astro から必要な部分だけを渡す（無関係な値をAIに見せない）。
 const CHAPTERS = [
@@ -163,7 +182,7 @@ const CHAPTERS = [
   {
     id: 'ch12',
     title: '第12章 試練を土台に変える時期',
-    pick: (a) => ({ sadeSati: a.sadeSati, mangalDosha: a.mangalDosha, remedy: REMEDY_MODERN }),
+    pick: (a, terms) => ({ sadeSati: a.sadeSati, mangalDosha: a.mangalDosha, remedy: terms.remedy(REMEDY_MODERN) }),
     schema: `{
       "intro": "試練期を「調整期」として捉える視点（250文字程度）",
       "sadeSati": "サディサティの該当状況と過ごし方（400文字程度。期間は確定データのものだけ。該当が無ければその旨を短く）",
@@ -184,34 +203,59 @@ const BANNED_PATTERNS = [
   /(訴訟|告訴|違法|合法)/
 ];
 
-function findViolations(text) {
-  return BANNED_PATTERNS.filter((re) => re.test(text)).map((re) => re.source);
+// ラテン文字の言語向け。日付の名指しと、医療・投資・法務に踏み込む語を検出する
+const BANNED_PATTERNS_LATIN = [
+  /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}\b/i,
+  /\b(diagnos\w*|prescrib\w*|prescription|medication|medical treatment)\b/i,
+  /\b(stock pick\w*|ticker|cryptocurrenc\w*|guaranteed returns?)\b/i,
+  /\b(lawsuit|prosecut\w*|illegal|legally binding)\b/i
+];
+
+function findViolations(text, lang) {
+  const patterns = lang === 'ja' ? BANNED_PATTERNS : [...BANNED_PATTERNS, ...BANNED_PATTERNS_LATIN];
+  return patterns.filter((re) => re.test(text)).map((re) => re.source);
 }
 
-function buildPrompt(chapter, astro) {
-  return `${COMMON_RULES}
-【章】${chapter.title}
+// signKey / nakshatraKey は計算用の内部キー（常に日本語表記）なので、AI には見せない
+function stripInternalKeys(value) {
+  if (Array.isArray(value)) return value.map(stripInternalKeys);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([key]) => !key.endsWith('Key'))
+        .map(([key, v]) => [key, stripInternalKeys(v)])
+    );
+  }
+  return value;
+}
+
+function buildPrompt(chapter, astro, terms) {
+  const rules = terms.lang === 'ja' ? COMMON_RULES_JA : commonRulesFor(terms.outputLanguage);
+  return `${rules}
+【章】${terms.chapterTitle(chapter.id, chapter.title)}
 
 【確定データ（JSON）】
-${JSON.stringify(chapter.pick(astro), null, 1)}
+${JSON.stringify(stripInternalKeys(chapter.pick(astro, terms)), null, 1)}
 
 【出力スキーマ】
 ${chapter.schema}`;
 }
 
 // 章を並列生成する。1章が失敗しても他章は返し、未生成の章は次回リクエストで補完する。
-async function generateChapters(astro, ids, apiKey, models, timeoutMs = 40000) {
+async function generateChapters(astro, ids, apiKey, models, { lang, timeoutMs = 40000 } = {}) {
+  const terms = createTerms(lang);
   const targets = CHAPTERS.filter((c) => ids.includes(c.id));
   const results = await Promise.all(targets.map(async (chapter) => {
-    const result = await generateWithGemini(apiKey, models, buildPrompt(chapter, astro), timeoutMs);
+    const result = await generateWithGemini(apiKey, models, buildPrompt(chapter, astro, terms), timeoutMs);
     if (!result.json) return { id: chapter.id, ok: false, reason: result.reason };
 
-    const violations = findViolations(JSON.stringify(result.json));
+    const violations = findViolations(JSON.stringify(result.json), terms.lang);
     if (violations.length) {
       console.warn(`Chapter ${chapter.id} contains banned expressions: ${violations.join(', ')}`);
       return { id: chapter.id, ok: false, reason: 'banned_expression' };
     }
-    return { id: chapter.id, ok: true, value: { title: chapter.title, ...result.json } };
+    const title = terms.chapterTitle(chapter.id, chapter.title);
+    return { id: chapter.id, ok: true, value: { title, ...result.json } };
   }));
 
   const chapters = {};
