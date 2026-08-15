@@ -14,13 +14,8 @@
     },
     {
       "tier": "T3",
-      "min": 18000,
-      "factor": 0.6
-    },
-    {
-      "tier": "T4",
       "min": 0,
-      "factor": 0.35
+      "factor": 0.6
     }
   ],
   "defaultTier": "T3",
@@ -39,7 +34,7 @@
     },
     "AF": {
       "name": "Afghanistan",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 2250,
       "year": "2024"
     },
@@ -63,7 +58,7 @@
     },
     "AO": {
       "name": "Angola",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 9840,
       "year": "2025"
     },
@@ -117,7 +112,7 @@
     },
     "BD": {
       "name": "Bangladesh",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 10710,
       "year": "2025"
     },
@@ -129,7 +124,7 @@
     },
     "BF": {
       "name": "Burkina Faso",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 2890,
       "year": "2025"
     },
@@ -147,13 +142,13 @@
     },
     "BI": {
       "name": "Burundi",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 1250,
       "year": "2025"
     },
     "BJ": {
       "name": "Benin",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 4760,
       "year": "2025"
     },
@@ -171,7 +166,7 @@
     },
     "BO": {
       "name": "Bolivia",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 12530,
       "year": "2025"
     },
@@ -207,7 +202,7 @@
     },
     "BZ": {
       "name": "Belize",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 14230,
       "year": "2025"
     },
@@ -219,19 +214,19 @@
     },
     "CD": {
       "name": "Congo, Dem. Rep.",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 1850,
       "year": "2025"
     },
     "CF": {
       "name": "Central African Republic",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 1390,
       "year": "2025"
     },
     "CG": {
       "name": "Congo, Rep.",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 6490,
       "year": "2025"
     },
@@ -243,7 +238,7 @@
     },
     "CI": {
       "name": "Cote d'Ivoire",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 7750,
       "year": "2025"
     },
@@ -255,7 +250,7 @@
     },
     "CM": {
       "name": "Cameroon",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 5700,
       "year": "2025"
     },
@@ -285,7 +280,7 @@
     },
     "CV": {
       "name": "Cabo Verde",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 12010,
       "year": "2025"
     },
@@ -315,7 +310,7 @@
     },
     "DJ": {
       "name": "Djibouti",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 8660,
       "year": "2025"
     },
@@ -345,7 +340,7 @@
     },
     "EC": {
       "name": "Ecuador",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 16290,
       "year": "2025"
     },
@@ -363,7 +358,7 @@
     },
     "ER": {
       "name": "Eritrea",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 1720,
       "year": "2011"
     },
@@ -375,7 +370,7 @@
     },
     "ET": {
       "name": "Ethiopia",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 3620,
       "year": "2025"
     },
@@ -387,13 +382,13 @@
     },
     "FJ": {
       "name": "Fiji",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 15360,
       "year": "2025"
     },
     "FM": {
       "name": "Micronesia, Fed. Sts.",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 5080,
       "year": "2025"
     },
@@ -435,7 +430,7 @@
     },
     "GH": {
       "name": "Ghana",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 8080,
       "year": "2025"
     },
@@ -453,19 +448,19 @@
     },
     "GM": {
       "name": "Gambia, The",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 3660,
       "year": "2025"
     },
     "GN": {
       "name": "Guinea",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 4730,
       "year": "2025"
     },
     "GQ": {
       "name": "Equatorial Guinea",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 14610,
       "year": "2025"
     },
@@ -477,7 +472,7 @@
     },
     "GT": {
       "name": "Guatemala",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 15020,
       "year": "2025"
     },
@@ -489,7 +484,7 @@
     },
     "GW": {
       "name": "Guinea-Bissau",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 3320,
       "year": "2025"
     },
@@ -507,7 +502,7 @@
     },
     "HN": {
       "name": "Honduras",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 7270,
       "year": "2025"
     },
@@ -519,7 +514,7 @@
     },
     "HT": {
       "name": "Haiti",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 3130,
       "year": "2025"
     },
@@ -531,7 +526,7 @@
     },
     "ID": {
       "name": "Indonesia",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 17190,
       "year": "2025"
     },
@@ -555,13 +550,13 @@
     },
     "IN": {
       "name": "India",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 11600,
       "year": "2025"
     },
     "IQ": {
       "name": "Iraq",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 14290,
       "year": "2025"
     },
@@ -591,13 +586,13 @@
     },
     "JM": {
       "name": "Jamaica",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 13090,
       "year": "2025"
     },
     "JO": {
       "name": "Jordan",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 12440,
       "year": "2025"
     },
@@ -609,31 +604,31 @@
     },
     "KE": {
       "name": "Kenya",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 6910,
       "year": "2025"
     },
     "KG": {
       "name": "Kyrgyz Republic",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 9120,
       "year": "2025"
     },
     "KH": {
       "name": "Cambodia",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 8390,
       "year": "2025"
     },
     "KI": {
       "name": "Kiribati",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 6080,
       "year": "2025"
     },
     "KM": {
       "name": "Comoros",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 4260,
       "year": "2025"
     },
@@ -675,13 +670,13 @@
     },
     "LA": {
       "name": "Lao PDR",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 9800,
       "year": "2025"
     },
     "LB": {
       "name": "Lebanon",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 11790,
       "year": "2024"
     },
@@ -699,19 +694,19 @@
     },
     "LK": {
       "name": "Sri Lanka",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 16750,
       "year": "2025"
     },
     "LR": {
       "name": "Liberia",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 1840,
       "year": "2025"
     },
     "LS": {
       "name": "Lesotho",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 3900,
       "year": "2025"
     },
@@ -735,13 +730,13 @@
     },
     "LY": {
       "name": "Libya",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 17150,
       "year": "2025"
     },
     "MA": {
       "name": "Morocco",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 10960,
       "year": "2025"
     },
@@ -771,13 +766,13 @@
     },
     "MG": {
       "name": "Madagascar",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 1910,
       "year": "2025"
     },
     "MH": {
       "name": "Marshall Islands",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 10590,
       "year": "2025"
     },
@@ -789,13 +784,13 @@
     },
     "ML": {
       "name": "Mali",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 3400,
       "year": "2025"
     },
     "MM": {
       "name": "Myanmar",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 5890,
       "year": "2025"
     },
@@ -819,7 +814,7 @@
     },
     "MR": {
       "name": "Mauritania",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 7640,
       "year": "2025"
     },
@@ -843,7 +838,7 @@
     },
     "MW": {
       "name": "Malawi",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 1880,
       "year": "2025"
     },
@@ -861,13 +856,13 @@
     },
     "MZ": {
       "name": "Mozambique",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 1540,
       "year": "2025"
     },
     "NA": {
       "name": "Namibia",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 11260,
       "year": "2025"
     },
@@ -879,19 +874,19 @@
     },
     "NE": {
       "name": "Niger",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 2150,
       "year": "2025"
     },
     "NG": {
       "name": "Nigeria",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 9230,
       "year": "2025"
     },
     "NI": {
       "name": "Nicaragua",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 8780,
       "year": "2025"
     },
@@ -909,7 +904,7 @@
     },
     "NP": {
       "name": "Nepal",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 6250,
       "year": "2025"
     },
@@ -939,7 +934,7 @@
     },
     "PE": {
       "name": "Peru",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 17540,
       "year": "2025"
     },
@@ -951,19 +946,19 @@
     },
     "PG": {
       "name": "Papua New Guinea",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 4840,
       "year": "2025"
     },
     "PH": {
       "name": "Philippines",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 14460,
       "year": "2025"
     },
     "PK": {
       "name": "Pakistan",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 6430,
       "year": "2025"
     },
@@ -981,7 +976,7 @@
     },
     "PS": {
       "name": "West Bank and Gaza",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 5310,
       "year": "2025"
     },
@@ -1029,7 +1024,7 @@
     },
     "RW": {
       "name": "Rwanda",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 4070,
       "year": "2025"
     },
@@ -1041,7 +1036,7 @@
     },
     "SB": {
       "name": "Solomon Islands",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 2790,
       "year": "2025"
     },
@@ -1053,7 +1048,7 @@
     },
     "SD": {
       "name": "Sudan",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 2140,
       "year": "2025"
     },
@@ -1083,7 +1078,7 @@
     },
     "SL": {
       "name": "Sierra Leone",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 3690,
       "year": "2025"
     },
@@ -1095,13 +1090,13 @@
     },
     "SN": {
       "name": "Senegal",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 5100,
       "year": "2025"
     },
     "SO": {
       "name": "Somalia, Fed. Rep.",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 1640,
       "year": "2025"
     },
@@ -1113,19 +1108,19 @@
     },
     "SS": {
       "name": "South Sudan",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 1010,
       "year": "2015"
     },
     "ST": {
       "name": "Sao Tome and Principe",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 6920,
       "year": "2025"
     },
     "SV": {
       "name": "El Salvador",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 13140,
       "year": "2025"
     },
@@ -1137,13 +1132,13 @@
     },
     "SY": {
       "name": "Syrian Arab Republic",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 4740,
       "year": "2022"
     },
     "SZ": {
       "name": "Eswatini",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 11390,
       "year": "2025"
     },
@@ -1155,13 +1150,13 @@
     },
     "TD": {
       "name": "Chad",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 2770,
       "year": "2025"
     },
     "TG": {
       "name": "Togo",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 4090,
       "year": "2025"
     },
@@ -1173,13 +1168,13 @@
     },
     "TJ": {
       "name": "Tajikistan",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 8240,
       "year": "2025"
     },
     "TL": {
       "name": "Timor-Leste",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 5120,
       "year": "2025"
     },
@@ -1191,13 +1186,13 @@
     },
     "TN": {
       "name": "Tunisia",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 14870,
       "year": "2025"
     },
     "TO": {
       "name": "Tonga",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 9240,
       "year": "2025"
     },
@@ -1215,13 +1210,13 @@
     },
     "TV": {
       "name": "Tuvalu",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 11000,
       "year": "2025"
     },
     "TZ": {
       "name": "Tanzania",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 4370,
       "year": "2025"
     },
@@ -1233,7 +1228,7 @@
     },
     "UG": {
       "name": "Uganda",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 3410,
       "year": "2025"
     },
@@ -1251,7 +1246,7 @@
     },
     "UZ": {
       "name": "Uzbekistan",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 13640,
       "year": "2025"
     },
@@ -1281,19 +1276,19 @@
     },
     "VN": {
       "name": "Viet Nam",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 17580,
       "year": "2025"
     },
     "VU": {
       "name": "Vanuatu",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 4970,
       "year": "2025"
     },
     "WS": {
       "name": "Samoa",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 9300,
       "year": "2025"
     },
@@ -1305,25 +1300,25 @@
     },
     "YE": {
       "name": "Yemen, Rep.",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 3020,
       "year": "2013"
     },
     "ZA": {
       "name": "South Africa",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 15600,
       "year": "2025"
     },
     "ZM": {
       "name": "Zambia",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 3990,
       "year": "2025"
     },
     "ZW": {
       "name": "Zimbabwe",
-      "tier": "T4",
+      "tier": "T3",
       "gniPpp": 6390,
       "year": "2025"
     }
