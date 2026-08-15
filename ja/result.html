@@ -103,6 +103,7 @@ border-radius: 10px; padding: 18px 16px; text-align: center;
 </style>
 <link rel="stylesheet" href="/css/site-menu.css">
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/checkout-links.js"></script>
 </head>
 <body>
 
@@ -165,7 +166,8 @@ window.location.reload();
 }
 
 const JYOTISH_API_URL = "/api/jyotish";
-const PREMIUM_UPGRADE_URL = "https://buy.stripe.com/dRmaEZ0I73Bx6g8auH24000";
+// 決済リンクは訪問者の国の価格帯に応じて /js/checkout-links.js が解決する
+const premiumUpgradeUrl = () => window.LJCheckout.linkFor('premium');
 
 document.addEventListener('DOMContentLoaded', async () => {
 const contentArea = document.getElementById('content-area');
@@ -356,7 +358,7 @@ const upgradeBtn = document.getElementById('btn-upgrade-preview');
 if (upgradeBtn) {
 upgradeBtn.addEventListener('click', () => {
 const email = (input && input.email) || localStorage.getItem('lj_user_email') || '';
-window.open(`${PREMIUM_UPGRADE_URL}?prefilled_email=${encodeURIComponent(email)}`, '_blank');
+window.open(`${premiumUpgradeUrl()}?prefilled_email=${encodeURIComponent(email)}`, '_blank');
 });
 }
 }
