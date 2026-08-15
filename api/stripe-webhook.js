@@ -1,9 +1,11 @@
 // Stripe Webhook: 決済完了を受けて会員ステータスを paid に昇格する（サブスク）／
-// 買い切り（mode=payment）は完全鑑定書の購入として記録する
+// 買い切り（mode=payment）は完全鑑定書の購入として記録する／
+// サブスク終了（解約・未払い）を受けて paid を free に戻す
 // Stripe ダッシュボードで https://<domain>/api/stripe-webhook を登録し、
-// checkout.session.completed / checkout.session.async_payment_succeeded / invoice.paid を送信する。
+// checkout.session.completed / checkout.session.async_payment_succeeded / invoice.paid /
+// customer.subscription.deleted / customer.subscription.updated を送信する。
 const crypto = require('crypto');
-const { setMemberStatus, setPdfPurchased } = require('./_sheets');
+const { setMemberStatus, setPdfPurchased, downgradeMember } = require('./_sheets');
 
 // 署名検証には生のリクエストボディが必要なため、Vercel の自動パースを無効化する
 module.exports.config = { api: { bodyParser: false } };
@@ -47,6 +49,13 @@ function verifyStripeSignature(rawBody, signatureHeader, secret) {
   });
 }
 
+// サブスクは 顧客ID しか載らないイベントがあるため、会員行を引く手掛かりを取り出す
+function extractCustomerId(object) {
+  const customer = object?.customer;
+  if (typeof customer === 'string') return customer;
+  return customer?.id || null;
+}
+
 function extractEmail(object) {
   return (
     object?.customer_details?.email ||
@@ -55,6 +64,23 @@ function extractEmail(object) {
     object?.metadata?.email ||
     null
   );
+}
+
+// 既存会員は stripe_customer_id 未記録のことがあるため、鍵があれば Stripe 側からメールを引く
+async function fetchCustomerEmail(customerId) {
+  const apiKey = process.env.STRIPE_SECRET_KEY;
+  if (!apiKey || !customerId) return null;
+  try {
+    const res = await fetch(`https://api.stripe.com/v1/customers/${encodeURIComponent(customerId)}`, {
+      headers: { Authorization: `Bearer ${apiKey}` }
+    });
+    if (!res.ok) return null;
+    const customer = await res.json();
+    return customer?.email || null;
+  } catch (err) {
+    console.error('Failed to fetch Stripe customer:', err.message);
+    return null;
+  }
 }
 
 module.exports = async function handler(req, res) {
@@ -93,12 +119,41 @@ module.exports = async function handler(req, res) {
     'checkout.session.async_payment_succeeded',
     'invoice.paid'
   ];
+  const endedEvents = ['customer.subscription.deleted', 'customer.subscription.updated'];
 
-  if (!paidEvents.includes(event.type)) {
+  if (!paidEvents.includes(event.type) && !endedEvents.includes(event.type)) {
     return res.status(200).json({ received: true, ignored: event.type });
   }
 
   const object = event.data?.object || {};
+
+  if (endedEvents.includes(event.type)) {
+    // 期末解約の予約（cancel_at_period_end）はまだ利用期間が残っているので降格しない。
+    // 実際に課金が止まる canceled / unpaid になった時点で無料に戻す。
+    const ended = ['canceled', 'unpaid', 'incomplete_expired'].includes(object.status);
+    if (!ended) {
+      return res.status(200).json({ received: true, ignored: `subscription_${object.status}` });
+    }
+
+    const customerId = extractCustomerId(object);
+    const email = extractEmail(object) || (await fetchCustomerEmail(customerId));
+    const result = await downgradeMember({ email, customerId }).catch((err) => {
+      console.error('Failed to downgrade member:', err.message);
+      return { updated: false, reason: 'error' };
+    });
+
+    if (!result.updated) {
+      if (result.reason === 'member_not_found') {
+        console.error(`Stripe ${event.type}: no member row for customer ${customerId}`);
+        return res.status(200).json({ received: true, skipped: result.reason });
+      }
+      // シート未接続などは Stripe にリトライさせる
+      return res.status(500).json({ error: 'Failed to downgrade status', reason: result.reason });
+    }
+
+    console.log(`Stripe ${event.type}: ${result.reason} for customer ${customerId}`);
+    return res.status(200).json({ received: true, result: result.reason });
+  }
   // 非同期決済は checkout.session.completed 時点では未入金のことがある
   if (event.type === 'checkout.session.completed' && object.payment_status && object.payment_status !== 'paid') {
     return res.status(200).json({ received: true, pending: object.payment_status });
@@ -114,7 +169,9 @@ module.exports = async function handler(req, res) {
   const isOneTime = object.mode === 'payment';
 
   try {
-    const updated = isOneTime ? await setPdfPurchased(email) : await setMemberStatus(email, 'paid');
+    const updated = isOneTime
+      ? await setPdfPurchased(email)
+      : await setMemberStatus(email, 'paid', extractCustomerId(object));
     if (!updated) {
       // シート未接続などで反映できていない場合、200 を返すと失敗が誰にも見えなくなる
       console.error(`Stripe ${event.type}: member sheet unavailable, purchase not recorded.`);

@@ -111,10 +111,12 @@ async function getMemberSheet() {
 }
 
 // 決済完了時などにステータスのみを更新する。行が無ければ最小限の行を作成する。
-async function setMemberStatus(email, status) {
+// customerId を渡すと、解約時に顧客IDから会員行を引けるよう記録する。
+async function setMemberStatus(email, status, customerId) {
   if (!email) return false;
   const sheet = await getMemberSheet();
   if (!sheet) return false;
+  if (customerId) await ensureColumns(sheet, ['stripe_customer_id']);
 
   const normalized = String(email).trim().toLowerCase();
   const rows = await sheet.getRows();
@@ -123,6 +125,7 @@ async function setMemberStatus(email, status) {
 
   if (row) {
     row.set('status', status);
+    if (customerId) row.set('stripe_customer_id', customerId);
     row.set('updated_at', nowStr);
     await row.save();
   } else {
@@ -130,12 +133,39 @@ async function setMemberStatus(email, status) {
       email: email,
       status: status,
       auth_provider: 'stripe',
+      stripe_customer_id: customerId || '',
       created_at: nowStr,
       updated_at: nowStr,
       language: 'ja'
     });
   }
   return true;
+}
+
+// サブスク解約時に有料権限を外す。買い切り（pdf_purchased）は購入済みの権利なので残す。
+// 解約イベントにメールが含まれないことがあるため、顧客IDでも会員行を引けるようにする。
+async function downgradeMember({ email, customerId }) {
+  const sheet = await getMemberSheet();
+  if (!sheet) return { updated: false, reason: 'sheet_unavailable' };
+
+  const normalizedEmail = normalizeEmail(email);
+  const normalizedCustomer = String(customerId || '').trim();
+  const rows = await sheet.getRows();
+  const row =
+    (normalizedCustomer
+      ? rows.find(r => String(r.get('stripe_customer_id') || '').trim() === normalizedCustomer)
+      : null) ||
+    (normalizedEmail ? rows.find(r => normalizeEmail(r.get('email')) === normalizedEmail) : null);
+
+  if (!row) return { updated: false, reason: 'member_not_found' };
+  if (String(row.get('status') || '').trim().toLowerCase() !== 'paid') {
+    return { updated: true, reason: 'already_free' };
+  }
+
+  row.set('status', 'free');
+  row.set('updated_at', new Date().toISOString());
+  await row.save();
+  return { updated: true, reason: 'downgraded' };
 }
 
 function normalizeEmail(email) {
@@ -315,6 +345,7 @@ async function savePdfReport(email, partial) {
 module.exports = {
   getMemberSheet,
   setMemberStatus,
+  downgradeMember,
   getLastSheetIssue,
   getMemberRecord,
   setPdfPurchased,

@@ -162,13 +162,17 @@ CORS は全オリジン許可。`OPTIONS` は 200、`POST` 以外は 405。
 
 ## 7. 決済フロー
 
-- Stripe Payment Link: `https://buy.stripe.com/dRmaEZ0I73Bx6g8auH24000?prefilled_email=<email>`
-- サブスク登録・PDF 単品購入とも同じリンクを使用
+- Stripe Payment Link（サブスク）: `https://buy.stripe.com/dRmaEZ0I73Bx6g8auH24000?prefilled_email=<email>`
+- Stripe Payment Link（生涯総合鑑定書・買い切り 4,980円）: `https://buy.stripe.com/3cI14paiHegb480fP124001?prefilled_email=<email>`
 - 完了ページ: `ja/success.html`（`lj_status = 'paid'`）、`ja/pdf-success.html`（`lj_pdf_purchased = 'true'`）
 - Stripe Webhook: `POST /api/stripe-webhook`
   - `STRIPE_WEBHOOK_SECRET` で署名検証（HMAC-SHA256 / タイムスタンプ許容 300 秒）
   - `checkout.session.completed` / `checkout.session.async_payment_succeeded` / `invoice.paid` で Sheets の `status` を `paid` に昇格
+  - `mode=payment`（買い切り）は `status` ではなく `pdf_purchased` を `true` にする
   - メールは `customer_details.email` → `customer_email` → `receipt_email` → `metadata.email` の順で解決
+  - サブスク昇格時に `stripe_customer_id` を会員行へ記録する（解約イベントにはメールが載らないため）
+  - `customer.subscription.deleted` / `customer.subscription.updated` で `status` が `canceled` / `unpaid` / `incomplete_expired` になった場合、`status` を `free` に戻す（`cancel_at_period_end` の予約状態では降格しない。`pdf_purchased` は買い切りの権利なので残す）
+  - 解約イベントの会員特定は `stripe_customer_id` → メールの順。`STRIPE_SECRET_KEY` が設定されていれば、顧客IDからメールを引くフォールバックが働く
 - 課金状態は **Sheets のみを正** とし、`/api/jyotish` はリクエストボディの `status` を無視する（改ざんによる昇格と、診断時の `free` 上書きによる降格の両方を防止）
 - 決済直後は `/ja/mypage?status=paid` で Webhook 反映待ちのリトライ（最大 5 回 / 4 秒間隔）を行う
 
