@@ -5,16 +5,5 @@
     "api/jyotish.js": { "maxDuration": 60 },
     "api/stripe-webhook.js": { "maxDuration": 30 },
     "api/pdf-report.js": { "maxDuration": 60 }
-  },
-  "redirects": [
-    { "source": "/mypage", "destination": "/ja/mypage", "permanent": false },
-    { "source": "/result", "destination": "/ja/result", "permanent": false },
-    { "source": "/legal", "destination": "/ja/legal", "permanent": false },
-    { "source": "/reissue", "destination": "/ja/reissue", "permanent": false },
-    { "source": "/success", "destination": "/ja/success", "permanent": false },
-    { "source": "/pdf-purchase", "destination": "/ja/pdf-purchase", "permanent": false },
-    { "source": "/pdf-success", "destination": "/ja/pdf-success", "permanent": false },
-    { "source": "/pdf-report", "destination": "/ja/pdf-report", "permanent": false },
-    { "source": "/calendar", "destination": "/ja/calendar", "permanent": false }
-  ]
+  }
 }
