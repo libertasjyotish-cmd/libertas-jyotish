@@ -323,6 +323,7 @@ data-width="320">
 
 <!-- プレミアム鑑定カルテ -->
 <h2 style="font-size:1.15rem; color:var(--color-gold-dark); text-align:left; margin-bottom:12px;">📜 プレミアム鑑定カルテ</h2>
+<p id="premium-sample-lead" style="display:none; font-size:0.82rem; color:#5A4E48; text-align:left; margin-bottom:12px;">以下は表示イメージ（サンプル）です。プラン登録後、あなたの出生図に基づいた実際の内容に切り替わります。</p>
 
 <div id="premium-gatekeeper" class="locked-wrapper">
 <div id="premium-content-area">
@@ -1110,6 +1111,49 @@ detailHtml += `
 }
 detailContainer.innerHTML = detailHtml;
 }
+
+if (data.status !== 'paid') applyPremiumSample();
+}
+
+// 無料会員には有料項目の中身をサンプル文言で見せる（APIは呼ばず固定のダミー）
+const PREMIUM_SAMPLE = {
+dashaTitle: '現在の周期：木星期（2021年〜2037年）',
+dashaDesc: '学びと拡大の時期にあたり、専門性を深めるほど評価が積み上がる流れです。次の転機となる副周期の入り口と、そこで取るべき戦略まで詳細に解読します。',
+planets: [
+{ name: '太陽', sign: '山羊座', house: 10, comment: '社会的な使命と責任感が人生の軸になります。' },
+{ name: '月', sign: '蟹座', house: 4, comment: '心の安定は家庭と身近な人との絆から生まれます。' },
+{ name: '火星', sign: '牡羊座', house: 7, comment: '対人関係で主導権を握りやすい配置です。' }
+],
+cards: [
+{ title: '🔮 精密クンダリー・9天体配置の宿命解読', text: 'ラグナ（アセンダント）と9天体の相互関係から、才能・適職・人間関係の傾向を立体的に読み解きます。無料鑑定では扱わないヨーガ（星の組み合わせ）や品位の判定まで含めた本格的な解析です。' },
+{ title: '📅 本日の日次＆週次詳細運勢レポート', text: 'その日の星回りに加え、1週間の流れと注意日、追い風となる日を具体的に提示します。あわせて星の負荷を和らげるレメディ（処方）もご案内します。' },
+{ title: '📜 108区分生涯カルテ＆支配星詳細解読', text: '生涯を108区分に分けた周期表から、転機となる年と取るべき行動を時系列で示します。人生の山と谷を先回りして準備できる内容です。' }
+]
+};
+
+function applyPremiumSample() {
+const lead = document.getElementById('premium-sample-lead');
+if (lead) lead.style.display = 'block';
+
+const title = document.getElementById('dasha-period-title');
+if (title) title.textContent = PREMIUM_SAMPLE.dashaTitle;
+const desc = document.getElementById('dasha-description');
+if (desc) desc.textContent = PREMIUM_SAMPLE.dashaDesc;
+
+renderPlanetTable(PREMIUM_SAMPLE.planets);
+
+let detailContainer = document.getElementById('premium-detail-container');
+if (!detailContainer) {
+detailContainer = document.createElement('div');
+detailContainer.id = 'premium-detail-container';
+document.getElementById('premium-content-area').appendChild(detailContainer);
+}
+detailContainer.innerHTML = PREMIUM_SAMPLE.cards.map(c => `
+<div class="card-box" style="margin-top:22px;">
+<div class="card-title">${c.title}</div>
+<div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">${c.text}</div>
+</div>
+`).join('');
 }
 
 function renderPlanetTable(planets) {
