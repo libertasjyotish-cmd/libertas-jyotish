@@ -212,6 +212,7 @@
     "pdf-purchase.text10": "💳 決済に進む（Stripe）",
     "pdf-purchase.text11": "ご購入後、サイト内の鑑定書ページでいつでも閲覧できます（ブラウザの印刷機能でPDF保存も可能です）。",
     "pdf-purchase.text12": "特定商取引法に基づく表記・利用規約・プライバシーポリシー",
+    "pdf-purchase.text13": "（時間が不明な場合は 12:00 と入力してください）",
     "pdf-purchase.placeholder01": "例: 東京都千代田区",
     "pdf-purchase.js01": "メールアドレスを入力してください。",
     "pdf-purchase.js02": "生年月日・時間を入力してください。",
