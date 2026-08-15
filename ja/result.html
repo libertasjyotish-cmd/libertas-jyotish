@@ -76,6 +76,27 @@ padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
 .btn-primary { display: inline-block; width: 100%; padding: 14px 20px; font-size: 1rem; font-weight: 600; color: #FFFDF9; background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%); border: none; border-radius: 8px; text-decoration: none; cursor: pointer; }
 .btn-secondary { display: block; width: 100%; margin-top: 15px; padding: 10px; background: transparent; border: 1px solid rgba(139, 107, 27, 0.4); color: var(--color-gold-dark); border-radius: 6px; font-size: 0.85rem; text-decoration: none; text-align: center; }
 
+/* 無料鑑定の下に「会員なら見られる内容」をぼかし表示して差分を可視化する */
+.locked-section { margin-top: 35px; text-align: left; }
+.locked-section-title { font-size: 1.05rem; color: var(--color-gold-dark); font-weight: 700; margin-bottom: 4px; }
+.locked-section-lead { font-size: 0.82rem; color: #5A4E48; margin-bottom: 14px; }
+.locked-wrapper { position: relative; border-radius: 10px; }
+.preview-card { background: rgba(255, 253, 248, 0.85); border: 1px solid rgba(139, 107, 27, 0.28); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
+.preview-card:last-child { margin-bottom: 0; }
+.preview-title { font-size: 0.92rem; font-weight: 700; color: var(--color-gold-dark); margin-bottom: 6px; }
+.preview-text { font-size: 0.84rem; color: #4a3e36; line-height: 1.75; }
+.preview-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.8rem; }
+.preview-table th, .preview-table td { padding: 6px 8px; border: 1px solid rgba(139, 107, 27, 0.3); text-align: left; }
+.preview-table th { background: rgba(212, 175, 55, 0.18); color: var(--color-gold-dark); }
+.blur-content { filter: blur(4px); user-select: none; pointer-events: none; opacity: 0.75; }
+.lock-overlay {
+margin-top: 14px; background: rgba(212, 175, 55, 0.14); border: 1px solid rgba(139, 107, 27, 0.35);
+border-radius: 10px; padding: 18px 16px; text-align: center;
+}
+.lock-overlay .lock-icon { font-size: 1.8rem; margin-bottom: 6px; }
+.lock-overlay .lock-title { font-weight: 700; color: var(--color-gold-dark); margin-bottom: 8px; }
+.lock-overlay .lock-note { font-size: 0.82rem; color: #5A4E48; margin-bottom: 15px; }
+
 .site-footer { width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3); padding: 24px 20px; text-align: center; position: relative; z-index: 10; }
 .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
 .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
@@ -323,10 +344,63 @@ readingContent = `
 document.getElementById('content-area').innerHTML = `
 ${input ? `<div class="meta-card">✉️ メール: ${input.email || '未設定'}<br>📅 生年月日: ${input.dob} ${input.tob || ''} | 📍 出生地: ${input.address || input.city}</div>` : ''}
 <div class="result-body">${readingContent}</div>
+${result.status === 'paid' ? '' : buildLockedPreview()}
 <div class="cta-card">
 <h3 style="color:var(--color-gold-dark); margin-bottom:8px;">✨ マイページで全ての星の配置を確認</h3>
 <p style="font-size:0.85rem; color:#5A4E48; margin-bottom:15px;">会員マイページにて、いつでもカルテや本日の運勢を確認できます。</p>
 <a href="/ja/mypage" class="btn-primary">マイページへアクセスする</a>
+</div>
+`;
+
+const upgradeBtn = document.getElementById('btn-upgrade-preview');
+if (upgradeBtn) {
+upgradeBtn.addEventListener('click', () => {
+const email = (input && input.email) || localStorage.getItem('lj_user_email') || '';
+window.open(`${PREMIUM_UPGRADE_URL}?prefilled_email=${encodeURIComponent(email)}`, '_blank');
+});
+}
+}
+
+// 無料鑑定との差が伝わるよう、有料会員に開放される項目をサンプル表示＋ぼかしで見せる
+function buildLockedPreview() {
+return `
+<div class="locked-section">
+<div class="locked-section-title">🔒 プレミアム会員になると見られる内容</div>
+<p class="locked-section-lead">以下は表示イメージ（サンプル）です。ご登録いただくと、あなたの出生図に基づいた実際の内容が表示されます。</p>
+<div class="locked-wrapper">
+<div>
+<div class="preview-card">
+<div class="preview-title">🪐 全天体（9天体）配置表</div>
+<table class="preview-table blur-content">
+<thead><tr><th>天体</th><th>サイン（星座）</th><th>ハウス</th><th>一言解説</th></tr></thead>
+<tbody>
+<tr><td>太陽</td><td>山羊座</td><td>第10ハウス</td><td>社会的な使命と責任感が人生の軸になります。</td></tr>
+<tr><td>月</td><td>蟹座</td><td>第4ハウス</td><td>心の安定は家庭と身近な人との絆から生まれます。</td></tr>
+<tr><td>火星</td><td>牡羊座</td><td>第7ハウス</td><td>対人関係で主導権を握りやすい配置です。</td></tr>
+</tbody>
+</table>
+</div>
+<div class="preview-card">
+<div class="preview-title">📜 マハー・ダシャー周期の解読</div>
+<p class="preview-text blur-content">現在の周期：木星期（2021年〜2037年）。学びと拡大の時期にあたり、専門性を深めるほど評価が積み上がる流れです。次の転機となる副周期の入り口と、そこで取るべき戦略まで詳細に解読します。</p>
+</div>
+<div class="preview-card">
+<div class="preview-title">🔮 精密クンダリー・9天体配置の宿命解読</div>
+<p class="preview-text blur-content">ラグナ（アセンダント）と9天体の相互関係から、才能・適職・人間関係の傾向を立体的に読み解きます。無料鑑定では扱わないヨーガ（星の組み合わせ）や品位の判定まで含めた本格的な解析です。</p>
+</div>
+<div class="preview-card">
+<div class="preview-title">📅 本日の日次＆週次詳細運勢レポート</div>
+<p class="preview-text blur-content">その日の星回りに加え、1週間の流れと注意日、追い風となる日を具体的に提示します。あわせて星の負荷を和らげるレメディ（処方）もご案内します。</p>
+</div>
+</div>
+<div class="lock-overlay">
+<div class="lock-icon">🔒</div>
+<div class="lock-title">有料会員限定コンテンツ</div>
+<p class="lock-note">全天体配置・ダシャー周期・詳細運勢・レメディが開放されます。</p>
+<button type="button" id="btn-upgrade-preview" class="btn-primary" style="width:auto; padding:12px 24px;">有料プランに登録する</button>
+<a href="/ja/pdf-purchase" class="btn-secondary" style="width:auto; padding:8px 18px; margin-top:12px;">買い切りの完全鑑定書（PDF）を見る</a>
+</div>
+</div>
 </div>
 `;
 }
