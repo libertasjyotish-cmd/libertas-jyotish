@@ -152,6 +152,8 @@ border: 1px solid rgba(139, 107, 27, 0.5);
 }
 .paid-member-title { font-size: 1rem; font-weight: 700; color: var(--color-gold-dark); margin-bottom: 6px; }
 .paid-member-desc { font-size: 0.82rem; color: #5A4E48; margin-bottom: 14px; line-height: 1.6; }
+.paid-member-price { font-size: 0.95rem; font-weight: 700; color: var(--color-gold-dark); margin-bottom: 12px; line-height: 1.5; }
+.paid-member-price:empty { display: none; }
 .paid-member-btn {
 display: inline-block; width: 100%; max-width: 380px; padding: 13px 20px;
 background: linear-gradient(135deg, #8B6B1B 0%, #5C450E 100%);
@@ -305,6 +307,7 @@ transition: color 0.3s, border-color 0.3s;
 <div class="paid-member-box">
 <div class="paid-member-title">{{t.index.text14}}</div>
 <p class="paid-member-desc">{{t.index.text15}}</p>
+<p class="paid-member-price" data-price-label="premium"></p>
 <button type="button" class="paid-member-btn btn-upgrade-premium">{{t.index.text16}}</button>
 </div>
 
@@ -396,6 +399,7 @@ transition: color 0.3s, border-color 0.3s;
 <div class="paid-member-box bottom-box">
 <div class="paid-member-title">{{t.index.text49}}</div>
 <p class="paid-member-desc">{{t.index.text50}}</p>
+<p class="paid-member-price" data-price-label="premium"></p>
 <button type="button" class="paid-member-btn btn-upgrade-premium">{{t.index.text51}}</button>
 </div>
 </div>

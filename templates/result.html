@@ -355,6 +355,8 @@ ${result.status === 'paid' ? '' : buildLockedPreview()}
 </div>
 `;
 
+window.LJCheckout.paint();
+
 const upgradeBtn = document.getElementById('btn-upgrade-preview');
 if (upgradeBtn) {
 upgradeBtn.addEventListener('click', () => {
@@ -400,6 +402,7 @@ return `
 <div class="lock-icon">🔒</div>
 <div class="lock-title">{{t.result.tpl41|tpl}}</div>
 <p class="lock-note">{{t.result.tpl42|tpl}}</p>
+<p data-price-label="premium" style="font-size:0.9rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:12px;"></p>
 <button type="button" id="btn-upgrade-preview" class="btn-primary" style="width:auto; padding:12px 24px;">{{t.result.tpl43|tpl}}</button>
 <a href="/{{lang}}/pdf-purchase" class="btn-secondary" style="width:auto; padding:8px 18px; margin-top:12px;">{{t.result.tpl44|tpl}}</a>
 </div>

@@ -450,6 +450,9 @@
     "menu.navLabel": "Site menu",
     "price.premium": "{price} / month (tax incl.)",
     "price.pdf": "{price} one-off (tax incl.)",
+    "price.premiumApprox": "About {price} / month (tax incl.) — final amount shown at checkout",
+    "price.pdfApprox": "About {price} one-off (tax incl.) — final amount shown at checkout",
+    "price.checkoutOnly": "The amount in your local currency is shown at checkout",
     "mypage.jsCachedAt": "Showing the reading retrieved at {time}.",
     "mypage.jsRefresh": "Refresh now"
   }

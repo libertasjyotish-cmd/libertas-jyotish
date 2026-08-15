@@ -152,6 +152,8 @@ border: 1px solid rgba(139, 107, 27, 0.5);
 }
 .paid-member-title { font-size: 1rem; font-weight: 700; color: var(--color-gold-dark); margin-bottom: 6px; }
 .paid-member-desc { font-size: 0.82rem; color: #5A4E48; margin-bottom: 14px; line-height: 1.6; }
+.paid-member-price { font-size: 0.95rem; font-weight: 700; color: var(--color-gold-dark); margin-bottom: 12px; line-height: 1.5; }
+.paid-member-price:empty { display: none; }
 .paid-member-btn {
 display: inline-block; width: 100%; max-width: 380px; padding: 13px 20px;
 background: linear-gradient(135deg, #8B6B1B 0%, #5C450E 100%);
@@ -270,7 +272,10 @@ window.LJ_I18N = {
   },
   price: {
     premium: '{price} / month (tax incl.)',
-    pdf: '{price} one-off (tax incl.)'
+    pdf: '{price} one-off (tax incl.)',
+    premiumApprox: 'About {price} / month (tax incl.) — final amount shown at checkout',
+    pdfApprox: 'About {price} one-off (tax incl.) — final amount shown at checkout',
+    checkoutOnly: 'The amount in your local currency is shown at checkout'
   }
 };
 </script>
@@ -326,6 +331,7 @@ window.LJ_I18N = {
 <div class="paid-member-box">
 <div class="paid-member-title">🌟 About the Premium plan</div>
 <p class="paid-member-desc">Unlock every feature of the full reading: detailed dasha timing forecasts, a precise horoscope, prescribed remedies and more.</p>
+<p class="paid-member-price" data-price-label="premium"></p>
 <button type="button" class="paid-member-btn btn-upgrade-premium">Join Premium (sign up and payment)</button>
 </div>
 
@@ -417,6 +423,7 @@ Enter your birth data and receive the genuine roadmap that LIBERTAS JYOTISH reve
 <div class="paid-member-box bottom-box">
 <div class="paid-member-title">🌟 Join Premium and unlock the full reading</div>
 <p class="paid-member-desc">Thank you for reading this far. Get your precise horoscope, dasha timing forecast and personal remedies right now.</p>
+<p class="paid-member-price" data-price-label="premium"></p>
 <button type="button" class="paid-member-btn btn-upgrade-premium">Join Premium (sign up and payment)</button>
 </div>
 </div>
