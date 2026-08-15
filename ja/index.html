@@ -152,6 +152,8 @@ border: 1px solid rgba(139, 107, 27, 0.5);
 }
 .paid-member-title { font-size: 1rem; font-weight: 700; color: var(--color-gold-dark); margin-bottom: 6px; }
 .paid-member-desc { font-size: 0.82rem; color: #5A4E48; margin-bottom: 14px; line-height: 1.6; }
+.paid-member-price { font-size: 0.95rem; font-weight: 700; color: var(--color-gold-dark); margin-bottom: 12px; line-height: 1.5; }
+.paid-member-price:empty { display: none; }
 .paid-member-btn {
 display: inline-block; width: 100%; max-width: 380px; padding: 13px 20px;
 background: linear-gradient(135deg, #8B6B1B 0%, #5C450E 100%);
@@ -270,7 +272,10 @@ window.LJ_I18N = {
   },
   price: {
     premium: '月額 {price}（税込）',
-    pdf: '買い切り {price}（税込）'
+    pdf: '買い切り {price}（税込）',
+    premiumApprox: '月額 約{price}（税込・決済画面で確定）',
+    pdfApprox: '買い切り 約{price}（税込・決済画面で確定）',
+    checkoutOnly: '金額はご利用の通貨で決済画面に表示されます'
   }
 };
 </script>
@@ -326,6 +331,7 @@ window.LJ_I18N = {
 <div class="paid-member-box">
 <div class="paid-member-title">🌟 有料プレミアムプランのご案内</div>
 <p class="paid-member-desc">詳細なダシャー時期予測・精密ホロスコープ・レメディ処方など、すべての本格鑑定機能を開放します。</p>
+<p class="paid-member-price" data-price-label="premium"></p>
 <button type="button" class="paid-member-btn btn-upgrade-premium">有料プレミアム会員に登録する（お申し込み・決済）</button>
 </div>
 
@@ -417,6 +423,7 @@ window.LJ_I18N = {
 <div class="paid-member-box bottom-box">
 <div class="paid-member-title">🌟 本格鑑定を開放するプレミアム会員登録</div>
 <p class="paid-member-desc">説明をお読みいただきありがとうございます。あなただけの精密なホロスコープ・ダシャー時期予測・各種レメディを今すぐ手に入れましょう。</p>
+<p class="paid-member-price" data-price-label="premium"></p>
 <button type="button" class="paid-member-btn btn-upgrade-premium">有料プレミアム会員に登録する（お申し込み・決済）</button>
 </div>
 </div>

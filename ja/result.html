@@ -120,7 +120,10 @@ window.LJ_I18N = {
   },
   price: {
     premium: '月額 {price}（税込）',
-    pdf: '買い切り {price}（税込）'
+    pdf: '買い切り {price}（税込）',
+    premiumApprox: '月額 約{price}（税込・決済画面で確定）',
+    pdfApprox: '買い切り 約{price}（税込・決済画面で確定）',
+    checkoutOnly: '金額はご利用の通貨で決済画面に表示されます'
   }
 };
 </script>
@@ -376,6 +379,8 @@ ${result.status === 'paid' ? '' : buildLockedPreview()}
 </div>
 `;
 
+window.LJCheckout.paint();
+
 const upgradeBtn = document.getElementById('btn-upgrade-preview');
 if (upgradeBtn) {
 upgradeBtn.addEventListener('click', () => {
@@ -421,6 +426,7 @@ return `
 <div class="lock-icon">🔒</div>
 <div class="lock-title">有料会員限定コンテンツ</div>
 <p class="lock-note">全天体配置・ダシャー周期・詳細運勢・レメディが開放されます。</p>
+<p data-price-label="premium" style="font-size:0.9rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:12px;"></p>
 <button type="button" id="btn-upgrade-preview" class="btn-primary" style="width:auto; padding:12px 24px;">有料プランに登録する</button>
 <a href="/ja/pdf-purchase" class="btn-secondary" style="width:auto; padding:8px 18px; margin-top:12px;">買い切りの完全鑑定書（PDF）を見る</a>
 </div>

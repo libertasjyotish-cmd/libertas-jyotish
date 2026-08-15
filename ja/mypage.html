@@ -237,7 +237,10 @@ window.LJ_I18N = {
   },
   price: {
     premium: '月額 {price}（税込）',
-    pdf: '買い切り {price}（税込）'
+    pdf: '買い切り {price}（税込）',
+    premiumApprox: '月額 約{price}（税込・決済画面で確定）',
+    pdfApprox: '買い切り 約{price}（税込・決済画面で確定）',
+    checkoutOnly: '金額はご利用の通貨で決済画面に表示されます'
   }
 };
 </script>
@@ -385,6 +388,7 @@ data-width="320">
 <div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:8px;">有料会員限定コンテンツ</div>
 <p style="font-size:0.82rem; color:#5A4E48; margin-bottom:15px;">全天体配置・ダシャー周期の解読にはプラン登録が必要です。</p>
 <p id="paid-sync-notice" style="display:none; font-size:0.82rem; color:#8a3b2f; margin-bottom:15px;">お支払いは確認できましたが、この会員アカウントにまだ反映されていません。決済時に入力したメールアドレスでログインしているかご確認ください（反映に数分かかる場合があります）。</p>
+<p data-price-label="premium" style="font-size:0.9rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:12px;"></p>
 <button id="btn-upgrade-premium" class="btn-upgrade">有料プランに登録する</button>
 </div>
 </div>

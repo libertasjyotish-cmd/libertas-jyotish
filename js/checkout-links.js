@@ -9,8 +9,7 @@
       pdf: 'https://buy.stripe.com/3cI14paiHegb480fP124001'
     },
     labels: { premium: '月額 500円（税込）', pdf: '買い切り 4,980円（税込）' },
-    currency: 'JPY',
-    amounts: { premium: 500, pdf: 4980 }
+    approx: null
   };
   var CACHE_KEY = 'lj_checkout_links';
   var resolved = FALLBACK;
@@ -42,22 +41,45 @@
     linkFor: function (product) {
       return resolved.links[product] || FALLBACK.links[product];
     },
-    // 日本語ページは API の日本語ラベル、他言語は金額を閲覧言語の書式に整形して返す。
+    // 日本語ページは API の確定ラベル（円）。他言語は訪問国の通貨での概算額を返し、
+    // 通貨が判定できない場合は金額を出さず、決済画面で提示される旨だけを返す。
     labelFor: function (product) {
       var i18n = window.LJ_I18N;
-      var amount = (resolved.amounts && resolved.amounts[product]) || FALLBACK.amounts[product];
-      var template = i18n && i18n.price && i18n.price[product];
-      if (i18n && i18n.lang && i18n.lang !== 'ja' && template && amount) {
-        var currency = resolved.currency || FALLBACK.currency;
-        var price;
-        try {
-          price = new Intl.NumberFormat(i18n.lang, { style: 'currency', currency: currency, maximumFractionDigits: 0 }).format(amount);
-        } catch (e) {
-          price = amount + ' ' + currency;
-        }
-        return template.replace('{price}', price);
+      var lang = i18n && i18n.lang;
+      if (!lang || lang === 'ja') return (resolved.labels && resolved.labels[product]) || FALLBACK.labels[product];
+
+      var price = i18n.price || {};
+      var approx = resolved.approx;
+      if (!approx || !approx[product]) return price.checkoutOnly || '';
+
+      var formatted;
+      try {
+        formatted = new Intl.NumberFormat(lang, {
+          style: 'currency',
+          currency: approx.currency,
+          maximumFractionDigits: approx[product] < 10 ? 2 : 0
+        }).format(approx[product]);
+      } catch (e) {
+        formatted = approx[product] + ' ' + approx.currency;
       }
-      return (resolved.labels && resolved.labels[product]) || FALLBACK.labels[product];
-    }
+      return (price[product + 'Approx'] || '{price}').replace('{price}', formatted);
+    },
+    // 動的に差し込んだ要素にも価格ラベルを反映させる
+    paint: function () { paintLabels(); }
   };
+
+  // data-price-label="premium" などの要素に価格ラベルを流し込む（解決後に上書きする）。
+  function paintLabels() {
+    var nodes = document.querySelectorAll('[data-price-label]');
+    for (var i = 0; i < nodes.length; i++) {
+      nodes[i].textContent = window.LJCheckout.labelFor(nodes[i].getAttribute('data-price-label'));
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', paintLabels);
+  } else {
+    paintLabels();
+  }
+  ready.then(paintLabels);
 })();
