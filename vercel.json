@@ -2,7 +2,8 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/googled0079136ed2b628f.html", "destination": "/gsc/googled0079136ed2b628f.html" }
+    { "source": "/googled0079136ed2b628f.html", "destination": "/gsc/googled0079136ed2b628f.html" },
+    { "source": "/googled0079136ed2b628f", "destination": "/gsc/googled0079136ed2b628f.html" }
   ],
   "functions": {
     "api/jyotish.js": { "maxDuration": 60 },
