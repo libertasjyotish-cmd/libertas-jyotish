@@ -107,7 +107,7 @@ opacity: 0; background: no-repeat center / contain;
 mask-image: radial-gradient(circle at 50% 50%, #000 58%, transparent 84%);
 }
 html[lang="ja"] body.plan-free .hero-container::after {
-bottom: 170px; background-image: url('/img/mandala-moon-sun.png'); opacity: 0.13;
+bottom: 250px; background-image: url('/img/mandala-moon-sun.png'); opacity: 0.13;
 }
 html[lang="ja"] body.plan-paid .hero-container::after {
 top: 90px; width: min(520px, 92%); background-image: url('/img/celestial-planets.png'); opacity: 0.18;
@@ -116,9 +116,9 @@ top: 90px; width: min(520px, 92%); background-image: url('/img/celestial-planets
 html[lang="ja"] .hero-container { padding-bottom: 150px; }
 html[lang="ja"] .hero-container::before {
 content: ''; position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%);
-width: 130px; aspect-ratio: 651 / 900; z-index: 0; pointer-events: none;
+width: 132px; aspect-ratio: 651 / 900; z-index: 0; pointer-events: none;
 background: url('/img/elephant-lotus.png') no-repeat center bottom / contain;
-opacity: 0.5;
+opacity: 0.62;
 }
 html[lang="ja"] .hero-container > * { position: relative; z-index: 1; }
 
@@ -235,7 +235,8 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 @media (max-width: 640px) {
 /* Google ログインボタン（固定幅320px）がはみ出して横スクロールが出ないよう余白を詰める */
 body { overflow-x: hidden; }
-.main-section { padding: 90px 10px 40px; }
+/* iOS/Android では背景の fixed が長いページで途切れ、下部に暗い帯が出るため通常配置にする */
+.main-section { padding: 90px 10px 40px; background-attachment: scroll, scroll; }
 .hero-container { padding: 30px 12px 26px; }
 .card-box { padding: 16px 12px; }
 .google-btn-container { max-width: 100%; overflow: hidden; }
