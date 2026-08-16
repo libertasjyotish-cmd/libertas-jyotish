@@ -239,14 +239,12 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 /* Google ログインボタン（固定幅320px）がはみ出して横スクロールが出ないよう余白を詰める */
 body { overflow-x: hidden; }
 /* スマホでは背景をビューポート固定の別レイヤーにする。
-   長いページで cover が引き伸ばされて下部が暗い帯になるのを防ぐ。 */
-.main-section { padding: 90px 10px 40px; background-image: none; }
+   長いページで cover が引き伸ばされて下部が暗い帯になるのを防ぐ。
+   clip-path でセクションの外（フッター下や引っ張り時の余白）には描かせない。 */
+.main-section { padding: 90px 10px 40px; background-image: none; clip-path: inset(0); }
 .bg-sticky {
-display: block; position: sticky; top: 0; height: 100vh; z-index: 0; pointer-events: none;
-/* セクションの上下パディング（90px / 40px）の内側にも背景が回り込むよう、負のマージンで広げる。
-   上下マージンの合計で高さを打ち消すため、レイアウト上の位置は変わらない。 */
-margin-top: -90px; margin-bottom: calc(90px - 100vh);
-width: 100vw; margin-left: calc(50% - 50vw); align-self: flex-start;
+display: block; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+background-color: #0c1a1f;
 background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");
 background-size: cover; background-position: center center; background-repeat: no-repeat;
 }
