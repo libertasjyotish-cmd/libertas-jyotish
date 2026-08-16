@@ -242,7 +242,10 @@ body { overflow-x: hidden; }
    長いページで cover が引き伸ばされて下部が暗い帯になるのを防ぐ。 */
 .main-section { padding: 90px 10px 40px; background-image: none; }
 .bg-sticky {
-display: block; position: sticky; top: 0; height: 100vh; margin-bottom: -100vh; z-index: 0; pointer-events: none;
+display: block; position: sticky; top: 0; height: 100vh; z-index: 0; pointer-events: none;
+/* セクションの上下パディング（90px / 40px）の内側にも背景が回り込むよう、負のマージンで広げる。
+   上下マージンの合計で高さを打ち消すため、レイアウト上の位置は変わらない。 */
+margin-top: -90px; margin-bottom: calc(90px - 100vh);
 width: 100vw; margin-left: calc(50% - 50vw); align-self: flex-start;
 background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");
 background-size: cover; background-position: center center; background-repeat: no-repeat;
