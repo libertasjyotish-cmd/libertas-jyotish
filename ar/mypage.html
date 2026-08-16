@@ -356,6 +356,7 @@ data-width="320">
 <p style="font-size:0.85rem; color:#4a3e36; margin-bottom:10px;">أضِفه إلى الشاشة الرئيسية ليعمل مثل تطبيق من دون فتح المتصفح.</p>
 <button id="btn-pwa-install" class="btn-action" style="display:none; width:100%;">إضافة إلى الشاشة الرئيسية</button>
 <p id="pwa-ios-hint" style="display:none; font-size:0.82rem; color:#5A4E48;">اضغط زر المشاركة ثم اختر «إضافة إلى الشاشة الرئيسية».</p>
+<p id="pwa-menu-hint" style="display:none; font-size:0.82rem; color:#5A4E48;">افتح قائمة المتصفح (⋮) واختر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية».</p>
 </div>
 
 <!-- 出生データ登録カード（初回ログイン時・データ欠落時の自律復元用） -->
@@ -482,20 +483,27 @@ navigator.serviceWorker.register('/sw.js').catch(() => {});
 }
 
 // ホーム画面への追加（PWA）。
-// Android/デスクトップの Chromium 系は beforeinstallprompt でワンタップ、
-// iOS Safari はイベントが無いので手順を案内する。インストール済みでは出さない。
+// beforeinstallprompt が来ればワンタップのボタン、来ない環境（iOS、シークレットタブ、
+// 既に一度出したあと等）はブラウザメニューからの手順を案内する。インストール済みでは出さない。
 (function setupInstallPrompt() {
 const box = document.getElementById('pwa-install-box');
 const btn = document.getElementById('btn-pwa-install');
-const hint = document.getElementById('pwa-ios-hint');
+const iosHint = document.getElementById('pwa-ios-hint');
+const menuHint = document.getElementById('pwa-menu-hint');
 if (!box) return;
 const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 if (standalone) return;
+
+const ua = navigator.userAgent;
+const isIos = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isChromium = /Chrome\/|CriOS|Edg\//.test(ua);
+
 let deferred = null;
 window.addEventListener('beforeinstallprompt', (e) => {
 e.preventDefault();
 deferred = e;
-hint.style.display = 'none';
+iosHint.style.display = 'none';
+menuHint.style.display = 'none';
 btn.style.display = 'block';
 box.style.display = 'block';
 });
@@ -508,12 +516,19 @@ await deferred.userChoice;
 deferred = null;
 box.style.display = 'none';
 });
-const ua = navigator.userAgent;
-const isIos = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-const isIosSafari = isIos && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
-if (isIosSafari) {
-hint.style.display = 'block';
+
+if (isIos) {
+iosHint.style.display = 'block';
 box.style.display = 'block';
+return;
+}
+// イベントを少し待ってから、来なければ手順の案内に切り替える。
+if (isChromium) {
+setTimeout(() => {
+if (deferred) return;
+menuHint.style.display = 'block';
+box.style.display = 'block';
+}, 1500);
 }
 })();
 
