@@ -182,7 +182,14 @@ white-space: nowrap;
 .btn-action:hover { background: #735715; }
 .btn-action:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.locked-wrapper { position: relative; overflow: hidden; border-radius: 10px; }
+/* 有料会員限定の枠は金色の枠線と淡い地色で背景から分かるようにする */
+.locked-wrapper {
+position: relative; overflow: hidden; border-radius: 12px;
+border: 2px solid rgba(160, 120, 40, 0.95);
+background: rgba(197, 155, 39, 0.16);
+box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.18), inset 0 1px 4px rgba(112, 76, 32, 0.18);
+padding: 14px;
+}
 .blur-content { filter: blur(3.5px); user-select: none; pointer-events: none; opacity: 0.8; transition: filter 0.5s ease; }
 /* 項目名は読める状態にして、中身だけをぼかす（有料で何が読めるか伝えるため） */
 .preview-blur { filter: blur(3.5px); user-select: none; pointer-events: none; opacity: 0.75; }
