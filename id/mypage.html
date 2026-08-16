@@ -118,7 +118,7 @@ html[lang="ja"] .hero-container::before {
 content: ''; position: absolute; bottom: -34px; left: 50%; transform: translateX(-50%);
 width: 118px; aspect-ratio: 1 / 1; z-index: 0; pointer-events: none;
 background: url('/img/mandala-zodiac.png') no-repeat center bottom / contain;
-opacity: 0.5;
+opacity: 0.72;
 }
 html[lang="ja"] .hero-container > * { position: relative; z-index: 1; }
 
@@ -235,8 +235,14 @@ padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 @media (max-width: 640px) {
 /* Google ログインボタン（固定幅320px）がはみ出して横スクロールが出ないよう余白を詰める */
 body { overflow-x: hidden; }
-/* iOS/Android では背景の fixed が長いページで途切れ、下部に暗い帯が出るため通常配置にする */
-.main-section { padding: 90px 10px 40px; background-attachment: scroll, scroll; }
+/* スマホでは背景をビューポート固定の別レイヤーにする。
+   長いページで cover が引き伸ばされて下部が暗い帯になるのを防ぐ。 */
+.main-section { padding: 90px 10px 40px; background-image: none; }
+body::before {
+content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");
+background-size: cover; background-position: center center; background-repeat: no-repeat;
+}
 .hero-container { padding: 30px 12px 26px; }
 .card-box { padding: 16px 12px; }
 .google-btn-container { max-width: 100%; overflow: hidden; }
