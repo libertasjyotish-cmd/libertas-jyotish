@@ -4,7 +4,8 @@
     "htmlAttrs": "lang=\"id\"",
     "dir": "ltr",
     "fontHref": "https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap",
-    "fontFamily": "'Noto Serif', serif"
+    "fontFamily": "'Noto Serif', serif",
+    "ogLocale": "id_ID"
   },
   "strings": {
     "calendar.text01": "Kalender Peruntungan Tahunan | Libertas Jyotish",
@@ -19,7 +20,7 @@
     "calendar.text10": "Kembali ke halaman utama",
     "calendar.text11": "Informasi hukum, Syarat Penggunaan, dan Kebijakan Privasi",
     "calendar.content01": "Kalender Peruntungan Tahunan Libertas Jyotish (sedang disiapkan). Dari transit dan dasha Anda, kami menghitung aliran satu tahun ke depan dan saat-saat terbaik untuk bertindak.",
-    "index.text01": "Libertas Jyotish - Portal Astrologi Veda",
+    "index.text01": "Libertas Jyotish | Pembacaan astrologi Veda gratis (zodiak bulan, lagna, dasha)",
     "index.text02": "Jyotish, kebijaksanaan yang diwariskan sejak zaman kuno, membaca takdir yang tertulis di bintang dan membebaskan diri Anda yang sesungguhnya",
     "index.text03": "Layanan pembacaan pribadi menyeluruh yang menghitung dan menafsirkan peta jiwa Anda (kundali) dengan metode sidereal dari India kuno.",
     "index.text04": "Naluri tersembunyi Anda mungkin milik zodiak yang lain.",
@@ -71,9 +72,10 @@
     "index.text50": "Terima kasih telah membaca sampai di sini. Dapatkan sekarang juga horoskop akurat, prediksi periode dasha, dan remedi pribadi Anda.",
     "index.text51": "Berlangganan Premium (pendaftaran dan pembayaran)",
     "index.text52": "Informasi hukum, Syarat Penggunaan, dan Kebijakan Privasi",
-    "index.content01": "Libertas Jyotish adalah layanan daring untuk pembacaan zodiak bulan dan konsultasi astrologi Veda pribadi berdasarkan metode sidereal dari India kuno.",
+    "index.content01": "Libertas Jyotish menghitung zodiak bulan (rasi), lagna (asenden), dan periode dasha Anda dari tanggal, jam, dan tempat lahir dengan astrologi Veda sidereal. Pembacaan gratis serta laporan lengkap seumur hidup berbayar.",
     "index.placeholder01": "mis. Jakarta, Indonesia",
     "legal.text01": "Informasi hukum dan Syarat Penggunaan | Libertas Jyotish",
+    "legal.content01": "Informasi hukum dan Syarat Penggunaan Libertas Jyotish: harga, metode pembayaran, ketentuan pembatalan dan pengembalian dana, serta informasi penyelenggara.",
     "legal.text02": "Informasi hukum dan Syarat Penggunaan",
     "legal.text03": "Keterangan berdasarkan Undang-Undang Transaksi Komersial Tertentu Jepang",
     "legal.text04": "Nama usaha",
@@ -206,6 +208,7 @@
     "mypage.js53": "Rumah",
     "mypage.js54": "Ringkasan",
     "pdf-purchase.text01": "Tentang laporan PDF terperinci | Libertas Jyotish",
+    "pdf-purchase.content01": "Tentang laporan lengkap seumur hidup dari Libertas Jyotish: lagna, zodiak bulan, nakshatra, dan periode dasha Anda dirangkum dalam satu dokumen yang dapat disimpan sebagai PDF dari peramban.",
     "pdf-purchase.text02": "Terima kasih atas pembelian Anda",
     "pdf-purchase.text03": "Anda sudah memiliki Laporan Seumur Hidup. Anda dapat membukanya kapan saja lewat tombol di bawah (laporan juga bisa disimpan sebagai PDF melalui fungsi cetak peramban).",
     "pdf-purchase.text04": "📖 Buka Laporan Seumur Hidup",
