@@ -1,4 +1,4 @@
-const CACHE_NAME = 'libertas-jyotish-v35';
+const CACHE_NAME = 'libertas-jyotish-v36';
 // vercel.json の cleanUrls: true に合わせ、リダイレクトされない実体パスを指定する
 const ASSETS_TO_CACHE = [
   '/ja',
@@ -11,7 +11,8 @@ const ASSETS_TO_CACHE = [
   '/js/site-menu.js',
   '/manifest.json',
   '/img/bg-jyotish.jpg',
-  '/img/libertas-logo.png'
+  '/img/libertas-logo.png',
+  '/img/mandala-zodiac.png'
 ];
 
 self.addEventListener('install', (e) => {

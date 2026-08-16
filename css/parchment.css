@@ -46,6 +46,23 @@ html[lang="ja"] .about-section::before {
       rgba(140, 100, 46, 0.18) 100%);
 }
 
+/* 上部パネルの背面に薄く敷く曼荼羅（装飾のみ） */
+html[lang="ja"] .hero-container::after {
+  content: '';
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  width: min(460px, 86%);
+  aspect-ratio: 1 / 1;
+  transform: translateX(-50%);
+  z-index: 0;
+  pointer-events: none;
+  background: url('/img/mandala-zodiac.png') no-repeat center / contain;
+  opacity: 0.14;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 55%, transparent 82%);
+  mask-image: radial-gradient(circle at 50% 50%, #000 55%, transparent 82%);
+}
+
 /* 陰影の上に本文が乗るようにする */
 html[lang="ja"] .hero-container > *,
 html[lang="ja"] .about-section > * {
