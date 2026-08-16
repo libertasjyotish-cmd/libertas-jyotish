@@ -6,6 +6,8 @@
 //
 // テンプレート内で使える記法:
 //   {{lang}} {{dir}}            … 言語コード / 表記方向
+//   {{canonical}}               … そのページの正規URL
+//   {{hreflang}}                … 全言語 + x-default の alternate リンク
 //   {{fontHref}} {{fontFamily}} … 言語ごとのWebフォント指定
 //   {{t.some.key}}              … locales/<lang>.json の文言（そのまま埋め込む）
 //   {{t.some.key|js}}           … JavaScript の文字列リテラル内に埋め込む場合
@@ -26,6 +28,10 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const TEMPLATE_DIR = join(ROOT, 'templates');
 const LOCALE_DIR = join(ROOT, 'locales');
 const BASE_LANG = 'ja';
+// 検索エンジンに見せる正規のオリジン（apex は www へ 308 転送される）。
+const SITE = 'https://www.libertas-jyotish.com';
+// sitemap.xml に載せる（＝検索結果に出したい）ページ。
+const SITEMAP_PAGES = ['index', 'legal', 'pdf-purchase'];
 
 const PARTIAL_DIR = join(TEMPLATE_DIR, 'partials');
 const PARTIAL = /\{\{>\s*([a-zA-Z0-9_-]+)\s*\}\}/g;
@@ -40,6 +46,45 @@ const LANG_SWITCH = [
   { lang: 'ar', label: 'العربية', title: 'العربية' },
   { lang: 'id', label: 'Indonesia', title: 'Bahasa Indonesia' }
 ];
+
+// index.html は言語ディレクトリ自体（/ja）を指す。
+function pageUrl(lang, page) {
+  return page === 'index' ? `${SITE}/${lang}` : `${SITE}/${lang}/${page}`;
+}
+
+// 同じページの各言語版を相互に示す。x-default は言語自動判定のページに向ける。
+function defaultUrl(page) {
+  return page === 'index' ? `${SITE}/` : `${SITE}/${page}`;
+}
+
+function buildHreflang(page) {
+  const links = LANG_SWITCH.map((entry) => `<link rel="alternate" hreflang="${entry.lang}" href="${pageUrl(entry.lang, page)}">`);
+  links.push(`<link rel="alternate" hreflang="x-default" href="${defaultUrl(page)}">`);
+  return links.join('\n');
+}
+
+function buildSitemap() {
+  const urls = [];
+  for (const page of SITEMAP_PAGES) {
+    for (const entry of LANG_SWITCH) {
+      const alternates = LANG_SWITCH.map((alt) => `    <xhtml:link rel="alternate" hreflang="${alt.lang}" href="${pageUrl(alt.lang, page)}"/>`);
+      urls.push([
+        '  <url>',
+        `    <loc>${pageUrl(entry.lang, page)}</loc>`,
+        ...alternates,
+        `    <xhtml:link rel="alternate" hreflang="x-default" href="${defaultUrl(page)}"/>`,
+        '  </url>'
+      ].join('\n'));
+    }
+  }
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+    ...urls,
+    '</urlset>',
+    ''
+  ].join('\n');
+}
 
 function buildLangSwitcher(current) {
   const links = LANG_SWITCH.map((entry) => {
@@ -85,15 +130,19 @@ function render(template, locale, base, context) {
       value = lookup(locale.strings, key);
       if (value === undefined) {
         value = lookup(base.strings, key);
-        if (value === undefined) throw new Error(`${context}: 文言キー ${key} が ${BASE_LANG} にも存在しません`);
+        if (value === undefined) throw new Error(`${context.name}: 文言キー ${key} が ${BASE_LANG} にも存在しません`);
         missing.push(key);
       }
       value = String(value).split('%LANG%').join(locale.meta.lang);
     } else if (path === 'langSwitcher') {
       value = buildLangSwitcher(locale.meta.lang);
+    } else if (path === 'canonical') {
+      value = pageUrl(locale.meta.lang, context.page);
+    } else if (path === 'hreflang') {
+      value = buildHreflang(context.page);
     } else {
       value = locale.meta[path] ?? base.meta[path];
-      if (value === undefined) throw new Error(`${context}: メタ情報 ${path} が未定義です`);
+      if (value === undefined) throw new Error(`${context.name}: メタ情報 ${path} が未定義です`);
     }
     if (filter === 'js') return escapeJs(value);
     if (filter === 'tpl') return escapeTemplate(value);
@@ -118,7 +167,7 @@ function main() {
     const missingKeys = new Set();
     for (const name of templates) {
       const template = readFileSync(join(TEMPLATE_DIR, name), 'utf8');
-      const { output, missing } = render(template, locale, base, `${lang}/${name}`);
+      const { output, missing } = render(template, locale, base, { name: `${lang}/${name}`, page: name.replace(/\.html$/, '') });
       missing.forEach((key) => missingKeys.add(key));
 
       const outPath = join(outDir, name);
@@ -139,10 +188,16 @@ function main() {
       console.error(`テンプレートと生成物が一致しません。node scripts/build-i18n.mjs を実行してコミットしてください:\n  ${stale.join('\n  ')}`);
       process.exit(1);
     }
+    const sitemapPath = join(ROOT, 'sitemap.xml');
+    if (!existsSync(sitemapPath) || readFileSync(sitemapPath, 'utf8') !== buildSitemap()) {
+      console.error('sitemap.xml が最新ではありません。node scripts/build-i18n.mjs を実行してコミットしてください');
+      process.exit(1);
+    }
     console.log(`生成物は最新です（${langs.length}言語 × ${templates.length}ページ）`);
     return;
   }
-  console.log(`生成しました: ${langs.length}言語 × ${templates.length}ページ`);
+  writeFileSync(join(ROOT, 'sitemap.xml'), buildSitemap());
+  console.log(`生成しました: ${langs.length}言語 × ${templates.length}ページ + sitemap.xml`);
 }
 
 main();

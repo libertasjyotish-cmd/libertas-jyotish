@@ -5,14 +5,25 @@
   // 新しい言語（/en/, /es/, /pt/, /ar/, /id/）を公開したらここに追加すれば自動判定に載る。
   var AVAILABLE_LANGS = ['ja', 'en', 'es', 'pt', 'ar', 'id'];
   var FALLBACK_LANG = 'ja';
+  // 対応していない言語（例: fr）の場合の受け皿。日本からの閲覧だけは日本語にする。
+  var OTHER_LANG = 'en';
 
-  var userLang = (navigator.language || navigator.userLanguage || FALLBACK_LANG).toLowerCase();
-  var targetLang = FALLBACK_LANG;
-  for (var i = 0; i < AVAILABLE_LANGS.length; i++) {
-    if (userLang.indexOf(AVAILABLE_LANGS[i]) === 0) {
-      targetLang = AVAILABLE_LANGS[i];
-      break;
+  // ブラウザの言語設定を優先順位の高いものから順に見る（ja-JP のような地域付きも拾う）。
+  var prefs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || navigator.userLanguage || FALLBACK_LANG]);
+  var targetLang = '';
+  for (var i = 0; i < prefs.length && !targetLang; i++) {
+    var pref = String(prefs[i]).toLowerCase();
+    for (var j = 0; j < AVAILABLE_LANGS.length; j++) {
+      if (pref === AVAILABLE_LANGS[j] || pref.indexOf(AVAILABLE_LANGS[j] + '-') === 0) {
+        targetLang = AVAILABLE_LANGS[j];
+        break;
+      }
     }
+  }
+  if (!targetLang) {
+    var zone = '';
+    try { zone = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').toLowerCase(); } catch (e) { zone = ''; }
+    targetLang = zone === 'asia/tokyo' ? FALLBACK_LANG : OTHER_LANG;
   }
 
   // /pdf-success → /pdf-success、/ → 空文字。cleanUrls のため拡張子は除去する。
