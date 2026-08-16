@@ -1,9 +1,9 @@
 /* 既存のベージュ面はそのままに、外周だけを濃くして紙のような陰影を足すレイヤー。
    中央は完全に透明なので、内側の明るさは変わらない。
-   現状は日本語トップのみに適用（他言語・他ページへの展開は追って判断）。 */
+   トップページは全言語で同じ意匠にする。 */
 
-html[lang="ja"] .hero-container::before,
-html[lang="ja"] .about-section::before {
+.hero-container::before,
+.about-section::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -47,7 +47,7 @@ html[lang="ja"] .about-section::before {
 }
 
 /* 上部パネルの背面に薄く敷く曼荼羅（装飾のみ） */
-html[lang="ja"] .hero-container::after {
+.hero-container::after {
   content: '';
   position: absolute;
   top: 24px;
@@ -64,11 +64,11 @@ html[lang="ja"] .hero-container::after {
 }
 
 /* 下部パネルの最下部に置く象の意匠（装飾のみ） */
-html[lang="ja"] .about-section {
+.about-section {
   padding-bottom: 150px;
 }
 
-html[lang="ja"] .about-section::after {
+.about-section::after {
   content: '';
   position: absolute;
   bottom: 22px;
@@ -83,8 +83,8 @@ html[lang="ja"] .about-section::after {
 }
 
 /* 陰影の上に本文が乗るようにする */
-html[lang="ja"] .hero-container > *,
-html[lang="ja"] .about-section > * {
+.hero-container > *,
+.about-section > * {
   position: relative;
   z-index: 1;
 }
