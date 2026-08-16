@@ -65,7 +65,7 @@ html[lang="ja"] .hero-container::after {
 
 /* 下部パネルの最下部に置く象の意匠（装飾のみ） */
 html[lang="ja"] .about-section {
-  padding-bottom: 230px;
+  padding-bottom: 150px;
 }
 
 html[lang="ja"] .about-section::after {
