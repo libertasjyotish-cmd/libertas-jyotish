@@ -240,8 +240,8 @@ module.exports = async function handler(req, res) {
     // ③ 無料診断実行 or プロファイル取得 (diagnosis / fetch_profile)
     if (action === 'diagnosis' || action === 'fetch_profile') {
       let finalEmail = email;
-      let finalDob = dob;
-      let finalTob = tob || '12:00';
+      let finalDob = normalizeDob(dob);
+      let finalTob = normalizeTob(tob);
       let finalCity = city || address;
       // 課金状態はサーバ側（Sheets）のみを正とする。リクエストボディの status は信用しない。
       let finalStatus = 'free';
@@ -255,8 +255,9 @@ module.exports = async function handler(req, res) {
         if (sheetsProfile) {
           finalStatus = sheetsProfile.status || 'free';
           if (action === 'fetch_profile') {
-            if (sheetsProfile.dob && sheetsProfile.dob !== '1970-01-01') finalDob = sheetsProfile.dob;
-            if (sheetsProfile.tob) finalTob = sheetsProfile.tob;
+            const sheetDob = normalizeDob(sheetsProfile.dob);
+            if (sheetDob && sheetDob !== '1970-01-01') finalDob = sheetDob;
+            if (sheetsProfile.tob) finalTob = normalizeTob(sheetsProfile.tob);
             if (sheetsProfile.city) finalCity = sheetsProfile.city;
           }
         }
@@ -730,6 +731,30 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
 // 退避鑑定（外部API障害時）は翌回に作り直したいので再利用しない。
 // 再利用できなかった理由。秘密情報を含まない区分だけを reading_cache として返す。
 let lastReadingCacheReason = 'none';
+
+// Sheets は日付・時刻列を独自の書式で返すことがあるので、Prokerala に渡す前に YYYY-MM-DD / HH:MM へ揃える。
+function normalizeDob(value) {
+  const text = String(value || '').trim();
+  const iso = text.match(/(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
+  const slashed = text.match(/^(\d{4})[/.](\d{1,2})[/.](\d{1,2})$/);
+  if (slashed) return `${slashed[1]}-${slashed[2].padStart(2, '0')}-${slashed[3].padStart(2, '0')}`;
+  return text;
+}
+
+function normalizeTob(value) {
+  const text = String(value == null ? '' : value).trim();
+  if (!text) return '12:00';
+  const hhmm = text.match(/(\d{1,2}):(\d{2})/);
+  if (hhmm) return `${hhmm[1].padStart(2, '0')}:${hhmm[2]}`;
+  // シリアル値（1日を 1.0 とする小数）で返るケース
+  const serial = Number(text);
+  if (Number.isFinite(serial) && serial >= 0 && serial < 1) {
+    const minutes = Math.round(serial * 24 * 60);
+    return `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
+  }
+  return '12:00';
+}
 
 // 出生データと表示言語の組み合わせを表す鍵（平文の個人情報を復元できないようハッシュ化する）
 function makeBirthKey(dob, tob, city, lang) {
