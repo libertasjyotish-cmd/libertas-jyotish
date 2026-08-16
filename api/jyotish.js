@@ -277,8 +277,10 @@ module.exports = async function handler(req, res) {
         tob: finalTob,
         city: finalCity
       });
+      const readingCache = lastReadingCacheReason;
       if (sameDayReading) {
         sameDayReading.profile_source = profileSource;
+        sameDayReading.reading_cache = readingCache;
         return res.status(200).json(sameDayReading);
       }
 
@@ -440,6 +442,7 @@ module.exports = async function handler(req, res) {
         cleanJsonResult.status = finalStatus;
         // Sheets の会員行を読めたかどうか（課金反映トラブルの切り分け用）
         cleanJsonResult.profile_source = profileSource;
+        cleanJsonResult.reading_cache = readingCache;
         cleanJsonResult.generated_at = toJstIsoString(new Date());
         cleanJsonResult.reading_date = cleanJsonResult.generated_at.slice(0, 10);
 
@@ -728,15 +731,22 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
 
 // 保存済みの鑑定が「同じ日・同じ条件」で作られたものなら、それをそのまま使う。
 // 退避鑑定（外部API障害時）は翌回に作り直したいので再利用しない。
+// 再利用できなかった理由。秘密情報を含まない区分だけを reading_cache として返す。
+let lastReadingCacheReason = 'none';
+
 function reusableReading(profile, ctx) {
   const last = profile && profile.lastResult;
-  if (!last || last.is_fallback) return null;
-  if (last.reading_date !== toJstIsoString(new Date()).slice(0, 10)) return null;
-  if (String(last.status || 'free') !== ctx.status) return null;
-  if (String(profile.language || 'ja') !== ctx.lang) return null;
-  if (String(profile.dob || '') !== String(ctx.dob || '')) return null;
-  if (String(profile.tob || '12:00') !== String(ctx.tob || '12:00')) return null;
-  if (String(profile.city || '') !== String(ctx.city || '')) return null;
+  lastReadingCacheReason = 'miss';
+  if (!profile) { lastReadingCacheReason = 'no_profile'; return null; }
+  if (!last) { lastReadingCacheReason = 'no_last_reading'; return null; }
+  if (last.is_fallback) { lastReadingCacheReason = 'fallback'; return null; }
+  if (last.reading_date !== toJstIsoString(new Date()).slice(0, 10)) { lastReadingCacheReason = 'other_day'; return null; }
+  if (String(last.status || 'free') !== ctx.status) { lastReadingCacheReason = 'status_changed'; return null; }
+  if (String(profile.language || 'ja') !== ctx.lang) { lastReadingCacheReason = 'lang_changed'; return null; }
+  if (String(profile.dob || '') !== String(ctx.dob || '')) { lastReadingCacheReason = 'dob_changed'; return null; }
+  if (String(profile.tob || '12:00') !== String(ctx.tob || '12:00')) { lastReadingCacheReason = 'tob_changed'; return null; }
+  if (String(profile.city || '') !== String(ctx.city || '')) { lastReadingCacheReason = 'city_changed'; return null; }
+  lastReadingCacheReason = 'hit';
   return last;
 }
 
