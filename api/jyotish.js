@@ -270,13 +270,8 @@ module.exports = async function handler(req, res) {
       }
 
       // 同じ日に何度開いても鑑定内容が変わらないよう、その日の初回生成分を再利用する（JSTの日付が変われば作り直す）。
-      const sameDayReading = reusableReading(sheetsProfile, {
-        status: finalStatus,
-        lang: finalLang,
-        dob: finalDob,
-        tob: finalTob,
-        city: finalCity
-      });
+      const birthKey = makeBirthKey(finalDob, finalTob, finalCity, finalLang);
+      const sameDayReading = reusableReading(sheetsProfile, { status: finalStatus, birthKey });
       const readingCache = lastReadingCacheReason;
       if (sameDayReading) {
         sameDayReading.profile_source = profileSource;
@@ -443,11 +438,13 @@ module.exports = async function handler(req, res) {
         // Sheets の会員行を読めたかどうか（課金反映トラブルの切り分け用）
         cleanJsonResult.profile_source = profileSource;
         cleanJsonResult.reading_cache = readingCache;
+        // 再利用判定用の鍵。Sheets の書式変換の影響を受けないよう、鑑定結果自体に埋め込む。
+        cleanJsonResult.birth_key = birthKey;
         cleanJsonResult.generated_at = toJstIsoString(new Date());
         cleanJsonResult.reading_date = cleanJsonResult.generated_at.slice(0, 10);
 
-        // Sheetsへの保存処理（落ちても気にせず継続）
-        if (action === 'diagnosis') {
+        // Sheetsへの保存処理（落ちても気にせず継続）。マイページの fetch_profile も保存して当日分を固定する。
+        if (finalEmail) {
           try {
             await saveProfileToSheets(finalEmail, finalStatus, finalDob, finalTob, finalCity, cleanJsonResult, finalLang);
           } catch (sheetSaveErr) {
@@ -734,6 +731,12 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
 // 再利用できなかった理由。秘密情報を含まない区分だけを reading_cache として返す。
 let lastReadingCacheReason = 'none';
 
+// 出生データと表示言語の組み合わせを表す鍵（平文の個人情報を復元できないようハッシュ化する）
+function makeBirthKey(dob, tob, city, lang) {
+  const source = `${dob || ''}|${tob || '12:00'}|${String(city || '').trim()}|${lang || 'ja'}`;
+  return crypto.createHash('sha256').update(source).digest('hex').slice(0, 16);
+}
+
 function reusableReading(profile, ctx) {
   const last = profile && profile.lastResult;
   lastReadingCacheReason = 'miss';
@@ -742,10 +745,9 @@ function reusableReading(profile, ctx) {
   if (last.is_fallback) { lastReadingCacheReason = 'fallback'; return null; }
   if (last.reading_date !== toJstIsoString(new Date()).slice(0, 10)) { lastReadingCacheReason = 'other_day'; return null; }
   if (String(last.status || 'free') !== ctx.status) { lastReadingCacheReason = 'status_changed'; return null; }
-  if (String(profile.language || 'ja') !== ctx.lang) { lastReadingCacheReason = 'lang_changed'; return null; }
-  if (String(profile.dob || '') !== String(ctx.dob || '')) { lastReadingCacheReason = 'dob_changed'; return null; }
-  if (String(profile.tob || '12:00') !== String(ctx.tob || '12:00')) { lastReadingCacheReason = 'tob_changed'; return null; }
-  if (String(profile.city || '') !== String(ctx.city || '')) { lastReadingCacheReason = 'city_changed'; return null; }
+  // 出生データ・言語は保存済み鑑定内の鍵と照合する（Sheets 側の日付・時刻書式のゆれを避ける）
+  if (!last.birth_key) { lastReadingCacheReason = 'no_birth_key'; return null; }
+  if (last.birth_key !== ctx.birthKey) { lastReadingCacheReason = 'birth_changed'; return null; }
   lastReadingCacheReason = 'hit';
   return last;
 }
