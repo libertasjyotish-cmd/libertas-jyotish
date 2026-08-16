@@ -5,6 +5,7 @@ const { listGeminiModels, generateWithGemini } = require('./_gemini');
 const { issueSession } = require('./_auth');
 const { createTerms } = require('./_terms');
 const { buildFallbackResponse: buildLocalizedFallback } = require('./_fallback');
+const { nakshatraFromLongitude } = require('./_astrology');
 
 // 退避鑑定は日付・星座の算出をこのファイルの関数に依存するため、ヘルパーを渡して組み立てる。
 function buildFallbackResponse(dob, isPaid, lang) {
@@ -594,7 +595,8 @@ function extractPlanets(prokeralaData) {
   return raw.map((p) => ({
     name: p.name,
     sign: p.rasi?.name || p.sign?.name || p.sign || p.zodiac || '',
-    nakshatra: p.nakshatra?.name || (typeof p.nakshatra === 'string' ? p.nakshatra : '') || '',
+    // planet-position はナクシャトラを返さないため、黄経（13°20′刻み）から求める。
+    nakshatra: p.nakshatra?.name || (typeof p.nakshatra === 'string' ? p.nakshatra : '') || nakshatraFromLongitude(p.longitude),
     degree: p.degree,
     house: p.position || p.house,
     is_retrograde: p.is_retrograde
