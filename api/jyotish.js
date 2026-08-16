@@ -248,8 +248,9 @@ module.exports = async function handler(req, res) {
       let finalLang = language || 'ja';
 
       let profileSource = 'none';
+      let sheetsProfile = null;
       try {
-        const sheetsProfile = await fetchProfileFromSheets(email);
+        sheetsProfile = await fetchProfileFromSheets(email);
         profileSource = lastLookupSource;
         if (sheetsProfile) {
           finalStatus = sheetsProfile.status || 'free';
@@ -266,6 +267,19 @@ module.exports = async function handler(req, res) {
       // '1970-01-01' は旧システムのダミー値。実在の出生地である '東京都' は弾かない。
       if (!finalDob || finalDob === '1970-01-01' || !finalCity) {
         return res.status(400).json({ error: 'Missing or corrupt birth date or birth place data.' });
+      }
+
+      // 同じ日に何度開いても鑑定内容が変わらないよう、その日の初回生成分を再利用する（JSTの日付が変われば作り直す）。
+      const sameDayReading = reusableReading(sheetsProfile, {
+        status: finalStatus,
+        lang: finalLang,
+        dob: finalDob,
+        tob: finalTob,
+        city: finalCity
+      });
+      if (sameDayReading) {
+        sameDayReading.profile_source = profileSource;
+        return res.status(200).json(sameDayReading);
       }
 
       // 超堅牢化： Nominatim, Prokerala, Gemini の呼び出しに一括して try-catch を張り、
@@ -710,6 +724,20 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
   【出力フォーマット】
   ${formatSchema}
   `;
+}
+
+// 保存済みの鑑定が「同じ日・同じ条件」で作られたものなら、それをそのまま使う。
+// 退避鑑定（外部API障害時）は翌回に作り直したいので再利用しない。
+function reusableReading(profile, ctx) {
+  const last = profile && profile.lastResult;
+  if (!last || last.is_fallback) return null;
+  if (last.reading_date !== toJstIsoString(new Date()).slice(0, 10)) return null;
+  if (String(last.status || 'free') !== ctx.status) return null;
+  if (String(profile.language || 'ja') !== ctx.lang) return null;
+  if (String(profile.dob || '') !== String(ctx.dob || '')) return null;
+  if (String(profile.tob || '12:00') !== String(ctx.tob || '12:00')) return null;
+  if (String(profile.city || '') !== String(ctx.city || '')) return null;
+  return last;
 }
 
 function findMemberRows(rows, email) {
