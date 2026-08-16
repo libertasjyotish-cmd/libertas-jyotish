@@ -350,6 +350,14 @@ data-width="320">
 </div>
 </div>
 
+<!-- ホーム画面への追加（PWA）。対応環境でのみ表示する。 -->
+<div id="pwa-install-box" class="card-box" style="display:none;">
+<div class="card-title">Gunakan sebagai aplikasi</div>
+<p style="font-size:0.85rem; color:#4a3e36; margin-bottom:10px;">Tambahkan ke layar utama agar bisa dibuka seperti aplikasi tanpa membuka browser.</p>
+<button id="btn-pwa-install" class="btn-action" style="display:none; width:100%;">Tambahkan ke layar utama</button>
+<p id="pwa-ios-hint" style="display:none; font-size:0.82rem; color:#5A4E48;">Ketuk tombol Bagikan, lalu pilih “Tambahkan ke Layar Utama”.</p>
+</div>
+
 <!-- 出生データ登録カード（初回ログイン時・データ欠落時の自律復元用） -->
 <div id="birth-setup-box" class="card-box" style="display: none;">
 <div class="card-title">📅 Daftarkan data kelahiran Anda</div>
@@ -469,7 +477,45 @@ if (refreshing) return;
 refreshing = true;
 window.location.reload();
 });
+// ホーム画面への追加を案内できるよう、このページからも Service Worker を登録する。
+navigator.serviceWorker.register('/sw.js').catch(() => {});
 }
+
+// ホーム画面への追加（PWA）。
+// Android/デスクトップの Chromium 系は beforeinstallprompt でワンタップ、
+// iOS Safari はイベントが無いので手順を案内する。インストール済みでは出さない。
+(function setupInstallPrompt() {
+const box = document.getElementById('pwa-install-box');
+const btn = document.getElementById('btn-pwa-install');
+const hint = document.getElementById('pwa-ios-hint');
+if (!box) return;
+const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+if (standalone) return;
+let deferred = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+e.preventDefault();
+deferred = e;
+hint.style.display = 'none';
+btn.style.display = 'block';
+box.style.display = 'block';
+});
+window.addEventListener('appinstalled', () => { box.style.display = 'none'; });
+btn.addEventListener('click', async () => {
+if (!deferred) return;
+btn.disabled = true;
+deferred.prompt();
+await deferred.userChoice;
+deferred = null;
+box.style.display = 'none';
+});
+const ua = navigator.userAgent;
+const isIos = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isIosSafari = isIos && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
+if (isIosSafari) {
+hint.style.display = 'block';
+box.style.display = 'block';
+}
+})();
 
 const JYOTISH_API_URL = "/api/jyotish";
 const STRIPE_PORTAL_API_URL = "/api/stripe-portal";
