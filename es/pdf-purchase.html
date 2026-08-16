@@ -76,7 +76,19 @@
         inset 0 0 35px rgba(139, 90, 43, 0.28),
         inset 0 2px 4px rgba(255, 255, 255, 0.8);
       padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
+      overflow: hidden;
     }
+    /* 背面に薄く敷く曼荼羅（装飾のみ） */
+    .card-container::before {
+      content: ''; position: absolute; top: 4px; left: 50%;
+      width: min(520px, 96%); aspect-ratio: 1 / 1; transform: translateX(-50%);
+      z-index: 0; pointer-events: none;
+      background: url('/img/mandala-wheel.png') no-repeat center / contain;
+      opacity: 0.2;
+      -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 55%, transparent 82%);
+      mask-image: radial-gradient(circle at 50% 50%, #000 55%, transparent 82%);
+    }
+    .card-container > * { position: relative; z-index: 1; }
 
     .data-confirm-box {
       background: rgba(255, 252, 245, 0.85);
@@ -132,6 +144,7 @@
       body { background: #ffffff !important; color: #000000 !important; }
       .main-section { padding: 0 !important; background: none !important; }
       .card-container { max-width: 100% !important; box-shadow: none !important; border: none !important; outline: none !important; background: #ffffff !important; padding: 0 !important; }
+      .card-container::before { display: none !important; }
       .report-card { background: #ffffff !important; border: 1px solid #ccc !important; page-break-inside: avoid; }
     }
   </style>
