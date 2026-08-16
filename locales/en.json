@@ -4,7 +4,8 @@
     "htmlAttrs": "lang=\"en\"",
     "dir": "ltr",
     "fontHref": "https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap",
-    "fontFamily": "'Noto Serif', serif"
+    "fontFamily": "'Noto Serif', serif",
+    "ogLocale": "en_US"
   },
   "strings": {
     "calendar.text01": "Annual Fortune Calendar | Libertas Jyotish",
@@ -19,7 +20,7 @@
     "calendar.text10": "Back to top page",
     "calendar.text11": "Legal notice, Terms of Service and Privacy Policy",
     "calendar.content01": "The Libertas Jyotish Annual Fortune Calendar (coming soon). From your transits and dasha we calculate the flow of the year ahead and the moments worth acting on.",
-    "index.text01": "Libertas Jyotish - Vedic Astrology Portal",
+    "index.text01": "Libertas Jyotish | Free Vedic Astrology Reading (Moon Sign, Lagna, Dasha)",
     "index.text02": "Jyotish, the wisdom handed down since antiquity, reads the destiny written in the stars and sets the real you free",
     "index.text03": "A full personal reading service that calculates and interprets the blueprint of your soul (your kundali) using the sidereal method of ancient India.",
     "index.text04": "Your hidden instincts may belong to a different sign.",
@@ -71,9 +72,10 @@
     "index.text50": "Thank you for reading this far. Get your precise horoscope, dasha timing forecast and personal remedies right now.",
     "index.text51": "Join Premium (sign up and payment)",
     "index.text52": "Legal notice, Terms of Service and Privacy Policy",
-    "index.content01": "Libertas Jyotish is a web service offering moon sign readings and personal Vedic astrology consultations based on the sidereal method of ancient India.",
+    "index.content01": "Libertas Jyotish calculates your moon sign (rashi), lagna (ascendant) and dasha periods from your date, time and place of birth using sidereal Vedic astrology. Free reading, plus an optional lifetime full report.",
     "index.placeholder01": "e.g. London, United Kingdom",
     "legal.text01": "Legal notice and Terms of Service | Libertas Jyotish",
+    "legal.content01": "Legal notice and Terms of Service for Libertas Jyotish: pricing, payment methods, cancellation and refund conditions, and business information.",
     "legal.text02": "Legal notice and Terms of Service",
     "legal.text03": "Notice based on the Japanese Act on Specified Commercial Transactions",
     "legal.text04": "Business name",
@@ -206,6 +208,7 @@
     "mypage.js53": "House",
     "mypage.js54": "In brief",
     "pdf-purchase.text01": "About the detailed PDF report | Libertas Jyotish",
+    "pdf-purchase.content01": "About the lifetime full report from Libertas Jyotish: your lagna, moon sign, nakshatra and dasha periods compiled into a single document you can save as PDF from your browser.",
     "pdf-purchase.text02": "Thank you for your purchase",
     "pdf-purchase.text03": "You already own the Lifetime Report. You can open it at any time with the button below (you can also save it as a PDF with your browser's print function).",
     "pdf-purchase.text04": "📖 Open the Lifetime Report",

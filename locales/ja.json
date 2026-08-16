@@ -4,7 +4,8 @@
     "htmlAttrs": "lang=\"ja\"",
     "dir": "ltr",
     "fontHref": "https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600;700&display=swap",
-    "fontFamily": "'Noto Serif JP', serif"
+    "fontFamily": "'Noto Serif JP', serif",
+    "ogLocale": "ja_JP"
   },
   "strings": {
     "calendar.text01": "年間運勢カレンダー | Libertas Jyotish",
@@ -19,7 +20,7 @@
     "calendar.text10": "トップへ戻る",
     "calendar.text11": "特定商取引法に基づく表記・利用規約・プライバシーポリシー",
     "calendar.content01": "Libertas Jyotish の年間運勢カレンダー（準備中）。トランジットとダシャーから、1年の流れと勝負どきを算出してお届けします。",
-    "index.text01": "Libertas Jyotish - インド占星術ポータル",
+    "index.text01": "リベルタス・ジョーティッシュ｜インド占星術の無料鑑定ポータル（月星座・ラグナ・ダシャー）",
     "index.text02": "古代より受け継がれる叡智「インド占星術」が星の宿命を紐解き、本当のあなたを解き放つ",
     "index.text03": "古代インドの叡智「サイデリアル式」で、あなたの魂の設計図（クンダリー）を算術・分析する本格個人鑑定サービスです。",
     "index.text04": "あなたの「隠された本能」は、別の星座かもしれない。",
@@ -71,9 +72,10 @@
     "index.text50": "説明をお読みいただきありがとうございます。あなただけの精密なホロスコープ・ダシャー時期予測・各種レメディを今すぐ手に入れましょう。",
     "index.text51": "有料プレミアム会員に登録する（お申し込み・決済）",
     "index.text52": "特定商取引法に基づく表記・利用規約・プライバシーポリシー",
-    "index.content01": "Libertas Jyotish（リベルタス・ジューティシュ）は、古代インドの叡智「サイデリアル式」に基づいた月星座診断および個人鑑定を提供するWebサービスです。",
+    "index.content01": "Libertas Jyotish（リベルタス・ジョーティッシュ／ジョーティシュ）は、生年月日と出生地からインド占星術（ヴェーダ占星術／サイデリアル方式）で月星座・ラグナ・ダシャーを算出。無料鑑定と、有料の生涯総合鑑定書をお届けします。",
     "index.placeholder01": "例：東京都千代田区",
     "legal.text01": "特定商取引法に基づく表記・利用規約 | Libertas Jyotish",
+    "legal.content01": "リベルタス・ジョーティッシュの特定商取引法に基づく表記と利用規約。料金、支払方法、解約・返金の条件、事業者情報を掲載しています。",
     "legal.text02": "法的表記および利用規約",
     "legal.text03": "特定商取引法に基づく表記",
     "legal.text04": "事業者名",
@@ -206,6 +208,7 @@
     "mypage.js53": "ハウス",
     "mypage.js54": "一言解説",
     "pdf-purchase.text01": "詳細鑑定PDFのご案内 | Libertas Jyotish",
+    "pdf-purchase.content01": "インド占星術の生涯総合鑑定書（買い切り）のご案内。出生図をもとにラグナ・月星座・ナクシャトラ・ダシャーから人生の流れを一冊にまとめ、ブラウザ印刷でPDFとして保存できます。",
     "pdf-purchase.text02": "ご購入ありがとうございます",
     "pdf-purchase.text03": "完全鑑定書はご購入済みです。下のボタンからいつでも閲覧できます（ブラウザの印刷機能でPDF保存も可能です）。",
     "pdf-purchase.text04": "📖 完全鑑定書を開く",

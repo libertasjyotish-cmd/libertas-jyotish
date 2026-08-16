@@ -4,7 +4,8 @@
     "htmlAttrs": "lang=\"es\"",
     "dir": "ltr",
     "fontHref": "https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap",
-    "fontFamily": "'Noto Serif', serif"
+    "fontFamily": "'Noto Serif', serif",
+    "ogLocale": "es_ES"
   },
   "strings": {
     "calendar.text01": "Calendario Anual de la Fortuna | Libertas Jyotish",
@@ -19,7 +20,7 @@
     "calendar.text10": "Volver a la página principal",
     "calendar.text11": "Información legal, Términos de uso y Política de privacidad",
     "calendar.content01": "El Calendario Anual de la Fortuna de Libertas Jyotish (en preparación). A partir de tus tránsitos y tu dasha calculamos el flujo del próximo año y los momentos que merecen acción.",
-    "index.text01": "Libertas Jyotish - Portal de Astrología Védica",
+    "index.text01": "Libertas Jyotish | Lectura gratuita de astrología védica (signo lunar, lagna, dasha)",
     "index.text02": "El Jyotish, sabiduría transmitida desde la Antigüedad, lee el destino escrito en las estrellas y libera quien realmente eres",
     "index.text03": "Un servicio completo de lectura personal que calcula e interpreta el mapa de tu alma (tu kundali) con el método sideral de la India antigua.",
     "index.text04": "Tus instintos ocultos podrían pertenecer a otro signo.",
@@ -71,9 +72,10 @@
     "index.text50": "Gracias por leer hasta aquí. Recibe ahora mismo tu horóscopo preciso, la previsión de los periodos de dasha y tus remedios personales.",
     "index.text51": "Suscribirme a Premium (registro y pago)",
     "index.text52": "Información legal, Términos de uso y Política de privacidad",
-    "index.content01": "Libertas Jyotish es un servicio en línea de lecturas del signo lunar y consultas personales de astrología védica basadas en el método sideral de la India antigua.",
+    "index.content01": "Libertas Jyotish calcula tu signo lunar (rashi), tu lagna (ascendente) y tus periodos dasha a partir de la fecha, hora y lugar de nacimiento con astrología védica sideral. Lectura gratuita e informe completo de por vida opcional.",
     "index.placeholder01": "p. ej., Madrid, España",
     "legal.text01": "Información legal y Términos de uso | Libertas Jyotish",
+    "legal.content01": "Información legal y Términos de uso de Libertas Jyotish: precios, formas de pago, condiciones de cancelación y reembolso e información de la empresa.",
     "legal.text02": "Información legal y Términos de uso",
     "legal.text03": "Información exigida por la Ley japonesa sobre Transacciones Comerciales Específicas",
     "legal.text04": "Nombre de la empresa",
@@ -206,6 +208,7 @@
     "mypage.js53": "Casa",
     "mypage.js54": "En resumen",
     "pdf-purchase.text01": "Sobre el informe detallado en PDF | Libertas Jyotish",
+    "pdf-purchase.content01": "Sobre el informe completo de por vida de Libertas Jyotish: tu lagna, signo lunar, nakshatra y periodos dasha reunidos en un solo documento que puedes guardar como PDF desde el navegador.",
     "pdf-purchase.text02": "Gracias por tu compra",
     "pdf-purchase.text03": "Ya tienes el Informe Vitalicio. Puedes abrirlo cuando quieras con el botón de abajo (también puedes guardarlo en PDF con la función de impresión del navegador).",
     "pdf-purchase.text04": "📖 Abrir el Informe Vitalicio",
