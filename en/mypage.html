@@ -102,11 +102,13 @@ inset 0 2px 4px rgba(255, 255, 255, 0.8);
 padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
 }
 
-/* 背面の意匠（装飾）。無料会員と有料会員で図案を切り替える */
-.hero-container::after {
+/* 背面の意匠（装飾）。無料会員と有料会員で図案を切り替える。
+   会員状態が確定するまでは生成しない（位置未指定の箱がページ下に余白を作るため）。 */
+body.plan-free .hero-container::after,
+body.plan-paid .hero-container::after {
 content: ''; position: absolute; left: 50%; transform: translateX(-50%);
 width: min(440px, 84%); aspect-ratio: 1 / 1; z-index: 0; pointer-events: none;
-opacity: 0; background: no-repeat center / contain;
+background: no-repeat center / contain;
 -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 58%, transparent 84%);
 mask-image: radial-gradient(circle at 50% 50%, #000 58%, transparent 84%);
 }
@@ -256,7 +258,7 @@ background-color: #0c1a1f;
 background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");
 background-size: cover; background-position: center center; background-repeat: no-repeat;
 }
-.hero-container { padding: 30px 12px 26px; }
+.hero-container { padding: 30px 12px 96px; }
 .card-box { padding: 16px 12px; }
 .google-btn-container { max-width: 100%; overflow: hidden; }
 .login-form-group { flex-direction: column; }
