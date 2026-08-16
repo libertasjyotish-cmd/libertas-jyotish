@@ -511,5 +511,6 @@ module.exports = {
   toJstIsoString,
   toJapaneseSign,
   toJapaneseNakshatra,
+  nakshatraFromLongitude,
   SIGN_ORDER
 };
