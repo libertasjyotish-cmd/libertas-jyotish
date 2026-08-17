@@ -685,7 +685,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
       "sunSign": "${sunSign}",
       "nakshatra": "${nakshatra}",
       "free_reading": {
-        "horoscope": "本日の運勢。今日一日の心のバイオリズムや行動の指標を、山羊座やナクシャトラの性質を踏まえて150文字前後で暖かく親しみやすく語りかけてください。",
+        "horoscope": "本日の運勢。今日一日の心のバイオリズムや行動の指標を、${moonSign}（月星座）と${nakshatra}（ナクシャトラ）の性質を踏まえて150文字前後で暖かく親しみやすく語りかけてください。",
         "influence": "本日受ける星の影響。トランジット天体が月の感情に及ぼす影響を、心理的・実用的な視点から150文字前後で解読してください。",
         "dasha_summary": "支配星周期の過ごし方。生まれた瞬間の月の位置から導かれる大まかな周期アドバイスを150文字前後で導いてください。",
         "lucky_element": "✨ 本日のラッキーカラー: XXX | 開運アクション: XXX などの一言（1行）"
