@@ -1253,6 +1253,7 @@ if (fr.horoscope) html += `<div style="margin-bottom:12px; line-height:1.7;"><st
 if (fr.influence) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>② Influência astral:</strong><br>${fr.influence}</div>`;
 if (fr.dasha_summary) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>③ Orientação da Mahadasha atual:</strong><br>${fr.dasha_summary}</div>`;
 if (fr.lucky_element) html += `<div style="margin-top:15px; padding:10px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:6px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">④ ${fr.lucky_element}</div>`;
+if (data.geo_notice) html += `<p style="margin-top:12px; font-size:0.78rem; color:#6b5b4a; line-height:1.6;">${data.geo_notice}</p>`;
 document.getElementById('today-transit-text').innerHTML = html;
 } else {
 if (fortuneContent && typeof fortuneContent === 'string' && fortuneContent.trim() !== '') {

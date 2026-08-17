@@ -6,38 +6,10 @@ const { fetchReportData } = require('./_astrology');
 const { listGeminiModels } = require('./_gemini');
 const { CHAPTER_IDS, generateChapters } = require('./_report');
 const { normalizeLang } = require('./_terms');
-
-const TOKYO = { lat: 35.6762, lon: 139.6503 };
+const { geocodeBirthPlace } = require('./_geocode');
 // 1リクエストで生成する章数の上限。全13章を一度に生成すると実行時間上限とGeminiのレート制限に触れるため、
 // 残りは pending として返し、画面側が続けて要求する。
 const CHAPTERS_PER_REQUEST = 4;
-
-async function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    return await fetch(url, { ...options, signal: controller.signal });
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-async function geocode(city) {
-  if (!city) return TOKYO;
-  try {
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`;
-    const res = await fetchWithTimeout(url, {
-      headers: { 'User-Agent': 'LibertasJyotishApp/2.0 (info@libertas-jyotish.com)' }
-    });
-    const data = await res.json();
-    if (Array.isArray(data) && data.length) {
-      return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
-    }
-  } catch (err) {
-    console.error('Geocoding failed, using Tokyo fallback:', err?.message);
-  }
-  return TOKYO;
-}
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -91,10 +63,13 @@ module.exports = async function handler(req, res) {
   // 星回りは1冊につき1回だけ取得する（Prokerala のクレジット消費を抑える）
   let astro = stored?.astro || null;
   if (!astro) {
+    const geo = await geocodeBirthPlace(finalCity, lang);
+    if (!geo) return res.status(400).json({ error: 'unknown_birthplace' });
     try {
-      const { lat, lon } = await geocode(finalCity);
-      astro = await fetchReportData({ dob: finalDob, tob: finalTob, lat, lon, lang });
+      astro = await fetchReportData({ dob: finalDob, tob: finalTob, lat: geo.lat, lon: geo.lon, lang });
       astro.city = finalCity;
+      astro.geo_precision = geo.precision;
+      if (geo.notice) astro.geo_notice = geo.notice;
     } catch (err) {
       console.error('Prokerala report data failed:', err?.message);
       return res.status(503).json({ error: 'astrology_unavailable' });

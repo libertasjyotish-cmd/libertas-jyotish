@@ -380,6 +380,7 @@ readingContent = `
 document.getElementById('content-area').innerHTML = `
 ${input ? `<div class="meta-card">✉️ البريد الإلكتروني: ${input.email || 'غير محدد'}<br>📅 تاريخ الميلاد: ${input.dob} ${input.tob || ''} | 📍 مكان الميلاد: ${input.address || input.city}</div>` : ''}
 <div class="result-body">${readingContent}</div>
+${result.geo_notice ? `<p style="margin:12px 4px 0; font-size:0.78rem; color:#6b5b4a; line-height:1.6;">${result.geo_notice}</p>` : ''}
 ${result.status === 'paid' ? '' : buildLockedPreview()}
 <div class="cta-card">
 <h3 style="color:var(--color-gold-dark); margin-bottom:8px;">✨ اطّلع على مواضع جميع الكواكب في صفحة عضويتك</h3>
