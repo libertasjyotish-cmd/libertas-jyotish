@@ -697,9 +697,10 @@ if (isTodaysReading(parsed)) renderUserData(parsed);
 fetchUserDataAndRender(savedEmail);
 }
 } else {
-// 出生データがない場合（新規ログイン、他デバイスからの引き継ぎ直後）は
-// 勝手に1970年のダミー計算をVercelへ送らず、美しくデザインされた入力フォームを提示
-showBirthSetupUI();
+// 端末に出生データが無くても、サーバ側（Sheets）に登録済みなら別端末でもそのまま表示できる。
+// サーバにも無いときだけ 400 が返り、入力フォームに切り替わる。
+document.getElementById('birth-setup-box').style.display = 'none';
+fetchUserDataAndRender(savedEmail);
 }
 } else {
 setLoggedOutState();
@@ -1049,12 +1050,8 @@ userTob = localStorage.getItem('tob') ||
 // 旧システムのダミー値 1970-01-01 を排除（'東京都' は実在の出生地なので保持）
 if (userDob === '1970-01-01') userDob = '';
 
-// 万が一データが揃っていない場合は、送信せずに登録画面を出す
-if (!userDob || !userAddress) {
-console.warn("Required birth data missing in fetchUserDataAndRender. Showing setup form.");
-showBirthSetupUI();
-return;
-}
+// 端末に保存が無くてもサーバ側（Sheets）に出生データがあるので、そのまま問い合わせる。
+// サーバにも無い場合だけ 400 が返るので、そのときに登録画面を出す。
 
 const currentJstISO = getJstIsoString();
 
@@ -1100,6 +1097,11 @@ if (!response.ok) {
     const errJson = await response.json();
     if (errJson && errJson.error) errMsg = errJson.error;
   } catch(e) {}
+  // 出生データがサーバにも無い・出生地を特定できない場合は入力をやり直してもらう
+  if (response.status === 400) {
+    showBirthSetupUI();
+    return;
+  }
   throw new Error(errMsg);
 }
 
