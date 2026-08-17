@@ -4,12 +4,14 @@ const { getMemberSheet, getLastSheetIssue, getMemberRecord } = require('./_sheet
 const { listGeminiModels, generateWithGemini } = require('./_gemini');
 const { issueSession } = require('./_auth');
 const { createTerms } = require('./_terms');
-const { buildFallbackResponse: buildLocalizedFallback } = require('./_fallback');
 const { nakshatraFromLongitude } = require('./_astrology');
+const { geocodeBirthPlace } = require('./_geocode');
 
-// 退避鑑定は日付・星座の算出をこのファイルの関数に依存するため、ヘルパーを渡して組み立てる。
-function buildFallbackResponse(dob, isPaid, lang) {
-  return buildLocalizedFallback(dob, isPaid, lang, { siderealSunSign, toJstIsoString });
+// 天体計算または鑑定文の生成に失敗したときは、根拠のない文面を返さず再試行を促す。
+function sendReadingUnavailable(res, reason, detail) {
+  const body = { error: 'reading_unavailable', reason: reason || 'unknown' };
+  if (detail) body.detail = detail;
+  return res.status(503).json(body);
 }
 
 const AUTH_SECRET = process.env.AUTH_SECRET;
@@ -280,28 +282,15 @@ module.exports = async function handler(req, res) {
         return res.status(200).json(sameDayReading);
       }
 
-      // 超堅牢化： Nominatim, Prokerala, Gemini の呼び出しに一括して try-catch を張り、
-      // どこかで例外が起きても、絶対に500エラーを出さず、美しい「自律合成ダミー診断結果」を返す。
       try {
-        // (A) Nominatim API による緯度経度変換
-        let lat = 35.6762, lon = 139.6503; // デフォルトは東京
-        try {
-          const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(finalCity)}&format=json&limit=1`;
-          const geoRes = await fetchWithTimeout(nominatimUrl, {
-            headers: {
-              'User-Agent': 'LibertasJyotishApp/2.0 (info@libertas-jyotish.com)',
-              // 入力は閲覧言語の表記になるため、その言語と英語で地名を拾えるようにする。
-              'Accept-Language': finalLang === 'en' ? 'en' : `${finalLang},en`
-            }
-          }, 8000);
-          const geoData = await geoRes.json();
-          if (geoData && geoData.length > 0) {
-            lat = parseFloat(geoData[0].lat);
-            lon = parseFloat(geoData[0].lon);
-          }
-        } catch (geoErr) {
-          console.error("Geocoding failed, using Tokyo fallback:", geoErr);
+        // (A) 出生地の緯度経度。特定できない場合に既定値で押し通すと鑑定の根拠が崩れるため、
+        // 入力どおり → 国レベル → 特定不能（エラー）の順に段階的に落とす。
+        const geo = await geocodeBirthPlace(finalCity, finalLang);
+        if (!geo) {
+          return res.status(400).json({ error: 'unknown_birthplace', reason: 'geocode_failed' });
         }
+        const lat = geo.lat;
+        const lon = geo.lon;
 
         // (B) Prokerala API 認証 & 惑星データ取得（出生図＋当日のトランジット）
         let prokeralaData = null;
@@ -414,14 +403,13 @@ module.exports = async function handler(req, res) {
 
         // (D) 【大救済ロジック】もしAPIやAIが途中で落ちていても、絶対に500エラーにせず、正常な診断書を構築して返す！
         if (!cleanJsonResult) {
-          console.warn("[RECOVERY ACTIVATED] Synthesizing static astrology response to prevent 500 error.", {
+          console.warn("[READING UNAVAILABLE] Calculation or generation failed.", {
             prokerala: Boolean(prokeralaData),
             transit: Boolean(transitData),
-            gemini_key: Boolean(process.env.GEMINI_API_KEY)
+            gemini_key: Boolean(process.env.GEMINI_API_KEY),
+            reason: fallbackReason || 'unknown'
           });
-          cleanJsonResult = buildFallbackResponse(finalDob, finalStatus === 'paid', finalLang);
-          cleanJsonResult.fallback_reason = fallbackReason || 'unknown';
-          if (fallbackDetail) cleanJsonResult.fallback_detail = fallbackDetail;
+          return sendReadingUnavailable(res, fallbackReason, fallbackDetail);
         } else if (fallbackReason) {
           // 基本鑑定は生成できたがプレミアム詳細だけ落ちた場合など、部分失敗も見えるようにする
           cleanJsonResult.partial_reason = fallbackReason;
@@ -436,6 +424,9 @@ module.exports = async function handler(req, res) {
         }
 
         cleanJsonResult.status = finalStatus;
+        // 出生地を市区町村まで特定できたか。概算のときは画面に注意書きを出す。
+        cleanJsonResult.geo_precision = geo.precision;
+        if (geo.notice) cleanJsonResult.geo_notice = geo.notice;
         // Sheets の会員行を読めたかどうか（課金反映トラブルの切り分け用）
         cleanJsonResult.profile_source = profileSource;
         cleanJsonResult.reading_cache = readingCache;
@@ -456,10 +447,8 @@ module.exports = async function handler(req, res) {
         return res.status(200).json(cleanJsonResult);
 
       } catch (innerError) {
-        console.error("Critical inner loop error, sending fallback:", innerError);
-        const fallback = buildFallbackResponse(finalDob, finalStatus === 'paid', finalLang);
-        fallback.status = finalStatus;
-        return res.status(200).json(fallback);
+        console.error("Critical inner loop error:", innerError);
+        return sendReadingUnavailable(res, 'internal_error');
       }
     }
 
@@ -467,10 +456,7 @@ module.exports = async function handler(req, res) {
 
   } catch (error) {
     console.error("Critical API Processing Error:", error);
-    // どのようなルート例外が起きても、絶対に500エラーを出さずに、200 OKの正常レスポンスを返す！
-    const fallback = buildFallbackResponse(dob || '1990-01-01', false, req.body && req.body.language);
-    fallback.status = 'free';
-    return res.status(200).json(fallback);
+    return sendReadingUnavailable(res, 'internal_error');
   }
 };
 
@@ -481,25 +467,6 @@ function isSignatureEqual(actual, expected) {
   const expectedBuf = Buffer.from(expected, 'utf8');
   if (actualBuf.length !== expectedBuf.length) return false;
   return crypto.timingSafeEqual(actualBuf, expectedBuf);
-}
-
-// 退避用の簡易サイデリアル太陽星座（サンクラーンティの概算日付。正確な値は Prokerala から取得する）
-function siderealSunSign(dob) {
-  const parts = String(dob || '').split('-');
-  const month = parseInt(parts[1], 10);
-  const day = parseInt(parts[2], 10);
-  if (!month || !day) return '不明';
-  // [開始月, 開始日, 星座]
-  const ranges = [
-    [1, 15, '山羊座'], [2, 13, '水瓶座'], [3, 15, '魚座'], [4, 14, '牡羊座'],
-    [5, 15, '牡牛座'], [6, 15, '双子座'], [7, 17, '蟹座'], [8, 17, '獅子座'],
-    [9, 17, '乙女座'], [10, 18, '天秤座'], [11, 16, '蠍座'], [12, 16, '射手座']
-  ];
-  let sign = '射手座'; // 1/1〜1/14 は前年12/16開始の射手座
-  for (const [m, d, s] of ranges) {
-    if (month > m || (month === m && day >= d)) sign = s;
-  }
-  return sign;
 }
 
 // Prokerala のエラー本文から、原因判別に使えるメッセージだけを取り出す（クレジット切れ等）
@@ -660,7 +627,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
       "moonSign": "${moonSign}",
       "sunSign": "${sunSign}",
       "nakshatra": "${nakshatra}",
-      "dashaTitle": "現在の支配星大周期（例：マハー・ダシャー 木星期）",
+      "dashaTitle": "現在の支配星大周期",
       "dashaDesc": "マハー・ダシャー周期の解読アドバイス（200文字程度）",
       "free_reading": {
         "horoscope": "本日の運勢（150文字程度）",
