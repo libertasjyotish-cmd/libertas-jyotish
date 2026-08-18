@@ -623,8 +623,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
     {
       "premium_reading": {
         "kundali_reading": "精密クンダリー・9天体配置の宿命解読（300文字以上の詳細解説）",
-        "detailed_horoscope": ${DETAILED_HOROSCOPE_SPEC},
-        "lifetime_dasha": "108区分生涯カルテ＆支配星詳細解読（800文字以上の生涯のバイオリズム解説）"
+        "detailed_horoscope": ${DETAILED_HOROSCOPE_SPEC}
       }
     }`;
   } else if (isPaid) {
@@ -647,8 +646,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
       ]${section === 'all' ? `,
       "premium_reading": {
         "kundali_reading": "精密クンダリー・9天体配置の宿命解読（300文字以上の詳細解説）",
-        "detailed_horoscope": ${DETAILED_HOROSCOPE_SPEC},
-        "lifetime_dasha": "108区分生涯カルテ＆支配星詳細解読（800文字以上の生涯のバイオリズム解説）"
+        "detailed_horoscope": ${DETAILED_HOROSCOPE_SPEC}
       }` : ''}
     }`;
   } else {

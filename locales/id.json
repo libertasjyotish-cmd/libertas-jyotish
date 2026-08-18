@@ -303,6 +303,8 @@
     "mypage.tpl04": "🔮 Kundali presisi: takdir yang tertulis pada sembilan planet Anda",
     "mypage.tpl05": "📅 Gambaran harian dan mingguan yang rinci",
     "mypage.tpl06": "📜 Peta hidup 108 bagian dan pembacaan rinci planet penguasa",
+    "mypage.tplLifetimeLocked": "Kartu seumur hidup ini tidak berubah setiap hari, sehingga Halaman Saya hanya menampilkan ringkasan. Seluruh 108 periode dan tahun titik baliknya tersedia di Laporan Lengkap (PDF).",
+    "mypage.tplLifetimeCta": "Lihat Laporan Lengkap",
     "pdf-report.tpl01": "Lagna — diri Anda yang dilihat orang lain",
     "pdf-report.tpl02": "Bulan — diri Anda di dalam",
     "pdf-report.tpl03": "Matahari — arah yang Anda tuju",

@@ -303,6 +303,8 @@
     "mypage.tpl04": "🔮 精密クンダリー・9天体配置の宿命解読",
     "mypage.tpl05": "📅 本日の日次＆週次詳細運勢レポート",
     "mypage.tpl06": "📜 108区分生涯カルテ＆支配星詳細解読",
+    "mypage.tplLifetimeLocked": "この生涯カルテは毎日変わらない内容のため、マイページでは概要のみのご案内です。全108区分の周期と転機の年は「完全鑑定書（PDF）」でお届けします。",
+    "mypage.tplLifetimeCta": "完全鑑定書を見る",
     "pdf-report.tpl01": "ラグナ ― 表に出るあなた",
     "pdf-report.tpl02": "月 ― 内側のあなた",
     "pdf-report.tpl03": "太陽 ― 目指す方向",

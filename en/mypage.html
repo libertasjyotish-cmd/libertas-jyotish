@@ -1302,18 +1302,23 @@ detailHtml += `
 </div>
 `;
 }
-if (pr.lifetime_dasha) {
-detailHtml += `
-<div class="card-box">
-<div class="card-title">📜 Lifetime chart in 108 divisions and detailed ruling-planet reading</div>
-<div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify; white-space:pre-line;">${pr.lifetime_dasha}</div>
-</div>
-`;
-}
+detailHtml += buildLifetimeLockedCard();
 detailContainer.innerHTML = detailHtml;
 }
 
 if (data.status !== 'paid') applyPremiumSample();
+}
+
+// 108区分の生涯カルテは日々変わらない内容なので、マイページでは見本にとどめて完全鑑定書へ誘導する。
+function buildLifetimeLockedCard() {
+return `
+<div class="card-box">
+<div class="card-title">📜 Lifetime chart in 108 divisions and detailed ruling-planet reading</div>
+<div class="preview-blur" style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">From a cycle table dividing your life into 108 divisions, we show the years that mark turning points and the actions to take, in chronological order. It lets you prepare for the peaks and troughs of life in advance.</div>
+<p style="margin-top:12px; font-size:0.82rem; color:#6b5b4a; line-height:1.7;">This lifetime chart does not change from day to day, so My Page shows only an outline. All 108 periods and their turning points are delivered in the Complete Reading (PDF).</p>
+<div style="text-align:center;"><a href="/en/pdf-purchase" class="btn-primary" style="display:inline-block; margin-top:10px; padding:10px 22px; border-radius:8px; font-weight:600; text-decoration:none;">See the Complete Reading</a></div>
+</div>
+`;
 }
 
 // 無料会員には有料項目の中身をサンプル文言で見せる（APIは呼ばず固定のダミー）
