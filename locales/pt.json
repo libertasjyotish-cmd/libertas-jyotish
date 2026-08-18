@@ -303,6 +303,8 @@
     "mypage.tpl04": "🔮 Kundali preciso: o destino escrito nos seus nove planetas",
     "mypage.tpl05": "📅 Panorama diário e semanal detalhado",
     "mypage.tpl06": "📜 Mapa da vida em 108 divisões e leitura detalhada dos planetas regentes",
+    "mypage.tplLifetimeLocked": "Este mapa vitalício não muda de um dia para o outro, então Minha Página mostra apenas um resumo. As 108 divisões e seus anos de virada são entregues no Relatório Completo (PDF).",
+    "mypage.tplLifetimeCta": "Ver o Relatório Completo",
     "pdf-report.tpl01": "Lagna — o você que os outros veem",
     "pdf-report.tpl02": "Lua — o você de dentro",
     "pdf-report.tpl03": "Sol — a direção que você busca",

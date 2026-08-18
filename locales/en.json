@@ -303,6 +303,8 @@
     "mypage.tpl04": "🔮 Precise kundali: the destiny written in your nine planets",
     "mypage.tpl05": "📅 Detailed daily and weekly outlook",
     "mypage.tpl06": "📜 Lifetime chart in 108 divisions and detailed ruling-planet reading",
+    "mypage.tplLifetimeLocked": "This lifetime chart does not change from day to day, so My Page shows only an outline. All 108 periods and their turning points are delivered in the Complete Reading (PDF).",
+    "mypage.tplLifetimeCta": "See the Complete Reading",
     "pdf-report.tpl01": "Lagna — the you others see",
     "pdf-report.tpl02": "Moon — the you within",
     "pdf-report.tpl03": "Sun — the direction you aim for",
