@@ -585,6 +585,13 @@ function extractPlanets(prokeralaData) {
   }));
 }
 
+// 詳細運勢は2つの見出しで構成し、見出しの前で必ず改行させる（画面側は white-space: pre-line で表示）。
+const DETAILED_HOROSCOPE_SPEC = JSON.stringify(
+  '本日のアスペクトによる日次＆週次詳細運勢レポート（500文字以上の詳細解説）。'
+  + '「【本日の詳細運勢】」と「【今週のバイオリズム】」の2つの見出しで構成し、'
+  + 'それぞれの見出しの直前に改行（\n）を入れ、見出しの後も改行してから本文を書くこと。'
+);
+
 // section: 'all'（既定）/ 'base'（プレミアム詳細以外）/ 'premium'（プレミアム詳細のみ）
 function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section = 'all') {
   const planetList = extractPlanets(prokeralaData);
@@ -616,7 +623,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
     {
       "premium_reading": {
         "kundali_reading": "精密クンダリー・9天体配置の宿命解読（300文字以上の詳細解説）",
-        "detailed_horoscope": "本日のアスペクトによる日次＆週次詳細運勢レポート（500文字以上の詳細解説）",
+        "detailed_horoscope": ${DETAILED_HOROSCOPE_SPEC},
         "lifetime_dasha": "108区分生涯カルテ＆支配星詳細解読（800文字以上の生涯のバイオリズム解説）"
       }
     }`;
@@ -640,7 +647,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
       ]${section === 'all' ? `,
       "premium_reading": {
         "kundali_reading": "精密クンダリー・9天体配置の宿命解読（300文字以上の詳細解説）",
-        "detailed_horoscope": "本日のアスペクトによる日次＆週次詳細運勢レポート（500文字以上の詳細解説）",
+        "detailed_horoscope": ${DETAILED_HOROSCOPE_SPEC},
         "lifetime_dasha": "108区分生涯カルテ＆支配星詳細解読（800文字以上の生涯のバイオリズム解説）"
       }` : ''}
     }`;
@@ -659,6 +666,14 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
       }
     }`;
   }
+
+  // 無料鑑定は「言い当て → 今日の心の状態 → 今日の一手」の順で書かせ、読み手に「わかってくれている」と感じてもらう。
+  const freeGuideline = isPaid ? '' : `
+  【無料鑑定「本日の運勢」の構成（必ずこの順序で書くこと）】
+  ① 冒頭1文で、月星座 ${moonSign} とナクシャトラ ${nakshatra} から導かれる「この人が消耗しやすい／満たされる条件」を言い当てる。
+  ② 次に、本日のトランジット月との関係から今日の心の状態を説明する。
+  ③ 最後に、今日ひとつだけ実行できる具体行動を提案する。
+  `;
 
   return `
   あなたは高名なインド占星術（ジューティシュ）の聖者、および現代天文学の知性を備えた占星鑑定士です。
@@ -689,6 +704,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
   ${lang === 'ja' ? '' : `Sign, nakshatra and planet names must be written in ${outputLanguage} (use the standard romanised Sanskrit names where no common translation exists).`}
   文字数の指定は日本語を基準とした目安です。他言語では同等の情報量になる長さで書いてください。
 
+  ${freeGuideline}
   【出力フォーマット】
   ${formatSchema}
   `;
