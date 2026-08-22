@@ -107,6 +107,7 @@
     ul { padding-left: 20px; margin-bottom: 15px; }
 
     .site-footer { width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3); padding: 24px 20px; text-align: center; position: relative; z-index: 10; }
+    .footer-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
     .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
     .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
 
@@ -163,21 +164,33 @@ window.LJ_I18N = {
         <tr><th>Costes ajenos al precio del producto</th><td>Costes de conexión a internet</td></tr>
         <tr><th>Entrega</th><td>Inmediatamente después del pago (en una página específica o por correo automático). El Informe Vitalicio se puede leer e imprimir en una página específica dentro del área de miembros (no se envía ningún archivo PDF).</td></tr>
         <tr><th>Forma de pago</th><td>Pago con tarjeta de crédito (procesado por Gumroad). Gumroad cobra en USD, convertido al tipo de cambio del momento de la compra.</td></tr>
-        <tr><th>Devoluciones y cancelación</th><td>Por la naturaleza del contenido digital, no aceptamos devoluciones, reembolsos ni cancelaciones una vez completado el pago. La suscripción mensual puede cancelarse en cualquier momento desde el correo de recibo de compra o desde tu biblioteca de Gumroad, y no se emitirán nuevos cobros tras la cancelación.</td></tr>
+        <tr><th>Devoluciones y cancelación</th><td>Por tratarse de contenido digital de entrega inmediata, no aceptamos reembolsos por cambio de opinión. Los casos como cobros duplicados o fallos técnicos se rigen por la Política de reembolso que figura más abajo; escríbenos dentro de los 14 días posteriores a la compra. La suscripción mensual puede cancelarse en cualquier momento antes de la siguiente fecha de renovación.</td></tr>
       </table>
 
-      <h2>Términos de uso</h2>
+      <h2 id="refund">Política de reembolso</h2>
+      <p>Por tratarse de contenido digital de entrega inmediata, no aceptamos reembolsos por cambio de opinión. No obstante, estudiaremos las solicitudes presentadas dentro de los 14 días posteriores a la compra en los siguientes casos.</p>
+      <ul>
+        <li>Se te ha cobrado más de una vez por la misma compra.</li>
+        <li>Un fallo técnico por nuestra parte te impide consultar el informe adquirido.</li>
+        <li>Lo entregado difiere notablemente de lo adquirido.</li>
+      </ul>
+      <p>La suscripción mensual puede cancelarse en cualquier momento antes de la siguiente fecha de renovación y no se renovará a partir de ese momento. No prorrateamos ni reembolsamos el periodo de facturación en curso.</p>
+
+      <h2 id="terms">Términos de uso</h2>
       <p><strong>Artículo 1 (Ámbito)</strong><br>Estos términos establecen las condiciones de uso de todo el contenido ofrecido por Libertas Jyotish.</p>
       <p><strong>Artículo 2 (Exención de responsabilidad)</strong><br>Las lecturas y los consejos basados en la astrología védica no garantizan acontecimientos ni resultados futuros.</p>
       <p><strong>Artículo 3 (Actos prohibidos)</strong><br>Queda estrictamente prohibida la reproducción, la reventa y el uso secundario de nuestro contenido sin autorización.</p>
 
-      <h2>Política de privacidad</h2>
+      <h2 id="privacy">Política de privacidad</h2>
       <p>La información personal recogida se utiliza únicamente para generar las lecturas de forma automática, enviar correos y prestar atención al cliente.</p>
     </div>
   </section>
 
   <footer class="site-footer">
-    <div class="footer-links"><a href="/es/legal">Información legal, Términos de uso y Política de privacidad</a></div>
+    <div class="footer-links"><a href="/es/legal">Información legal</a>
+<a href="/es/legal#terms">Términos de uso</a>
+<a href="/es/legal#privacy">Política de privacidad</a>
+<a href="/es/legal#refund">Política de reembolso</a></div>
     <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
   </footer>
 

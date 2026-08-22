@@ -107,6 +107,7 @@
     ul { padding-left: 20px; margin-bottom: 15px; }
 
     .site-footer { width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3); padding: 24px 20px; text-align: center; position: relative; z-index: 10; }
+    .footer-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
     .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
     .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
 
@@ -163,21 +164,33 @@ window.LJ_I18N = {
         <tr><th>商品代金以外の必要料金</th><td>インターネット通信料</td></tr>
         <tr><th>引き渡し時期</th><td>決済完了後、即時（専用画面またはメール自動配信）。生涯総合鑑定書は会員ページ内の専用画面で閲覧・印刷いただく形での提供です（PDFファイルの送付はありません）。</td></tr>
         <tr><th>お支払い方法</th><td>クレジットカード決済（決済代行：Gumroad）。Gumroadの仕様により、請求は決済時のレートで米ドル換算されます。</td></tr>
-        <tr><th>返品・キャンセル</th><td>デジタルコンテンツの性質上、決済完了後の返品・返金・キャンセル等には応じかねます。月額会員は、ご購入時のレシートメールまたはGumroadのライブラリからいつでも解約でき、解約後は次回以降の請求は発生しません。</td></tr>
+        <tr><th>返品・キャンセル</th><td>デジタルコンテンツという性質上、お客様のご都合による返金は原則としてお受けできません。ただし、重複課金や技術的な不具合など、下記「返金ポリシー」に該当する場合は、ご購入日から14日以内にご連絡いただければ個別に対応いたします。月額会員は、次回更新日の前までにいつでも解約できます。</td></tr>
       </table>
 
-      <h2>利用規約</h2>
+      <h2 id="refund">返金ポリシー</h2>
+      <p>デジタルコンテンツという性質上、お客様のご都合による返金は原則としてお受けできません。ただし、次の場合はご購入日から14日以内にご連絡いただければ、個別に対応いたします。</p>
+      <ul>
+        <li>決済が重複した場合</li>
+        <li>技術的な不具合により、購入した鑑定書を閲覧できない場合</li>
+        <li>ご購入内容と提供内容が明らかに異なる場合</li>
+      </ul>
+      <p>月額会員は、次回更新日の前までにお手続きいただければ、その時点で更新が停止します。なお、経過期間分の日割り返金は行っておりません。</p>
+
+      <h2 id="terms">利用規約</h2>
       <p><strong>第1条（適用）</strong><br>本規約は、Libertas Jyotishが提供するすべてのコンテンツの利用条件を定めるものです。</p>
       <p><strong>第2条（免責事項）</strong><br>インド占星術に基づく鑑定結果およびアドバイスは、将来の出来事や効果を保証するものではありません。</p>
       <p><strong>第3条（禁止事項）</strong><br>コンテンツの無断転載・転売・二次利用を固く禁止します。</p>
 
-      <h2>プライバシーポリシー</h2>
+      <h2 id="privacy">プライバシーポリシー</h2>
       <p>収集した個人情報は、鑑定結果の自動生成、メール配信、カスタマーサポートの目的でのみ利用いたします。</p>
     </div>
   </section>
 
   <footer class="site-footer">
-    <div class="footer-links"><a href="/ja/legal">特定商取引法に基づく表記・利用規約・プライバシーポリシー</a></div>
+    <div class="footer-links"><a href="/ja/legal">特定商取引法に基づく表記</a>
+<a href="/ja/legal#terms">利用規約</a>
+<a href="/ja/legal#privacy">プライバシーポリシー</a>
+<a href="/ja/legal#refund">返金ポリシー</a></div>
     <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
   </footer>
 
