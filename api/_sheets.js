@@ -112,12 +112,10 @@ async function getMemberSheet() {
 }
 
 // 決済完了時などにステータスのみを更新する。行が無ければ最小限の行を作成する。
-// customerId を渡すと、解約時に顧客IDから会員行を引けるよう記録する。
-async function setMemberStatus(email, status, customerId) {
+async function setMemberStatus(email, status) {
   if (!email) return false;
   const sheet = await getMemberSheet();
   if (!sheet) return false;
-  if (customerId) await ensureColumns(sheet, ['stripe_customer_id']);
 
   const normalized = String(email).trim().toLowerCase();
   const rows = await sheet.getRows();
@@ -126,7 +124,6 @@ async function setMemberStatus(email, status, customerId) {
 
   if (row) {
     row.set('status', status);
-    if (customerId) row.set('stripe_customer_id', customerId);
     row.set('updated_at', nowStr);
     await row.save();
   } else {
@@ -134,7 +131,6 @@ async function setMemberStatus(email, status, customerId) {
       email: email,
       status: status,
       auth_provider: 'gumroad',
-      stripe_customer_id: customerId || '',
       created_at: nowStr,
       updated_at: nowStr,
       language: 'ja'
@@ -144,19 +140,15 @@ async function setMemberStatus(email, status, customerId) {
 }
 
 // サブスク解約時に有料権限を外す。買い切り（pdf_purchased）は購入済みの権利なので残す。
-// 解約イベントにメールが含まれないことがあるため、顧客IDでも会員行を引けるようにする。
-async function downgradeMember({ email, customerId }) {
+async function downgradeMember({ email }) {
   const sheet = await getMemberSheet();
   if (!sheet) return { updated: false, reason: 'sheet_unavailable' };
 
   const normalizedEmail = normalizeEmail(email);
-  const normalizedCustomer = String(customerId || '').trim();
   const rows = await sheet.getRows();
-  const row =
-    (normalizedCustomer
-      ? rows.find(r => String(r.get('stripe_customer_id') || '').trim() === normalizedCustomer)
-      : null) ||
-    (normalizedEmail ? rows.find(r => normalizeEmail(r.get('email')) === normalizedEmail) : null);
+  const row = normalizedEmail
+    ? rows.find(r => normalizeEmail(r.get('email')) === normalizedEmail)
+    : null;
 
   if (!row) return { updated: false, reason: 'member_not_found' };
   if (String(row.get('status') || '').trim().toLowerCase() !== 'paid') {
@@ -194,7 +186,6 @@ async function getMemberRecord(email) {
     tob: row.get('tob') || '',
     city: row.get('city') || '',
     language: row.get('language') || 'ja',
-    stripeCustomerId: String(row.get('stripe_customer_id') || '').trim(),
     pdfPurchased: String(row.get('pdf_purchased') || '').trim().toLowerCase() === 'true',
     pdfPurchasedAt: row.get('pdf_purchased_at') || ''
   };

@@ -1,6 +1,6 @@
 {
   "source": "currency: mledoze/countries, rates: open.er-api.com (JPY base)",
-  "note": "表示は概算。確定額はStripeの決済画面で購入者の通貨により決まる。",
+  "note": "表示は概算。確定額はGumroadの決済画面で購入者の通貨により決まる。",
   "generatedAt": "2026-08-15",
   "ratesUpdatedAt": "Sat, 15 Aug 2026 00:02:31 +0000",
   "zeroDecimal": [

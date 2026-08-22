@@ -144,7 +144,7 @@ window.LJ_I18N = {
   </footer>
 
   <script>
-    // 購入状態は Stripe の Webhook を受けてサーバ側で記録される。この画面では購入済みの判定を行わない。
+    // 購入状態は Gumroad の Webhook を受けてサーバ側で記録される。この画面では購入済みの判定を行わない。
     document.addEventListener('DOMContentLoaded', () => {
       const note = document.getElementById('success-note');
       const email = localStorage.getItem('lj_user_email');

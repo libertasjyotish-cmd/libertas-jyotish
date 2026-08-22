@@ -975,7 +975,7 @@ if (premiumTitle) premiumTitle.style.display = 'none';
 }
 
 let makeRetryCount = 0; // 同期失敗時のリトライ回数
-let paidSyncRetry = 0; // Stripe決済直後、Webhook反映待ちのリトライ回数
+let paidSyncRetry = 0; // 決済直後、Webhook反映待ちのリトライ回数
 
 async function fetchUserDataAndRender(email, isRetry = false) {
 if (!isRetry) {
@@ -1100,7 +1100,7 @@ data = { fortune: responseText };
 }
 }
 
-// Stripe決済直後は Webhook による paid 反映に数秒かかることがあるため待ち受ける
+// 決済直後は Webhook による paid 反映に数秒かかることがあるため待ち受ける
 if (new URLSearchParams(location.search).get('status') === 'paid' && data.status !== 'paid' && paidSyncRetry < 5) {
 paidSyncRetry++;
 const textElem = document.getElementById('today-transit-text');
