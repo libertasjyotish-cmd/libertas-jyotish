@@ -987,7 +987,7 @@ console.error('purchase status check failed', e);
 
 // Gumroad の購入者向け画面へ案内する（支払い方法の変更・サブスク解約）
 function openBillingPortal() {
-alert('Se abrirá tu página de compras de Gumroad. Inicia sesión con el correo que usaste al pagar para cancelar la suscripción o cambiar el método de pago.');
+alert('Se abrirá tu página de compras de Gumroad. Los pagos los gestiona Gumroad, así que debes iniciar sesión en Gumroad, no con la contraseña de este sitio. Introduce el correo que usaste al pagar y Gumroad te enviará un enlace de acceso, sin necesidad de contraseña. Después podrás cancelar la suscripción o cambiar el método de pago.');
 window.open(GUMROAD_LIBRARY_URL, '_blank');
 }
 

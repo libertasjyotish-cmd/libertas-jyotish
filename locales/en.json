@@ -172,7 +172,7 @@
     "mypage.js17": "You need to sign in to manage your plan.",
     "mypage.js18": "Loading...",
     "mypage.js19": "We could not find any payment for this email address. Please check that you are signed in with the address you used at checkout.",
-    "mypage.js20": "Opening your Gumroad purchases page. Log in with the email you used at checkout to cancel your membership or change your payment method.",
+    "mypage.js20": "Opening your Gumroad purchases page. Payments are handled by Gumroad, so you sign in to Gumroad — not with your password for this site. Enter the email you used at checkout and Gumroad emails you a login link, so no password is needed. Once signed in you can cancel your membership or change your payment method.",
     "mypage.js21": "A connection error occurred. Please try again in a moment.",
     "mypage.js22": "Tokyo",
     "mypage.js23": "Loading today's chart data...",
