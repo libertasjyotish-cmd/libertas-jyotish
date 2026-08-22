@@ -1,14 +1,14 @@
-// 訪問者の国に応じた Stripe 決済リンクを取得する共通ヘルパー。
+// 訪問者の国に応じた Gumroad 決済リンクを取得する共通ヘルパー。
 // 取得できるまで／失敗した場合は既定（T2）のリンクを使い、購入導線が止まらないようにする。
 // クリック時にポップアップがブロックされないよう、参照は同期的に返す。
 (function () {
   var FALLBACK = {
     tier: 'T2',
     links: {
-      premium: 'https://buy.stripe.com/dRmaEZ0I73Bx6g8auH24000',
-      pdf: 'https://buy.stripe.com/3cI14paiHegb480fP124001'
+      premium: 'https://libertajyoti.gumroad.com/l/plan-t2',
+      pdf: 'https://libertajyoti.gumroad.com/l/report-t2'
     },
-    labels: { premium: '月額 500円（税込）', pdf: '買い切り 4,980円（税込）' },
+    labels: { premium: '月額 550円', pdf: '買い切り 5,980円' },
     approx: null
   };
   var CACHE_KEY = 'lj_checkout_links';
@@ -40,6 +40,14 @@
     // product は 'premium' か 'pdf'
     linkFor: function (product) {
       return resolved.links[product] || FALLBACK.links[product];
+    },
+    // 購入者メールを引き渡し、商品ページを経由せず Gumroad の決済画面へ直行させる。
+    // 会員権はこのメールアドレスで当サイトのアカウントに紐づける。
+    checkoutUrlFor: function (product, email) {
+      var url = window.LJCheckout.linkFor(product);
+      var params = 'wanted=true';
+      if (email) params += '&email=' + encodeURIComponent(email);
+      return url + (url.indexOf('?') >= 0 ? '&' : '?') + params;
     },
     // 日本語ページは API の確定ラベル（円）。他言語は訪問国の通貨での概算額を返し、
     // 通貨が判定できない場合は金額を出さず、決済画面で提示される旨だけを返す。

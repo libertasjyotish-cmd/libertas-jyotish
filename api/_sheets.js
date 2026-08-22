@@ -133,7 +133,7 @@ async function setMemberStatus(email, status, customerId) {
     await sheet.addRow({
       email: email,
       status: status,
-      auth_provider: 'stripe',
+      auth_provider: 'gumroad',
       stripe_customer_id: customerId || '',
       created_at: nowStr,
       updated_at: nowStr,
@@ -208,7 +208,22 @@ async function ensureColumns(sheet, columns) {
   if (missing.length) await sheet.setHeaderRow([...headers, ...missing]);
 }
 
-// 買い切り決済（mode=payment）の完了を記録する。会員行が無ければ最小限の行を作る。
+// 買い切り（完全鑑定書）の返金・チャージバック時に閲覧権を外す。
+async function revokePdfPurchase(email) {
+  if (!email) return false;
+  const sheet = await getMemberSheet();
+  if (!sheet) return false;
+
+  const row = await findMemberRow(email);
+  if (!row) return true;
+
+  row.set('pdf_purchased', 'false');
+  row.set('updated_at', new Date().toISOString());
+  await row.save();
+  return true;
+}
+
+// 買い切り決済の完了を記録する。会員行が無ければ最小限の行を作る。
 async function setPdfPurchased(email) {
   if (!email) return false;
   const sheet = await getMemberSheet();
@@ -226,7 +241,7 @@ async function setPdfPurchased(email) {
     await sheet.addRow({
       email: email,
       status: 'free',
-      auth_provider: 'stripe',
+      auth_provider: 'gumroad',
       pdf_purchased: 'true',
       pdf_purchased_at: nowStr,
       created_at: nowStr,
@@ -356,6 +371,7 @@ module.exports = {
   getMemberSheet,
   setMemberStatus,
   downgradeMember,
+  revokePdfPurchase,
   getLastSheetIssue,
   getMemberRecord,
   setPdfPurchased,

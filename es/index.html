@@ -482,19 +482,18 @@ Introduce tus datos de nacimiento y recibe la hoja de ruta auténtica que LIBERT
       });
     }
 
-// Stripe 決済リンク直接遷移
-function openStripeCheckout() {
+// Gumroad 決済リンク直接遷移
+function openCheckout() {
   const email = document.getElementById('user-email')?.value.trim() ||
                 localStorage.getItem('lj_user_email') ||
                 localStorage.getItem('email') || '';
 
   // 訪問者の国の価格帯に応じた決済リンクを使う
-  const stripeUrl = `${window.LJCheckout.linkFor('premium')}?prefilled_email=${encodeURIComponent(email)}`;
-  window.open(stripeUrl, '_blank');
+  window.open(window.LJCheckout.checkoutUrlFor('premium', email), '_blank');
 }
 
 document.querySelectorAll('.btn-upgrade-premium').forEach(btn => {
-  btn.addEventListener('click', openStripeCheckout);
+  btn.addEventListener('click', openCheckout);
 });
 
 const form = document.getElementById('jyotish-form');
