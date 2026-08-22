@@ -1,37 +1,37 @@
-// 訪問者の国に応じた Stripe 決済リンクを返す: /api/checkout-links
+// 訪問者の国に応じた Gumroad 決済リンクを返す: /api/checkout-links
 // 国コードは Vercel が付与する x-vercel-ip-country を使い、data/price-tiers.json で価格帯に変換する。
 // 判定できない国・テーブルに無い国は既定の価格帯（T2）にフォールバックする。
 const priceTiers = require('../data/price-tiers.json');
 const currencyRates = require('../data/currency-rates.json');
 
-// 価格帯ごとの Payment Link。Stripe で新しいリンクを作ったらここだけ更新する。
+// 価格帯ごとの Gumroad 商品リンク。商品を作り直したらここだけ更新する。
 const LINKS = {
   premium: {
-    T1: 'https://buy.stripe.com/14A3cxeyXegb8ogcCP24003',
-    T2: 'https://buy.stripe.com/dRmaEZ0I73Bx6g8auH24000',
-    T3: 'https://buy.stripe.com/3cIfZjaiH5JF33WbyL24002'
+    T1: 'https://libertajyoti.gumroad.com/l/plan-t1',
+    T2: 'https://libertajyoti.gumroad.com/l/plan-t2',
+    T3: 'https://libertajyoti.gumroad.com/l/plan-t3'
   },
   pdf: {
-    T1: 'https://buy.stripe.com/cNi00l62r8VRfQI0U724004',
-    T2: 'https://buy.stripe.com/3cI14paiHegb480fP124001',
-    T3: 'https://buy.stripe.com/aFa8wRfD12xteME8mz24005'
+    T1: 'https://libertajyoti.gumroad.com/l/report-t1',
+    T2: 'https://libertajyoti.gumroad.com/l/report-t2',
+    T3: 'https://libertajyoti.gumroad.com/l/report-t3'
   }
 };
 
-// 表示用の価格ラベル（税込・日本語）。リンクの金額と必ず揃える。
+// 表示用の価格ラベル（日本語）。リンクの金額と必ず揃える。
 const LABELS = {
-  premium: { T1: '月額 750円（税込）', T2: '月額 500円（税込）', T3: '月額 300円（税込）' },
-  pdf: { T1: '買い切り 7,480円（税込）', T2: '買い切り 4,980円（税込）', T3: '買い切り 2,980円（税込）' }
+  premium: { T1: '月額 980円', T2: '月額 550円', T3: '月額 380円' },
+  pdf: { T1: '買い切り 8,800円', T2: '買い切り 5,980円', T3: '買い切り 3,480円' }
 };
 
 // 日本語以外のページは、この金額を閲覧言語の書式に整形して表示する。
 const CURRENCY = 'JPY';
 const AMOUNTS = {
-  premium: { T1: 750, T2: 500, T3: 300 },
-  pdf: { T1: 7480, T2: 4980, T3: 2980 }
+  premium: { T1: 980, T2: 550, T3: 380 },
+  pdf: { T1: 8800, T2: 5980, T3: 3480 }
 };
 
-// 円以外の国には現地通貨の概算額を添える（確定額はStripeの決済画面）。
+// 円以外の国には現地通貨の概算額を添える（確定額はGumroadの決済画面）。
 // レート表は data/currency-rates.json（scripts/build-currency-rates.js で更新）。
 const ZERO_DECIMAL = new Set(currencyRates.zeroDecimal);
 

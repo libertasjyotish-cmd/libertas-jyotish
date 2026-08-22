@@ -8,6 +8,7 @@
   "functions": {
     "api/jyotish.js": { "maxDuration": 60 },
     "api/stripe-webhook.js": { "maxDuration": 30 },
+    "api/gumroad-webhook.js": { "maxDuration": 30 },
     "api/pdf-report.js": { "maxDuration": 60 }
   }
 }

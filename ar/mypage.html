@@ -540,9 +540,9 @@ box.style.display = 'block';
 })();
 
 const JYOTISH_API_URL = "/api/jyotish";
-const STRIPE_PORTAL_API_URL = "/api/stripe-portal";
+// 支払い方法の変更・解約は Gumroad の購入者向け画面で行う
+const GUMROAD_LIBRARY_URL = "https://app.gumroad.com/library";
 // 決済リンクは訪問者の国の価格帯に応じて /js/checkout-links.js が解決する
-const premiumUpgradeUrl = () => window.LJCheckout.linkFor('premium');
 
 // JSTの今日の日付（YYYY-MM-DD）
 function getJstDateString() {
@@ -761,10 +761,10 @@ if (premiumTitle) premiumTitle.style.display = 'block';
 fetchUserDataAndRender(savedEmail);
 });
 
-// Stripe 決済ページ呼び出し
+// Gumroad 決済ページ呼び出し
 document.getElementById('btn-upgrade-premium')?.addEventListener('click', () => {
   const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
-  window.open(`${premiumUpgradeUrl()}?prefilled_email=${encodeURIComponent(email)}`, '_blank');
+  window.open(window.LJCheckout.checkoutUrlFor('premium', email), '_blank');
 });
 
 let currentAuthToken = '';
@@ -840,11 +840,8 @@ const verified = await res.json().catch(() => ({}));
 // 鑑定書など購入者限定APIの本人確認に使うセッション
 if (verified.session) localStorage.setItem('lj_session', verified.session);
 completeLogin(email);
-// 認証待ちにしていた操作（プラン管理など）をそのまま続行する
-if (window.ljPendingAfterAuth === 'portal') {
-window.ljPendingAfterAuth = '';
-openBillingPortal();
-} else if (window.ljPendingAfterAuth === 'pdf-report') {
+// 認証待ちにしていた操作をそのまま続行する
+if (window.ljPendingAfterAuth === 'pdf-report') {
 window.ljPendingAfterAuth = '';
 window.location.href = '/ar/pdf-report';
 }
@@ -930,41 +927,10 @@ console.error('purchase status check failed', e);
 }
 }
 
-// Stripe カスタマーポータルへ遷移する（支払い方法の変更・サブスク解約）
-async function openBillingPortal() {
-const link = document.getElementById('btn-billing-portal');
-const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
-const session = localStorage.getItem('lj_session') || '';
-if (!email) { alert('تحتاج إلى تسجيل الدخول لإدارة خطتك.'); return; }
-// Google ログインや古い端末連携ではセッションが無いため、その場でメール認証を促して続行する
-if (!session) { requestReauth('portal', email); return; }
-
-const original = link ? link.textContent : '';
-if (link) { link.textContent = 'جارٍ التحميل...'; link.style.pointerEvents = 'none'; }
-try {
-const res = await fetch(STRIPE_PORTAL_API_URL, {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ email: email, session: session })
-});
-const data = await res.json().catch(() => null);
-if (res.ok && data && data.url) {
-window.location.href = data.url;
-return;
-}
-if (data && data.error === 'invalid_session') {
-localStorage.removeItem('lj_session');
-requestReauth('portal', email);
-} else if (data && data.error === 'customer_not_found') {
-alert('لم نعثر على أي عملية دفع لهذا البريد. تأكد من تسجيل الدخول بالعنوان الذي استخدمته عند الشراء.');
-} else {
-alert('تعذّر فتح شاشة إدارة الخطة. حاول مرة أخرى لاحقًا.');
-}
-} catch (err) {
-alert('حدث خطأ في الاتصال. أعد المحاولة بعد قليل.');
-} finally {
-if (link) { link.textContent = original; link.style.pointerEvents = 'auto'; }
-}
+// Gumroad の購入者向け画面へ案内する（支払い方法の変更・サブスク解約）
+function openBillingPortal() {
+alert('سيتم فتح صفحة مشترياتك على Gumroad. سجّل الدخول بالبريد الإلكتروني الذي استخدمته عند الشراء لإلغاء الاشتراك أو تغيير طريقة الدفع.');
+window.open(GUMROAD_LIBRARY_URL, '_blank');
 }
 
 function logout() {

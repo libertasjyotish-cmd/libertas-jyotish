@@ -202,9 +202,8 @@
   </footer>
 
   <script>
-    // 価格と買い切りPayment Linkは訪問者の国の価格帯に応じて /js/checkout-links.js が解決する
+    // 価格と買い切りの決済リンクは訪問者の国の価格帯に応じて /js/checkout-links.js が解決する
     const pdfPriceLabel = () => window.LJCheckout.labelFor('pdf');
-    const pdfCheckoutUrl = () => window.LJCheckout.linkFor('pdf');
 
     // 購入済みかどうかはサーバー（会員シート）だけを正とする。
     // 購入済みなら購入フォームを出さず、鑑定書への導線に差し替える。
@@ -266,9 +265,7 @@
         if (timePart) localStorage.setItem('tob', timePart.slice(0, 5));
         localStorage.setItem('city', birthplace);
 
-        const checkoutUrl = pdfCheckoutUrl();
-        const separator = checkoutUrl.includes('?') ? '&' : '?';
-        window.location.href = `${checkoutUrl}${separator}prefilled_email=${encodeURIComponent(email)}`;
+        window.location.href = window.LJCheckout.checkoutUrlFor('pdf', email);
       });
     });
 

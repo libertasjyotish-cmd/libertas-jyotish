@@ -201,7 +201,6 @@ window.location.reload();
 
 const JYOTISH_API_URL = "/api/jyotish";
 // 決済リンクは訪問者の国の価格帯に応じて /js/checkout-links.js が解決する
-const premiumUpgradeUrl = () => window.LJCheckout.linkFor('premium');
 
 document.addEventListener('DOMContentLoaded', async () => {
 const contentArea = document.getElementById('content-area');
@@ -395,7 +394,7 @@ const upgradeBtn = document.getElementById('btn-upgrade-preview');
 if (upgradeBtn) {
 upgradeBtn.addEventListener('click', () => {
 const email = (input && input.email) || localStorage.getItem('lj_user_email') || '';
-window.open(`${premiumUpgradeUrl()}?prefilled_email=${encodeURIComponent(email)}`, '_blank');
+window.open(window.LJCheckout.checkoutUrlFor('premium', email), '_blank');
 });
 }
 }

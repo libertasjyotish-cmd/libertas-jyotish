@@ -219,7 +219,7 @@ window.LJ_I18N = {
         </div>
 
         <div id="price-label" style="font-size:1.3rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:15px;"></div>
-        <button id="btn-proceed-checkout" class="btn-purchase">💳 Ir para o pagamento (Stripe)</button>
+        <button id="btn-proceed-checkout" class="btn-purchase">💳 Ir para o pagamento (Gumroad)</button>
         <p id="checkout-note" style="font-size:0.8rem; color:#6A5E58; margin-top:12px;">Após a compra, você pode lê-lo quando quiser na página do relatório deste site (também é possível salvá-lo em PDF pela função de impressão do navegador).</p>
       </div>
 
@@ -232,9 +232,8 @@ window.LJ_I18N = {
   </footer>
 
   <script>
-    // 価格と買い切りPayment Linkは訪問者の国の価格帯に応じて /js/checkout-links.js が解決する
+    // 価格と買い切りの決済リンクは訪問者の国の価格帯に応じて /js/checkout-links.js が解決する
     const pdfPriceLabel = () => window.LJCheckout.labelFor('pdf');
-    const pdfCheckoutUrl = () => window.LJCheckout.linkFor('pdf');
 
     // 購入済みかどうかはサーバー（会員シート）だけを正とする。
     // 購入済みなら購入フォームを出さず、鑑定書への導線に差し替える。
@@ -296,9 +295,7 @@ window.LJ_I18N = {
         if (timePart) localStorage.setItem('tob', timePart.slice(0, 5));
         localStorage.setItem('city', birthplace);
 
-        const checkoutUrl = pdfCheckoutUrl();
-        const separator = checkoutUrl.includes('?') ? '&' : '?';
-        window.location.href = `${checkoutUrl}${separator}prefilled_email=${encodeURIComponent(email)}`;
+        window.location.href = window.LJCheckout.checkoutUrlFor('pdf', email);
       });
     });
 
