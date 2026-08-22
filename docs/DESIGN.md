@@ -50,10 +50,7 @@ Agent.pdf            旧 v12 設計書（アーカイブ）
 | 会員 DB | Google Sheets (`会員データ`) | `api/jyotish.js` | `GOOGLE_SHEETS_ID`, `GOOGLE_SERVICE_ACCOUNT_EMAIL`, `GOOGLE_PRIVATE_KEY` |
 | 認証メール | Resend API | `api/jyotish.js` | `RESEND_API_KEY` |
 | トークン署名 | Node.js crypto (HMAC-SHA256) | `api/jyotish.js` | `AUTH_SECRET` |
-| 決済 | Stripe Payment Link | `ja/*.html` | - （URL 直書き） |
-
-Tally は設計書 v12 に記載があるが、実装では Stripe Payment Link に一本化されている
-（`ja/mypage.html` に到達不能な Tally 分岐が残存。GAP-AUDIT 参照）。
+| 決済 | Gumroad（Merchant of Record） | `api/checkout-links.js`, `api/gumroad-webhook.js` | `GUMROAD_PING_TOKEN`, `GUMROAD_SELLER_ID` |
 
 ## 4. API 仕様: `POST /api/jyotish`
 
@@ -167,20 +164,22 @@ CORS は全オリジン許可。`OPTIONS` は 200、`POST` 以外は 405。
 
 ## 7. 決済フロー
 
-- Stripe Payment Link（サブスク）: `https://buy.stripe.com/dRmaEZ0I73Bx6g8auH24000?prefilled_email=<email>`
-- Stripe Payment Link（生涯総合鑑定書・買い切り 4,980円）: `https://buy.stripe.com/3cI14paiHegb480fP124001?prefilled_email=<email>`
+- 決済リンクは訪問国の価格帯（T1/T2/T3）で振り分ける（`api/checkout-links.js` / `js/checkout-links.js`）
+  - サブスク: `https://libertajyoti.gumroad.com/l/plan-t{1,2,3}?wanted=true&email=<email>`（月額 980 / 550 / 380 円）
+  - 生涯総合鑑定書（買い切り）: `https://libertajyoti.gumroad.com/l/report-t{1,2,3}?wanted=true&email=<email>`（8,800 / 5,980 / 3,480 円）
+  - 通貨は JPY 固定。日本語以外のページでは `data/currency-rates.json` による現地通貨の概算を併記する（確定額は Gumroad の決済画面）
 - 完了ページ: `ja/success.html`（`lj_status = 'paid'`）、`ja/pdf-success.html`（`lj_pdf_purchased = 'true'`）
-- Stripe Webhook: `POST /api/stripe-webhook`
-  - `STRIPE_WEBHOOK_SECRET` で署名検証（HMAC-SHA256 / タイムスタンプ許容 300 秒）
-  - `checkout.session.completed` / `checkout.session.async_payment_succeeded` / `invoice.paid` で Sheets の `status` を `paid` に昇格
-  - `mode=payment`（買い切り）は `status` ではなく `pdf_purchased` を `true` にする
-  - メールは `customer_details.email` → `customer_email` → `receipt_email` → `metadata.email` の順で解決
-  - サブスク昇格時に `stripe_customer_id` を会員行へ記録する（解約イベントにはメールが載らないため）
-  - `customer.subscription.deleted` / `customer.subscription.updated` で `status` が `canceled` / `unpaid` / `incomplete_expired` になった場合、`status` を `free` に戻す（`cancel_at_period_end` の予約状態では降格しない。`pdf_purchased` は買い切りの権利なので残す）
-  - 解約イベントの会員特定は `stripe_customer_id` → メールの順。`STRIPE_SECRET_KEY` が設定されていれば、顧客IDからメールを引くフォールバックが働く
-- 解約導線: マイページのステータス行に「プランの管理・解約」（有料会員のみ表示）→ `POST /api/stripe-portal`（`verifySession` で本人確認）→ Stripe カスタマーポータルへ遷移
-  - 顧客IDは会員行の `stripe_customer_id`、無ければ `STRIPE_SECRET_KEY` で Stripe の顧客検索（メール一致）にフォールバック
-  - Stripe ダッシュボードでカスタマーポータルの有効化が必要
+- Gumroad Webhook: `POST /api/gumroad-webhook?token=<GUMROAD_PING_TOKEN>&resource=<resource_name>`
+  - Gumroad の通知は署名されないため、URL クエリの秘密トークンで検証する。`GUMROAD_SELLER_ID` を設定した場合は `seller_id` も照合する
+  - `sale`（Settings → Advanced の Ping）と、API の resource subscriptions（`refund` / `dispute` / `dispute_won` / `cancellation` / `subscription_ended` / `subscription_restarted`）を同一エンドポイントで受ける
+  - イベント種別は `?resource=` → `resource_name` → 固有フィールド（`ended_at` / `restarted_at` / `cancelled_at` / `refunded` / `sale_id`）の順で判定する
+  - 商品種別は permalink のスラッグで判定（`report-*` は買い切り、`plan-*` はサブスク）
+  - `sale` / `subscription_restarted`: `pdf_purchased = true` または `status = paid`
+  - `refund` / `dispute`: 買い切りは `pdf_purchased = false`、サブスクは `status = free`
+  - `subscription_ended`: `status = free`（`pdf_purchased` は買い切りの権利なので残す）
+  - `cancellation` は解約予約であり期末まで閲覧できるため無視する（失効は `subscription_ended` で処理）
+  - 会員の特定は購入時メールアドレス。通知は重複・順不同で届くが、処理はいずれも状態の上書きで冪等
+- 解約導線: マイページのステータス行に「プランの管理・解約」（有料会員のみ表示）→ Gumroad の購入者ページ（`https://app.gumroad.com/library`）を別タブで開く
 - 課金状態は **Sheets のみを正** とし、`/api/jyotish` はリクエストボディの `status` を無視する（改ざんによる昇格と、診断時の `free` 上書きによる降格の両方を防止）
 - 決済直後は `/ja/mypage?status=paid` で Webhook 反映待ちのリトライ（最大 5 回 / 4 秒間隔）を行う
 
@@ -205,3 +204,5 @@ CORS は全オリジン許可。`OPTIONS` は 200、`POST` 以外は 405。
 | `GEMINI_API_KEY` | 必須 | 静的フォールバック鑑定に切り替わる |
 | `GOOGLE_SHEETS_ID` | 推奨 | ハードコード値にフォールバック |
 | `GOOGLE_SERVICE_ACCOUNT_EMAIL` / `GOOGLE_PRIVATE_KEY` | 必須 | メモリのみで動作し永続化されない |
+| `GUMROAD_PING_TOKEN` | 必須 | `/api/gumroad-webhook` が 500 を返し、購入・解約が反映されない |
+| `GUMROAD_SELLER_ID` | 任意 | 通知の送信者を照合しない |

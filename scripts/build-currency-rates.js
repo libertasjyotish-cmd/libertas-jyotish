@@ -1,6 +1,6 @@
 // 国別の通貨と円換算レートのマスター（data/currency-rates.json）の生成スクリプト。
 // 出典: 国→通貨 https://github.com/mledoze/countries 、レート https://open.er-api.com（日次更新）
-// 生成物はリポジトリに固定で持ち、実行時に外部APIは呼ばない（表示は概算で、確定額はStripeの決済画面）。
+// 生成物はリポジトリに固定で持ち、実行時に外部APIは呼ばない（表示は概算で、確定額はGumroadの決済画面）。
 // レートを更新したいときだけ `node scripts/build-currency-rates.js` を手動実行する。
 const fs = require('fs');
 const path = require('path');
@@ -44,7 +44,7 @@ async function main() {
 
   const out = {
     source: 'currency: mledoze/countries, rates: open.er-api.com (JPY base)',
-    note: '表示は概算。確定額はStripeの決済画面で購入者の通貨により決まる。',
+    note: '表示は概算。確定額はGumroadの決済画面で購入者の通貨により決まる。',
     generatedAt: new Date().toISOString().slice(0, 10),
     ratesUpdatedAt: rates.time_last_update_utc,
     zeroDecimal: [...ZERO_DECIMAL].sort(),
