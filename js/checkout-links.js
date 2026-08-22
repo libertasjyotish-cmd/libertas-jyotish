@@ -8,7 +8,7 @@
       premium: 'https://libertajyoti.gumroad.com/l/plan-t2',
       pdf: 'https://libertajyoti.gumroad.com/l/report-t2'
     },
-    labels: { premium: '月額 550円', pdf: '買い切り 5,980円' },
+    labels: { premium: '月額 550円（米ドル決済）', pdf: '買い切り 5,980円（米ドル決済）' },
     approx: null
   };
   var CACHE_KEY = 'lj_checkout_links';
