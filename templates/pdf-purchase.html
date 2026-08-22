@@ -281,7 +281,7 @@
           window.location.href = '/{{lang}}/mypage?next=checkout&product=pdf&hint=' + encodeURIComponent(email);
           return;
         }
-        window.location.href = window.LJCheckout.checkoutUrlFor('pdf', email);
+        window.LJCheckout.openCheckout('pdf', email);
       });
     });
 

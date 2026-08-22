@@ -1,8 +1,9 @@
-// 訪問者の国に応じた Gumroad 決済リンクを返す: /api/checkout-links
-// 国コードは Vercel が付与する x-vercel-ip-country を使い、data/price-tiers.json で価格帯に変換する。
-// 判定できない国・テーブルに無い国は既定の価格帯（T2）にフォールバックする。
+// 訪問者の国に応じた決済リンクと価格表示を返す: /api/checkout-links
+// 国コードは Vercel が付与する x-vercel-ip-country を使う。
+// 決済事業者は環境変数 CHECKOUT_PROVIDER で切り替える（未設定なら現行の Gumroad）。
 const priceTiers = require('../data/price-tiers.json');
 const currencyRates = require('../data/currency-rates.json');
+const fastspring = require('../data/fastspring-prices.json');
 
 // 価格帯ごとの Gumroad 商品リンク。商品を作り直したらここだけ更新する。
 const LINKS = {
@@ -61,13 +62,10 @@ function resolveTier(country) {
   return (entry && entry.tier) || priceTiers.defaultTier;
 }
 
-module.exports = (req, res) => {
-  const country = String(req.headers['x-vercel-ip-country'] || '').trim().toUpperCase() || null;
+function gumroadPayload(country) {
   const tier = resolveTier(country);
-
-  // 国ごとに内容が変わるため共有キャッシュには載せない。
-  res.setHeader('Cache-Control', 'private, max-age=3600');
-  return res.status(200).json({
+  return {
+    provider: 'gumroad',
     country,
     tier,
     links: { premium: LINKS.premium[tier], pdf: LINKS.pdf[tier] },
@@ -75,5 +73,39 @@ module.exports = (req, res) => {
     currency: CURRENCY,
     amounts: { premium: AMOUNTS.premium[tier], pdf: AMOUNTS.pdf[tier] },
     approx: approxFor(country, tier)
-  });
+  };
+}
+
+// FastSpring は購入者の国から決済通貨を自動で決める。
+// 価格を手入力した通貨だけサイト側でも同じ金額を表示し、それ以外は金額を出さない
+// （自動換算のため確定額が決済画面でしか分からない）。
+function fastspringPayload(country) {
+  const storefront = process.env.FASTSPRING_STOREFRONT || '';
+  const products = {
+    premium: process.env.FASTSPRING_PATH_PREMIUM || 'membership-monthly',
+    premium_annual: process.env.FASTSPRING_PATH_PREMIUM_ANNUAL || 'membership-annual',
+    pdf: process.env.FASTSPRING_PATH_PDF || 'complete-reading'
+  };
+  const currency = (country && fastspring.countries[country]) || fastspring.defaultCurrency;
+  const priced = fastspring.prices[currency] || null;
+
+  return {
+    provider: 'fastspring',
+    country,
+    storefront,
+    products,
+    accountUrl: process.env.FASTSPRING_ACCOUNT_URL || '',
+    currency: priced ? currency : null,
+    amounts: priced,
+    zeroDecimal: fastspring.zeroDecimal
+  };
+}
+
+module.exports = (req, res) => {
+  const country = String(req.headers['x-vercel-ip-country'] || '').trim().toUpperCase() || null;
+  const provider = String(process.env.CHECKOUT_PROVIDER || 'gumroad').trim().toLowerCase();
+
+  // 国ごとに内容が変わるため共有キャッシュには載せない。
+  res.setHeader('Cache-Control', 'private, max-age=3600');
+  return res.status(200).json(provider === 'fastspring' ? fastspringPayload(country) : gumroadPayload(country));
 };
