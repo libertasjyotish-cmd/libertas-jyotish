@@ -300,6 +300,7 @@ window.LJ_I18N = {
 </script>
 <script defer src="/js/site-menu.js"></script>
 <script src="/js/checkout-links.js"></script>
+<script src="/js/checkout-guard.js"></script>
 </head>
 <body>
 
@@ -452,7 +453,8 @@ data-width="320">
 <div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:8px;">有料会員限定コンテンツ</div>
 <p style="font-size:0.82rem; color:#5A4E48; margin-bottom:15px;">全天体配置・ダシャー周期の解読にはプラン登録が必要です。</p>
 <p id="paid-sync-notice" style="display:none; font-size:0.82rem; color:#8a3b2f; margin-bottom:15px;">お支払いは確認できましたが、この会員アカウントにまだ反映されていません。決済時に入力したメールアドレスでログインしているかご確認ください（反映に数分かかる場合があります）。</p>
-<p data-price-label="premium" style="font-size:0.9rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:12px;"></p>
+<p data-price-label="premium" style="font-size:0.9rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:6px;"></p>
+<p style="font-size:0.78rem; color:#5A4E48; margin-bottom:12px;">決済画面のメールアドレスは、ログイン中のアドレスから変更しないでください。会員の紐づけに使用します。</p>
 <button id="btn-upgrade-premium" class="btn-upgrade">有料プランに登録する</button>
 </div>
 </div>
@@ -607,6 +609,8 @@ return null;
 function handleCredentialResponse(response) {
 const responsePayload = parseJwt(response.credential);
 if (responsePayload && responsePayload.email) {
+// Google 側で確認済みのアドレスなので、決済の紐づけにそのまま使える
+window.LJCheckoutGuard.markVerified(responsePayload.email);
 completeLogin(responsePayload.email);
 }
 }
@@ -711,6 +715,21 @@ if (savedEmail) showPdfReportLinkIfPurchased(savedEmail);
 
 // 鑑定書ページなど、本人確認セッションが必要なページから ?next= 付きで戻ってきた場合
 const nextTarget = new URLSearchParams(window.location.search).get('next');
+// 購入ボタンから本人確認を経由して戻ってきた場合は、確認後のアドレスで決済へ進む
+if (nextTarget === 'checkout') {
+  const product = new URLSearchParams(window.location.search).get('product') === 'pdf' ? 'pdf' : 'premium';
+  const verifiedEmail = window.LJCheckoutGuard.verifiedEmail();
+  if (verifiedEmail) {
+    window.LJCheckout.ready.then(() => {
+      window.location.href = window.LJCheckout.checkoutUrlFor(product, verifiedEmail);
+    });
+    return;
+  }
+  const hintEmail = new URLSearchParams(window.location.search).get('hint') || savedEmail;
+  requestReauth('checkout:' + product, hintEmail);
+  return;
+}
+
 if (nextTarget === 'pdf-report') {
 if (localStorage.getItem('lj_session')) {
 window.location.replace('/ja/pdf-report');
@@ -761,10 +780,13 @@ if (premiumTitle) premiumTitle.style.display = 'block';
 fetchUserDataAndRender(savedEmail);
 });
 
-// Gumroad 決済ページ呼び出し
+// Gumroad 決済ページ呼び出し。未認証なら先にメール認証を求める。
 document.getElementById('btn-upgrade-premium')?.addEventListener('click', () => {
-  const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
-  window.open(window.LJCheckout.checkoutUrlFor('premium', email), '_blank');
+  if (window.LJCheckoutGuard.verifiedEmail()) {
+    window.LJCheckoutGuard.start('premium', 'ja');
+    return;
+  }
+  requestReauth('checkout:premium', savedEmail);
 });
 
 let currentAuthToken = '';
@@ -839,11 +861,19 @@ if (res.ok) {
 const verified = await res.json().catch(() => ({}));
 // 鑑定書など購入者限定APIの本人確認に使うセッション
 if (verified.session) localStorage.setItem('lj_session', verified.session);
+window.LJCheckoutGuard.markVerified(email);
 completeLogin(email);
 // 認証待ちにしていた操作をそのまま続行する
 if (window.ljPendingAfterAuth === 'pdf-report') {
 window.ljPendingAfterAuth = '';
 window.location.href = '/ja/pdf-report';
+}
+if (String(window.ljPendingAfterAuth || '').indexOf('checkout:') === 0) {
+const product = window.ljPendingAfterAuth.slice('checkout:'.length);
+window.ljPendingAfterAuth = '';
+window.LJCheckout.ready.then(() => {
+window.location.href = window.LJCheckout.checkoutUrlFor(product, email);
+});
 }
 } else {
 alert('認証コードが正しくないか、有効期限が切れています。');
@@ -936,6 +966,7 @@ window.open(GUMROAD_LIBRARY_URL, '_blank');
 function logout() {
 localStorage.removeItem('jyotish_user');
 localStorage.removeItem('lj_session');
+localStorage.removeItem(window.LJCheckoutGuard.verifiedKey);
 localStorage.removeItem('lj_user_email');
 localStorage.removeItem('email');
 setLoggedOutState();

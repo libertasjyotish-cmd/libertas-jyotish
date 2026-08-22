@@ -138,6 +138,7 @@ window.LJ_I18N = {
 </script>
 <script defer src="/js/site-menu.js"></script>
 <script src="/js/checkout-links.js"></script>
+<script src="/js/checkout-guard.js"></script>
 </head>
 <body>
 
@@ -393,8 +394,8 @@ window.LJCheckout.paint();
 const upgradeBtn = document.getElementById('btn-upgrade-preview');
 if (upgradeBtn) {
 upgradeBtn.addEventListener('click', () => {
-const email = (input && input.email) || localStorage.getItem('lj_user_email') || '';
-window.open(window.LJCheckout.checkoutUrlFor('premium', email), '_blank');
+const hint = (input && input.email) || localStorage.getItem('lj_user_email') || '';
+window.LJCheckoutGuard.start('premium', 'ar', hint);
 });
 }
 }
@@ -435,7 +436,8 @@ return `
 <div class="lock-icon">🔒</div>
 <div class="lock-title">خاص بالأعضاء المميزين</div>
 <p class="lock-note">تُفتح مواضع الكواكب كاملة، ودورات الداشا، والنظرة المفصّلة، والعلاجات.</p>
-<p data-price-label="premium" style="font-size:0.9rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:12px;"></p>
+<p data-price-label="premium" style="font-size:0.9rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:6px;"></p>
+<p style="font-size:0.78rem; color:#5A4E48; margin-bottom:12px;">لا تغيّر عنوان البريد الإلكتروني في صفحة الدفع، فهو المفتاح الذي نربط به عملية الشراء بحسابك.</p>
 <button type="button" id="btn-upgrade-preview" class="btn-primary" style="width:auto; padding:12px 24px;">الاشتراك في خطة مدفوعة</button>
 <a href="/ar/pdf-purchase" class="btn-secondary" style="width:auto; padding:8px 18px; margin-top:12px;">تعرّف على تقرير العمر بدفعة واحدة (PDF)</a>
 </div>

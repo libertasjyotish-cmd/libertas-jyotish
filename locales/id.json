@@ -465,6 +465,8 @@
     "price.pdfApprox": "Sekitar {price} sekali bayar (termasuk pajak) — jumlah akhir ditampilkan saat checkout",
     "price.checkoutOnly": "Jumlah dalam mata uang lokal Anda ditampilkan saat checkout",
     "mypage.jsCachedAt": "Menampilkan pembacaan yang diambil pukul {time}.",
-    "mypage.jsRefresh": "Perbarui sekarang"
+    "mypage.jsRefresh": "Perbarui sekarang",
+    "checkout.emailNotice": "Jangan mengubah alamat email di halaman pembayaran. Alamat itu dipakai untuk menautkan pembelian dengan akun Anda.",
+    "checkout.authRequired": "Email Anda perlu diverifikasi sebelum pembayaran. Masukkan kode verifikasi di Halaman Saya."
   }
 }

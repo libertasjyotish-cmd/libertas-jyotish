@@ -465,6 +465,8 @@
     "price.pdfApprox": "About {price} one-off (tax incl.) — final amount shown at checkout",
     "price.checkoutOnly": "The amount in your local currency is shown at checkout",
     "mypage.jsCachedAt": "Showing the reading retrieved at {time}.",
-    "mypage.jsRefresh": "Refresh now"
+    "mypage.jsRefresh": "Refresh now",
+    "checkout.emailNotice": "Do not change the email address on the checkout page. It is the key we use to link your purchase to your account.",
+    "checkout.authRequired": "We need to verify your email before checkout. Please enter the verification code on My Page."
   }
 }

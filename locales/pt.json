@@ -465,6 +465,8 @@
     "price.pdfApprox": "Cerca de {price} pagamento único (impostos incl.) — valor final exibido no checkout",
     "price.checkoutOnly": "O valor na sua moeda local é exibido no checkout",
     "mypage.jsCachedAt": "Exibindo a leitura obtida às {time}.",
-    "mypage.jsRefresh": "Atualizar agora"
+    "mypage.jsRefresh": "Atualizar agora",
+    "checkout.emailNotice": "Não altere o e-mail na página de pagamento: é a chave que usamos para vincular a compra à sua conta.",
+    "checkout.authRequired": "Precisamos verificar seu e-mail antes do pagamento. Digite o código de verificação em Minha página."
   }
 }

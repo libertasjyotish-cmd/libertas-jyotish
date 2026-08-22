@@ -298,6 +298,7 @@ window.LJ_I18N = {
 </script>
 <script defer src="/js/site-menu.js"></script>
 <script src="/js/checkout-links.js"></script>
+<script src="/js/checkout-guard.js"></script>
 </head>
 <body>
 
@@ -349,6 +350,7 @@ window.LJ_I18N = {
 <div class="paid-member-title">🌟 Sobre o plano Premium</div>
 <p class="paid-member-desc">Libere todos os recursos da leitura completa: previsões detalhadas dos períodos de dasha, um horóscopo preciso, remédios indicados e muito mais.</p>
 <p class="paid-member-price" data-price-label="premium"></p>
+<p class="paid-member-desc" style="font-size:0.78rem;">Não altere o e-mail na página de pagamento: é a chave que usamos para vincular a compra à sua conta.</p>
 <button type="button" class="paid-member-btn btn-upgrade-premium">Assinar o Premium (cadastro e pagamento)</button>
 </div>
 
@@ -441,6 +443,7 @@ Informe os seus dados de nascimento e receba o roteiro autêntico que a LIBERTAS
 <div class="paid-member-title">🌟 Assine o Premium e libere a leitura completa</div>
 <p class="paid-member-desc">Obrigado por ler até aqui. Receba agora mesmo o seu horóscopo preciso, a previsão dos períodos de dasha e os seus remédios pessoais.</p>
 <p class="paid-member-price" data-price-label="premium"></p>
+<p class="paid-member-desc" style="font-size:0.78rem;">Não altere o e-mail na página de pagamento: é a chave que usamos para vincular a compra à sua conta.</p>
 <button type="button" class="paid-member-btn btn-upgrade-premium">Assinar o Premium (cadastro e pagamento)</button>
 </div>
 </div>
@@ -482,14 +485,11 @@ Informe os seus dados de nascimento e receba o roteiro autêntico que a LIBERTAS
       });
     }
 
-// Gumroad 決済リンク直接遷移
+// Gumroad 決済リンク直接遷移。本人確認が済んでいない場合はマイページの認証へ回す。
 function openCheckout() {
-  const email = document.getElementById('user-email')?.value.trim() ||
-                localStorage.getItem('lj_user_email') ||
-                localStorage.getItem('email') || '';
-
-  // 訪問者の国の価格帯に応じた決済リンクを使う
-  window.open(window.LJCheckout.checkoutUrlFor('premium', email), '_blank');
+  const hint = document.getElementById('user-email')?.value.trim() ||
+               localStorage.getItem('lj_user_email') || '';
+  window.LJCheckoutGuard.start('premium', 'pt', hint);
 }
 
 document.querySelectorAll('.btn-upgrade-premium').forEach(btn => {

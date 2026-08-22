@@ -300,6 +300,7 @@ window.LJ_I18N = {
 </script>
 <script defer src="/js/site-menu.js"></script>
 <script src="/js/checkout-links.js"></script>
+<script src="/js/checkout-guard.js"></script>
 </head>
 <body>
 
@@ -452,7 +453,8 @@ Cargando los datos del mapa de hoy...
 <div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:8px;">Exclusivo para miembros Premium</div>
 <p style="font-size:0.82rem; color:#5A4E48; margin-bottom:15px;">Se necesita un plan de pago para leer la posición completa de los planetas y los ciclos de dasha.</p>
 <p id="paid-sync-notice" style="display:none; font-size:0.82rem; color:#8a3b2f; margin-bottom:15px;">Hemos localizado tu pago, pero todavía no se ha aplicado a esta cuenta de miembro. Comprueba que has iniciado sesión con el mismo correo que usaste en la compra (la actualización puede tardar unos minutos).</p>
-<p data-price-label="premium" style="font-size:0.9rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:12px;"></p>
+<p data-price-label="premium" style="font-size:0.9rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:6px;"></p>
+<p style="font-size:0.78rem; color:#5A4E48; margin-bottom:12px;">No cambies la dirección de correo en la página de pago: es la clave con la que vinculamos tu compra a tu cuenta.</p>
 <button id="btn-upgrade-premium" class="btn-upgrade">Suscribirme a un plan de pago</button>
 </div>
 </div>
@@ -607,6 +609,8 @@ return null;
 function handleCredentialResponse(response) {
 const responsePayload = parseJwt(response.credential);
 if (responsePayload && responsePayload.email) {
+// Google 側で確認済みのアドレスなので、決済の紐づけにそのまま使える
+window.LJCheckoutGuard.markVerified(responsePayload.email);
 completeLogin(responsePayload.email);
 }
 }
@@ -711,6 +715,21 @@ if (savedEmail) showPdfReportLinkIfPurchased(savedEmail);
 
 // 鑑定書ページなど、本人確認セッションが必要なページから ?next= 付きで戻ってきた場合
 const nextTarget = new URLSearchParams(window.location.search).get('next');
+// 購入ボタンから本人確認を経由して戻ってきた場合は、確認後のアドレスで決済へ進む
+if (nextTarget === 'checkout') {
+  const product = new URLSearchParams(window.location.search).get('product') === 'pdf' ? 'pdf' : 'premium';
+  const verifiedEmail = window.LJCheckoutGuard.verifiedEmail();
+  if (verifiedEmail) {
+    window.LJCheckout.ready.then(() => {
+      window.location.href = window.LJCheckout.checkoutUrlFor(product, verifiedEmail);
+    });
+    return;
+  }
+  const hintEmail = new URLSearchParams(window.location.search).get('hint') || savedEmail;
+  requestReauth('checkout:' + product, hintEmail);
+  return;
+}
+
 if (nextTarget === 'pdf-report') {
 if (localStorage.getItem('lj_session')) {
 window.location.replace('/es/pdf-report');
@@ -761,10 +780,13 @@ if (premiumTitle) premiumTitle.style.display = 'block';
 fetchUserDataAndRender(savedEmail);
 });
 
-// Gumroad 決済ページ呼び出し
+// Gumroad 決済ページ呼び出し。未認証なら先にメール認証を求める。
 document.getElementById('btn-upgrade-premium')?.addEventListener('click', () => {
-  const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email') || '';
-  window.open(window.LJCheckout.checkoutUrlFor('premium', email), '_blank');
+  if (window.LJCheckoutGuard.verifiedEmail()) {
+    window.LJCheckoutGuard.start('premium', 'es');
+    return;
+  }
+  requestReauth('checkout:premium', savedEmail);
 });
 
 let currentAuthToken = '';
@@ -839,11 +861,19 @@ if (res.ok) {
 const verified = await res.json().catch(() => ({}));
 // 鑑定書など購入者限定APIの本人確認に使うセッション
 if (verified.session) localStorage.setItem('lj_session', verified.session);
+window.LJCheckoutGuard.markVerified(email);
 completeLogin(email);
 // 認証待ちにしていた操作をそのまま続行する
 if (window.ljPendingAfterAuth === 'pdf-report') {
 window.ljPendingAfterAuth = '';
 window.location.href = '/es/pdf-report';
+}
+if (String(window.ljPendingAfterAuth || '').indexOf('checkout:') === 0) {
+const product = window.ljPendingAfterAuth.slice('checkout:'.length);
+window.ljPendingAfterAuth = '';
+window.LJCheckout.ready.then(() => {
+window.location.href = window.LJCheckout.checkoutUrlFor(product, email);
+});
 }
 } else {
 alert('Ese código de verificación es incorrecto o ha caducado.');
@@ -936,6 +966,7 @@ window.open(GUMROAD_LIBRARY_URL, '_blank');
 function logout() {
 localStorage.removeItem('jyotish_user');
 localStorage.removeItem('lj_session');
+localStorage.removeItem(window.LJCheckoutGuard.verifiedKey);
 localStorage.removeItem('lj_user_email');
 localStorage.removeItem('email');
 setLoggedOutState();
