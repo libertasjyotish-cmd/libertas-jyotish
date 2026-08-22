@@ -559,6 +559,13 @@ return Boolean(result && result.reading_date === getJstDateString());
 // 鑑定は生成に数十秒かかるので、同じ日の結果は一定時間使い回す（日付が変われば必ず再取得）。
 const READING_TTL_MS = 30 * 60 * 1000;
 
+// 決済からの戻り。Gumroad の遷移先に入れるパラメータは購入者に見えるので、意味の読めない c=1 を正とし、
+// 既存リンク（success ページなど）の status=paid も引き続き受け付ける。
+function isPostCheckoutReturn() {
+const query = new URLSearchParams(location.search);
+return query.get('c') === '1' || query.get('status') === 'paid';
+}
+
 // 購入直後はキャッシュ済みの鑑定が free のまま残るので、軽い purchase_status で差分だけ見る。
 // 変化していれば鑑定ごと取り直す（Prokerala を呼ぶのはこのときだけ）。
 async function verifyPurchaseState(email, cachedUser) {
@@ -698,7 +705,7 @@ document.getElementById('birth-setup-box').style.display = 'none';
 
 // 決済直後や手動更新はキャッシュを使わず必ず取り直す。
 const pageQuery = new URLSearchParams(window.location.search);
-const forceRefresh = pageQuery.get('refresh') === '1' || pageQuery.get('status') === 'paid';
+const forceRefresh = pageQuery.get('refresh') === '1' || isPostCheckoutReturn();
 
 if (!forceRefresh && isFreshReading(cachedUser)) {
 console.log("Fresh cached reading reused (within TTL).");
@@ -1153,7 +1160,7 @@ data = { fortune: responseText };
 }
 
 // 決済直後は Webhook による paid 反映に数秒かかることがあるため待ち受ける
-if (new URLSearchParams(location.search).get('status') === 'paid' && data.status !== 'paid' && paidSyncRetry < 5) {
+if (isPostCheckoutReturn() && data.status !== 'paid' && paidSyncRetry < 5) {
 paidSyncRetry++;
 const textElem = document.getElementById('today-transit-text');
 if (textElem) textElem.textContent = `Memeriksa data pembayaran Anda... (${paidSyncRetry}/5)`;
@@ -1162,7 +1169,7 @@ return;
 }
 
 // 決済直後なのに反映されないままリトライを使い切った場合は理由を明示する
-if (new URLSearchParams(location.search).get('status') === 'paid' && data.status !== 'paid' && paidSyncRetry >= 5) {
+if (isPostCheckoutReturn() && data.status !== 'paid' && paidSyncRetry >= 5) {
 const notice = document.getElementById('paid-sync-notice');
 if (notice) notice.style.display = 'block';
 }
