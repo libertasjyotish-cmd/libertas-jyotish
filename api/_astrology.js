@@ -200,7 +200,7 @@ function isAuspiciousGroup(name) {
   return !/inauspicious|dosha/i.test(String(name || ''));
 }
 
-function normalizeYogas(yoga, rajaYoga, terms) {
+function normalizeYogas(yoga, extra, terms) {
   const collect = (payload) => {
     const groups = payload?.data?.yoga_details || payload?.data?.yogas || [];
     const out = [];
@@ -232,7 +232,7 @@ function normalizeYogas(yoga, rajaYoga, terms) {
     return out;
   };
 
-  const merged = [...collect(yoga), ...collect(rajaYoga)].filter((y) => y.hasYoga && y.name);
+  const merged = [...collect(yoga), ...collect(extra)].filter((y) => y.hasYoga && y.name);
   const seen = new Set();
   return merged.filter((y) => {
     const key = String(y.nameEn || y.name).toLowerCase();
@@ -458,13 +458,14 @@ async function fetchReportData({ dob, tob, lat, lon, lang }) {
     ...base, chart_type: type, chart_style: 'north-indian', format: 'svg'
   });
 
+  // raja-yoga（Advanced Raja Yoga）は1回20,000クレジットで鑑定書1冊の消費の95%を占めるため呼ばない。
+  // ラージャヨーガを含む主要ヨーガは kundli/advanced と yoga の yoga_details から得られる。
   const [
-    planetPosition, kundli, rajaYoga, yoga,
+    planetPosition, kundli, yoga,
     sarva, sadeSati, chartD1, chartD9, chartD10
   ] = await Promise.all([
     callEndpoint(token, 'astrology/planet-position', base),
     callEndpoint(token, 'astrology/kundli/advanced', base),
-    callEndpoint(token, 'astrology/raja-yoga', base),
     callEndpoint(token, 'astrology/yoga', base),
     callEndpoint(token, 'astrology/sarvashtakavarga', base),
     callEndpoint(token, 'astrology/sade-sati/advanced', base),
@@ -494,7 +495,7 @@ async function fetchReportData({ dob, tob, lat, lon, lang }) {
     nakshatra: terms.nakshatra(birthNakshatra),
     nakshatraPada: birthDetails?.nakshatra?.pada || null,
     strength: normalizeDignity(planets, terms),
-    yogas: normalizeYogas(yoga, rajaYoga, terms),
+    yogas: normalizeYogas(yoga, kundli, terms),
     ashtakavarga: normalizeAshtakavarga(sarva, asc?.signKey || '', terms),
     dasha,
     sadeSati: normalizeSadeSati(sadeSati, terms),
