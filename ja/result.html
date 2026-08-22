@@ -138,6 +138,7 @@ window.LJ_I18N = {
 </script>
 <script defer src="/js/site-menu.js"></script>
 <script src="/js/checkout-links.js"></script>
+<script src="/js/checkout-guard.js"></script>
 </head>
 <body>
 
@@ -393,8 +394,8 @@ window.LJCheckout.paint();
 const upgradeBtn = document.getElementById('btn-upgrade-preview');
 if (upgradeBtn) {
 upgradeBtn.addEventListener('click', () => {
-const email = (input && input.email) || localStorage.getItem('lj_user_email') || '';
-window.open(window.LJCheckout.checkoutUrlFor('premium', email), '_blank');
+const hint = (input && input.email) || localStorage.getItem('lj_user_email') || '';
+window.LJCheckoutGuard.start('premium', 'ja', hint);
 });
 }
 }
@@ -435,7 +436,8 @@ return `
 <div class="lock-icon">🔒</div>
 <div class="lock-title">有料会員限定コンテンツ</div>
 <p class="lock-note">全天体配置・ダシャー周期・詳細運勢・レメディが開放されます。</p>
-<p data-price-label="premium" style="font-size:0.9rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:12px;"></p>
+<p data-price-label="premium" style="font-size:0.9rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:6px;"></p>
+<p style="font-size:0.78rem; color:#5A4E48; margin-bottom:12px;">決済画面のメールアドレスは、ログイン中のアドレスから変更しないでください。会員の紐づけに使用します。</p>
 <button type="button" id="btn-upgrade-preview" class="btn-primary" style="width:auto; padding:12px 24px;">有料プランに登録する</button>
 <a href="/ja/pdf-purchase" class="btn-secondary" style="width:auto; padding:8px 18px; margin-top:12px;">買い切りの完全鑑定書（PDF）を見る</a>
 </div>

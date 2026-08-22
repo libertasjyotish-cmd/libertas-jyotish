@@ -268,6 +268,7 @@ transition: color 0.3s, border-color 0.3s;
 {{>i18n-globals}}
 <script defer src="/js/site-menu.js"></script>
 <script src="/js/checkout-links.js"></script>
+<script src="/js/checkout-guard.js"></script>
 </head>
 <body>
 
@@ -319,6 +320,7 @@ transition: color 0.3s, border-color 0.3s;
 <div class="paid-member-title">{{t.index.text14}}</div>
 <p class="paid-member-desc">{{t.index.text15}}</p>
 <p class="paid-member-price" data-price-label="premium"></p>
+<p class="paid-member-desc" style="font-size:0.78rem;">{{t.checkout.emailNotice}}</p>
 <button type="button" class="paid-member-btn btn-upgrade-premium">{{t.index.text16}}</button>
 </div>
 
@@ -411,6 +413,7 @@ transition: color 0.3s, border-color 0.3s;
 <div class="paid-member-title">{{t.index.text49}}</div>
 <p class="paid-member-desc">{{t.index.text50}}</p>
 <p class="paid-member-price" data-price-label="premium"></p>
+<p class="paid-member-desc" style="font-size:0.78rem;">{{t.checkout.emailNotice}}</p>
 <button type="button" class="paid-member-btn btn-upgrade-premium">{{t.index.text51}}</button>
 </div>
 </div>
@@ -445,14 +448,11 @@ transition: color 0.3s, border-color 0.3s;
       });
     }
 
-// Gumroad 決済リンク直接遷移
+// Gumroad 決済リンク直接遷移。本人確認が済んでいない場合はマイページの認証へ回す。
 function openCheckout() {
-  const email = document.getElementById('user-email')?.value.trim() ||
-                localStorage.getItem('lj_user_email') ||
-                localStorage.getItem('email') || '';
-
-  // 訪問者の国の価格帯に応じた決済リンクを使う
-  window.open(window.LJCheckout.checkoutUrlFor('premium', email), '_blank');
+  const hint = document.getElementById('user-email')?.value.trim() ||
+               localStorage.getItem('lj_user_email') || '';
+  window.LJCheckoutGuard.start('premium', '{{lang}}', hint);
 }
 
 document.querySelectorAll('.btn-upgrade-premium').forEach(btn => {

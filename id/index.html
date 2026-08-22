@@ -298,6 +298,7 @@ window.LJ_I18N = {
 </script>
 <script defer src="/js/site-menu.js"></script>
 <script src="/js/checkout-links.js"></script>
+<script src="/js/checkout-guard.js"></script>
 </head>
 <body>
 
@@ -349,6 +350,7 @@ window.LJ_I18N = {
 <div class="paid-member-title">🌟 Tentang paket Premium</div>
 <p class="paid-member-desc">Buka seluruh isi pembacaan lengkap: prediksi rinci periode dasha, horoskop yang akurat, remedi yang sesuai, dan banyak lagi.</p>
 <p class="paid-member-price" data-price-label="premium"></p>
+<p class="paid-member-desc" style="font-size:0.78rem;">Jangan mengubah alamat email di halaman pembayaran. Alamat itu dipakai untuk menautkan pembelian dengan akun Anda.</p>
 <button type="button" class="paid-member-btn btn-upgrade-premium">Berlangganan Premium (pendaftaran dan pembayaran)</button>
 </div>
 
@@ -441,6 +443,7 @@ Masukkan data kelahiran Anda dan terimalah peta jalan otentik yang LIBERTAS JYOT
 <div class="paid-member-title">🌟 Berlanggananlah Premium dan buka pembacaan lengkap</div>
 <p class="paid-member-desc">Terima kasih telah membaca sampai di sini. Dapatkan sekarang juga horoskop akurat, prediksi periode dasha, dan remedi pribadi Anda.</p>
 <p class="paid-member-price" data-price-label="premium"></p>
+<p class="paid-member-desc" style="font-size:0.78rem;">Jangan mengubah alamat email di halaman pembayaran. Alamat itu dipakai untuk menautkan pembelian dengan akun Anda.</p>
 <button type="button" class="paid-member-btn btn-upgrade-premium">Berlangganan Premium (pendaftaran dan pembayaran)</button>
 </div>
 </div>
@@ -482,14 +485,11 @@ Masukkan data kelahiran Anda dan terimalah peta jalan otentik yang LIBERTAS JYOT
       });
     }
 
-// Gumroad 決済リンク直接遷移
+// Gumroad 決済リンク直接遷移。本人確認が済んでいない場合はマイページの認証へ回す。
 function openCheckout() {
-  const email = document.getElementById('user-email')?.value.trim() ||
-                localStorage.getItem('lj_user_email') ||
-                localStorage.getItem('email') || '';
-
-  // 訪問者の国の価格帯に応じた決済リンクを使う
-  window.open(window.LJCheckout.checkoutUrlFor('premium', email), '_blank');
+  const hint = document.getElementById('user-email')?.value.trim() ||
+               localStorage.getItem('lj_user_email') || '';
+  window.LJCheckoutGuard.start('premium', 'id', hint);
 }
 
 document.querySelectorAll('.btn-upgrade-premium').forEach(btn => {

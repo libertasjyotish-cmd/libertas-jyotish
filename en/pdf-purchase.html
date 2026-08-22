@@ -194,6 +194,7 @@ window.LJ_I18N = {
 </script>
 <script defer src="/js/site-menu.js"></script>
 <script src="/js/checkout-links.js"></script>
+<script src="/js/checkout-guard.js"></script>
 </head>
 <body>
 
@@ -219,6 +220,7 @@ window.LJ_I18N = {
         </div>
 
         <div id="price-label" style="font-size:1.3rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:15px;"></div>
+        <p style="font-size:0.78rem; color:#5A4E48; margin-bottom:12px;">Do not change the email address on the checkout page. It is the key we use to link your purchase to your account.</p>
         <button id="btn-proceed-checkout" class="btn-purchase">💳 Continue to payment (Gumroad)</button>
         <p id="checkout-note" style="font-size:0.8rem; color:#6A5E58; margin-top:12px;">After purchase you can read it at any time on the report page of this site (you can also save it as a PDF with your browser's print function).</p>
       </div>
@@ -268,11 +270,18 @@ window.LJ_I18N = {
       window.LJCheckout.ready.then(() => {
         document.getElementById('price-label').textContent = pdfPriceLabel();
       });
+      // 本人確認済みのアドレスは会員の紐づけキーなので、ここで変更させない
+      const verifiedEmail = window.LJCheckoutGuard.verifiedEmail();
+      if (verifiedEmail) {
+        const emailField = document.getElementById('user-email');
+        emailField.value = verifiedEmail;
+        emailField.readOnly = true;
+      }
       const savedEmail = localStorage.getItem('lj_user_email') || '';
       const savedBirthdate = localStorage.getItem('lj_user_birthdate') || '';
       const savedBirthplace = localStorage.getItem('lj_user_birthplace') || '';
 
-      if (savedEmail) document.getElementById('user-email').value = savedEmail;
+      if (savedEmail && !verifiedEmail) document.getElementById('user-email').value = savedEmail;
       if (savedBirthdate) document.getElementById('user-birthdate').value = savedBirthdate;
       if (savedBirthplace) document.getElementById('user-birthplace').value = savedBirthplace;
 
@@ -295,6 +304,12 @@ window.LJ_I18N = {
         if (timePart) localStorage.setItem('tob', timePart.slice(0, 5));
         localStorage.setItem('city', birthplace);
 
+        // 未確認のアドレスのまま決済させると購入と会員が紐づかないため、先にメール認証へ回す
+        if (!window.LJCheckoutGuard.verifiedEmail()) {
+          alert('We need to verify your email before checkout. Please enter the verification code on My Page.');
+          window.location.href = '/en/mypage?next=checkout&product=pdf&hint=' + encodeURIComponent(email);
+          return;
+        }
         window.location.href = window.LJCheckout.checkoutUrlFor('pdf', email);
       });
     });

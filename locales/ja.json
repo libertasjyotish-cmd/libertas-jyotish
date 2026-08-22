@@ -465,6 +465,8 @@
     "price.pdfApprox": "買い切り 約{price}（税込・決済画面で確定）",
     "price.checkoutOnly": "金額はご利用の通貨で決済画面に表示されます",
     "mypage.jsCachedAt": "{time} 時点の鑑定結果を表示しています。",
-    "mypage.jsRefresh": "最新に更新する"
+    "mypage.jsRefresh": "最新に更新する",
+    "checkout.emailNotice": "決済画面のメールアドレスは、ログイン中のアドレスから変更しないでください。会員の紐づけに使用します。",
+    "checkout.authRequired": "購入前にメールアドレスの確認が必要です。マイページで認証コードを入力してください。"
   }
 }

@@ -138,6 +138,7 @@ window.LJ_I18N = {
 </script>
 <script defer src="/js/site-menu.js"></script>
 <script src="/js/checkout-links.js"></script>
+<script src="/js/checkout-guard.js"></script>
 </head>
 <body>
 
@@ -393,8 +394,8 @@ window.LJCheckout.paint();
 const upgradeBtn = document.getElementById('btn-upgrade-preview');
 if (upgradeBtn) {
 upgradeBtn.addEventListener('click', () => {
-const email = (input && input.email) || localStorage.getItem('lj_user_email') || '';
-window.open(window.LJCheckout.checkoutUrlFor('premium', email), '_blank');
+const hint = (input && input.email) || localStorage.getItem('lj_user_email') || '';
+window.LJCheckoutGuard.start('premium', 'es', hint);
 });
 }
 }
@@ -435,7 +436,8 @@ return `
 <div class="lock-icon">🔒</div>
 <div class="lock-title">Exclusivo para miembros Premium</div>
 <p class="lock-note">Se desbloquean la posición completa de los planetas, los ciclos de dasha, el panorama detallado y los remedios.</p>
-<p data-price-label="premium" style="font-size:0.9rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:12px;"></p>
+<p data-price-label="premium" style="font-size:0.9rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:6px;"></p>
+<p style="font-size:0.78rem; color:#5A4E48; margin-bottom:12px;">No cambies la dirección de correo en la página de pago: es la clave con la que vinculamos tu compra a tu cuenta.</p>
 <button type="button" id="btn-upgrade-preview" class="btn-primary" style="width:auto; padding:12px 24px;">Suscribirme a un plan de pago</button>
 <a href="/es/pdf-purchase" class="btn-secondary" style="width:auto; padding:8px 18px; margin-top:12px;">Conocer el Informe Vitalicio de pago único (PDF)</a>
 </div>
