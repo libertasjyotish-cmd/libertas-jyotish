@@ -529,6 +529,25 @@ return Boolean(result && result.reading_date === getJstDateString());
 // 鑑定は生成に数十秒かかるので、同じ日の結果は一定時間使い回す（日付が変われば必ず再取得）。
 const READING_TTL_MS = 30 * 60 * 1000;
 
+// 購入直後はキャッシュ済みの鑑定が free のまま残るので、軽い purchase_status で差分だけ見る。
+// 変化していれば鑑定ごと取り直す（Prokerala を呼ぶのはこのときだけ）。
+async function verifyPurchaseState(email, cachedUser) {
+try {
+const res = await fetch(JYOTISH_API_URL, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ action: 'purchase_status', email: email })
+});
+if (!res.ok) return;
+const state = await res.json();
+const cachedStatus = String((cachedUser && cachedUser.status) || 'free');
+if (String(state.status || 'free') === cachedStatus) return;
+const freshness = document.getElementById('reading-freshness');
+if (freshness) freshness.remove();
+fetchUserDataAndRender(email, true);
+} catch (e) {}
+}
+
 function isFreshReading(user) {
 if (!user || !user.lastResult || !isTodaysReading(user.lastResult)) return false;
 const fetchedAt = Number(user.lastFetchedAt || 0);
@@ -655,6 +674,8 @@ if (!forceRefresh && isFreshReading(cachedUser)) {
 console.log("Fresh cached reading reused (within TTL).");
 renderUserData(cachedUser.lastResult);
 showReadingFreshness(cachedUser.lastFetchedAt, savedEmail);
+// キャッシュ表示中に購入が反映されると取り残されるため、課金状態だけは毎回サーバへ確認する
+verifyPurchaseState(savedEmail, cachedUser);
 } else {
 if (cachedUser && cachedUser.lastResult && isTodaysReading(cachedUser.lastResult)) {
 console.log("Cached diagnostic data restored immediately.");
