@@ -107,6 +107,7 @@
     ul { padding-left: 20px; margin-bottom: 15px; }
 
     .site-footer { width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3); padding: 24px 20px; text-align: center; position: relative; z-index: 10; }
+    .footer-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
     .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
     .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
 
@@ -163,21 +164,33 @@ window.LJ_I18N = {
         <tr><th>Costs other than the product price</th><td>Internet connection charges</td></tr>
         <tr><th>Delivery</th><td>Immediately after payment (on a dedicated page or by automated email). The Lifetime Report is provided for viewing and printing on a dedicated page inside the member area (no PDF file is sent).</td></tr>
         <tr><th>Payment method</th><td>Credit card payment (processed by Gumroad). Gumroad charges in USD, converted at the exchange rate at the time of purchase.</td></tr>
-        <tr><th>Returns and cancellation</th><td>Because of the nature of digital content, we cannot accept returns, refunds or cancellations once payment is complete. Monthly memberships can be cancelled at any time from your purchase receipt email or your Gumroad library, and you will not be billed again after cancelling.</td></tr>
+        <tr><th>Returns and cancellation</th><td>Because our products are digital content delivered immediately, we do not offer refunds for change of mind. Cases such as duplicate charges or technical faults are covered by our Refund Policy below; please contact us within 14 days of purchase. Monthly memberships can be cancelled at any time before the next renewal date.</td></tr>
       </table>
 
-      <h2>Terms of Service</h2>
+      <h2 id="refund">Refund Policy</h2>
+      <p>Because our products are digital content delivered immediately, we do not offer refunds for change of mind. We will, however, review requests made within 14 days of purchase in the following cases.</p>
+      <ul>
+        <li>You were charged more than once for the same purchase.</li>
+        <li>A technical fault on our side prevents you from viewing the report you purchased.</li>
+        <li>What was delivered materially differs from what was purchased.</li>
+      </ul>
+      <p>Monthly memberships can be cancelled at any time before the next renewal date and will not renew thereafter. We do not pro-rate or refund the current billing period.</p>
+
+      <h2 id="terms">Terms of Service</h2>
       <p><strong>Article 1 (Scope)</strong><br>These terms set out the conditions of use for all content provided by Libertas Jyotish.</p>
       <p><strong>Article 2 (Disclaimer)</strong><br>Readings and advice based on Vedic astrology do not guarantee future events or results.</p>
       <p><strong>Article 3 (Prohibited acts)</strong><br>Reproduction, resale and secondary use of our content without permission are strictly prohibited.</p>
 
-      <h2>Privacy Policy</h2>
+      <h2 id="privacy">Privacy Policy</h2>
       <p>Personal information we collect is used only to generate readings automatically, to send email and for customer support.</p>
     </div>
   </section>
 
   <footer class="site-footer">
-    <div class="footer-links"><a href="/en/legal">Legal notice, Terms of Service and Privacy Policy</a></div>
+    <div class="footer-links"><a href="/en/legal">Legal notice</a>
+<a href="/en/legal#terms">Terms of Service</a>
+<a href="/en/legal#privacy">Privacy Policy</a>
+<a href="/en/legal#refund">Refund Policy</a></div>
     <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
   </footer>
 

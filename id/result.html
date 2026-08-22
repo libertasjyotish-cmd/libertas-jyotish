@@ -106,7 +106,8 @@ border-radius: 10px; padding: 18px 16px; text-align: center;
 .lock-overlay .lock-note { font-size: 0.82rem; color: #5A4E48; margin-bottom: 15px; }
 
 .site-footer { width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3); padding: 24px 20px; text-align: center; position: relative; z-index: 10; }
-.footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
+.footer-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+    .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
 .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
 </style>
 <link rel="stylesheet" href="/css/site-menu.css">
@@ -160,7 +161,10 @@ window.LJ_I18N = {
 </section>
 
 <footer class="site-footer">
-<div class="footer-links"><a href="/id/legal">Informasi hukum, Syarat Penggunaan, dan Kebijakan Privasi</a></div>
+<div class="footer-links"><a href="/id/legal">Informasi hukum</a>
+<a href="/id/legal#terms">Syarat Penggunaan</a>
+<a href="/id/legal#privacy">Kebijakan Privasi</a>
+<a href="/id/legal#refund">Kebijakan Pengembalian Dana</a></div>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 

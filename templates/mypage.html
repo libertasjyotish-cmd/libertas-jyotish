@@ -243,7 +243,8 @@ font-size: 0.75rem; font-weight: 600; color: var(--color-gold-dark);
 width: 100%; background: #081216; border-top: 1px solid rgba(139, 107, 27, 0.3);
 padding: 24px 20px; text-align: center; position: relative; z-index: 10;
 }
-.footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
+.footer-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+    .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
 .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
 
 @media (max-width: 640px) {
@@ -433,7 +434,7 @@ data-width="320">
 </section>
 
 <footer class="site-footer">
-<div class="footer-links"><a href="/{{lang}}/legal">{{t.mypage.text39}}</a></div>
+<div class="footer-links">{{>legal-links}}</div>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 

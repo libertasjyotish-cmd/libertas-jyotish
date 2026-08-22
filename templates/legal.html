@@ -101,6 +101,7 @@
     ul { padding-left: 20px; margin-bottom: 15px; }
 
     .site-footer { width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3); padding: 24px 20px; text-align: center; position: relative; z-index: 10; }
+    .footer-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
     .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
     .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
 
@@ -136,18 +137,27 @@
         <tr><th>{{t.legal.text20}}</th><td>{{t.legal.text21}}</td></tr>
       </table>
 
-      <h2>{{t.legal.text22}}</h2>
+      <h2 id="refund">{{t.legal.text32}}</h2>
+      <p>{{t.legal.text33}}</p>
+      <ul>
+        <li>{{t.legal.text34}}</li>
+        <li>{{t.legal.text35}}</li>
+        <li>{{t.legal.text36}}</li>
+      </ul>
+      <p>{{t.legal.text37}}</p>
+
+      <h2 id="terms">{{t.legal.text22}}</h2>
       <p><strong>{{t.legal.text23}}</strong><br>{{t.legal.text24}}</p>
       <p><strong>{{t.legal.text25}}</strong><br>{{t.legal.text26}}</p>
       <p><strong>{{t.legal.text27}}</strong><br>{{t.legal.text28}}</p>
 
-      <h2>{{t.legal.text29}}</h2>
+      <h2 id="privacy">{{t.legal.text29}}</h2>
       <p>{{t.legal.text30}}</p>
     </div>
   </section>
 
   <footer class="site-footer">
-    <div class="footer-links"><a href="/{{lang}}/legal">{{t.legal.text31}}</a></div>
+    <div class="footer-links">{{>legal-links}}</div>
     <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
   </footer>
 
