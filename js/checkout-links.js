@@ -14,7 +14,7 @@
     approx: null
   };
   var CACHE_KEY = 'lj_checkout_links';
-  var SBL_SRC = 'https://sbl.onfastspring.com/sbl/1.0.3/fastspring-builder.min.js';
+  var SBL_SRC = 'https://sbl.onfastspring.com/sbl/1.0.7/fastspring-builder.min.js';
   var resolved = FALLBACK;
 
   function apply(data) {
