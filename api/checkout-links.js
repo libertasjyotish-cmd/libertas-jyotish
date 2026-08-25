@@ -83,8 +83,8 @@ function fastspringPayload(country) {
   const storefront = process.env.FASTSPRING_STOREFRONT || '';
   const products = {
     premium: process.env.FASTSPRING_PATH_PREMIUM || 'membership-monthly',
-    premium_annual: process.env.FASTSPRING_PATH_PREMIUM_ANNUAL || 'membership-annual',
-    pdf: process.env.FASTSPRING_PATH_PDF || 'complete-reading'
+    premium_annual: process.env.FASTSPRING_PATH_PREMIUM_ANNUAL || 'libertas-jyotish-annual-membership',
+    pdf: process.env.FASTSPRING_PATH_PDF || 'libertas-jyotish-complete-lifetime-reading'
   };
   const currency = (country && fastspring.countries[country]) || fastspring.defaultCurrency;
   const priced = fastspring.prices[currency] || null;

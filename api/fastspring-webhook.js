@@ -7,10 +7,10 @@
 const crypto = require('crypto');
 const { setMemberStatus, setPdfPurchased, revokePdfPurchase, downgradeMember } = require('./_sheets');
 
-const REPORT_PATH = process.env.FASTSPRING_PATH_PDF || 'complete-reading';
+const REPORT_PATH = process.env.FASTSPRING_PATH_PDF || 'libertas-jyotish-complete-lifetime-reading';
 const MEMBERSHIP_PATHS = [
   process.env.FASTSPRING_PATH_PREMIUM || 'membership-monthly',
-  process.env.FASTSPRING_PATH_PREMIUM_ANNUAL || 'membership-annual'
+  process.env.FASTSPRING_PATH_PREMIUM_ANNUAL || 'libertas-jyotish-annual-membership'
 ];
 
 function timingSafeEqualStr(a, b) {
