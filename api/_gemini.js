@@ -47,22 +47,26 @@ async function listGeminiModels(apiKey) {
 
 // 利用可能なモデルを順に試して JSON を1本生成する。失敗理由は秘密情報を含まない区分だけ返す。
 // レート制限（429）や過負荷（503）は同じモデルで待ってもすぐには明けないので、待たずに次のモデルへ移る。
-// 全モデルを1周しても未生成で、かつ時間が余っているときだけ 2 周目を試す。
+// 全モデルを1周しても未生成なら、残り時間をすべて使って主モデルをもう一度試す。
 // deadline（エポックms）を渡すと、その時刻を超える再試行は打ち切る。実行時間の上限がある
 // サーバーレス環境で、応答を返せないまま強制終了（504）になるのを防ぐため。
 async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadline) {
   let reason = 'gemini_error';
-  const attempts = [...models, ...models];
   const MIN_ATTEMPT_MS = 8000;
-  // 生成は正常なら数秒で返る。長引くのは一時的な不調なので、待たずに次（や同じモデルの再試行）へ回す。
-  const MAX_ATTEMPT_MS = 12000;
+  // 生成は正常なら数秒で返る。長引くのは一時的な不調なので、待たずに切り上げて再試行する。
+  // 代替モデルは実測で成功率が低いので短く切り、最後に主モデルへ残り時間をすべて使って戻る。
+  const plan = [
+    { model: models[0], cap: 12000 },
+    ...models.slice(1).map((m) => ({ model: m, cap: MIN_ATTEMPT_MS })),
+    { model: models[0], cap: null }
+  ];
   // どのモデルで何秒使い、どう失敗したかを応答から追えるようにする。
   const log = [];
 
   const dead = new Set();
-  for (let i = 0; i < attempts.length; i++) {
-    const model = attempts[i];
-    if (dead.has(model)) continue;
+  for (const step of plan) {
+    const model = step.model;
+    if (!model || dead.has(model)) continue;
     const attemptStartedAt = Date.now();
     const note = (outcome) => log.push(`${model}:${outcome}:${Math.round((Date.now() - attemptStartedAt) / 100) / 10}s`);
     let attemptTimeoutMs = timeoutMs;
@@ -73,8 +77,7 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
         console.warn('Gemini generation aborted: not enough time left before the deadline.');
         break;
       }
-      // 1回の待ちで時間を使い切らず、遅い試行に見切りをつけて次へ進む。
-      attemptTimeoutMs = Math.min(timeoutMs, MAX_ATTEMPT_MS, remaining);
+      attemptTimeoutMs = step.cap ? Math.min(timeoutMs, step.cap, remaining) : Math.min(timeoutMs, remaining);
     }
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
