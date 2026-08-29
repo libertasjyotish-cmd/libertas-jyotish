@@ -54,8 +54,8 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
   let reason = 'gemini_error';
   const attempts = [...models, ...models];
   const MIN_ATTEMPT_MS = 8000;
-  // 1モデルの待ちが長引くと後続を試す時間が無くなる。未試行が残る間は上限を短く抑える。
-  const MAX_UNTRIED_ATTEMPT_MS = 15000;
+  // 生成は正常なら数秒で返る。長引くのは一時的な不調なので、待たずに次（や同じモデルの再試行）へ回す。
+  const MAX_ATTEMPT_MS = 12000;
   // どのモデルで何秒使い、どう失敗したかを応答から追えるようにする。
   const log = [];
 
@@ -73,9 +73,8 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
         console.warn('Gemini generation aborted: not enough time left before the deadline.');
         break;
       }
-      // 未試行のモデルが残っている間は時間を使い切らず、遅いモデルに見切りをつけて次へ進む。
-      const untried = i < models.length - 1;
-      attemptTimeoutMs = Math.min(timeoutMs, untried ? Math.min(MAX_UNTRIED_ATTEMPT_MS, Math.max(MIN_ATTEMPT_MS, Math.floor(remaining / 2))) : remaining);
+      // 1回の待ちで時間を使い切らず、遅い試行に見切りをつけて次へ進む。
+      attemptTimeoutMs = Math.min(timeoutMs, MAX_ATTEMPT_MS, remaining);
     }
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
