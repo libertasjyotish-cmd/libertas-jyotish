@@ -95,7 +95,13 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
   }
 }
 
+// Vercel の実行時間上限（vercel.json: 60秒）。ここに達すると応答を返せないまま 504 になるため、
+// 生成の打ち切りと保存の後回しはこの予算内で判断する。
+const FUNCTION_BUDGET_MS = 52000;
+
 module.exports = async function handler(req, res) {
+  const startedAt = Date.now();
+  const elapsed = () => Date.now() - startedAt;
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -266,6 +272,7 @@ module.exports = async function handler(req, res) {
       } catch (sheetErr) {
         console.error("Sheets profile sync failed, falling back to memory:", sheetErr);
       }
+      const tSheets = elapsed();
 
       // '1970-01-01' は旧システムのダミー値。実在の出生地である '東京都' は弾かない。
       if (!finalDob || finalDob === '1970-01-01' || !finalCity) {
@@ -289,6 +296,7 @@ module.exports = async function handler(req, res) {
         if (!geo) {
           return res.status(400).json({ error: 'unknown_birthplace', reason: 'geocode_failed' });
         }
+        const tGeocode = elapsed();
         const lat = geo.lat;
         const lon = geo.lon;
 
@@ -349,6 +357,7 @@ module.exports = async function handler(req, res) {
           fallbackReason = fallbackReason || 'prokerala_error';
           console.error("Prokerala API failed, trigger fallback content:", proErr);
         }
+        const tProkerala = elapsed();
 
         // (C) Gemini API 呼び出し
         let cleanJsonResult = null;
@@ -370,8 +379,8 @@ module.exports = async function handler(req, res) {
                 // 有料は出力量が多く1回の生成が長い。基本鑑定とプレミアム詳細を別プロンプトに割って
                 // 同時に生成することで、実行時間を最長のセクション1本分に抑える。
                 const [base, premium] = await Promise.all([
-                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'base'), 40000),
-                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'premium'), 40000)
+                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'base'), 40000, startedAt + FUNCTION_BUDGET_MS),
+                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'premium'), 40000, startedAt + FUNCTION_BUDGET_MS)
                 ]);
 
                 if (base.json) {
@@ -386,7 +395,7 @@ module.exports = async function handler(req, res) {
                   fallbackReason = base.reason || 'gemini_error';
                 }
               } else {
-                const result = await generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, false, finalLang), 25000);
+                const result = await generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, false, finalLang), 25000, startedAt + FUNCTION_BUDGET_MS);
                 if (result.json) {
                   cleanJsonResult = result.json;
                   cleanJsonResult.generated_by = result.model;
@@ -434,14 +443,23 @@ module.exports = async function handler(req, res) {
         cleanJsonResult.birth_key = birthKey;
         cleanJsonResult.generated_at = toJstIsoString(new Date());
         cleanJsonResult.reading_date = cleanJsonResult.generated_at.slice(0, 10);
+        // どの外部APIで時間を使ったかを応答からも切り分けられるようにする（秒）
+        const tGemini = elapsed();
+        cleanJsonResult.timings = {
+          sheets: Math.round(tSheets / 100) / 10,
+          geocode: Math.round((tGeocode - tSheets) / 100) / 10,
+          prokerala: Math.round((tProkerala - tGeocode) / 100) / 10,
+          gemini: Math.round((tGemini - tProkerala) / 100) / 10
+        };
+        console.log('jyotish timings(s):', JSON.stringify(cleanJsonResult.timings));
 
         // Sheetsへの保存処理（落ちても気にせず継続）。マイページの fetch_profile も保存して当日分を固定する。
+        // 残り時間が乏しいときに保存を待つと応答ごと打ち切られるため、その場合は待たずに返す。
         if (finalEmail) {
-          try {
-            await saveProfileToSheets(finalEmail, finalStatus, finalDob, finalTob, finalCity, cleanJsonResult, finalLang);
-          } catch (sheetSaveErr) {
-            console.error("Google Sheets save error, skipped:", sheetSaveErr);
-          }
+          const save = saveProfileToSheets(finalEmail, finalStatus, finalDob, finalTob, finalCity, cleanJsonResult, finalLang)
+            .catch((sheetSaveErr) => console.error("Google Sheets save error, skipped:", sheetSaveErr));
+          if (elapsed() < FUNCTION_BUDGET_MS) await save;
+          else console.warn('Sheets save not awaited: running out of time budget.');
         }
 
         return res.status(200).json(cleanJsonResult);
