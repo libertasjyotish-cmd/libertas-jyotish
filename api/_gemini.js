@@ -11,7 +11,7 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
 
 // 応答が速いことを実測で確認できている世代を優先する。新しい世代ほど既定の思考時間が長く、
 // 鑑定文1本に1分近くかかることがあるため、名前の新しさでは並べない。
-const PREFERRED = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest'];
+const PREFERRED = ['gemini-3.6-flash', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest'];
 const MODEL_CACHE_MS = 6 * 60 * 60 * 1000;
 let modelCache = { at: 0, models: null };
 
@@ -54,6 +54,8 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
   let reason = 'gemini_error';
   const attempts = [...models, ...models];
   const MIN_ATTEMPT_MS = 8000;
+  // 1モデルの待ちが長引くと後続を試す時間が無くなる。未試行が残る間は上限を短く抑える。
+  const MAX_UNTRIED_ATTEMPT_MS = 15000;
   // どのモデルで何秒使い、どう失敗したかを応答から追えるようにする。
   const log = [];
 
@@ -73,7 +75,7 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
       }
       // 未試行のモデルが残っている間は時間を使い切らず、遅いモデルに見切りをつけて次へ進む。
       const untried = i < models.length - 1;
-      attemptTimeoutMs = Math.min(timeoutMs, untried ? Math.max(MIN_ATTEMPT_MS, Math.floor(remaining / 2)) : remaining);
+      attemptTimeoutMs = Math.min(timeoutMs, untried ? Math.min(MAX_UNTRIED_ATTEMPT_MS, Math.max(MIN_ATTEMPT_MS, Math.floor(remaining / 2))) : remaining);
     }
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
