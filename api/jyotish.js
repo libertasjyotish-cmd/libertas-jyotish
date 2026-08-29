@@ -395,7 +395,7 @@ module.exports = async function handler(req, res) {
                   fallbackReason = base.reason || 'gemini_error';
                 }
               } else {
-                const result = await generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, false, finalLang), 25000, startedAt + FUNCTION_BUDGET_MS);
+                const result = await generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, false, finalLang), 45000, startedAt + FUNCTION_BUDGET_MS);
                 if (result.json) {
                   cleanJsonResult = result.json;
                   cleanJsonResult.generated_by = result.model;

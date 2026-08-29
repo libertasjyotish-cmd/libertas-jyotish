@@ -45,20 +45,19 @@ async function listGeminiModels(apiKey) {
   }
 }
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 // 利用可能なモデルを順に試して JSON を1本生成する。失敗理由は秘密情報を含まない区分だけ返す。
-// 過負荷（429/503）は一時的なので、同じモデルで数回待ってから次のモデルに移る。
+// レート制限（429）や過負荷（503）は同じモデルで待ってもすぐには明けないので、待たずに次のモデルへ移る。
+// 全モデルを1周しても未生成で、かつ時間が余っているときだけ 2 周目を試す。
 // deadline（エポックms）を渡すと、その時刻を超える再試行は打ち切る。実行時間の上限がある
 // サーバーレス環境で、応答を返せないまま強制終了（504）になるのを防ぐため。
 async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadline) {
   let reason = 'gemini_error';
-  const attempts = [];
-  for (const model of models) attempts.push(model, model);
+  const attempts = [...models, ...models];
   const MIN_ATTEMPT_MS = 8000;
 
   const dead = new Set();
-  for (const model of attempts) {
+  for (let i = 0; i < attempts.length; i++) {
+    const model = attempts[i];
     if (dead.has(model)) continue;
     let attemptTimeoutMs = timeoutMs;
     if (deadline) {
@@ -68,7 +67,9 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
         console.warn('Gemini generation aborted: not enough time left before the deadline.');
         break;
       }
-      attemptTimeoutMs = Math.min(timeoutMs, remaining);
+      // 未試行のモデルが残っている間は時間を使い切らず、遅いモデルに見切りをつけて次へ進む。
+      const untried = i < models.length - 1;
+      attemptTimeoutMs = Math.min(timeoutMs, untried ? Math.max(MIN_ATTEMPT_MS, Math.floor(remaining / 2)) : remaining);
     }
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
@@ -98,7 +99,6 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
         reason = `gemini_${res.status}`;
         console.error(`Gemini model ${model} failed with status ${res.status}`);
         if (res.status === 404) dead.add(model);
-        else if (res.status === 429 || res.status >= 500) await sleep(1500);
         continue;
       }
 
