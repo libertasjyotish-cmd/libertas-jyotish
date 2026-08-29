@@ -52,12 +52,15 @@ async function listGeminiModels(apiKey) {
 // サーバーレス環境で、応答を返せないまま強制終了（504）になるのを防ぐため。
 async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadline) {
   let reason = 'gemini_error';
-  const MIN_ATTEMPT_MS = 8000;
+  const MIN_ATTEMPT_MS = 6000;
   // 生成は正常なら数秒で返る。長引くのは一時的な不調なので、待たずに切り上げて再試行する。
-  // 代替モデルは実測で成功率が低いので短く切り、最後に主モデルへ残り時間をすべて使って戻る。
+  // 代替モデルは実測で成功率が低いので短く切り、残りは主モデルの短い再試行を重ねる。
+  // 応答が止まった接続は待っても回復しないため、長く待つより試行回数を稼いだ方が成功率が高い。
   const plan = [
     { model: models[0], cap: 12000 },
     ...models.slice(1).map((m) => ({ model: m, cap: MIN_ATTEMPT_MS })),
+    { model: models[0], cap: 12000 },
+    { model: models[0], cap: 12000 },
     { model: models[0], cap: null }
   ];
   // どのモデルで何秒使い、どう失敗したかを応答から追えるようにする。
