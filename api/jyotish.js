@@ -8,9 +8,10 @@ const { nakshatraFromLongitude } = require('./_astrology');
 const { geocodeBirthPlace } = require('./_geocode');
 
 // 天体計算または鑑定文の生成に失敗したときは、根拠のない文面を返さず再試行を促す。
-function sendReadingUnavailable(res, reason, detail) {
+function sendReadingUnavailable(res, reason, detail, geminiMeta) {
   const body = { error: 'reading_unavailable', reason: reason || 'unknown' };
   if (detail) body.detail = detail;
+  if (geminiMeta) body.gemini_meta = geminiMeta;
   return res.status(503).json(body);
 }
 
@@ -306,6 +307,7 @@ module.exports = async function handler(req, res) {
         // 秘密情報を含まない障害区分。フォールバック時にどの外部APIが落ちたかを判別するために返す。
         let fallbackReason = null;
         let fallbackDetail = null;
+        let geminiMeta = null;
         try {
           const prokeralaClientId = process.env.PROKERALA_CLIENT_ID;
           const prokeralaClientSecret = process.env.PROKERALA_CLIENT_SECRET;
@@ -402,6 +404,7 @@ module.exports = async function handler(req, res) {
                   cleanJsonResult.gemini_meta = result.meta;
                 } else {
                   fallbackReason = result.reason || 'gemini_error';
+                  geminiMeta = result.meta;
                 }
               }
             }
@@ -419,7 +422,7 @@ module.exports = async function handler(req, res) {
             gemini_key: Boolean(process.env.GEMINI_API_KEY),
             reason: fallbackReason || 'unknown'
           });
-          return sendReadingUnavailable(res, fallbackReason, fallbackDetail);
+          return sendReadingUnavailable(res, fallbackReason, fallbackDetail, geminiMeta);
         } else if (fallbackReason) {
           // 基本鑑定は生成できたがプレミアム詳細だけ落ちた場合など、部分失敗も見えるようにする
           cleanJsonResult.partial_reason = fallbackReason;
