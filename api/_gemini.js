@@ -54,11 +54,15 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
   let reason = 'gemini_error';
   const attempts = [...models, ...models];
   const MIN_ATTEMPT_MS = 8000;
+  // どのモデルで何秒使い、どう失敗したかを応答から追えるようにする。
+  const log = [];
 
   const dead = new Set();
   for (let i = 0; i < attempts.length; i++) {
     const model = attempts[i];
     if (dead.has(model)) continue;
+    const attemptStartedAt = Date.now();
+    const note = (outcome) => log.push(`${model}:${outcome}:${Math.round((Date.now() - attemptStartedAt) / 100) / 10}s`);
     let attemptTimeoutMs = timeoutMs;
     if (deadline) {
       const remaining = deadline - Date.now();
@@ -105,6 +109,7 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
         reason = `gemini_${res.status}`;
         console.error(`Gemini model ${model} failed with status ${res.status}`);
         if (res.status === 404) dead.add(model);
+        note(String(res.status));
         continue;
       }
 
@@ -112,8 +117,10 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
       const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
       if (!rawText) {
         reason = 'gemini_empty_response';
+        note('empty');
         continue;
       }
+      note('ok');
       return {
         json: JSON.parse(rawText.trim()),
         model,
@@ -122,15 +129,17 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
           thinking: usedConfig?.thinkingConfig ? JSON.stringify(usedConfig.thinkingConfig) : 'default',
           thought_tokens: data.usageMetadata?.thoughtsTokenCount ?? null,
           output_tokens: data.usageMetadata?.candidatesTokenCount ?? null,
-          candidates: models
+          candidates: models,
+          attempts: log
         }
       };
     } catch (err) {
       reason = err?.name === 'AbortError' ? 'gemini_timeout' : 'gemini_error';
       console.error(`Gemini model ${model} error:`, err?.message);
+      note(reason === 'gemini_timeout' ? 'timeout' : 'error');
     }
   }
-  return { json: null, model: null, reason };
+  return { json: null, model: null, reason, meta: { candidates: models, attempts: log } };
 }
 
 module.exports = { listGeminiModels, generateWithGemini };
