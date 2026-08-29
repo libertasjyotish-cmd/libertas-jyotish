@@ -76,8 +76,12 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
     // 思考（thinking）が既定で有効なモデルは応答が数十秒に伸びる。鑑定文の生成に長考は不要なので最小化する。
     // 設定名はモデル世代で異なり、未対応のキーを送ると 400 になるため、その場合は無指定で再試行する。
     const thinkingConfigs = [];
-    if (/^gemini-3/.test(model)) thinkingConfigs.push({ thinkingConfig: { thinkingLevel: 'low' } });
-    else if (/^gemini-2\.5/.test(model)) thinkingConfigs.push({ thinkingConfig: { thinkingBudget: 0 } });
+    if (/^gemini-3/.test(model)) {
+      thinkingConfigs.push({ thinkingConfig: { thinkingLevel: 'minimal' } });
+      thinkingConfigs.push({ thinkingConfig: { thinkingLevel: 'low' } });
+    } else if (/^gemini-2\.5/.test(model)) {
+      thinkingConfigs.push({ thinkingConfig: { thinkingBudget: 0 } });
+    }
     thinkingConfigs.push({});
 
     try {
