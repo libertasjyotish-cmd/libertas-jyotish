@@ -399,6 +399,7 @@ module.exports = async function handler(req, res) {
                 if (result.json) {
                   cleanJsonResult = result.json;
                   cleanJsonResult.generated_by = result.model;
+                  cleanJsonResult.gemini_meta = result.meta;
                 } else {
                   fallbackReason = result.reason || 'gemini_error';
                 }

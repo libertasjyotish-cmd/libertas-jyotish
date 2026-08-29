@@ -86,7 +86,9 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
 
     try {
       let res = null;
+      let usedConfig = null;
       for (const extraConfig of thinkingConfigs) {
+        usedConfig = extraConfig;
         res = await fetchWithTimeout(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -112,7 +114,16 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
         reason = 'gemini_empty_response';
         continue;
       }
-      return { json: JSON.parse(rawText.trim()), model, reason: null };
+      return {
+        json: JSON.parse(rawText.trim()),
+        model,
+        reason: null,
+        meta: {
+          thinking: usedConfig?.thinkingConfig ? JSON.stringify(usedConfig.thinkingConfig) : 'default',
+          thought_tokens: data.usageMetadata?.thoughtsTokenCount ?? null,
+          output_tokens: data.usageMetadata?.candidatesTokenCount ?? null
+        }
+      };
     } catch (err) {
       reason = err?.name === 'AbortError' ? 'gemini_timeout' : 'gemini_error';
       console.error(`Gemini model ${model} error:`, err?.message);
