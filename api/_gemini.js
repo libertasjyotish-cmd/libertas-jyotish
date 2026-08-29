@@ -121,7 +121,8 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
         meta: {
           thinking: usedConfig?.thinkingConfig ? JSON.stringify(usedConfig.thinkingConfig) : 'default',
           thought_tokens: data.usageMetadata?.thoughtsTokenCount ?? null,
-          output_tokens: data.usageMetadata?.candidatesTokenCount ?? null
+          output_tokens: data.usageMetadata?.candidatesTokenCount ?? null,
+          candidates: models
         }
       };
     } catch (err) {
