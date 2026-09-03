@@ -293,7 +293,9 @@ window.LJ_I18N = {
   price: {
     premium: '{price} / mês (impostos incl.)',
     pdf: '{price} pagamento único (impostos incl.)',
+    premium_annual: '{price} / ano (impostos incl.)',
     premiumApprox: 'Cerca de {price} / mês (impostos incl.) — valor final exibido no checkout',
+    premium_annualApprox: 'Cerca de {price} / ano (impostos incl.) — valor final exibido no checkout',
     pdfApprox: 'Cerca de {price} pagamento único (impostos incl.) — valor final exibido no checkout',
     checkoutOnly: 'O valor na sua moeda local é exibido no checkout'
   }
@@ -546,7 +548,7 @@ box.style.display = 'block';
 })();
 
 const JYOTISH_API_URL = "/api/jyotish";
-// 支払い方法の変更・解約は Gumroad の購入者向け画面で行う
+// 支払い方法の変更・解約は決済事業者の購入者向け画面で行う
 const GUMROAD_LIBRARY_URL = "https://app.gumroad.com/library";
 // 決済リンクは訪問者の国の価格帯に応じて /js/checkout-links.js が解決する
 
@@ -749,11 +751,12 @@ if (savedEmail) showPdfReportLinkIfPurchased(savedEmail);
 const nextTarget = new URLSearchParams(window.location.search).get('next');
 // 購入ボタンから本人確認を経由して戻ってきた場合は、確認後のアドレスで決済へ進む
 if (nextTarget === 'checkout') {
-  const product = new URLSearchParams(window.location.search).get('product') === 'pdf' ? 'pdf' : 'premium';
+  const requested = new URLSearchParams(window.location.search).get('product');
+  const product = ['pdf', 'premium_annual'].includes(requested) ? requested : 'premium';
   const verifiedEmail = window.LJCheckoutGuard.verifiedEmail();
   if (verifiedEmail) {
     window.LJCheckout.ready.then(() => {
-      window.location.href = window.LJCheckout.checkoutUrlFor(product, verifiedEmail);
+      window.LJCheckout.openCheckout(product, verifiedEmail);
     });
     return;
   }
@@ -904,7 +907,7 @@ if (String(window.ljPendingAfterAuth || '').indexOf('checkout:') === 0) {
 const product = window.ljPendingAfterAuth.slice('checkout:'.length);
 window.ljPendingAfterAuth = '';
 window.LJCheckout.ready.then(() => {
-window.location.href = window.LJCheckout.checkoutUrlFor(product, email);
+window.LJCheckout.openCheckout(product, email);
 });
 }
 } else {
@@ -989,10 +992,14 @@ console.error('purchase status check failed', e);
 }
 }
 
-// Gumroad の購入者向け画面へ案内する（支払い方法の変更・サブスク解約）
+// 決済事業者の購入者向け画面へ案内する（支払い方法の変更・サブスク解約）
 function openBillingPortal() {
-alert('Vamos abrir sua página de compras da Gumroad. Os pagamentos são gerenciados pela Gumroad, então o login é na Gumroad, e não com a senha deste site. Informe o e-mail usado no pagamento e a Gumroad enviará um link de acesso, sem precisar de senha. Depois de entrar, você pode cancelar a assinatura ou alterar a forma de pagamento.');
-window.open(GUMROAD_LIBRARY_URL, '_blank');
+window.LJCheckout.ready.then(() => {
+const fastspring = window.LJCheckout.provider() === 'fastspring';
+alert(fastspring ? 'Abrindo a página de compras do nosso provedor de pagamentos (FastSpring). Os pagamentos são gerenciados pela FastSpring, então o login é feito lá, e não com a senha deste site. Use o link que a FastSpring envia para o e-mail usado na compra. Após entrar, você pode cancelar a assinatura ou alterar a forma de pagamento.' : 'Vamos abrir sua página de compras da Gumroad. Os pagamentos são gerenciados pela Gumroad, então o login é na Gumroad, e não com a senha deste site. Informe o e-mail usado no pagamento e a Gumroad enviará um link de acesso, sem precisar de senha. Depois de entrar, você pode cancelar a assinatura ou alterar a forma de pagamento.');
+const accountUrl = window.LJCheckout.accountUrl();
+window.open(fastspring && accountUrl ? accountUrl : GUMROAD_LIBRARY_URL, '_blank');
+});
 }
 
 function logout() {

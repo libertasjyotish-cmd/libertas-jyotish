@@ -22,11 +22,11 @@
       if (email) localStorage.setItem(VERIFIED_KEY, email);
     },
     // 決済へ進む。未確認ならマイページの認証へ送り、認証後に決済を続行させる。
-    // product は 'premium' か 'pdf'。hint は認証画面に埋める入力済みのアドレス。
+    // product は 'premium'、'premium_annual'、'pdf'。hint は認証画面に埋める入力済みのアドレス。
     start: function (product, lang, hint) {
       var email = window.LJCheckoutGuard.verifiedEmail();
       if (email) {
-        window.open(window.LJCheckout.checkoutUrlFor(product, email), '_blank');
+        window.LJCheckout.openCheckout(product, email, { newTab: true });
         return true;
       }
       var url = '/' + lang + '/mypage?next=checkout&product=' + encodeURIComponent(product);
