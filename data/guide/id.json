@@ -1,0 +1,271 @@
+{
+  "note": "Ditulis untuk orang yang mencari kata kunci gabungan seputar astrologi Veda / India (Jyotish). Hindari ramalan yang bersifat pasti dan apa pun yang terbaca sebagai nasihat medis, hukum, atau keuangan.",
+  "published": false,
+  "linked": true,
+  "ui": {
+    "crumbHome": "Beranda",
+    "crumbHub": "Panduan",
+    "breadcrumbLabel": "Jejak navigasi",
+    "footerLegal": "Informasi hukum",
+    "footerTerms": "Ketentuan layanan",
+    "footerPrivacy": "Kebijakan privasi",
+    "footerRefund": "Kebijakan pengembalian dana",
+    "ctaTitle": "Periksa pada bagan Anda sendiri",
+    "ctaBody": "Masukkan tanggal, jam, dan tempat lahir Anda, dan kami menghitung zodiak Bulan, Nakshatra, ascendant, dan Dasha Anda saat ini secara gratis, lengkap dengan pembacaan tertulis.",
+    "ctaButton": "Mulai pembacaan gratis",
+    "relatedHeading": "Panduan lainnya",
+    "disclaimer": "Artikel ini memperkenalkan gagasan umum astrologi Veda. Artikel ini tidak menjamin peristiwa di masa depan dan bukan pengganti nasihat medis, hukum, atau keuangan."
+  },
+  "index": {
+    "title": "Panduan Astrologi Veda | Libertas Jyotish",
+    "description": "Panduan astrologi Veda (India): dasar-dasar Jyotish, apa yang ditunjukkan pembacaan gratis, pernikahan dan kecocokan, karier dan keuangan, cara membaca bagan Anda, periode Dasha, dan 27 Nakshatra.",
+    "h1": "Panduan Astrologi Veda",
+    "lead": "Artikel berbahasa sederhana tentang cara kerja astrologi Veda (Jyotish), ditulis untuk pembaca yang baru pertama kali mengenalnya. Mulailah dari topik yang paling penting bagi Anda.",
+    "more": "Semua panduan",
+    "menuLabel": "Semua panduan",
+    "introSlug": "indian-astrology"
+  },
+  "articles": [
+    {
+      "slug": "indian-astrology",
+      "title": "Apa itu astrologi Veda? | Perbedaannya dengan astrologi Barat dan mengapa disebut akurat",
+      "description": "Dasar-dasar astrologi Veda (India), yang juga disebut Jyotish: perbedaannya dengan astrologi Barat, mengapa zodiak Anda bisa berubah, dan bagaimana periode Dasha menggambarkan waktu. Termasuk mengapa disebut akurat dan di mana batasnya.",
+      "h1": "Apa itu astrologi Veda?",
+      "menuLabel": "Apa itu astrologi Veda?",
+      "lead": "Astrologi Veda, yang dalam bahasa Sanskerta disebut Jyotish («ilmu cahaya»), adalah cara membaca langit yang diwariskan di India selama lebih dari tiga ribu tahun. Ia juga dikenal sebagai astrologi India. Dari keadaan langit pada saat kelahiran, ia membaca sifat seseorang dan alur berbagai tahap kehidupannya.",
+      "sections": [
+        {
+          "heading": "Perbedaan terbesar dengan astrologi Barat: zodiak Anda bisa berubah",
+          "body": "Ketika seseorang memeriksa zodiaknya dalam astrologi Veda, sering kali ia menemukan bahwa zodiaknya adalah tanda sebelum yang ia kenal. Astrologi Barat memakai zodiak tropis yang berpatokan pada titik ekuinoks musim semi; astrologi Veda memakai zodiak sideris yang berpatokan pada posisi bintang yang sebenarnya. Selisih keduanya saat ini sekitar 24 derajat. Orang yang selama ini Aries bisa menjadi Pisces dalam astrologi Veda. Tidak ada sistem yang salah; keduanya hanya memakai titik acuan yang berbeda. Astrologi Veda memakai tempat planet benar-benar berada di langit."
+        },
+        {
+          "heading": "Bulan lebih diutamakan daripada Matahari",
+          "body": "Astrologi Barat menempatkan zodiak Matahari di urutan pertama. Astrologi Veda memberi bobot lebih besar pada Bulan. Jika Matahari adalah wajah yang kita tunjukkan kepada masyarakat, Bulan adalah cara pikiran bergerak: apa yang menenangkan kita dan apa yang menguras kita. Selain itu, astrologi Veda membagi lintasan Bulan menjadi 27 Nakshatra (rumah Bulan), sehingga dua orang dengan zodiak yang sama bisa menerima pembacaan yang sangat berbeda. Banyak orang mengatakan gambaran watak menurut astrologi Veda terasa lebih tepat daripada versi Barat, dan kehalusan pembagian inilah sebagian besar alasannya."
+        },
+        {
+          "heading": "Dasha: sistem untuk membaca «kapan»",
+          "body": "Ciri khas astrologi Veda adalah Dasha, sistem periode planet. Dari posisi Bulan saat lahir, kehidupan dibagi menjadi periode-periode yang dikuasai masing-masing planet: periode Jupiter, periode Saturnus, periode Rahu, masing-masing berlangsung bertahun-tahun. Perasaan seperti «apa pun yang kulakukan sekarang terasa mandek» atau «lingkunganku tiba-tiba berubah» dibaca lewat kualitas periode yang sedang berjalan. Kemampuan menangani alur kehidupan, bukan hanya watak, adalah perbedaan praktis terbesar dari astrologi Barat."
+        },
+        {
+          "heading": "Apakah astrologi Veda akurat?",
+          "body": "Ia disebut akurat terutama karena memakai jam lahir dan mengolah banyak informasi, sehingga gambarannya konkret. Bukan hanya zodiak, tetapi juga ascendant (Lagna), rumah Bulan, posisi setiap planet, dan waktunya. Semakin halus kombinasinya, semakin tinggi resolusi pembacaannya. Meski demikian, posisi planet tidak menentukan peristiwa masa depan. Susunan yang sama terwujud berbeda tergantung keadaan dan pilihan masing-masing orang. Yang ditawarkan astrologi Veda adalah petunjuk: kecenderungan yang Anda bawa dan angin apa yang bertiup pada periode ini. Menganggapnya sebagai jaminan hasil akan membawa pada keputusan yang buruk."
+        },
+        {
+          "heading": "Apa yang diperlukan untuk pembacaan",
+          "body": "Tiga data: tanggal, jam, dan tempat lahir. Jam lahir sangat penting karena menentukan ascendant dan rumah (pembagian bidang kehidupan), dan selisih beberapa menit saja bisa mengubah apa yang dibaca. Biasanya tercatat di akta kelahiran atau catatan rumah sakit, jadi periksalah jika bisa. Jika benar-benar tidak diketahui, salah satu pilihan adalah menghitung untuk pukul 12:00 siang dan berfokus pada hal yang tidak bergantung pada jam: zodiak Bulan, Nakshatra, dan gambaran umum Dasha."
+        }
+      ]
+    },
+    {
+      "slug": "free-reading",
+      "title": "Apa yang ditunjukkan pembacaan astrologi Veda gratis | Cara kerja perhitungan otomatis dan batasnya",
+      "description": "Apa yang benar-benar Anda pelajari dari pembacaan astrologi Veda gratis: apa yang dihitung dari tanggal, jam, dan tempat lahir, apa yang dicakup bagian gratis, dan apa yang berada di luarnya.",
+      "h1": "Apa yang ditunjukkan pembacaan astrologi Veda gratis",
+      "lead": "Cari «astrologi Veda gratis» dan layanan yang muncul sangat beragam. Ada yang hanya menggambar bagan, ada yang berhenti pada deskripsi singkat zodiak, ada yang menjelaskan dengan kalimat lengkap. Di sini kami merangkum apa yang sebenarnya bisa disampaikan oleh pembacaan gratis yang menghitung otomatis dari data kelahiran Anda.",
+      "sections": [
+        {
+          "heading": "Yang dihitung adalah langit pada saat Anda lahir",
+          "body": "Saat Anda memasukkan tanggal, jam, dan tempat lahir, posisi planet dihitung sebagaimana terlihat dari saat dan tempat itu. Tempat diubah menjadi lintang dan bujur, dan zona waktu dikoreksi. Dari sini diperoleh zodiak Bulan dan Nakshatra (rumah Bulan) Anda, zodiak Matahari, ascendant (Lagna), posisi setiap planet, dan batas-batas periode Dasha Anda. Bagian ini adalah astronomi, bukan pendapat seorang astrolog, sehingga layanan mana pun akan memberikan nilai yang sama. Pembacaannya adalah susunan tetap itu yang dituangkan ke dalam kata-kata menurut penafsiran klasik."
+        },
+        {
+          "heading": "Apa yang dicakup bagian gratis",
+          "body": "Dalam kebanyakan kasus, bagian gratis mencakup sifat Anda dilihat dari zodiak Bulan dan Nakshatra, bagaimana orang lain memandang Anda menurut ascendant, dan kecenderungan umum hari ini serta jangka pendek. Ini cukup untuk mengenali pola dasar Anda dan mengetahui zodiak Anda dalam astrologi Veda. Pembacaan gratis di situs ini mencakup cakupan tersebut dan bisa dibaca setiap hari."
+        },
+        {
+          "heading": "Apa yang tidak dicakup bagian gratis",
+          "body": "Pertanyaan tentang «kapan», seperti waktu menikah atau pindah kerja, memerlukan perbandingan Dasha dengan transit (pergerakan planet saat ini), yang membutuhkan lebih banyak volume dan penilaian. Menggali satu bidang tertentu, seperti pekerjaan yang cocok, keuangan, atau kecocokan, berarti melihat posisi rumah dan bagan pembagian (D9, D10, dan lainnya). Ini berada di luar pembacaan gratis dan biasanya dibahas dalam konten berbayar untuk anggota atau laporan lengkap seumur hidup."
+        },
+        {
+          "heading": "Hal yang perlu diperhatikan saat memakai pembacaan gratis",
+          "body": "Jika jam lahir tidak tepat, ascendant dan rumah bergeser dan premis pembacaan berubah, jadi pastikan jam lahir sebelum mulai. Selain itu, terimalah hasilnya sebagai bahan bacaan untuk mengenal diri sendiri. Ia tidak menentukan peristiwa masa depan dan bukan pengganti keputusan medis, hukum, atau keuangan. Ia paling berguna jika Anda membacanya sambil memeriksa apakah kecenderungan yang digambarkan benar-benar cocok dengan Anda."
+        }
+      ]
+    },
+    {
+      "slug": "marriage",
+      "title": "Waktu pernikahan dan kecocokan dalam astrologi Veda | Rumah ke-7, D9, dan Dasha",
+      "description": "Cara astrologi Veda (Jyotish) membaca pernikahan: rumah ke-7, Venus dan Jupiter, bagan pembagian Navamsha (D9), waktu menurut Dasha dan transit, dan cara menilai kecocokan dua orang.",
+      "h1": "Waktu pernikahan dan kecocokan dalam astrologi Veda",
+      "lead": "Astrologi Veda secara tradisional digunakan untuk mempertimbangkan pernikahan, dan di India bagan masih dibandingkan saat sebuah lamaran diajukan. Di sini kami menjelaskan dari faktor apa pernikahan dibaca dan bagaimana waktunya ditentukan, sambil menguraikan istilah teknisnya.",
+      "sections": [
+        {
+          "heading": "Pernikahan dibaca dari rumah ke-7",
+          "body": "Bagan kelahiran dibagi menjadi dua belas rumah, masing-masing mengurus satu bidang kehidupan. Pernikahan dan pasangan hidup ditunjukkan di rumah ke-7. Zodiak apa yang jatuh di sana, di mana penguasanya berada, dan planet apa yang menempatinya: dari sini dibaca apa yang Anda cari pada pasangan dan bagaimana Anda cenderung membangun hubungan. Dalam pendekatan klasik, Jupiter pada bagan perempuan dan Venus pada bagan laki-laki juga dipakai sebagai penunjuk pasangan hidup."
+        },
+        {
+          "heading": "D9 (Navamsha): bagan kedua",
+          "body": "Astrologi Veda memiliki bagan pembagian yang membagi bagan kelahiran lebih jauh. Yang selalu dilihat untuk pernikahan adalah D9, Navamsha, bagan kedua yang diperoleh dengan membagi setiap zodiak pada bagan kelahiran menjadi sembilan bagian. Dikatakan bahwa sifat di permukaan tampak di bagan kelahiran, sedangkan inti yang muncul dalam kehidupan pernikahan tampak di D9, dan keduanya dibaca bersama. Planet yang tidak menonjol di bagan kelahiran bisa menjadi kuat di D9, yang ditafsirkan sebagai pernikahan yang mengubah arah hidup orang itu."
+        },
+        {
+          "heading": "Waktunya dibaca dengan Dasha dan transit",
+          "body": "«Kapan aku akan menikah?» dinilai dengan menumpangkan Dasha (periode planet) dan pergerakan planet saat ini (transit). Apakah Anda berada dalam periode planet yang terkait dengan rumah ke-7, penguasanya, Venus, atau Jupiter? Apakah Jupiter atau Saturnus benar-benar sedang melintasi rumah ke-7 saat itu? Ketika keduanya bertepatan, urusan pasangan cenderung bergerak. Sebaliknya, terburu-buru saat syaratnya belum terpenuhi sering kali melelahkan. Perhatikan bahwa ini menunjukkan periode dengan kemungkinan lebih tinggi; ia tidak memutuskan apakah atau kapan pernikahan terjadi."
+        },
+        {
+          "heading": "Cara membaca kecocokan dua orang",
+          "body": "Metode yang sejak lama dipakai di India adalah Ashtakoota, yang membandingkan rumah Bulan (Nakshatra) kedua orang pada delapan poin dan memberi skor dari 36, dengan 18 atau lebih sebagai patokan umum. Namun skor hanyalah pintu masuk. Dalam praktiknya, bobot lebih besar diberikan pada menumpangkan kedua bagan dan melihat di bidang mana milik Anda planet-planet orang lain jatuh (rumah ke-7, ke-2, ke-8, dan lainnya). Ada hubungan berskor rendah yang bertahan, dan hubungan berskor tinggi yang tidak cocok. Kecocokan paling berguna bukan sebagai putusan «cocok atau tidak», melainkan sebagai peta di mana kalian saling menopang dan di mana gesekan mungkin terjadi."
+        },
+        {
+          "heading": "Di situs ini",
+          "body": "Pembacaan gratis saat ini mencakup pandangan Anda sendiri tentang pernikahan dan bagaimana Anda cenderung berhubungan dengan pasangan, menurut bagan kelahiran Anda. Pembacaan kecocokan yang membandingkan dua bagan sedang disiapkan dan akan ditambahkan ke menu. Analisis Dasha yang rinci di balik waktu pernikahan dibahas dalam laporan lengkap seumur hidup."
+        }
+      ]
+    },
+    {
+      "slug": "career",
+      "title": "Karier, pindah kerja, dan keuangan dalam astrologi Veda | Rumah ke-10 dan ke-2",
+      "description": "Cara astrologi Veda (Jyotish) membaca pekerjaan dan uang: rumah ke-10 untuk pekerjaan yang cocok, rumah ke-2 dan ke-11 untuk penghasilan, bagan pembagian D10, dan bagaimana Dasha menunjukkan periode yang baik untuk pindah kerja.",
+      "h1": "Karier, pindah kerja, dan keuangan dalam astrologi Veda",
+      "lead": "Astrologi Veda tidak hanya berbicara tentang watak, tetapi juga tentang «di bidang apa kekuatan Anda muncul» dan «kapan bergerak searah dengan arus». Pekerjaan dan uang berada di rumah yang berbeda, dan masing-masing dibaca di tempat yang berbeda.",
+      "sections": [
+        {
+          "heading": "Pekerjaan yang cocok dibaca dari rumah ke-10",
+          "body": "Rumah ke-10 menunjukkan pekerjaan dan kedudukan sosial. Zodiak apa yang jatuh di sana, di mana penguasanya, dan planet apa yang memengaruhinya: ini menggambarkan jenis pekerjaan yang cocok untuk Anda. Jika Merkurius terlibat kuat, pekerjaan dengan kata-kata dan informasi; Mars, lingkungan yang menuntut ketegasan dan tindakan; Saturnus, pekerjaan yang dibangun perlahan seiring waktu. Sifat planet berpadanan dengan bidangnya. Bagan pembagian D10 (Dashamsha) melangkah lebih jauh dan menunjukkan posisi mana dalam suatu profesi yang cocok untuk Anda: di garis depan, mengoordinasi, atau mandiri."
+        },
+        {
+          "heading": "Penghasilan dibaca dari rumah ke-2 dan ke-11",
+          "body": "Pekerjaan yang cocok dan uang bukanlah hal yang sama. Rumah ke-2 menunjukkan tabungan dan harta yang tinggal bersama Anda; rumah ke-11, penghasilan dan orang-orang yang membawanya. Rumah ke-10 yang kuat dengan rumah ke-2 yang lemah dibaca sebagai dihargai tetapi sulit menahan uang, dan kebalikannya juga terjadi. Keterlibatan Jupiter menunjuk pada pertumbuhan; Saturnus, pada sesuatu yang lebih lambat tetapi stabil. Yang ditunjukkan bukanlah jumlah, melainkan pola bagaimana uang masuk dan bagaimana ia tinggal."
+        },
+        {
+          "heading": "Periode yang baik untuk pindah kerja",
+          "body": "Untuk keputusan karier, sekali lagi Dasha yang dipakai. Memasuki periode planet yang terkait dengan rumah ke-10 atau penguasanya membuat lingkungan kerja lebih mungkin bergerak. Transit Saturnus juga diperlakukan sebagai titik balik: ketika Saturnus menyentuh rumah ke-10 atau ascendant, sifat tanggung jawab cenderung berubah atau cara bekerja ditinjau ulang. Sebaliknya, melakukan langkah besar saat tidak ada tanda perubahan, menurut pandangan tradisional, bisa memberi hasil kecil untuk usaha yang besar."
+        },
+        {
+          "heading": "Hal yang perlu diperhatikan saat membaca",
+          "body": "Bagan kelahiran menunjukkan kecenderungan; ia tidak menyebutkan satu profesi. Susunan yang sama menghasilkan pekerjaan yang tak terhitung banyaknya tergantung zaman dan lingkungan. Ia juga tidak menjamin penghasilan atau hasil investasi, jadi terimalah yang tertulis sebagai satu bahan di antara yang lain. Keputusan pindah kerja atau mengeluarkan uang sebaiknya diambil setelah memeriksa kondisi nyata."
+        },
+        {
+          "heading": "Di situs ini",
+          "body": "Pembacaan gratis mencakup kualitas dasar Anda dan alur saat ini. Pekerjaan yang cocok menurut rumah ke-10 dan ke-2 serta D10, dan waktunya menurut Dasha, dibahas dalam laporan lengkap seumur hidup."
+        }
+      ]
+    },
+    {
+      "slug": "horoscope",
+      "title": "Cara membaca bagan astrologi Veda | Ascendant, rumah, dan D9",
+      "description": "Cara membaca bagan astrologi Veda (India): gaya bagan India Utara dan Selatan, ascendant (Lagna) dan cara menghitung rumah, kekuatan planet, dan peran bagan pembagian D9, dalam urutan pembacaan.",
+      "h1": "Cara membaca bagan astrologi Veda",
+      "lead": "Bagan Veda digambar sebagai persegi, berbeda dengan roda bundar astrologi Barat. Awalnya tampak seperti kumpulan simbol yang membingungkan, tetapi setelah mengetahui urutan membacanya, Anda bisa menarik kecenderungan dari bagan Anda sendiri.",
+      "sections": [
+        {
+          "heading": "Ada dua gaya bagan",
+          "body": "Gaya India Utara adalah gambar belah ketupat yang saling bertaut, dengan posisi rumah tetap dan nomor zodiak ditulis di dalamnya. Gaya India Selatan adalah bingkai dua belas kotak dengan posisi zodiak tetap dan rumah yang berpindah. Keduanya menunjukkan isi yang sama; perbedaannya adalah kebiasaan daerah. Bagi pemula, gaya Selatan dengan tata letak kotak yang tetap biasanya lebih mudah diikuti."
+        },
+        {
+          "heading": "Mulai dari Lagna (ascendant)",
+          "body": "Pembacaan dimulai dari zodiak yang sedang terbit di cakrawala timur pada saat kelahiran: Lagna, atau ascendant. Ia menjadi rumah ke-1, dan rumah ke-2, ke-3, dan seterusnya dihitung dari sana berlawanan arah jarum jam. Lagna menunjukkan konstitusi, kesan pertama, dan sikap terhadap hidup, dan menjadi acuan yang menentukan posisi semua rumah. Ascendant berpindah ke zodiak berikutnya kira-kira setiap dua jam, sehingga jam lahir yang tidak tepat menggeser seluruh bagan. Karena itu memastikan jam lahir penting."
+        },
+        {
+          "heading": "Bidang yang dicakup dua belas rumah",
+          "body": "Rumah ke-1 adalah diri; ke-2, harta dan tutur kata; ke-3, inisiatif dan saudara; ke-4, rumah dan landasan emosi; ke-5, kreativitas dan anak; ke-6, kesulitan dalam pekerjaan dan kesehatan; ke-7, pernikahan dan hubungan; ke-8, transformasi dan warisan; ke-9, keberuntungan dan pembelajaran; ke-10, pekerjaan dan kedudukan sosial; ke-11, penghasilan dan jaringan; ke-12, kehilangan, melepaskan, dan introspeksi. Planet mana yang berada di rumah mana menunjukkan di mana energi cenderung terpusat dalam hidup."
+        },
+        {
+          "heading": "Menilai kekuatan dan keadaan planet",
+          "body": "Ekspresi sebuah planet berubah menurut zodiak yang ditempatinya. Di zodiaknya sendiri atau zodiak pengangkatannya ia menunjukkan kualitasnya dengan mudah; di zodiak yang berlawanan ia bekerja melalui kesulitan. Secara tradisional, planet juga dikelompokkan menjadi yang cenderung bertindak menguntungkan, seperti Jupiter dan Venus, dan yang bertindak sebagai ujian, seperti Saturnus, Mars, Rahu, dan Ketu. Namun planet ujian bukanlah planet jahat; semakin kuat ia bertindak, semakin jelas bidang tempat Anda sedang dilatih."
+        },
+        {
+          "heading": "Menumpangkan bagan pembagian dan waktu",
+          "body": "Setelah membaca bagan kelahiran, gunakan bagan pembagian (D9, D10, dan lainnya) untuk menggali bidang tertentu, dan terakhir tumpangkan Dasha (periode planet) untuk melihat periode mana yang sedang Anda jalani. Tiga tahap ini adalah cara dasar menelusuri bagan Veda. Bergerak dari keseluruhan ke bidang, dan dari bidang ke waktu, mencegah penafsiran terpecah-pecah."
+        },
+        {
+          "heading": "Cara mendapatkan bagan Anda sendiri",
+          "body": "Dengan tanggal, jam, dan tempat lahir Anda, bagan dihitung secara otomatis. Pembacaan gratis di situs ini menghitung zodiak Bulan, Nakshatra, dan ascendant Anda dan menjelaskannya dalam kalimat lengkap. Daripada mengikuti simbol sendiri, jalan tercepat adalah membaca bagaimana posisi Anda sendiri ditafsirkan."
+        }
+      ]
+    },
+    {
+      "slug": "dasha",
+      "title": "Apa itu Dasha dalam astrologi Veda? | Cara menghitungnya dan arti setiap periode planet",
+      "description": "Vimshottari Dasha, sistem waktu astrologi Veda (Jyotish): bagaimana siklus 120 tahun dihitung dari Nakshatra Bulan, karakter setiap periode planet seperti Jupiter, Saturnus, atau Rahu, dan cara membaca Mahadasha dan Antardasha.",
+      "h1": "Cara membaca Dasha (periode planet)",
+      "lead": "Astrologi Veda memiliki sistem bernama Dasha yang membagi kehidupan menjadi periode-periode planet dan membaca angin apa yang bertiup pada periode saat ini. Ini adalah cara membaca waktu yang berbeda dari transit Barat dan khas astrologi Veda. Di sini kami membahas versi yang paling banyak dipakai, Vimshottari Dasha, dan menjelaskan cara menghitungnya serta seperti apa setiap periode planet.",
+      "sections": [
+        {
+          "heading": "Apa itu Dasha",
+          "body": "Dasha berarti «keadaan» atau «periode» dalam bahasa Sanskerta dan menunjuk pada sistem yang membagi kehidupan menjadi periode-periode yang dikuasai planet. Ada banyak jenisnya, tetapi standarnya adalah Vimshottari Dasha, di mana sembilan planet bergiliran menjadi pemeran utama suatu kehidupan hingga total 120 tahun. Waktu yang dialokasikan untuk setiap planet tetap: Ketu 7 tahun, Venus 20, Matahari 6, Bulan 10, Mars 7, Rahu 18, Jupiter 16, Saturnus 19, Merkurius 17."
+        },
+        {
+          "heading": "Perhitungan dimulai dari Nakshatra Bulan saat lahir",
+          "body": "Dengan periode planet apa sebuah kehidupan dimulai ditentukan oleh Nakshatra (rumah Bulan) yang ditempati Bulan pada saat kelahiran. Setiap dari 27 Nakshatra ditugaskan kepada salah satu dari sembilan planet: Bulan di Ashwini memulai dari periode Ketu; Bulan di Rohini, dari periode Bulan. Sejauh mana Bulan telah bergerak dalam Nakshatra itu menentukan berapa tahun sisa periode pertama. Jam lahir yang meleset beberapa jam menggeser posisi Bulan dan, bersamanya, tanggal-tanggal pergantian Dasha. Ini salah satu alasan jam lahir yang tepat penting."
+        },
+        {
+          "heading": "Mahadasha dan Antardasha",
+          "body": "Periode besar, dari beberapa tahun hingga dua puluh tahun, disebut Mahadasha (periode utama). Masing-masing dibagi lagi menjadi sembilan sub-periode yang disebut Antardasha. Dalam periode Saturnus 19 tahun, misalnya, sub-periodenya berjalan Saturnus/Saturnus, Saturnus/Merkurius, Saturnus/Ketu, dan seterusnya. Dalam praktiknya, periode utama memberi kualitas umum masa itu, dan sub-periode memberi warna konkret tahun itu atau beberapa tahun itu. Biasanya ditulis utama/sub, seperti «Saturnus/Jupiter»."
+        },
+        {
+          "heading": "Karakter setiap periode planet",
+          "body": "Periode Jupiter cenderung membawa pembelajaran, perluasan, dan hubungan dengan orang yang mendukung, dan sering disebut dalam kaitan dengan pernikahan dan anak. Periode Saturnus adalah masa tanggung jawab dan ketahanan, ketika usaha menumpuk tetapi perubahan mendadak tidak mungkin. Periode Rahu menguatkan perubahan lingkungan yang tiba-tiba dan keterlibatan dengan luar negeri atau teknologi baru; kenaikan dan kebingungan berjalan bersama. Periode Ketu adalah introspeksi dan pelepasan, ketika keterikatan lama memudar. Venus adalah hubungan, seni, dan kenyamanan; Matahari, penegasan diri dan kedudukan sosial; Bulan, emosi dan rumah; Mars, tindakan dan persaingan; Merkurius, pengetahuan, pekerjaan, dan negosiasi. Ini hanya gambaran umum. Periode Jupiter yang sama tampak sangat berbeda tergantung rumah yang ditempati Jupiter di bagan Anda dan keadaannya."
+        },
+        {
+          "heading": "Dasar-dasar membaca Dasha",
+          "body": "Untuk membaca Dasha, periksa dulu di mana planet penguasanya berada di bagan kelahiran, rumah apa yang dikuasainya, dan apakah ia kuat atau lemah. Dasha seperti pewaktu yang menunjukkan kapan posisi di bagan kelahiran menjadi aktif; periode itu sendiri tidak baik maupun buruk. Berikutnya, harapkan tema rumah-rumah yang dikuasai planet itu (pernikahan untuk rumah ke-7, pekerjaan untuk ke-10) muncul ke depan pada periode itu. Terakhir, menumpangkan transit Jupiter dan Saturnus saat ini menajamkan waktunya. Prosedur untuk waktu pernikahan dan karier juga dibahas di panduan masing-masing."
+        },
+        {
+          "heading": "Hal yang perlu diperhatikan tentang Dasha",
+          "body": "Dasha menunjukkan kualitas suatu periode; ia tidak menentukan peristiwa. Dalam periode Saturnus yang sama, satu orang menetap dan menghimpun kekuatan sementara yang lain merasa mandek. Sekitar setahun di sekitar pergantian dari satu periode utama ke berikutnya biasanya dibaca sebagai masa transisi ketika pengaruh kedua planet bercampur. Tabel Dasha bisa dihitung otomatis dari tanggal, jam, dan tempat lahir Anda. Pembacaan gratis di situs ini memberikan periode utama dan sub-periode Anda saat ini; laporan lengkap seumur hidup mencakup urutan lengkap Dasha kehidupan Anda dan pembacaan setiap periodenya."
+        }
+      ]
+    },
+    {
+      "slug": "nakshatra",
+      "title": "Apa itu Nakshatra? | 27 rumah Bulan dan cara menemukan milik Anda (astrologi Veda)",
+      "description": "27 Nakshatra (rumah Bulan) dalam astrologi Veda (Jyotish): perbedaannya dengan 12 zodiak, hubungannya dengan watak dan Dasha, daftar lengkap dengan planet penguasa, zodiak, dan kata kunci, dan cara menemukan Nakshatra Bulan Anda secara gratis.",
+      "h1": "Apa itu Nakshatra: 27 rumah Bulan",
+      "lead": "Nakshatra adalah «rumah-rumah Bulan»: lintasan Bulan yang dibagi menjadi 27 bagian. Dalam astrologi Veda, rumah yang ditempati Bulan saat lahir adalah petunjuk utama untuk membaca kecenderungan batin seseorang. Ia menjelaskan mengapa dua orang dengan zodiak yang sama memberi kesan yang begitu berbeda, dan juga menjadi titik awal perhitungan Dasha (periode planet).",
+      "sections": [
+        {
+          "heading": "Perbedaannya dengan 12 zodiak",
+          "body": "12 zodiak membagi ekliptika menjadi ruas-ruas 30 derajat; Nakshatra membagi ekliptika yang sama menjadi 27 ruas masing-masing 13 derajat 20 menit. Setiap zodiak karena itu memuat dua sampai tiga rumah Bulan. Jika zodiak adalah panggung tempat sebuah kehidupan dipentaskan, rumah Bulan lebih mirip peran yang dimainkan di atasnya, dan mengungkapkan temperamen serta reaksi kebiasaan yang lebih halus. Setiap Nakshatra dinamai menurut bintang atau gugus bintang yang nyata, dan memiliki dewa, simbol, dan planet penguasa yang ditetapkan tradisi."
+        },
+        {
+          "heading": "Apa yang ditunjukkan Nakshatra Bulan",
+          "body": "Yang paling diutamakan dalam astrologi Veda adalah rumah yang ditempati Bulan pada saat kelahiran. Bulan dipandang sebagai cara pikiran bergerak: apa yang menenangkannya, apa yang mengguncangnya, kapan ia lelah. Rumah Bulan membedakan kecenderungan batin ini. Tidak jarang orang yang merasa deskripsi zodiak Matahari versi Barat agak hambar mengatakan deskripsi rumah Bulannya akhirnya terasa pas. Pembacaan juga melihat rumah yang ditempati planet lain dan ascendant, tetapi mengetahui rumah Bulan Anda adalah pintu masuknya."
+        },
+        {
+          "heading": "Nakshatra dan Dasha",
+          "body": "Setiap dari 27 rumah Bulan ditugaskan kepada salah satu dari sembilan planet, dan penguasa rumah Bulan Anda saat lahir menjadi Dasha (periode planet) pertama Anda. Dengan demikian Nakshatra bukan hanya menggambarkan watak; ia adalah titik awal untuk menghitung alur periode kehidupan. Cara membaca waktu dibahas dalam panduan Dasha."
+        },
+        {
+          "heading": "27 Nakshatra (planet penguasa, zodiak, kata kunci)",
+          "body": "Berikut 27 rumah Bulan dalam urutan ekliptika. Kata kunci merangkum kualitas yang oleh tradisi dikaitkan dengan masing-masing dan hanya sebagai titik awal.",
+          "items": [
+            "Ashwini (Ketu / Aries) — permulaan, penyembuhan",
+            "Bharani (Venus / Aries) — menanggung, ketahanan",
+            "Krittika (Matahari / Aries–Taurus) — menerobos, pemurnian",
+            "Rohini (Bulan / Taurus) — memelihara, kelimpahan",
+            "Mrigashira (Mars / Taurus–Gemini) — pencarian, kepekaan",
+            "Ardra (Rahu / Gemini) — badai, transformasi",
+            "Punarvasu (Jupiter / Gemini–Cancer) — pembaruan, kembali",
+            "Pushya (Saturnus / Cancer) — pengasuhan, kepercayaan",
+            "Ashlesha (Merkurius / Cancer) — mengikat, ketajaman",
+            "Magha (Ketu / Leo) — garis keturunan, wibawa",
+            "Purva Phalguni (Venus / Leo) — istirahat, kenikmatan",
+            "Uttara Phalguni (Matahari / Leo–Virgo) — perjanjian, kerja sama",
+            "Hasta (Bulan / Virgo) — kerja tangan, keterampilan",
+            "Chitra (Mars / Virgo–Libra) — kecemerlangan, membangun",
+            "Swati (Rahu / Libra) — kemandirian, keluwesan",
+            "Vishakha (Jupiter / Libra–Scorpio) — tujuan, ambisi",
+            "Anuradha (Saturnus / Scorpio) — pengabdian, persahabatan",
+            "Jyeshtha (Merkurius / Scorpio) — senioritas, tanggung jawab",
+            "Mula (Ketu / Sagitarius) — akar, penyelidikan",
+            "Purva Ashadha (Venus / Sagitarius) — kemenangan, optimisme",
+            "Uttara Ashadha (Matahari / Sagitarius–Capricorn) — ketekunan, pencapaian",
+            "Shravana (Bulan / Capricorn) — mendengarkan, pembelajaran",
+            "Dhanishta (Mars / Capricorn–Aquarius) — kekayaan, irama",
+            "Shatabhisha (Rahu / Aquarius) — penyembuhan, rahasia",
+            "Purva Bhadrapada (Jupiter / Aquarius–Pisces) — intensitas, dualitas",
+            "Uttara Bhadrapada (Saturnus / Pisces) — kedalaman, kestabilan",
+            "Revati (Merkurius / Pisces) — bimbingan, penyelesaian"
+          ]
+        },
+        {
+          "heading": "Cara menemukan Nakshatra Anda",
+          "body": "Bulan melintasi satu zodiak dalam sekitar dua setengah hari dan berganti Nakshatra kira-kira sekali sehari. Karena itu tanggal lahir saja memberi jawaban kasar, tetapi orang yang lahir dekat batas bisa jatuh ke rumah Bulan di sebelahnya jika jam dan tempat tidak diketahui. Masukkan ketiga data itu dan rumah Bulan dihitung otomatis. Pembacaan gratis di situs ini menghitung zodiak Bulan, Nakshatra, dan ascendant Anda dan menjelaskan maknanya dalam kalimat lengkap."
+        },
+        {
+          "heading": "Hal yang perlu diperhatikan saat membaca Nakshatra",
+          "body": "Deskripsi sebuah rumah Bulan adalah satu dari 27 gambaran umum. Dalam pembacaan sesungguhnya, posisi Bulan di dalam rumah itu, planet yang berbagi rumahnya, dan hubungannya dengan ascendant dibaca bersama, sehingga rumah Bulan yang sama bisa memberi kesan yang sangat berbeda. Pernyataan tegas seperti «rumah Bulan ini tidak cocok untuk menikah», meski muncul dalam teks tradisional, tidak boleh diterapkan langsung pada keputusan masa kini. Cara paling berguna menerimanya adalah sebagai kosakata untuk memahami kecenderungan Anda sendiri."
+        }
+      ]
+    }
+  ]
+}
