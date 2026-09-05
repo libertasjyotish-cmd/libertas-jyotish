@@ -9,6 +9,8 @@ on:
       - 'templates/**'
       - 'locales/**'
       - 'scripts/build-i18n.mjs'
+      - 'scripts/build-guide.mjs'
+      - 'data/guide/**'
       - '*/*.html'
   workflow_dispatch:
 
@@ -21,3 +23,4 @@ jobs:
         with:
           node-version: '20'
       - run: npm run check:i18n
+      - run: npm run check:guide
