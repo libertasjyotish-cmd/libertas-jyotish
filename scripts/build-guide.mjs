@@ -4,9 +4,9 @@
 //   node scripts/build-guide.mjs          … 生成
 //   node scripts/build-guide.mjs --check  … 生成物とコミット済みHTMLの差分を検査（CI用）
 //
-// 現時点では日本語のみ。公開の可否は data/guide/ja.json の published で切り替える。
-//   published: false … 各記事に noindex を付け、sitemap.xml とトップの記事一覧に載せない（原稿確認中）
-//   published: true  … noindex を外し、sitemap.xml とトップの記事一覧に載せる（build-i18n.mjs 側で参照）
+// 現時点では日本語のみ。公開の段階は data/guide/ja.json の 2 つのフラグで切り替える。
+//   linked: true     … トップの記事一覧と共通メニューに載せる（サイト内から辿れる。build-i18n.mjs 側で参照）
+//   published: true  … noindex を外し、sitemap.xml に載せる（検索エンジンに出す）
 // 切り替え後は build-guide.mjs と build-i18n.mjs の両方を実行してコミットする。
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
@@ -21,6 +21,7 @@ const SITE_NAME = 'Libertas Jyotish';
 const OG_IMAGE = `${SITE}/img/og-image.jpg`;
 
 const data = JSON.parse(readFileSync(join(ROOT, `data/guide/${LANG}.json`), 'utf8'));
+const locale = JSON.parse(readFileSync(join(ROOT, `locales/${LANG}.json`), 'utf8'));
 const HUB_URL = `${SITE}/${LANG}/${SECTION}`;
 const HOME_URL = `${SITE}/${LANG}`;
 
@@ -61,8 +62,31 @@ ${data.published ? '' : '<meta name="robots" content="noindex">\n'}<link rel="ca
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site-menu.css">
 <link rel="stylesheet" href="/css/guide.css">
+<script defer src="/js/site-menu.js"></script>
 ${extra}`;
+}
+
+// 共通ヘッダー（js/site-menu.js）に渡す文言。トップ等の templates/partials/i18n-globals.html と同じ形。
+function i18nGlobals() {
+  const menu = {};
+  for (const [key, value] of Object.entries(locale.strings)) {
+    if (key.startsWith('menu.')) menu[key.slice(5)] = value;
+  }
+  const intro = data.articles.find((a) => a.slug === data.index.introSlug) || data.articles[0];
+  const globals = {
+    lang: LANG,
+    menu,
+    guide: {
+      hub: `/${LANG}/${SECTION}`,
+      hubLabel: data.index.menuLabel || data.index.h1,
+      intro: `/${LANG}/${SECTION}/${intro.slug}`,
+      introLabel: intro.menuLabel || intro.h1,
+      groupLabel: data.index.menuGroup || ''
+    }
+  };
+  return `<script>window.LJ_I18N = ${JSON.stringify(globals).replace(/</g, '\\u003c')};</script>`;
 }
 
 function breadcrumbLd(items) {
@@ -81,10 +105,8 @@ function breadcrumbNav(items) {
 }
 
 function header() {
-  return `<header class="guide-header">
-<a class="guide-brand" href="/${LANG}"><img src="/img/libertas-logo.png" alt="" width="28" height="28">${SITE_NAME}</a>
-<nav class="guide-nav" aria-label="サイト内"><a href="/${LANG}/${SECTION}">解説記事</a><a href="/${LANG}#form-area">無料鑑定</a></nav>
-</header>`;
+  return `${i18nGlobals()}
+<header class="site-header" data-site-header></header>`;
 }
 
 function footer() {

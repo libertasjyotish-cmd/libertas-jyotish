@@ -32,7 +32,9 @@ const BASE_LANG = 'ja';
 const SITE = 'https://www.libertas-jyotish.com';
 // sitemap.xml に載せる（＝検索結果に出したい）ページ。
 const SITEMAP_PAGES = ['index', 'legal', 'pdf-purchase'];
-// 解説記事（data/guide/<lang>.json）。published が true の言語だけ sitemap とトップの記事一覧に載せる。
+// 解説記事（data/guide/<lang>.json）。
+//   linked: true    … トップの記事一覧と共通メニューに載せる（サイト内から辿れる）
+//   published: true … 上記に加えて sitemap.xml に載せる（検索エンジンに出す）
 const GUIDE_DIR = join(ROOT, 'data/guide');
 const GUIDE_SECTION = 'guide';
 
@@ -69,15 +71,39 @@ function buildHreflang(page) {
 function loadGuide(lang) {
   const path = join(GUIDE_DIR, `${lang}.json`);
   if (!existsSync(path)) return null;
-  const guide = readJson(path);
-  return guide.published ? guide : null;
+  return readJson(path);
+}
+
+function linkedGuide(lang) {
+  const guide = loadGuide(lang);
+  return guide && (guide.linked || guide.published) ? guide : null;
+}
+
+function publishedGuide(lang) {
+  const guide = loadGuide(lang);
+  return guide && guide.published ? guide : null;
+}
+
+// 共通メニュー（js/site-menu.js）へ渡す解説記事のリンク先。記事の無い言語では空文字。
+function buildGuideMenu(lang) {
+  const guide = linkedGuide(lang);
+  if (!guide) return '';
+  const intro = guide.articles.find((a) => a.slug === guide.index.introSlug) || guide.articles[0];
+  return `,
+  guide: {
+    hub: '/${lang}/${GUIDE_SECTION}',
+    hubLabel: ${JSON.stringify(guide.index.menuLabel || guide.index.h1)},
+    intro: '/${lang}/${GUIDE_SECTION}/${intro.slug}',
+    introLabel: ${JSON.stringify(intro.menuLabel || intro.h1)},
+    groupLabel: ${JSON.stringify(guide.index.menuGroup || '')}
+  }`;
 }
 
 // 記事は言語ごとに独立しており、他言語版が無いので hreflang は付けない。
 function buildGuideSitemapUrls() {
   const urls = [];
   for (const entry of LANG_SWITCH) {
-    const guide = loadGuide(entry.lang);
+    const guide = publishedGuide(entry.lang);
     if (!guide) continue;
     const base = `${SITE}/${entry.lang}/${GUIDE_SECTION}`;
     urls.push(`  <url>\n    <loc>${base}</loc>\n  </url>`);
@@ -88,9 +114,9 @@ function buildGuideSitemapUrls() {
   return urls;
 }
 
-// トップの「解説記事」一覧。未公開・記事の無い言語では空文字（枠ごと出さない）。
+// トップの「解説記事」一覧。linked でない・記事の無い言語では空文字（枠ごと出さない）。
 function buildGuideLinks(lang) {
-  const guide = loadGuide(lang);
+  const guide = linkedGuide(lang);
   if (!guide) return '';
   const items = guide.articles
     .map((a) => `<li><a href="/${lang}/${GUIDE_SECTION}/${a.slug}">${escapeAttr(a.h1)}</a></li>`)
@@ -178,6 +204,8 @@ function render(template, locale, base, context) {
       value = buildLangSwitcher(locale.meta.lang);
     } else if (path === 'guideLinks') {
       value = buildGuideLinks(locale.meta.lang);
+    } else if (path === 'guideMenu') {
+      value = buildGuideMenu(locale.meta.lang);
     } else if (path === 'canonical') {
       value = pageUrl(locale.meta.lang, context.page);
     } else if (path === 'hreflang') {

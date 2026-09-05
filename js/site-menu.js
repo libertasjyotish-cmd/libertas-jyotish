@@ -16,17 +16,29 @@
   const t = Object.assign({}, FALLBACK.menu, i18n.menu);
   const lang = i18n.lang || FALLBACK.lang;
   const home = '/' + lang;
+  // 解説記事がある言語では「学ぶ」グループを出し、「…とは」は入門記事へ向ける。
+  const guide = i18n.guide || null;
 
   const LINKS = [
     { href: home, label: t.top },
     { href: home + '#form-area', label: t.free },
-    { href: home + '#about', label: t.about },
     { href: home + '/pdf-purchase', label: t.report },
-    { href: home + '/calendar', label: t.calendar, note: t.calendarNote },
+    { href: home + '/calendar', label: t.calendar, note: t.calendarNote }
+  ];
+  if (guide) {
+    LINKS.push(
+      { divider: true, label: guide.groupLabel },
+      { href: guide.intro, label: guide.introLabel },
+      { href: guide.hub, label: guide.hubLabel }
+    );
+  } else {
+    LINKS.splice(2, 0, { href: home + '#about', label: t.about });
+  }
+  LINKS.push(
     { divider: true },
     { href: home + '/mypage', label: t.mypage },
     { href: home + '/legal', label: t.legal }
-  ];
+  );
 
   function currentPath() {
     return window.location.pathname.replace(/\/$/, '') || home;
@@ -70,6 +82,12 @@
         const hr = document.createElement('div');
         hr.className = 'lj-menu-divider';
         menu.appendChild(hr);
+        if (item.label) {
+          const group = document.createElement('div');
+          group.className = 'lj-menu-group';
+          group.textContent = item.label;
+          menu.appendChild(group);
+        }
         continue;
       }
       const a = document.createElement('a');
@@ -81,7 +99,8 @@
         note.textContent = lang === 'ja' ? `（${item.note}）` : ` (${item.note})`;
         a.appendChild(note);
       }
-      if (item.href.split('#')[0] === path) a.classList.add('is-current');
+      const target = item.href.split('#')[0];
+      if (target === path || (target !== home && path.indexOf(target + '/') === 0)) a.classList.add('is-current');
       menu.appendChild(a);
     }
 

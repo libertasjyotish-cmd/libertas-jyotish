@@ -18,7 +18,7 @@ body {
 .guide {
   max-width: 760px;
   margin: 0 auto;
-  padding: 32px 16px 64px;
+  padding: 96px 16px 64px;
 }
 
 .guide article {
@@ -94,31 +94,15 @@ body {
   .guide .nakshatra-list li { grid-template-columns: 1fr; }
 }
 
-/* ヘッダー・フッター・パンくず */
-.guide-header {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 14px 16px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+/* ヘッダー（中身は /js/site-menu.js が描画）・フッター・パンくず */
+.site-header {
+  position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+  background: rgba(12, 26, 31, 0.92);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(139, 107, 27, 0.3);
+  padding: 12px 20px;
+  display: flex; justify-content: space-between; align-items: center;
 }
-
-.guide-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Cinzel', serif;
-  letter-spacing: 0.08em;
-  color: var(--guide-gold);
-  text-decoration: none;
-}
-
-.guide-nav { display: flex; gap: 16px; }
-.guide-nav a { color: #e8d9a8; font-size: 0.88rem; text-decoration: none; }
-.guide-nav a:hover { text-decoration: underline; }
 
 .breadcrumb { font-size: 0.8rem; margin-bottom: 12px; color: #c9bb93; }
 .breadcrumb ol { list-style: none; display: flex; flex-wrap: wrap; gap: 4px; }
