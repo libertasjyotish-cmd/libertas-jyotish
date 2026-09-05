@@ -16,7 +16,7 @@
   const t = Object.assign({}, FALLBACK.menu, i18n.menu);
   const lang = i18n.lang || FALLBACK.lang;
   const home = '/' + lang;
-  // 解説記事がある言語では「学ぶ」グループを出し、「…とは」は入門記事へ向ける。
+  // 解説記事がある言語では入門記事と記事一覧をメニューに出す。
   const guide = i18n.guide || null;
 
   const LINKS = [

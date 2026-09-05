@@ -120,7 +120,7 @@ body {
 .guide-footer .copyright { color: #9c907a; margin-top: 10px; }
 
 /* 記事内リスト（27宿一覧など） */
-.guide .guide-list { margin: 8px 0 0 1.4em; font-size: 0.95rem; }
+.guide .guide-list { margin-top: 8px; margin-inline-start: 1.4em; font-size: 0.95rem; }
 .guide .guide-list li { padding: 4px 0; border-bottom: 1px solid rgba(139, 107, 27, 0.15); }
 
 /* 無料鑑定への導線 */

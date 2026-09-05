@@ -1,0 +1,271 @@
+{
+  "note": "Written for people searching compound queries around Vedic / Indian astrology (Jyotish). Avoid deterministic predictions and anything that reads as medical, legal or financial advice.",
+  "published": false,
+  "linked": true,
+  "ui": {
+    "crumbHome": "Home",
+    "crumbHub": "Guides",
+    "breadcrumbLabel": "Breadcrumb",
+    "footerLegal": "Legal notice",
+    "footerTerms": "Terms of service",
+    "footerPrivacy": "Privacy policy",
+    "footerRefund": "Refund policy",
+    "ctaTitle": "Check it against your own chart",
+    "ctaBody": "Enter your date, time and place of birth and we calculate your Moon sign, Nakshatra, ascendant and current Dasha for free, with a written reading.",
+    "ctaButton": "Start your free reading",
+    "relatedHeading": "More guides",
+    "disclaimer": "This article introduces general ideas from Vedic astrology. It does not guarantee future events and is not a substitute for medical, legal or financial advice."
+  },
+  "index": {
+    "title": "Vedic Astrology Guides | Libertas Jyotish",
+    "description": "Guides to Vedic (Indian) astrology: the basics of Jyotish, what a free reading shows, marriage and compatibility, career and wealth, how to read your chart, Dasha periods and the 27 Nakshatras.",
+    "h1": "Vedic Astrology Guides",
+    "lead": "Plain-language articles on how Vedic astrology (Jyotish) works, written for readers coming to it for the first time. Start with whichever topic matters to you.",
+    "more": "All guides",
+    "menuLabel": "All guides",
+    "introSlug": "indian-astrology"
+  },
+  "articles": [
+    {
+      "slug": "indian-astrology",
+      "title": "What Is Vedic Astrology? Differences from Western Astrology and Why It Is Called Accurate",
+      "description": "The basics of Vedic (Indian) astrology, also called Jyotish: how it differs from Western astrology, why your sign may shift, and how Dasha periods describe timing. Includes why it is said to be accurate, and its limits.",
+      "h1": "What is Vedic astrology?",
+      "menuLabel": "What is Vedic astrology?",
+      "lead": "Vedic astrology, called Jyotish (\"the science of light\") in Sanskrit, is a way of reading the sky that has been passed down in India for more than three thousand years. It is also known as Indian astrology. From the state of the sky at the moment of birth, it reads a person's nature and the flow of the different periods of their life.",
+      "sections": [
+        {
+          "heading": "The biggest difference from Western astrology: your sign may shift",
+          "body": "When people look up their sign in Vedic astrology, many find it is one sign earlier than the one they know. Western astrology uses the tropical zodiac, anchored to the spring equinox; Vedic astrology uses the sidereal zodiac, anchored to the actual positions of the stars. The gap between the two is currently about 24 degrees. Someone who has always been an Aries can easily turn out to be a Pisces in Vedic astrology. Neither system is wrong; they simply take a different reference point. Vedic astrology uses where the planets actually are in the sky right now."
+        },
+        {
+          "heading": "The Moon matters more than the Sun",
+          "body": "Western astrology puts the Sun sign first. Vedic astrology gives more weight to the Moon. If the Sun is the face you show society, the Moon is how your mind moves: what calms you and what wears you down. Vedic astrology also divides the Moon's path into 27 Nakshatras (lunar mansions), so two people born under the same sign can receive very different readings. Many people say the Vedic description of their character rings truer than the Western one, and this finer grain is a large part of the reason."
+        },
+        {
+          "heading": "Dasha: a system for reading \"when\"",
+          "body": "A distinctive feature of Vedic astrology is the Dasha, a system of planetary periods. Starting from the position of the Moon at birth, life is divided into periods ruled by each planet: a Jupiter period, a Saturn period, a Rahu period and so on, each lasting years. Feelings such as \"everything I do seems to stall right now\" or \"my surroundings changed all at once\" are read through the quality of the current period. Being able to work with the flow of a life, not just character, is the main practical difference from Western astrology."
+        },
+        {
+          "heading": "Is Vedic astrology accurate?",
+          "body": "It is called accurate largely because it uses the time of birth and works with a great deal of information, which makes its descriptions concrete. Not only the sign but the ascendant (Lagna), the lunar mansion, the placement of each planet, and the timing. The finer the combination, the higher the resolution of the reading. That said, the positions of the planets do not fix future events. The same placement shows up differently depending on circumstances and the person's own choices. What Vedic astrology offers is a set of clues: the tendencies you carry, and what kind of wind is blowing in the current period. Treating it as a guarantee of outcomes leads to poor decisions."
+        },
+        {
+          "heading": "What you need for a reading",
+          "body": "Three things: your date of birth, time of birth and place of birth. The time of birth is especially important because it determines the ascendant and the houses (the divisions of life's areas), and a difference of a few minutes can change what is read. It is often recorded on a birth certificate or hospital record, so check it if you can. If it is truly unknown, one approach is to calculate for 12:00 noon and focus on the parts that do not depend on the time: the Moon sign, the Nakshatra and the broad outline of the Dasha."
+        }
+      ]
+    },
+    {
+      "slug": "free-reading",
+      "title": "What a Free Vedic Astrology Reading Can Show You | How Automated Calculation Works and Its Limits",
+      "description": "What you actually learn from a free Vedic astrology reading: what is calculated from your date, time and place of birth, what the free part covers, and what lies beyond it.",
+      "h1": "What a free Vedic astrology reading can show you",
+      "lead": "Search for \"free Vedic astrology\" and the services you find differ a lot. Some only draw a chart, some stop at a short description of your sign, some explain things in full sentences. Here we lay out what a free reading that calculates automatically from your birth data can actually tell you.",
+      "sections": [
+        {
+          "heading": "What is calculated is the sky at the moment you were born",
+          "body": "When you enter your date, time and place of birth, the positions of the planets as seen from that moment and that place are calculated. The birthplace is converted to latitude and longitude, and the time zone is corrected. This gives your Moon sign and Nakshatra (lunar mansion), Sun sign, ascendant (Lagna), the placement of each planet, and the boundaries of your Dasha periods. This part is astronomy, not an astrologer's opinion, so any service will produce the same values. The reading is those fixed positions put into words according to the classical interpretations."
+        },
+        {
+          "heading": "What the free part covers",
+          "body": "In most cases, the free part covers your nature as seen from the Moon sign and Nakshatra, how others perceive you as seen from the ascendant, and the general trend for today and the near term. That is enough to learn your basic patterns and to find out what your sign is in Vedic astrology. The free reading on this site covers this range and can be read every day."
+        },
+        {
+          "heading": "What the free part does not cover",
+          "body": "Questions of \"when\", such as the timing of marriage or a career change, require comparing the Dasha with the transits (the current movement of the planets), which takes more volume and more judgement. Digging into a specific area of life, such as suitable work, wealth or compatibility, means looking at house placements and divisional charts (D9, D10 and others). This goes beyond a free reading, and is normally handled in paid member content or in a full lifetime report."
+        },
+        {
+          "heading": "Things to keep in mind",
+          "body": "If the birth time is inaccurate, the ascendant and houses shift and the premise of the reading changes, so confirm the time before you start. Also, please treat the result as reading material for self-understanding. It does not fix future events, and it is not a substitute for medical, legal or financial decisions. It is most useful when you read it while checking whether the described tendencies actually match you."
+        }
+      ]
+    },
+    {
+      "slug": "marriage",
+      "title": "Marriage Timing and Compatibility in Vedic Astrology | Reading the 7th House, D9 and Dasha",
+      "description": "How Vedic astrology (Jyotish) reads marriage: the 7th house, Venus and Jupiter, the Navamsha (D9) divisional chart, timing through Dasha and transits, and how compatibility between two people is assessed.",
+      "h1": "Marriage timing and compatibility in Vedic astrology",
+      "lead": "Vedic astrology has traditionally been used to consider marriage, and in India charts are still compared when a match is proposed. Here we explain which factors marriage is read from and how the timing is worked out, unpacking the technical terms as we go.",
+      "sections": [
+        {
+          "heading": "Marriage is read from the 7th house",
+          "body": "The birth chart is divided into twelve houses, each responsible for an area of life. Marriage and the spouse are shown by the 7th house. Which sign falls there, where its ruler is placed, and which planets occupy it: from these we read what you look for in a partner and how you tend to build a relationship. In the classical approach, Jupiter in a woman's chart and Venus in a man's chart are also used as indicators of the spouse."
+        },
+        {
+          "heading": "D9 (Navamsha): the second chart",
+          "body": "Vedic astrology has divisional charts, which subdivide the birth chart further. The one always consulted for marriage is D9, the Navamsha, a second chart made by dividing each sign of the birth chart into nine parts. The surface nature appears in the birth chart; the essence that emerges within married life is said to appear in D9, and the two are read together. A planet that is unremarkable in the birth chart may become strong in D9, which is read as marriage changing the direction of a person's life."
+        },
+        {
+          "heading": "Timing is read from Dasha and transits",
+          "body": "\"When will I marry?\" is judged by layering the Dasha (planetary periods) with the current movement of the planets (transits). Are you in the period of a planet connected to the 7th house, its ruler, Venus or Jupiter? Is Jupiter or Saturn actually passing through the 7th house at the time? When these two coincide, matters of partnership tend to move. Put the other way, rushing when the conditions are not in place tends to be draining. Note that this indicates periods of higher likelihood; it does not settle whether or when a marriage will happen."
+        },
+        {
+          "heading": "How compatibility between two people is read",
+          "body": "The method long used in India is Ashtakoota, which compares the two people's lunar mansions (Nakshatras) on eight points and gives a score out of 36, with 18 or more generally taken as the benchmark. The score is only the entry point, though. In practice, more weight is given to overlaying the two charts and seeing which of your areas the other person's planets fall into (the 7th, 2nd, 8th houses and so on). Relationships with low scores last; relationships with high scores fail to mesh. Compatibility is most useful not as a verdict of \"suited or not\" but as a map of where you support each other and where friction is likely."
+        },
+        {
+          "heading": "On this site",
+          "body": "The current free reading covers your own view of marriage and how you tend to relate to a partner, as seen from your birth chart. A compatibility reading that compares two charts is in preparation and will be added to the menu. The detailed Dasha analysis behind marriage timing is covered in the full lifetime report."
+        }
+      ]
+    },
+    {
+      "slug": "career",
+      "title": "Career, Job Changes and Wealth in Vedic Astrology | Reading the 10th and 2nd Houses",
+      "description": "How Vedic astrology (Jyotish) reads work and money: the 10th house for suitable work, the 2nd and 11th houses for income, the D10 divisional chart, and how Dasha shows periods favourable for a career change.",
+      "h1": "Career, job changes and wealth in Vedic astrology",
+      "lead": "Vedic astrology deals not only with character but with \"which field brings out your strength\" and \"when moving is likely to go with the current\". Work and money are handled by different houses, and each is read in a different place.",
+      "sections": [
+        {
+          "heading": "Suitable work is read from the 10th house",
+          "body": "The 10th house shows occupation and social standing. Which sign falls there, where its ruler is placed, and which planets influence it: this outlines the kind of work that suits you. If Mercury is strongly involved, work with words and information; Mars, a setting that calls for decision and action; Saturn, work built up slowly over time. The nature of the planet maps onto the field. The D10 (Dashamsha) divisional chart goes further, showing which position within a profession suits you: hands-on, coordinating, or independent."
+        },
+        {
+          "heading": "Income is read from the 2nd and 11th houses",
+          "body": "Suitable work and wealth are not the same thing. The 2nd house shows savings and assets that stay with you; the 11th shows income and the people who bring it. A strong 10th house with a weak 2nd reads as being valued but finding it hard to hold on to money, and the reverse also occurs. Jupiter's involvement points to growth; Saturn's to something slower but stable. What is shown is not an amount but the pattern of how money comes in and how it stays."
+        },
+        {
+          "heading": "Periods favourable for a career change",
+          "body": "For career decisions, again, the Dasha is used. Entering the period of a planet connected to the 10th house or its ruler makes the work environment more likely to move. Saturn's transit is also treated as a turning point: when Saturn touches the 10th house or the ascendant, the nature of your responsibilities tends to change or your way of working comes under review. Conversely, making a large move when there is no sign of change can, in the traditional view, yield little for the effort."
+        },
+        {
+          "heading": "Things to keep in mind",
+          "body": "The birth chart shows tendencies; it does not name a profession. The same placement produces countless different jobs depending on the era and the environment. It also does not guarantee income or investment results, so treat what is written as one input among many. Decisions about changing jobs or committing money need to be made after checking the real-world conditions."
+        },
+        {
+          "heading": "On this site",
+          "body": "The free reading covers your basic qualities and the current flow. Suitable work based on the 10th house, 2nd house and D10, and timing based on the Dasha, are covered in the full lifetime report."
+        }
+      ]
+    },
+    {
+      "slug": "horoscope",
+      "title": "How to Read a Vedic Astrology Chart | Ascendant, Houses and D9 Basics",
+      "description": "How to read a Vedic (Indian) astrology chart: North and South Indian chart styles, the ascendant (Lagna) and how houses are counted, planetary strength, and the role of the D9 divisional chart, in reading order.",
+      "h1": "How to read a Vedic astrology chart",
+      "lead": "A Vedic chart is drawn as a square, unlike the circular wheel of Western astrology. At first it looks like a jumble of symbols, but once you know the order to read it in, you can pick out tendencies from your own chart.",
+      "sections": [
+        {
+          "heading": "There are two chart styles",
+          "body": "The North Indian style is a figure of interlocking diamonds in which the house positions are fixed and the sign numbers are written into them. The South Indian style is a frame of twelve boxes in which the sign positions are fixed and the houses move. Both show the same content; the difference is regional convention. If you are new to it, the South Indian style, with its unchanging layout of boxes, is usually easier to follow."
+        },
+        {
+          "heading": "Start with the Lagna (ascendant)",
+          "body": "Reading begins with the sign that was rising on the eastern horizon at the moment of birth: the Lagna, or ascendant. It becomes the 1st house, and the 2nd, 3rd and so on are counted anticlockwise from there. The Lagna shows constitution, first impression and one's stance toward life, and it is the reference point that fixes the position of every house. The ascendant moves to the next sign roughly every two hours, so an inaccurate birth time shifts the whole chart. This is why confirming the time matters."
+        },
+        {
+          "heading": "The areas the twelve houses cover",
+          "body": "The 1st house is the self; the 2nd, assets and speech; the 3rd, initiative and siblings; the 4th, home and emotional foundation; the 5th, creativity and children; the 6th, difficulties at work and health; the 7th, marriage and relationships; the 8th, transformation and inheritance; the 9th, fortune and learning; the 10th, occupation and social standing; the 11th, income and networks; the 12th, loss, letting go and introspection. Which planets sit in which houses shows where in life energy tends to gather."
+        },
+        {
+          "heading": "Judging the strength and condition of planets",
+          "body": "A planet's expression changes with the sign it occupies. In its own sign or its sign of exaltation it shows its qualities easily; in the opposite sign it works through difficulty. Traditionally, planets are also grouped into those that tend to act favourably, such as Jupiter and Venus, and those that act as trials, such as Saturn, Mars, Rahu and Ketu. The planets of trial are not bad, however; the stronger they act, the clearer the area in which you are being trained."
+        },
+        {
+          "heading": "Layer the divisional charts and the timing",
+          "body": "After reading the birth chart, use the divisional charts (D9, D10 and others) to go deeper into specific areas, and finally layer the Dasha (planetary periods) to see which period you are in now. These three stages are the basic way of working through a Vedic chart. Going from the whole picture to the area to the timing keeps the interpretation from fragmenting."
+        },
+        {
+          "heading": "Getting your own chart",
+          "body": "With your date, time and place of birth, the chart is calculated automatically. The free reading on this site calculates your Moon sign, Nakshatra and ascendant and explains them in full sentences. Rather than tracing the symbols yourself, the quickest way in is to read how your own placements are interpreted."
+        }
+      ]
+    },
+    {
+      "slug": "dasha",
+      "title": "What Is a Dasha in Vedic Astrology? How It Is Calculated and What Each Planetary Period Means",
+      "description": "Vimshottari Dasha, the timing system of Vedic astrology (Jyotish): how the 120-year cycle is calculated from the Moon's Nakshatra, the character of each planetary period such as Jupiter, Saturn and Rahu, and how to read Mahadasha and Antardasha.",
+      "h1": "Reading the Dasha (planetary periods)",
+      "lead": "Vedic astrology has a system called Dasha that divides life into planetary periods and reads what kind of wind is blowing in the current one. It is a way of reading time that is distinct from Western transits and unique to Vedic astrology. Here we take up the most widely used version, the Vimshottari Dasha, and explain how it is calculated and what each planetary period is like.",
+      "sections": [
+        {
+          "heading": "What a Dasha is",
+          "body": "Dasha means \"state\" or \"period\" in Sanskrit, and refers to a system that divides a life into periods ruled by planets. There are many kinds, but the standard one is the Vimshottari Dasha, in which nine planets take turns as the lead actor in a life, adding up to 120 years. Each planet's allotted time is fixed: Ketu 7 years, Venus 20, Sun 6, Moon 10, Mars 7, Rahu 18, Jupiter 16, Saturn 19, Mercury 17."
+        },
+        {
+          "heading": "The calculation starts from the Moon's Nakshatra at birth",
+          "body": "Which planet's period a life begins with is decided by the Nakshatra (lunar mansion) the Moon occupied at the moment of birth. Each of the 27 Nakshatras is assigned to one of the nine planets: a Moon in Ashwini starts in the Ketu period, a Moon in Rohini in the Moon period. How far the Moon had travelled through that Nakshatra determines how many years of the first period remain. A birth time that is off by a few hours moves the Moon's position, and with it the dates on which the Dashas change. This is one reason an accurate birth time matters."
+        },
+        {
+          "heading": "Mahadasha and Antardasha",
+          "body": "The large periods lasting from several years to twenty are called Mahadasha (major periods). Each is further divided into nine sub-periods called Antardasha. Within a 19-year Saturn period, for example, the sub-periods run Saturn/Saturn, Saturn/Mercury, Saturn/Ketu and so on in turn. In practice, the major period gives the broad quality of the time and the sub-period gives the specific colour of that year or few years. They are usually written major/sub, as in \"Saturn/Jupiter\"."
+        },
+        {
+          "heading": "The character of each planetary period",
+          "body": "The Jupiter period tends to bring learning, expansion and connections with supporters, and is often spoken of in connection with marriage and children. The Saturn period is a time of responsibility and endurance in which effort accumulates but sudden change is unlikely. The Rahu period intensifies abrupt changes of environment and involvement with foreign places or new technology; rise and confusion sit side by side. The Ketu period is one of introspection and letting go, when old attachments fade. Venus is relationships, art and comfort; the Sun is establishing oneself and social standing; the Moon is emotion and home; Mars is action and competition; Mercury is knowledge, work and negotiation. These are generalities only. The same Jupiter period looks completely different depending on which house Jupiter occupies in your chart and what condition it is in."
+        },
+        {
+          "heading": "The basics of reading a Dasha",
+          "body": "To read a Dasha, first check where the ruling planet sits in the birth chart, which houses it rules, and whether it is strong or weak. The Dasha is like a timer that shows when the placements in the birth chart become active; the period itself is neither good nor bad. Next, expect the themes of the houses that planet governs (marriage for the 7th, work for the 10th) to come to the fore during that period. Finally, layering the current transits of Jupiter and Saturn narrows the timing. The procedure for marriage timing and career timing is also covered in the respective guides."
+        },
+        {
+          "heading": "Things to keep in mind",
+          "body": "The Dasha shows the quality of a period; it does not fix events. In the same Saturn period, one person settles in and builds strength while another feels stuck. The year or so around the change from one major period to the next is usually read as a transition in which both planets' influence mixes. A Dasha table can be calculated automatically from your date, time and place of birth. The free reading on this site gives your current major and sub-period; the full lifetime report covers the complete Dasha sequence for your life and a reading of each period."
+        }
+      ]
+    },
+    {
+      "slug": "nakshatra",
+      "title": "What Are Nakshatras? The 27 Lunar Mansions and How to Find Yours (Vedic Astrology)",
+      "description": "The 27 Nakshatras (lunar mansions) of Vedic astrology (Jyotish): how they differ from the 12 signs, their link to character and Dasha, a full list with ruling planet, sign and keywords, and how to find your own Moon Nakshatra for free.",
+      "h1": "What are Nakshatras? The 27 lunar mansions",
+      "lead": "Nakshatras are the \"mansions of the Moon\": the Moon's path divided into 27 parts. In Vedic astrology, the mansion the Moon occupied at birth is the central clue for reading a person's inner tendencies. It is why two people born under the same sign can give such different impressions, and it is also the starting point for calculating the Dasha (planetary periods).",
+      "sections": [
+        {
+          "heading": "How they differ from the 12 signs",
+          "body": "The 12 signs divide the ecliptic into segments of 30 degrees; the Nakshatras divide the same ecliptic into 27 segments of 13 degrees 20 minutes. Each sign therefore contains two to three mansions. If the sign is the stage on which a life plays out, the mansion is closer to the role played on it, expressing finer temperament and habitual reactions. Each Nakshatra is named after an actual star or star group, and each has a deity, a symbol and a ruling planet fixed by tradition."
+        },
+        {
+          "heading": "What the Moon's Nakshatra shows",
+          "body": "What Vedic astrology weighs most is the mansion the Moon occupied at the moment of birth. The Moon is taken to show how the mind moves: what calms it, what stirs it, when it becomes worn down. The mansion distinguishes these inner tendencies. It is not unusual for someone who found the Western Sun-sign description a little thin to say the Moon-mansion description finally clicked. Readings also refer to the mansions occupied by the other planets and the ascendant, but knowing your Moon's mansion is the way in."
+        },
+        {
+          "heading": "Nakshatras and the Dasha",
+          "body": "Each of the 27 mansions is assigned to one of the nine planets, and the ruler of your Moon's mansion at birth becomes your first Dasha (planetary period). So the Nakshatra not only describes character; it is the starting point for calculating the flow of a life's periods. How to read the timing is covered in the Dasha guide."
+        },
+        {
+          "heading": "The 27 Nakshatras (ruling planet, sign, keywords)",
+          "body": "Below are the 27 mansions in ecliptic order. The keywords summarise the qualities traditionally attributed to each and are only a starting point.",
+          "items": [
+            "Ashwini (Ketu / Aries) — beginnings, healing",
+            "Bharani (Venus / Aries) — holding, endurance",
+            "Krittika (Sun / Aries–Taurus) — cutting through, purification",
+            "Rohini (Moon / Taurus) — nurturing, abundance",
+            "Mrigashira (Mars / Taurus–Gemini) — searching, sensitivity",
+            "Ardra (Rahu / Gemini) — storm, transformation",
+            "Punarvasu (Jupiter / Gemini–Cancer) — renewal, return",
+            "Pushya (Saturn / Cancer) — nourishment, trust",
+            "Ashlesha (Mercury / Cancer) — entwining, insight",
+            "Magha (Ketu / Leo) — lineage, authority",
+            "Purva Phalguni (Venus / Leo) — rest, enjoyment",
+            "Uttara Phalguni (Sun / Leo–Virgo) — contracts, cooperation",
+            "Hasta (Moon / Virgo) — handiwork, dexterity",
+            "Chitra (Mars / Virgo–Libra) — brilliance, construction",
+            "Swati (Rahu / Libra) — independence, flexibility",
+            "Vishakha (Jupiter / Libra–Scorpio) — purpose, ambition",
+            "Anuradha (Saturn / Scorpio) — devotion, friendship",
+            "Jyeshtha (Mercury / Scorpio) — seniority, responsibility",
+            "Mula (Ketu / Sagittarius) — roots, inquiry",
+            "Purva Ashadha (Venus / Sagittarius) — victory, optimism",
+            "Uttara Ashadha (Sun / Sagittarius–Capricorn) — persistence, achievement",
+            "Shravana (Moon / Capricorn) — listening, learning",
+            "Dhanishta (Mars / Capricorn–Aquarius) — wealth, rhythm",
+            "Shatabhisha (Rahu / Aquarius) — healing, secrets",
+            "Purva Bhadrapada (Jupiter / Aquarius–Pisces) — intensity, duality",
+            "Uttara Bhadrapada (Saturn / Pisces) — depth, stability",
+            "Revati (Mercury / Pisces) — guidance, completion"
+          ]
+        },
+        {
+          "heading": "How to find your Nakshatra",
+          "body": "The Moon passes through a sign in about two and a half days and moves to a new Nakshatra roughly once a day. So the date of birth alone gives a rough answer, but people born near the boundary may land in the neighbouring mansion without the time and place of birth. Enter all three and the Moon's mansion is calculated automatically. The free reading on this site calculates your Moon sign, Nakshatra and ascendant and explains what they mean in full sentences."
+        },
+        {
+          "heading": "Things to keep in mind",
+          "body": "A description of a Moon mansion is one of 27 generalities. In an actual reading, the Moon's position within the mansion, the planets sharing its house and its relationship to the ascendant are read together, so the same mansion can give a very different impression. Categorical statements such as \"this mansion is unsuited to marriage\", even where they appear in traditional texts, should not be applied directly to modern decisions. The most useful way to take them is as a vocabulary for understanding your own tendencies."
+        }
+      ]
+    }
+  ]
+}

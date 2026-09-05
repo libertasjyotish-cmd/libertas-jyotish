@@ -1,0 +1,271 @@
+{
+  "note": "Escrito para quem pesquisa combinações com astrologia védica / indiana (Jyotish). Evitar previsões taxativas e qualquer expressão que soe como conselho médico, jurídico ou financeiro.",
+  "published": false,
+  "linked": true,
+  "ui": {
+    "crumbHome": "Início",
+    "crumbHub": "Guias",
+    "breadcrumbLabel": "Trilha de navegação",
+    "footerLegal": "Aviso legal",
+    "footerTerms": "Termos de uso",
+    "footerPrivacy": "Política de privacidade",
+    "footerRefund": "Política de reembolso",
+    "ctaTitle": "Confira no seu próprio mapa",
+    "ctaBody": "Informe sua data, hora e local de nascimento e calculamos gratuitamente seu signo lunar, seu Nakshatra, seu ascendente e seu Dasha atual, com uma leitura escrita.",
+    "ctaButton": "Começar a leitura gratuita",
+    "relatedHeading": "Mais guias",
+    "disclaimer": "Este artigo apresenta ideias gerais da astrologia védica. Não garante acontecimentos futuros nem substitui aconselhamento médico, jurídico ou financeiro."
+  },
+  "index": {
+    "title": "Guias de astrologia védica | Libertas Jyotish",
+    "description": "Guias sobre astrologia védica (indiana): as bases do Jyotish, o que uma leitura gratuita mostra, casamento e compatibilidade, carreira e dinheiro, como ler seu mapa, os períodos Dasha e os 27 Nakshatras.",
+    "h1": "Guias de astrologia védica",
+    "lead": "Artigos em linguagem simples sobre como funciona a astrologia védica (Jyotish), escritos para quem chega a ela pela primeira vez. Comece pelo tema que mais lhe interessa.",
+    "more": "Todos os guias",
+    "menuLabel": "Todos os guias",
+    "introSlug": "indian-astrology"
+  },
+  "articles": [
+    {
+      "slug": "indian-astrology",
+      "title": "O que é astrologia védica | Diferenças da astrologia ocidental e por que dizem que acerta",
+      "description": "As bases da astrologia védica (indiana), também chamada Jyotish: como difere da astrologia ocidental, por que seu signo pode mudar e como os períodos Dasha descrevem o tempo. Inclui por que dizem que acerta e quais são seus limites.",
+      "h1": "O que é astrologia védica?",
+      "menuLabel": "O que é astrologia védica?",
+      "lead": "A astrologia védica, chamada Jyotish («a ciência da luz») em sânscrito, é uma forma de ler o céu transmitida na Índia há mais de três mil anos. Também é conhecida como astrologia indiana. A partir do estado do céu no momento do nascimento, ela lê a natureza de uma pessoa e o fluxo das diferentes fases de sua vida.",
+      "sections": [
+        {
+          "heading": "A maior diferença da astrologia ocidental: seu signo pode mudar",
+          "body": "Quando alguém consulta seu signo na astrologia védica, muitas vezes descobre que é o signo anterior ao que conhecia. A astrologia ocidental usa o zodíaco tropical, ancorado no equinócio de primavera; a védica usa o zodíaco sideral, ancorado na posição real das estrelas. A diferença entre os dois é hoje de cerca de 24 graus. Quem sempre foi Áries pode se revelar Peixes na astrologia védica. Nenhum dos sistemas está errado; eles apenas usam pontos de referência diferentes. A astrologia védica usa o lugar onde os planetas realmente estão no céu."
+        },
+        {
+          "heading": "A Lua pesa mais que o Sol",
+          "body": "A astrologia ocidental coloca o signo solar em primeiro lugar. A védica dá mais peso à Lua. Se o Sol é o rosto que mostramos à sociedade, a Lua é como a mente se move: o que nos acalma e o que nos desgasta. Além disso, a astrologia védica divide o caminho da Lua em 27 Nakshatras (mansões lunares), de modo que duas pessoas do mesmo signo podem receber leituras muito diferentes. Muita gente diz que a descrição védica de seu caráter soa mais verdadeira que a ocidental, e essa granularidade é grande parte do motivo."
+        },
+        {
+          "heading": "Dasha: um sistema para ler o «quando»",
+          "body": "Um traço característico da astrologia védica é o Dasha, um sistema de períodos planetários. A partir da posição da Lua no nascimento, a vida é dividida em períodos regidos por cada planeta: um período de Júpiter, um de Saturno, um de Rahu, cada um durando anos. Sensações como «tudo o que faço agora parece travar» ou «meu ambiente mudou de repente» são lidas pela qualidade do período atual. Poder trabalhar com o fluxo de uma vida, e não só com o caráter, é a principal diferença prática em relação à astrologia ocidental."
+        },
+        {
+          "heading": "A astrologia védica acerta?",
+          "body": "Dizem que acerta sobretudo porque usa a hora de nascimento e trabalha com muita informação, o que torna suas descrições concretas. Não só o signo, mas o ascendente (Lagna), a mansão lunar, a posição de cada planeta e o momento. Quanto mais fina a combinação, maior a resolução da leitura. Dito isso, a posição dos planetas não fixa acontecimentos futuros. A mesma configuração se manifesta de forma diferente conforme as circunstâncias e as escolhas de cada pessoa. O que a astrologia védica oferece são pistas: as tendências que você carrega e que vento sopra no período atual. Tratá-la como garantia de resultados leva a decisões ruins."
+        },
+        {
+          "heading": "O que é preciso para uma leitura",
+          "body": "Três dados: data, hora e local de nascimento. A hora é especialmente importante porque determina o ascendente e as casas (as divisões das áreas da vida), e uma diferença de poucos minutos pode mudar o que se lê. Costuma constar na certidão de nascimento ou no registro do hospital, então confira se puder. Se for realmente desconhecida, uma opção é calcular para as 12:00 e concentrar-se no que não depende da hora: o signo lunar, o Nakshatra e o esquema geral do Dasha."
+        }
+      ]
+    },
+    {
+      "slug": "free-reading",
+      "title": "O que uma leitura gratuita de astrologia védica mostra | Como funciona o cálculo automático e seus limites",
+      "description": "O que você realmente aprende com uma leitura gratuita de astrologia védica: o que é calculado a partir de data, hora e local de nascimento, o que a parte gratuita cobre e o que fica além dela.",
+      "h1": "O que uma leitura gratuita de astrologia védica mostra",
+      "lead": "Pesquise «astrologia védica grátis» e os serviços que aparecem são muito diferentes. Alguns só desenham o mapa, outros param numa breve descrição do signo, outros explicam em frases completas. Aqui resumimos o que uma leitura gratuita que calcula automaticamente a partir dos seus dados de nascimento pode de fato dizer.",
+      "sections": [
+        {
+          "heading": "O que se calcula é o céu no momento em que você nasceu",
+          "body": "Ao informar data, hora e local de nascimento, calculam-se as posições dos planetas vistas daquele momento e daquele lugar. O local é convertido em latitude e longitude, e o fuso horário é corrigido. Assim se obtêm seu signo lunar e seu Nakshatra (mansão lunar), seu signo solar, o ascendente (Lagna), a posição de cada planeta e os limites dos seus períodos Dasha. Essa parte é astronomia, não a opinião de um astrólogo, então qualquer serviço dará os mesmos valores. A leitura é essa configuração fixa colocada em palavras segundo as interpretações clássicas."
+        },
+        {
+          "heading": "O que a parte gratuita cobre",
+          "body": "Na maioria dos casos, a parte gratuita cobre sua natureza vista pelo signo lunar e pelo Nakshatra, como os outros o percebem segundo o ascendente, e a tendência geral de hoje e do curto prazo. É suficiente para conhecer seus padrões básicos e saber qual é seu signo na astrologia védica. A leitura gratuita deste site cobre esse alcance e pode ser lida todos os dias."
+        },
+        {
+          "heading": "O que a parte gratuita não cobre",
+          "body": "Perguntas sobre o «quando», como o momento do casamento ou de uma mudança de emprego, exigem comparar o Dasha com os trânsitos (o movimento atual dos planetas), o que pede mais volume e mais critério. Aprofundar uma área específica, como o trabalho adequado, o dinheiro ou a compatibilidade, implica olhar a posição das casas e os mapas divisionais (D9, D10 e outros). Isso vai além de uma leitura gratuita e normalmente é tratado no conteúdo pago para membros ou no relatório completo de vida."
+        },
+        {
+          "heading": "Cuidados ao usar uma leitura gratuita",
+          "body": "Se a hora de nascimento não for exata, o ascendente e as casas se deslocam e a premissa da leitura muda, então confirme a hora antes de começar. Além disso, receba o resultado como material de leitura para autoconhecimento. Ele não fixa acontecimentos futuros nem substitui decisões médicas, jurídicas ou financeiras. É mais útil quando você lê conferindo se as tendências descritas realmente combinam com você."
+        }
+      ]
+    },
+    {
+      "slug": "marriage",
+      "title": "Momento do casamento e compatibilidade na astrologia védica | Casa 7, D9 e Dasha",
+      "description": "Como a astrologia védica (Jyotish) lê o casamento: a casa 7, Vênus e Júpiter, o mapa divisional Navamsha (D9), o momento pelo Dasha e pelos trânsitos, e como se avalia a compatibilidade entre duas pessoas.",
+      "h1": "Momento do casamento e compatibilidade na astrologia védica",
+      "lead": "A astrologia védica é tradicionalmente usada para considerar o casamento, e na Índia os mapas ainda são comparados quando uma união é proposta. Aqui explicamos de quais fatores o casamento é lido e como se determina o momento, desdobrando os termos técnicos pelo caminho.",
+      "sections": [
+        {
+          "heading": "O casamento é lido na casa 7",
+          "body": "O mapa natal se divide em doze casas, cada uma responsável por uma área da vida. O casamento e o cônjuge aparecem na casa 7. Que signo cai ali, onde está seu regente e que planetas a ocupam: disso se lê o que você procura num parceiro e como tende a construir uma relação. Na abordagem clássica, Júpiter no mapa de uma mulher e Vênus no de um homem também são usados como indicadores do cônjuge."
+        },
+        {
+          "heading": "D9 (Navamsha): o segundo mapa",
+          "body": "A astrologia védica tem mapas divisionais, que subdividem ainda mais o mapa natal. O que sempre se consulta para o casamento é o D9, o Navamsha, um segundo mapa obtido dividindo cada signo do mapa natal em nove partes. Diz-se que a natureza superficial aparece no mapa natal e que a essência que emerge na vida conjugal aparece no D9, e os dois são lidos juntos. Um planeta discreto no mapa natal pode se tornar forte no D9, o que se interpreta como o casamento mudando o rumo da vida daquela pessoa."
+        },
+        {
+          "heading": "O momento é lido com Dasha e trânsitos",
+          "body": "«Quando vou me casar?» é julgado sobrepondo o Dasha (períodos planetários) ao movimento atual dos planetas (trânsitos). Você está no período de um planeta ligado à casa 7, ao seu regente, a Vênus ou a Júpiter? Júpiter ou Saturno está de fato passando pela casa 7 nesse momento? Quando as duas coisas coincidem, os assuntos de relacionamento tendem a se mover. Dito ao contrário, apressar-se quando as condições não estão dadas costuma desgastar. Note que isso indica períodos de maior probabilidade; não decide se haverá casamento nem quando."
+        },
+        {
+          "heading": "Como se lê a compatibilidade entre duas pessoas",
+          "body": "O método usado há muito tempo na Índia é o Ashtakoota, que compara as mansões lunares (Nakshatras) das duas pessoas em oito pontos e dá uma pontuação de 36, com 18 ou mais como referência habitual. Mas a pontuação é só a entrada. Na prática, dá-se mais peso a sobrepor os dois mapas e ver em quais áreas suas os planetas da outra pessoa caem (casas 7, 2, 8 e outras). Há relações com pontuação baixa que duram e relações com pontuação alta que não se encaixam. A compatibilidade é mais útil não como veredito de «combinam ou não», mas como mapa de onde vocês se apoiam e onde o atrito é provável."
+        },
+        {
+          "heading": "Neste site",
+          "body": "A leitura gratuita atual cobre sua própria visão do casamento e como você tende a se relacionar com o parceiro, segundo seu mapa natal. Uma leitura de compatibilidade que compare dois mapas está em preparação e será adicionada ao menu. A análise detalhada do Dasha por trás do momento do casamento é tratada no relatório completo de vida."
+        }
+      ]
+    },
+    {
+      "slug": "career",
+      "title": "Carreira, mudança de emprego e dinheiro na astrologia védica | Casas 10 e 2",
+      "description": "Como a astrologia védica (Jyotish) lê trabalho e dinheiro: a casa 10 para a profissão adequada, as casas 2 e 11 para a renda, o mapa divisional D10 e como o Dasha aponta períodos favoráveis para mudar de emprego.",
+      "h1": "Carreira, mudança de emprego e dinheiro na astrologia védica",
+      "lead": "A astrologia védica não trata só do caráter, mas de «em que campo sua força aparece» e de «quando se mover vai a favor da corrente». Trabalho e dinheiro pertencem a casas diferentes, e cada um é lido num lugar distinto.",
+      "sections": [
+        {
+          "heading": "A profissão adequada é lida na casa 10",
+          "body": "A casa 10 mostra a ocupação e a posição social. Que signo cai ali, onde está seu regente e que planetas a influenciam: isso delineia o tipo de trabalho que combina com você. Se Mercúrio intervém com força, trabalho com palavras e informação; Marte, ambientes que exigem decisão e ação; Saturno, trabalho construído devagar ao longo do tempo. A natureza do planeta corresponde ao campo. O mapa divisional D10 (Dashamsha) vai além e mostra qual posição dentro de uma profissão lhe convém: na linha de frente, coordenando ou de forma independente."
+        },
+        {
+          "heading": "A renda é lida nas casas 2 e 11",
+          "body": "Profissão adequada e dinheiro não são a mesma coisa. A casa 2 mostra as economias e os bens que ficam com você; a 11, a renda e as pessoas que a trazem. Uma casa 10 forte com uma casa 2 fraca se lê como ser valorizado mas ter dificuldade em reter dinheiro, e o contrário também acontece. A intervenção de Júpiter aponta para crescimento; a de Saturno, para algo mais lento porém estável. O que se mostra não é um valor, mas o padrão de como o dinheiro entra e como fica."
+        },
+        {
+          "heading": "Períodos favoráveis para mudar de emprego",
+          "body": "Para decisões de carreira usa-se, de novo, o Dasha. Entrar no período de um planeta ligado à casa 10 ou ao seu regente torna mais provável que o ambiente de trabalho se mova. O trânsito de Saturno também é tratado como ponto de virada: quando Saturno toca a casa 10 ou o ascendente, a natureza das responsabilidades tende a mudar ou a forma de trabalhar é revista. Inversamente, fazer um grande movimento quando não há sinal de mudança pode, na visão tradicional, render pouco pelo esforço."
+        },
+        {
+          "heading": "Cuidados ao ler",
+          "body": "O mapa natal mostra tendências; não nomeia uma profissão. A mesma configuração produz inúmeros empregos diferentes conforme a época e o ambiente. Também não garante renda nem resultados de investimento, então tome o que está escrito como um dado entre outros. Decisões de mudar de emprego ou comprometer dinheiro devem ser tomadas depois de conferir as condições reais."
+        },
+        {
+          "heading": "Neste site",
+          "body": "A leitura gratuita cobre suas qualidades básicas e o fluxo atual. A profissão adequada segundo as casas 10 e 2 e o D10, e o momento segundo o Dasha, são tratados no relatório completo de vida."
+        }
+      ]
+    },
+    {
+      "slug": "horoscope",
+      "title": "Como ler um mapa de astrologia védica | Ascendente, casas e D9",
+      "description": "Como ler um mapa de astrologia védica (indiana): os estilos de mapa do norte e do sul da Índia, o ascendente (Lagna) e como se contam as casas, a força dos planetas e o papel do mapa divisional D9, em ordem de leitura.",
+      "h1": "Como ler um mapa de astrologia védica",
+      "lead": "Um mapa védico é desenhado como um quadrado, ao contrário da roda circular da astrologia ocidental. No início parece um emaranhado de símbolos, mas depois de conhecer a ordem de leitura você consegue extrair tendências do seu próprio mapa.",
+      "sections": [
+        {
+          "heading": "Há dois estilos de mapa",
+          "body": "O estilo do norte da Índia é uma figura de losangos entrelaçados em que as posições das casas são fixas e os números dos signos são escritos dentro. O estilo do sul é uma moldura de doze quadros em que as posições dos signos são fixas e as casas se movem. Ambos mostram o mesmo conteúdo; a diferença é uma convenção regional. Se está começando, o estilo do sul, com sua disposição fixa de quadros, costuma ser mais fácil de acompanhar."
+        },
+        {
+          "heading": "Comece pelo Lagna (ascendente)",
+          "body": "A leitura começa pelo signo que nascia no horizonte leste no momento do nascimento: o Lagna, ou ascendente. Ele se torna a casa 1, e a 2, a 3 e as seguintes são contadas a partir dali no sentido anti-horário. O Lagna mostra a constituição, a primeira impressão e a postura diante da vida, e é a referência que fixa a posição de todas as casas. O ascendente passa ao signo seguinte a cada duas horas aproximadamente, então uma hora de nascimento inexata desloca o mapa inteiro. Por isso confirmar a hora importa."
+        },
+        {
+          "heading": "As áreas que as doze casas cobrem",
+          "body": "A casa 1 é o eu; a 2, bens e palavra; a 3, iniciativa e irmãos; a 4, lar e base emocional; a 5, criatividade e filhos; a 6, dificuldades no trabalho e saúde; a 7, casamento e relacionamentos; a 8, transformação e herança; a 9, fortuna e aprendizado; a 10, ocupação e posição social; a 11, renda e redes; a 12, perda, desapego e introspecção. Quais planetas estão em quais casas mostra onde a energia tende a se concentrar na vida."
+        },
+        {
+          "heading": "Avaliar a força e o estado dos planetas",
+          "body": "A expressão de um planeta muda conforme o signo que ocupa. No próprio signo ou no signo de exaltação ele mostra suas qualidades com facilidade; no signo oposto trabalha através da dificuldade. Tradicionalmente, os planetas também são agrupados entre os que tendem a agir de forma favorável, como Júpiter e Vênus, e os que agem como provas, como Saturno, Marte, Rahu e Ketu. Mas os planetas de prova não são maus; quanto mais forte agem, mais clara é a área em que você está sendo treinado."
+        },
+        {
+          "heading": "Sobrepor os mapas divisionais e o tempo",
+          "body": "Depois de ler o mapa natal, use os mapas divisionais (D9, D10 e outros) para aprofundar áreas específicas e, por fim, sobreponha o Dasha (períodos planetários) para ver em que período você está agora. Essas três etapas são a forma básica de percorrer um mapa védico. Ir do conjunto para a área e da área para o tempo evita que a interpretação se fragmente."
+        },
+        {
+          "heading": "Como obter seu próprio mapa",
+          "body": "Com sua data, hora e local de nascimento, o mapa é calculado automaticamente. A leitura gratuita deste site calcula seu signo lunar, seu Nakshatra e seu ascendente e os explica em frases completas. Em vez de seguir os símbolos por conta própria, o caminho mais rápido é ler como suas próprias posições são interpretadas."
+        }
+      ]
+    },
+    {
+      "slug": "dasha",
+      "title": "O que é o Dasha na astrologia védica | Como se calcula e o que significa cada período planetário",
+      "description": "O Vimshottari Dasha, o sistema de tempo da astrologia védica (Jyotish): como o ciclo de 120 anos é calculado a partir do Nakshatra da Lua, o caráter de cada período planetário como Júpiter, Saturno ou Rahu, e como ler Mahadasha e Antardasha.",
+      "h1": "Como ler o Dasha (períodos planetários)",
+      "lead": "A astrologia védica tem um sistema chamado Dasha que divide a vida em períodos planetários e lê que vento sopra no atual. É uma forma de ler o tempo distinta dos trânsitos ocidentais e própria da astrologia védica. Aqui tratamos da versão mais usada, o Vimshottari Dasha, e explicamos como se calcula e como é cada período planetário.",
+      "sections": [
+        {
+          "heading": "O que é um Dasha",
+          "body": "Dasha significa «estado» ou «período» em sânscrito e designa um sistema que divide a vida em períodos regidos por planetas. Há muitos tipos, mas o padrão é o Vimshottari Dasha, em que nove planetas se revezam como protagonistas de uma vida até somar 120 anos. O tempo atribuído a cada planeta é fixo: Ketu 7 anos, Vênus 20, Sol 6, Lua 10, Marte 7, Rahu 18, Júpiter 16, Saturno 19, Mercúrio 17."
+        },
+        {
+          "heading": "O cálculo começa no Nakshatra da Lua ao nascer",
+          "body": "Com qual período planetário uma vida começa é decidido pelo Nakshatra (mansão lunar) que a Lua ocupava no momento do nascimento. Cada um dos 27 Nakshatras é atribuído a um dos nove planetas: uma Lua em Ashwini começa no período de Ketu; uma Lua em Rohini, no período da Lua. Quanto a Lua havia avançado dentro daquele Nakshatra determina quantos anos restam do primeiro período. Uma hora de nascimento errada em algumas horas move a posição da Lua e, com ela, as datas em que os Dashas mudam. É uma das razões pelas quais uma hora exata importa."
+        },
+        {
+          "heading": "Mahadasha e Antardasha",
+          "body": "Os grandes períodos, de vários anos até vinte, chamam-se Mahadasha (períodos maiores). Cada um se divide por sua vez em nove subperíodos chamados Antardasha. Dentro de um período de Saturno de 19 anos, por exemplo, os subperíodos se sucedem Saturno/Saturno, Saturno/Mercúrio, Saturno/Ketu e assim por diante. Na prática, o período maior dá a qualidade geral do tempo e o subperíodo dá a cor concreta daquele ano ou daqueles poucos anos. Costumam ser escritos maior/sub, como «Saturno/Júpiter»."
+        },
+        {
+          "heading": "O caráter de cada período planetário",
+          "body": "O período de Júpiter tende a trazer aprendizado, expansão e vínculos com quem apoia, e costuma ser mencionado em relação a casamento e filhos. O de Saturno é um tempo de responsabilidade e resistência em que o esforço se acumula mas a mudança brusca é improvável. O de Rahu intensifica mudanças repentinas de ambiente e o envolvimento com o exterior ou com novas tecnologias; ascensão e confusão convivem. O de Ketu é de introspecção e desapego, quando antigos apegos se desfazem. Vênus é relacionamentos, arte e conforto; o Sol, afirmar-se e posição social; a Lua, emoção e lar; Marte, ação e competição; Mercúrio, conhecimento, trabalho e negociação. São apenas generalidades. O mesmo período de Júpiter parece completamente diferente conforme a casa que Júpiter ocupa no seu mapa e seu estado."
+        },
+        {
+          "heading": "Bases para ler um Dasha",
+          "body": "Para ler um Dasha, confira primeiro onde o planeta regente está no mapa natal, que casas rege e se está forte ou fraco. O Dasha é como um temporizador que indica quando as posições do mapa natal se ativam; o período em si não é bom nem mau. Depois, espere que os temas das casas que esse planeta governa (casamento para a 7, trabalho para a 10) venham à frente nesse período. Por fim, sobrepor os trânsitos atuais de Júpiter e Saturno afina o momento. O procedimento para o momento do casamento e da carreira também é tratado nos respectivos guias."
+        },
+        {
+          "heading": "Cuidados com o Dasha",
+          "body": "O Dasha mostra a qualidade de um período; não fixa acontecimentos. No mesmo período de Saturno, uma pessoa se assenta e acumula força enquanto outra se sente travada. O ano aproximado em torno da mudança de um período maior para o seguinte costuma ser lido como uma transição em que a influência dos dois planetas se mistura. Uma tabela de Dasha pode ser calculada automaticamente a partir de sua data, hora e local de nascimento. A leitura gratuita deste site dá seu período maior e subperíodo atuais; o relatório completo de vida cobre a sequência completa de Dashas da sua vida e uma leitura de cada período."
+        }
+      ]
+    },
+    {
+      "slug": "nakshatra",
+      "title": "O que são os Nakshatras | As 27 mansões lunares e como encontrar a sua (astrologia védica)",
+      "description": "Os 27 Nakshatras (mansões lunares) da astrologia védica (Jyotish): como diferem dos 12 signos, sua relação com o caráter e o Dasha, a lista completa com planeta regente, signo e palavras-chave, e como encontrar gratuitamente seu Nakshatra lunar.",
+      "h1": "O que são os Nakshatras: as 27 mansões lunares",
+      "lead": "Os Nakshatras são as «mansões da Lua»: o caminho da Lua dividido em 27 partes. Na astrologia védica, a mansão que a Lua ocupava ao nascer é a pista central para ler as tendências interiores de uma pessoa. Explica por que duas pessoas do mesmo signo dão impressões tão diferentes, e é também o ponto de partida para calcular o Dasha (períodos planetários).",
+      "sections": [
+        {
+          "heading": "Como diferem dos 12 signos",
+          "body": "Os 12 signos dividem a eclíptica em segmentos de 30 graus; os Nakshatras dividem a mesma eclíptica em 27 segmentos de 13 graus e 20 minutos. Cada signo contém, portanto, de duas a três mansões. Se o signo é o palco em que uma vida se representa, a mansão se parece mais com o papel interpretado nele, expressando temperamento e reações habituais mais finas. Cada Nakshatra recebe o nome de uma estrela ou grupo de estrelas real, e tem uma divindade, um símbolo e um planeta regente fixados pela tradição."
+        },
+        {
+          "heading": "O que o Nakshatra da Lua mostra",
+          "body": "O que mais pesa na astrologia védica é a mansão que a Lua ocupava no momento do nascimento. A Lua é tomada como a forma em que a mente se move: o que a acalma, o que a agita, quando se desgasta. A mansão distingue essas tendências interiores. Não é raro que alguém para quem a descrição ocidental do signo solar parecia um pouco pobre diga que a da mansão lunar finalmente fez sentido. As leituras também consultam as mansões ocupadas pelos outros planetas e pelo ascendente, mas conhecer a mansão da sua Lua é a porta de entrada."
+        },
+        {
+          "heading": "Nakshatras e Dasha",
+          "body": "Cada uma das 27 mansões é atribuída a um dos nove planetas, e o regente da mansão da sua Lua ao nascer se torna seu primeiro Dasha (período planetário). Assim, o Nakshatra não só descreve o caráter; é o ponto de partida para calcular o fluxo dos períodos da vida. Como ler o tempo é tratado no guia do Dasha."
+        },
+        {
+          "heading": "Os 27 Nakshatras (planeta regente, signo, palavras-chave)",
+          "body": "A seguir, as 27 mansões em ordem eclíptica. As palavras-chave resumem as qualidades que a tradição atribui a cada uma e são apenas um ponto de partida.",
+          "items": [
+            "Ashwini (Ketu / Áries) — começos, cura",
+            "Bharani (Vênus / Áries) — sustentar, resistência",
+            "Krittika (Sol / Áries–Touro) — abrir caminho, purificação",
+            "Rohini (Lua / Touro) — nutrir, abundância",
+            "Mrigashira (Marte / Touro–Gêmeos) — busca, sensibilidade",
+            "Ardra (Rahu / Gêmeos) — tempestade, transformação",
+            "Punarvasu (Júpiter / Gêmeos–Câncer) — renovação, retorno",
+            "Pushya (Saturno / Câncer) — alimento, confiança",
+            "Ashlesha (Mercúrio / Câncer) — enlaçar, perspicácia",
+            "Magha (Ketu / Leão) — linhagem, autoridade",
+            "Purva Phalguni (Vênus / Leão) — descanso, prazer",
+            "Uttara Phalguni (Sol / Leão–Virgem) — contratos, cooperação",
+            "Hasta (Lua / Virgem) — trabalho manual, destreza",
+            "Chitra (Marte / Virgem–Libra) — brilho, construção",
+            "Swati (Rahu / Libra) — independência, flexibilidade",
+            "Vishakha (Júpiter / Libra–Escorpião) — propósito, ambição",
+            "Anuradha (Saturno / Escorpião) — devoção, amizade",
+            "Jyeshtha (Mercúrio / Escorpião) — senioridade, responsabilidade",
+            "Mula (Ketu / Sagitário) — raízes, investigação",
+            "Purva Ashadha (Vênus / Sagitário) — vitória, otimismo",
+            "Uttara Ashadha (Sol / Sagitário–Capricórnio) — persistência, realização",
+            "Shravana (Lua / Capricórnio) — escuta, aprendizado",
+            "Dhanishta (Marte / Capricórnio–Aquário) — riqueza, ritmo",
+            "Shatabhisha (Rahu / Aquário) — cura, segredos",
+            "Purva Bhadrapada (Júpiter / Aquário–Peixes) — intensidade, dualidade",
+            "Uttara Bhadrapada (Saturno / Peixes) — profundidade, estabilidade",
+            "Revati (Mercúrio / Peixes) — orientação, conclusão"
+          ]
+        },
+        {
+          "heading": "Como encontrar seu Nakshatra",
+          "body": "A Lua atravessa um signo em cerca de dois dias e meio e muda de Nakshatra aproximadamente uma vez por dia. Por isso a data de nascimento sozinha dá uma resposta aproximada, mas quem nasceu perto do limite pode cair na mansão vizinha se a hora e o local não forem conhecidos. Informe os três dados e a mansão da Lua é calculada automaticamente. A leitura gratuita deste site calcula seu signo lunar, seu Nakshatra e seu ascendente e explica seu significado em frases completas."
+        },
+        {
+          "heading": "Cuidados ao ler os Nakshatras",
+          "body": "A descrição de uma mansão lunar é uma entre 27 generalidades. Numa leitura real, a posição da Lua dentro da mansão, os planetas que compartilham sua casa e sua relação com o ascendente são lidos juntos, então a mesma mansão pode dar uma impressão muito diferente. Afirmações categóricas como «esta mansão não serve para o casamento», ainda que apareçam em textos tradicionais, não devem ser aplicadas diretamente a decisões atuais. A forma mais útil de recebê-las é como vocabulário para entender suas próprias tendências."
+        }
+      ]
+    }
+  ]
+}
