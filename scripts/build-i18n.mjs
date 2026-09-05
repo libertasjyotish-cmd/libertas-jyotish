@@ -38,7 +38,7 @@ const GUIDE_SECTION = 'guide';
 
 const PARTIAL_DIR = join(TEMPLATE_DIR, 'partials');
 const PARTIAL = /\{\{>\s*([a-zA-Z0-9_-]+)\s*\}\}/g;
-const PLACEHOLDER = /\{\{\s*([a-zA-Z0-9_.-]+)\s*(?:\|\s*(js|attr|tpl)\s*)?\}\}/g;
+const PLACEHOLDER = /\{\{\s*([a-zA-Z0-9_.-]+)\s*(?:\|\s*(js|attr|tpl|json)\s*)?\}\}/g;
 
 // フッターの言語切替。表示順と表記はここだけで管理する。
 const LANG_SWITCH = [
@@ -139,6 +139,10 @@ function lookup(obj, path) {
   return path.split('.').reduce((acc, key) => (acc == null ? undefined : acc[key]), obj);
 }
 
+function escapeJsonString(value) {
+  return JSON.stringify(String(value)).slice(1, -1).replace(/</g, '\\u003c');
+}
+
 // 文字列リテラルの引用符種別に依らず安全にするため、3種の引用符と ${ をすべて退避する。
 function escapeJs(value) {
   return JSON.stringify(String(value)).slice(1, -1).replace(/'/g, "\\'").replace(/`/g, '\\`').replace(/\$\{/g, '\\${');
@@ -185,6 +189,7 @@ function render(template, locale, base, context) {
     if (filter === 'js') return escapeJs(value);
     if (filter === 'tpl') return escapeTemplate(value);
     if (filter === 'attr') return escapeAttr(value);
+    if (filter === 'json') return escapeJsonString(value);
     return String(value);
   });
   return { output, missing };
