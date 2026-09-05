@@ -1,4 +1,4 @@
-/* 解説ページ（ナクシャトラ等）の体裁。原稿確認用の最小構成。 */
+/* 解説記事ページの体裁。 */
 :root {
   --guide-gold: #d4af37;
   --guide-bg: #0c1a1f;
@@ -93,3 +93,91 @@ body {
 @media (max-width: 640px) {
   .guide .nakshatra-list li { grid-template-columns: 1fr; }
 }
+
+/* ヘッダー・フッター・パンくず */
+.guide-header {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 14px 16px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.guide-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.08em;
+  color: var(--guide-gold);
+  text-decoration: none;
+}
+
+.guide-nav { display: flex; gap: 16px; }
+.guide-nav a { color: #e8d9a8; font-size: 0.88rem; text-decoration: none; }
+.guide-nav a:hover { text-decoration: underline; }
+
+.breadcrumb { font-size: 0.8rem; margin-bottom: 12px; color: #c9bb93; }
+.breadcrumb ol { list-style: none; display: flex; flex-wrap: wrap; gap: 4px; }
+.breadcrumb li + li::before { content: '›'; margin: 0 6px; opacity: 0.7; }
+.breadcrumb a { color: #e8d9a8; text-decoration: none; }
+
+.guide-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 16px 40px;
+  text-align: center;
+  font-size: 0.8rem;
+}
+.guide-footer a { color: var(--guide-gold); text-decoration: none; margin: 0 8px; }
+.guide-footer .copyright { color: #9c907a; margin-top: 10px; }
+
+/* 記事内リスト（27宿一覧など） */
+.guide .guide-list { margin: 8px 0 0 1.4em; font-size: 0.95rem; }
+.guide .guide-list li { padding: 4px 0; border-bottom: 1px solid rgba(139, 107, 27, 0.15); }
+
+/* 無料鑑定への導線 */
+.guide-cta {
+  margin-top: 24px;
+  padding: 22px 24px;
+  background: var(--guide-paper);
+  border: 1px solid var(--guide-gold);
+  border-radius: 10px;
+  text-align: center;
+}
+.guide-cta-title { font-weight: 600; color: #6b4f10; font-size: 1.05rem; margin-bottom: 8px; }
+.guide-cta p { font-size: 0.92rem; }
+.guide-cta-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #b8912a, var(--guide-gold));
+  color: #1a1408;
+  font-weight: 600;
+  border-radius: 999px;
+  text-decoration: none;
+}
+
+/* 関連記事・記事一覧 */
+.guide .related {
+  margin-top: 24px;
+  padding: 20px 24px;
+  background: rgba(253, 248, 236, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 10px;
+  color: #e8d9a8;
+}
+.guide .related h2 { color: var(--guide-gold); font-size: 1rem; margin: 0 0 10px; }
+.guide .related ul { list-style: none; }
+.guide .related li { padding: 6px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.2); font-size: 0.95rem; }
+.guide .related a { color: #e8d9a8; text-decoration: none; }
+.guide .related a:hover { text-decoration: underline; }
+
+.guide .guide-index { list-style: none; }
+.guide .guide-index li { border-bottom: 1px solid rgba(139, 107, 27, 0.25); }
+.guide .guide-index a { display: block; padding: 14px 0; text-decoration: none; color: inherit; }
+.guide .guide-index-title { display: block; font-weight: 600; color: #6b4f10; margin-bottom: 4px; }
+.guide .guide-index-desc { display: block; font-size: 0.88rem; color: #5a4c3e; }
