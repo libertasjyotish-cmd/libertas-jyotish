@@ -217,6 +217,12 @@ background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(139, 107, 27, 0.18)
 border-radius: 10px; padding: 6px 18px 2px; margin-bottom: 20px;
 }
 .about-block.alt { background: rgba(212, 175, 55, 0.09); }
+.guide-links ul { list-style: none; padding: 0 0 12px; margin: 0; }
+.guide-links li { padding: 7px 0; border-bottom: 1px solid rgba(139, 107, 27, 0.18); font-size: 0.9rem; }
+.guide-links li:last-child { border-bottom: none; }
+.guide-links a { color: var(--color-gold-dark); text-decoration: none; }
+.guide-links a:hover { text-decoration: underline; }
+.guide-links-more { text-align: right; font-size: 0.85rem; }
 .about-block .about-h3 { margin-top: 18px; }
 .about-cta {
 text-align: center; margin-top: 30px; padding: 18px 16px;
@@ -363,14 +369,10 @@ transition: color 0.3s, border-color 0.3s;
 <p style="margin-bottom:0;">{{t.index.text30}}</p>
 </div>
 
-<p>{{t.index.text31}}</p>
-<p>{{t.index.text32}}</p>
-
 </div>
 
 <div class="about-block alt">
 <h3 class="about-h3">{{t.index.text33}}</h3>
-<p>{{t.index.text34}}</p>
 
 <div class="about-card">
 <div class="about-card-title">{{t.index.text35}}</div>
@@ -391,17 +393,12 @@ transition: color 0.3s, border-color 0.3s;
 
 <div class="about-block">
 <h3 class="about-h3">{{t.index.text41}}</h3>
-<p>{{t.index.text42}}</p>
 <p>{{t.index.text43}}</p>
-
-</div>
-
-<div class="about-block alt">
-<h3 class="about-h3">{{t.index.text44}}</h3>
 <p>{{t.index.text45}}</p>
-<p>{{t.index.text46}}</p>
 
 </div>
+
+{{guideLinks}}
 
 <div class="about-cta">
 {{t.index.text47}}<br>

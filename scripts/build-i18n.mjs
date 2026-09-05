@@ -32,6 +32,9 @@ const BASE_LANG = 'ja';
 const SITE = 'https://www.libertas-jyotish.com';
 // sitemap.xml に載せる（＝検索結果に出したい）ページ。
 const SITEMAP_PAGES = ['index', 'legal', 'pdf-purchase'];
+// 解説記事（data/guide/<lang>.json）。published が true の言語だけ sitemap とトップの記事一覧に載せる。
+const GUIDE_DIR = join(ROOT, 'data/guide');
+const GUIDE_SECTION = 'guide';
 
 const PARTIAL_DIR = join(TEMPLATE_DIR, 'partials');
 const PARTIAL = /\{\{>\s*([a-zA-Z0-9_-]+)\s*\}\}/g;
@@ -63,6 +66,38 @@ function buildHreflang(page) {
   return links.join('\n');
 }
 
+function loadGuide(lang) {
+  const path = join(GUIDE_DIR, `${lang}.json`);
+  if (!existsSync(path)) return null;
+  const guide = readJson(path);
+  return guide.published ? guide : null;
+}
+
+// 記事は言語ごとに独立しており、他言語版が無いので hreflang は付けない。
+function buildGuideSitemapUrls() {
+  const urls = [];
+  for (const entry of LANG_SWITCH) {
+    const guide = loadGuide(entry.lang);
+    if (!guide) continue;
+    const base = `${SITE}/${entry.lang}/${GUIDE_SECTION}`;
+    urls.push(`  <url>\n    <loc>${base}</loc>\n  </url>`);
+    for (const article of guide.articles) {
+      urls.push(`  <url>\n    <loc>${base}/${article.slug}</loc>\n  </url>`);
+    }
+  }
+  return urls;
+}
+
+// トップの「解説記事」一覧。未公開・記事の無い言語では空文字（枠ごと出さない）。
+function buildGuideLinks(lang) {
+  const guide = loadGuide(lang);
+  if (!guide) return '';
+  const items = guide.articles
+    .map((a) => `<li><a href="/${lang}/${GUIDE_SECTION}/${a.slug}">${escapeAttr(a.h1)}</a></li>`)
+    .join('\n');
+  return `<div class="about-block guide-links">\n<h3 class="about-h3">${escapeAttr(guide.index.h1)}</h3>\n<ul>\n${items}\n</ul>\n<p class="guide-links-more"><a href="/${lang}/${GUIDE_SECTION}">${escapeAttr(guide.index.more)}</a></p>\n</div>`;
+}
+
 function buildSitemap() {
   const urls = [];
   for (const page of SITEMAP_PAGES) {
@@ -77,6 +112,7 @@ function buildSitemap() {
       ].join('\n'));
     }
   }
+  urls.push(...buildGuideSitemapUrls());
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
@@ -136,6 +172,8 @@ function render(template, locale, base, context) {
       value = String(value).split('%LANG%').join(locale.meta.lang);
     } else if (path === 'langSwitcher') {
       value = buildLangSwitcher(locale.meta.lang);
+    } else if (path === 'guideLinks') {
+      value = buildGuideLinks(locale.meta.lang);
     } else if (path === 'canonical') {
       value = pageUrl(locale.meta.lang, context.page);
     } else if (path === 'hreflang') {
