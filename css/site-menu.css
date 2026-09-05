@@ -41,6 +41,7 @@
 .lj-menu a.is-current { color: #D4AF37; }
 .lj-menu .lj-menu-note { font-size: 0.7rem; color: #8A9A9E; margin-left: 6px; }
 .lj-menu-divider { height: 1px; margin: 6px 4px; background: rgba(139, 107, 27, 0.35); }
+.lj-menu-group { padding: 6px 12px 2px; font-size: 0.7rem; letter-spacing: 0.12em; color: #8A9A9E; }
 
 @media (max-width: 640px) {
   .lj-logo { font-size: 1.08rem; }
