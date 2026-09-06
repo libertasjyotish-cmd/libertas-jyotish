@@ -12,5 +12,8 @@
   "dependencies": {
     "google-auth-library": "^9.14.0",
     "google-spreadsheet": "^4.1.4"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^25.9.0"
   }
 }
