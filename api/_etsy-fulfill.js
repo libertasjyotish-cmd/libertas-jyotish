@@ -1,0 +1,269 @@
+// Etsy 注文の自動処理の本体。Vercel Cron（api/etsy-cron.js）から数分おきに呼ばれ、
+// 関数の制限時間内で進められるところまで進めて台帳（Google Sheets）に保存し、次回に続きを行う。
+//   注文取得 → パーソナライズ解析 → 天体計算 → 章を数個ずつ生成 → 揃ったら PDF → Resend → Etsy 注文を完了に更新
+// 台帳は receipt_id ごとに 1 行。再実行しても二重生成・二重送信しない。
+const { fetchReportData } = require('./_astrology');
+const { listGeminiModels } = require('./_gemini');
+const { CHAPTER_IDS, generateChapters } = require('./_report');
+const { normalizeLang } = require('./_terms');
+const { geocodeBirthPlace } = require('./_geocode');
+const etsy = require('./_etsy-api');
+const ledger = require('./_etsy-ledger');
+const { parsePersonalization } = require('./_etsy-parse');
+const { renderReportPdf } = require('./_etsy-pdf');
+const mail = require('./_etsy-mail');
+
+const CHAPTERS_PER_STEP = 3;
+const MAX_ATTEMPTS = 5;
+const IN_PROGRESS_LOCK_MS = 2 * 60 * 1000;
+const MIN_MS_FOR_CHAPTERS = 25000;
+const MIN_MS_FOR_PDF = 30000;
+const { STATUS } = ledger;
+
+const REVIEW_PAGE = `
+  <h2 class="chapter-title">Thank you</h2>
+  <p>This report was calculated from your exact birth data using the sidereal (Vedic) zodiac, and every interpretation
+  is grounded in the positions shown in the chart pages. Read it slowly, return to it at the start of each Dasha period,
+  and treat it as a map rather than a verdict: the chart shows tendencies, and your choices decide the outcome.</p>
+  <p>If you have a question about a passage, reply to the delivery email. If the reading helped you, a short review on
+  Etsy would mean a great deal and helps other seekers find this work.</p>
+  <p class="disclaimer">Libertas Jyotish · www.libertas-jyotish.com · This report is for self-reflection and entertainment
+  and is not medical, legal, financial or psychological advice.</p>`;
+
+function personalizationOf(receipt) {
+  const parts = [];
+  for (const tx of receipt.transactions || []) {
+    if (tx.personalization) parts.push(tx.personalization);
+    for (const v of tx.variations || []) {
+      if (/personali[sz]ation/i.test(v.formatted_name || '') || v.property_id === 54) parts.push(v.formatted_value);
+    }
+  }
+  if (!parts.length && receipt.message_from_buyer) parts.push(receipt.message_from_buyer);
+  return parts.filter(Boolean).join('\n');
+}
+
+// 新しい注文を台帳に登録する。既存行には触らない（運営者の手修正を上書きしないため）。
+async function registerReceipt(receipt, ctx) {
+  const receiptId = receipt.receipt_id;
+  const existing = ctx.orders.find((o) => o.receipt_id === String(receiptId));
+  if (existing) return existing.status === STATUS.DELIVERED ? 'already_delivered' : 'known';
+
+  const buyerEmail = receipt.buyer_email || '';
+  const buyerName = receipt.name || '';
+  const personalization = personalizationOf(receipt);
+  const parsed = parsePersonalization(personalization);
+  const base = {
+    transaction_id: (receipt.transactions || []).map((t) => t.transaction_id).join(','),
+    buyer_email: buyerEmail,
+    buyer_name: buyerName,
+    personalization,
+    dob: parsed.dob || '',
+    tob: parsed.tob || '',
+    tob_unknown: parsed.tobUnknown ? 'true' : 'false',
+    place: parsed.place || '',
+    language: normalizeLang(parsed.language || 'en')
+  };
+
+  if (!buyerEmail) {
+    ctx.orders.push(await ctx.store.upsertOrder(receiptId, { ...base, status: STATUS.ERROR, attempts: MAX_ATTEMPTS, last_error: 'buyer_email_missing' }));
+    if (ctx.mail) await mail.notifyOwner(`Etsy: buyer email missing (receipt ${receiptId})`, [`buyer: ${buyerName}`, `input: ${personalization}`]);
+    return 'error';
+  }
+  if (parsed.missing.length) {
+    if (ctx.mail) {
+      await mail.sendNeedsInfo({ to: buyerEmail, name: buyerName, personalization, missing: parsed.missing, notes: parsed.notes });
+      await mail.notifyOwner(`Etsy: needs info (receipt ${receiptId})`, [`buyer: ${buyerName} <${buyerEmail}>`, `missing: ${parsed.missing.join(', ')}`, `input: ${personalization}`]);
+    }
+    ctx.orders.push(await ctx.store.upsertOrder(receiptId, { ...base, status: STATUS.NEEDS_INFO, last_error: `missing:${parsed.missing.join(',')}` }));
+    return 'needs_info';
+  }
+  ctx.orders.push(await ctx.store.upsertOrder(receiptId, { ...base, status: STATUS.NEW }));
+  return 'new';
+}
+
+function isPending(order) {
+  if (order.status === STATUS.NEW) return true;
+  if (order.status === STATUS.GENERATING) return Date.now() - Date.parse(order.updated_at || 0) > IN_PROGRESS_LOCK_MS;
+  if (order.status === STATUS.ERROR) return order.attempts < MAX_ATTEMPTS;
+  return false;
+}
+
+function parseJson(text) {
+  if (!text) return null;
+  try { return JSON.parse(text); } catch (err) { return null; }
+}
+
+// 1 件の注文を制限時間内で進める。戻り値はこの呼び出しで到達した段階。
+async function advanceOrder(order, ctx) {
+  const receiptId = order.receipt_id;
+  const language = normalizeLang(order.language || 'en');
+  const tob = order.tob || '12:00';
+  const tobUnknown = order.tob_unknown === 'true' || !order.tob;
+  const remaining = () => ctx.deadline - Date.now();
+  const save = (fields) => ctx.store.upsertOrder(receiptId, fields);
+
+  if (!order.dob || !order.place) {
+    await save({ status: STATUS.NEEDS_INFO, last_error: 'missing:dob/place (fill in and set status to new)' });
+    return 'needs_info';
+  }
+
+  const attempts = order.status === STATUS.ERROR ? order.attempts + 1 : Math.max(order.attempts, 1);
+  await save({ status: STATUS.GENERATING, attempts, last_error: '' });
+
+  try {
+    let astro = parseJson(order.astro);
+    if (!astro) {
+      const geo = await geocodeBirthPlace(order.place, language);
+      if (!geo) {
+        if (ctx.mail) await mail.sendNeedsInfo({ to: order.buyer_email, name: order.buyer_name, personalization: order.personalization, missing: ['place'], notes: [] });
+        await save({ status: STATUS.NEEDS_INFO, last_error: `unknown_birthplace: ${order.place}` });
+        return 'needs_info';
+      }
+      astro = await fetchReportData({ dob: order.dob, tob, lat: geo.lat, lon: geo.lon, lang: language });
+      astro.city = order.place;
+      astro.geo_precision = geo.precision;
+      if (geo.notice) astro.geo_notice = geo.notice;
+      await save({ astro: JSON.stringify(astro) });
+      ctx.log(`  ${receiptId}: astro ready`);
+    }
+
+    const chapters = {};
+    for (const id of CHAPTER_IDS) {
+      const value = parseJson(order[id]);
+      if (value) chapters[id] = value;
+    }
+    let missing = CHAPTER_IDS.filter((id) => !chapters[id]);
+
+    while (missing.length && remaining() > MIN_MS_FOR_CHAPTERS) {
+      const batch = missing.slice(0, CHAPTERS_PER_STEP);
+      const result = await ctx.generate(astro, batch, language, remaining() - 8000);
+      const saved = {};
+      for (const [id, value] of Object.entries(result.chapters)) {
+        chapters[id] = value;
+        saved[id] = JSON.stringify(value);
+      }
+      if (Object.keys(saved).length) await save(saved);
+      if (result.failed.length) ctx.log(`  ${receiptId}: failed ${result.failed.map((f) => `${f.id}(${f.reason})`).join(', ')}`);
+      const before = missing.length;
+      missing = CHAPTER_IDS.filter((id) => !chapters[id]);
+      if (missing.length === before) throw new Error(`chapters_failed: ${result.failed.map((f) => f.id).join(',') || batch.join(',')}`);
+    }
+    // 時間内に終わらない分は new に戻して次回に続きを行う（generating は実行中ロックの意味）
+    if (missing.length) {
+      await save({ status: STATUS.NEW, last_error: `pending:${missing.join(',')}` });
+      return 'in_progress';
+    }
+    if (remaining() < MIN_MS_FOR_PDF) {
+      await save({ status: STATUS.NEW, last_error: 'pending:pdf' });
+      return 'in_progress';
+    }
+
+    const pdf = await renderReportPdf({ lang: language, report: { astro, chapters }, extraHtml: REVIEW_PAGE });
+    const filename = `Libertas-Jyotish-Report-${order.dob}.pdf`;
+    ctx.log(`  ${receiptId}: pdf ${Math.round(pdf.length / 1024)} KB`);
+    if (ctx.onPdf) await ctx.onPdf(receiptId, filename, pdf);
+
+    let emailId = '';
+    if (ctx.mail) {
+      emailId = await mail.sendReport({
+        to: order.buyer_email,
+        name: order.buyer_name,
+        pdf,
+        filename,
+        meta: { dob: order.dob, tob, tobUnknown, place: order.place, language }
+      });
+    }
+    await save({ status: STATUS.DELIVERED, delivered_at: new Date().toISOString(), email_id: emailId, last_error: '' });
+    if (ctx.mail) await mail.notifyOwner(`Etsy: delivered (receipt ${receiptId})`, [`buyer: ${order.buyer_name} <${order.buyer_email}>`, `birth: ${order.dob} ${tob} ${order.place}`, `language: ${language}`, `pdf: ${Math.round(pdf.length / 1024)} KB`]);
+    return 'delivered';
+  } catch (err) {
+    const message = String(err.message || err).slice(0, 500);
+    ctx.log(`  ${receiptId}: failed: ${message}`);
+    await save({ status: STATUS.ERROR, last_error: message });
+    if (ctx.mail && attempts >= MAX_ATTEMPTS) await mail.notifyOwner(`Etsy: gave up (receipt ${receiptId})`, [`buyer: ${order.buyer_name} <${order.buyer_email}>`, `error: ${message}`]);
+    return 'error';
+  }
+}
+
+// 配信済みで Etsy 側の完了更新が済んでいない注文を更新する
+async function markShippedIfNeeded(ctx) {
+  if (!ctx.client) return 0;
+  let count = 0;
+  for (const order of ctx.orders) {
+    if (order.status !== STATUS.DELIVERED || order.shipped === 'true') continue;
+    try {
+      await ctx.client.markShipped(ctx.shopId, order.receipt_id);
+      await ctx.store.upsertOrder(order.receipt_id, { shipped: 'true' });
+      count += 1;
+    } catch (err) {
+      ctx.log(`  ${order.receipt_id}: markShipped failed: ${err.message}`);
+    }
+  }
+  return count;
+}
+
+async function connectEtsy(store) {
+  const state = await store.getState();
+  const refreshToken = state.refresh_token || process.env.ETSY_REFRESH_TOKEN;
+  if (!refreshToken) throw new Error('No Etsy refresh token. Run scripts/etsy/auth.js first.');
+
+  const token = await etsy.refreshAccessToken(refreshToken);
+  await store.setState({
+    refresh_token: token.refresh_token,
+    access_expires_at: new Date(Date.now() + (token.expires_in || 3600) * 1000).toISOString()
+  });
+  const client = etsy.createClient(token.access_token);
+
+  let shopId = process.env.ETSY_SHOP_ID || state.shop_id;
+  if (!shopId) {
+    const me = await client.getMe();
+    shopId = me.shop_id;
+    if (!shopId) throw new Error('Could not determine shop_id from users/me');
+    await store.setState({ shop_id: shopId });
+  }
+  return { client, shopId };
+}
+
+function defaultGenerate() {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error('GEMINI_API_KEY is not set');
+  let modelsPromise = null;
+  return async (astro, ids, lang, timeoutMs) => {
+    if (!modelsPromise) modelsPromise = process.env.GEMINI_MODEL ? Promise.resolve([process.env.GEMINI_MODEL]) : listGeminiModels(apiKey);
+    return generateChapters(astro, ids, apiKey, await modelsPromise, { lang, timeoutMs: Math.max(10000, timeoutMs) });
+  };
+}
+
+// 1 回分の処理。deadline（epoch ms）までに終わるところまで進める。
+// options: { store, receipts, mail, generate, onPdf, log }（省略時は本番: Sheets・Etsy API・Gemini・Resend）
+async function runCycle({ deadline, store = ledger, receipts = null, mail: sendMail = true, generate = null, onPdf = null, log = console.log }) {
+  const ctx = { deadline, store, mail: sendMail, generate: generate || defaultGenerate(), onPdf, log, client: null, shopId: null, orders: [] };
+  const summary = { registered: {}, processed: {}, shipped: 0 };
+
+  if (!receipts) {
+    ({ client: ctx.client, shopId: ctx.shopId } = await connectEtsy(store));
+    receipts = await ctx.client.listOpenReceipts(ctx.shopId);
+  }
+  ctx.orders = await store.listOrders();
+  log(`${receipts.length} open receipt(s), ${ctx.orders.length} ledger row(s)`);
+
+  for (const receipt of receipts) {
+    const outcome = await registerReceipt(receipt, ctx);
+    summary.registered[outcome] = (summary.registered[outcome] || 0) + 1;
+  }
+
+  summary.shipped = await markShippedIfNeeded(ctx);
+
+  const pending = ctx.orders.filter(isPending).sort((a, b) => Date.parse(a.created_at || 0) - Date.parse(b.created_at || 0));
+  for (const order of pending) {
+    if (deadline - Date.now() < MIN_MS_FOR_CHAPTERS) break;
+    log(`receipt ${order.receipt_id} (${order.status})`);
+    const outcome = await advanceOrder(order, ctx);
+    log(`  → ${outcome}`);
+    summary.processed[outcome] = (summary.processed[outcome] || 0) + 1;
+  }
+  if (summary.processed.delivered) summary.shipped += await markShippedIfNeeded({ ...ctx, orders: await store.listOrders() });
+  return summary;
+}
+
+module.exports = { runCycle, personalizationOf };

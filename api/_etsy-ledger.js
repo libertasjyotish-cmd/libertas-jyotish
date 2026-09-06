@@ -6,13 +6,17 @@ const { JWT } = require('google-auth-library');
 const STATE_TAB = process.env.GOOGLE_SHEETS_ETSY_STATE_TAB || 'Etsy設定';
 const ORDER_TAB = process.env.GOOGLE_SHEETS_ETSY_ORDER_TAB || 'Etsy注文';
 
+// 章は Cron の 1 回分ずつ生成して行に貯める（/api/pdf-report と同じ分割方式）
+const REPORT_FIELDS = ['astro', 'summary', 'ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'ch6', 'ch7', 'ch8', 'ch9', 'ch10', 'ch11', 'ch12'];
 const ORDER_HEADERS = [
   'receipt_id', 'transaction_id', 'buyer_email', 'buyer_name', 'personalization',
   'dob', 'tob', 'tob_unknown', 'place', 'language',
-  'status', 'attempts', 'last_error', 'created_at', 'updated_at', 'delivered_at', 'email_id'
+  'status', 'attempts', 'last_error', 'created_at', 'updated_at', 'delivered_at', 'email_id', 'shipped',
+  ...REPORT_FIELDS
 ];
 
 // status の遷移: new → generating → delivered / needs_info / error
+// needs_info の行は運営者が dob/tob/place/language を補完して status を new に戻すと再処理される
 const STATUS = {
   NEW: 'new',
   GENERATING: 'generating',
@@ -144,4 +148,9 @@ async function findOrder(receiptId) {
   return row ? rowToOrder(row) : null;
 }
 
-module.exports = { STATUS, ORDER_HEADERS, getState, setState, upsertOrder, findOrder };
+async function listOrders() {
+  const { rows } = await loadOrders();
+  return rows.map(rowToOrder);
+}
+
+module.exports = { STATUS, ORDER_HEADERS, REPORT_FIELDS, getState, setState, upsertOrder, findOrder, listOrders };

@@ -1,6 +1,9 @@
 {
   "name": "libertas-jyotish",
   "version": "1.0.0",
+  "engines": {
+    "node": "22.x"
+  },
   "description": "Vercel integration for Libertas Jyotish",
   "main": "index.html",
   "scripts": {
@@ -10,10 +13,9 @@
     "check:guide": "node scripts/build-guide.mjs --check"
   },
   "dependencies": {
+    "@sparticuz/chromium": "^149.0.0",
     "google-auth-library": "^9.14.0",
-    "google-spreadsheet": "^4.1.4"
-  },
-  "devDependencies": {
+    "google-spreadsheet": "^4.1.4",
     "puppeteer-core": "^25.9.0"
   }
 }

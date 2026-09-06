@@ -7,7 +7,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { buildAuthorizeUrl, exchangeCode } = require('./_api');
+const { buildAuthorizeUrl, exchangeCode } = require('../../api/_etsy-api');
 
 const REDIRECT_URI = process.env.ETSY_REDIRECT_URI || 'https://www.libertas-jyotish.com/api/etsy-callback';
 const PKCE_FILE = path.join(os.homedir(), '.etsy-pkce.json');
