@@ -70,9 +70,16 @@ async function refreshAccessToken(refreshToken) {
   });
 }
 
+// 個人アプリ（Personal Access）では x-api-key に "keystring:shared_secret" を要求される
+function apiKeyHeader() {
+  const key = requireEnv('ETSY_API_KEY');
+  const secret = process.env.ETSY_SHARED_SECRET;
+  return secret ? `${key}:${secret}` : key;
+}
+
 function createClient(accessToken) {
   const headers = {
-    'x-api-key': requireEnv('ETSY_API_KEY'),
+    'x-api-key': apiKeyHeader(),
     Authorization: `Bearer ${accessToken}`
   };
   return {
