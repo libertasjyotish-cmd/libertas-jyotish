@@ -1,8 +1,8 @@
 // 既存の鑑定書ページ（<lang>/pdf-report）を Chromium で開き、API 応答を差し込んで PDF 化する。
 // 描画ロジックはブラウザ版と共通なので、レイアウトや多言語・RTL の二重実装をしない。
 // Vercel 上では @sparticuz/chromium、ローカルでは CHROME_PATH などのシステム Chrome を使う。
+// puppeteer-core / @sparticuz/chromium は ESM のみなので import() で読み込む（Vercel の Node ランタイムは require(esm) 不可）。
 const fs = require('fs');
-const puppeteer = require('puppeteer-core');
 
 const BASE_URL = (process.env.ETSY_REPORT_BASE_URL || 'https://www.libertas-jyotish.com').replace(/\/$/, '');
 
@@ -16,6 +16,7 @@ const CHROME_CANDIDATES = [
 ].filter(Boolean);
 
 async function launchBrowser() {
+  const { default: puppeteer } = await import('puppeteer-core');
   const local = CHROME_CANDIDATES.find((p) => fs.existsSync(p));
   if (local && !process.env.VERCEL) {
     return puppeteer.launch({
