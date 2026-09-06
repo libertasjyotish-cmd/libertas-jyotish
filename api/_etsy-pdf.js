@@ -1,16 +1,10 @@
-// 既存の鑑定書ページ（<lang>/pdf-report.html）を Chromium で開き、API 応答を差し込んで PDF 化する。
+// 既存の鑑定書ページ（<lang>/pdf-report）を Chromium で開き、API 応答を差し込んで PDF 化する。
 // 描画ロジックはブラウザ版と共通なので、レイアウトや多言語・RTL の二重実装をしない。
+// Vercel 上では @sparticuz/chromium、ローカルでは CHROME_PATH などのシステム Chrome を使う。
 const fs = require('fs');
-const http = require('http');
-const path = require('path');
 const puppeteer = require('puppeteer-core');
 
-const ROOT = path.resolve(__dirname, '..', '..');
-const MIME = {
-  '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'application/javascript',
-  '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
-  '.webp': 'image/webp', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.woff': 'font/woff'
-};
+const BASE_URL = (process.env.ETSY_REPORT_BASE_URL || 'https://www.libertas-jyotish.com').replace(/\/$/, '');
 
 const CHROME_CANDIDATES = [
   process.env.CHROME_PATH,
@@ -21,37 +15,27 @@ const CHROME_CANDIDATES = [
   `${process.env.HOME || ''}/.local/bin/google-chrome`
 ].filter(Boolean);
 
-function findChrome() {
-  const found = CHROME_CANDIDATES.find((p) => fs.existsSync(p));
-  if (!found) throw new Error('Chrome/Chromium not found. Set CHROME_PATH.');
-  return found;
-}
-
-// Vercel の cleanUrls と同じ規則（/en/pdf-report → en/pdf-report.html）でリポジトリを配信する
-function startStaticServer() {
-  return new Promise((resolve) => {
-    const server = http.createServer((req, res) => {
-      const urlPath = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
-      let file = path.join(ROOT, urlPath);
-      if (!file.startsWith(ROOT)) { res.writeHead(403).end(); return; }
-      if (fs.existsSync(file) && fs.statSync(file).isDirectory()) file = path.join(file, 'index.html');
-      else if (!path.extname(file) && fs.existsSync(`${file}.html`)) file = `${file}.html`;
-      if (!fs.existsSync(file) || fs.statSync(file).isDirectory()) { res.writeHead(404).end(); return; }
-      res.writeHead(200, { 'Content-Type': MIME[path.extname(file).toLowerCase()] || 'application/octet-stream' });
-      fs.createReadStream(file).pipe(res);
+async function launchBrowser() {
+  const local = CHROME_CANDIDATES.find((p) => fs.existsSync(p));
+  if (local && !process.env.VERCEL) {
+    return puppeteer.launch({
+      executablePath: local,
+      headless: true,
+      args: ['--no-sandbox', '--disable-dev-shm-usage', '--font-render-hinting=none']
     });
-    server.listen(0, '127.0.0.1', () => resolve({ server, port: server.address().port }));
+  }
+  const { default: chromium } = await import('@sparticuz/chromium');
+  return puppeteer.launch({
+    executablePath: await chromium.executablePath(),
+    headless: true,
+    args: [...chromium.args, '--font-render-hinting=none'],
+    defaultViewport: { width: 1000, height: 1400 }
   });
 }
 
 // report: { astro, chapters } — /api/pdf-report の応答と同じ形。extraHtml は末尾ページ（レビュー依頼など）。
 async function renderReportPdf({ lang, report, extraHtml = '' }) {
-  const { server, port } = await startStaticServer();
-  const browser = await puppeteer.launch({
-    executablePath: findChrome(),
-    headless: true,
-    args: ['--no-sandbox', '--disable-dev-shm-usage', '--font-render-hinting=none']
-  });
+  const browser = await launchBrowser();
   try {
     const page = await browser.newPage();
     await page.evaluateOnNewDocument(() => {
@@ -71,10 +55,10 @@ async function renderReportPdf({ lang, report, extraHtml = '' }) {
       req.continue();
     });
 
-    await page.goto(`http://127.0.0.1:${port}/${lang}/pdf-report`, { waitUntil: 'networkidle0', timeout: 90000 });
+    await page.goto(`${BASE_URL}/${lang}/pdf-report`, { waitUntil: 'networkidle0', timeout: 40000 });
     await page.waitForFunction(
       () => { const b = document.getElementById('book'); return b && b.style.display !== 'none' && b.children.length > 5; },
-      { timeout: 60000 }
+      { timeout: 20000 }
     );
     if (extraHtml) {
       await page.evaluate((html) => {
@@ -98,7 +82,6 @@ async function renderReportPdf({ lang, report, extraHtml = '' }) {
     return Buffer.from(pdf);
   } finally {
     await browser.close().catch(() => null);
-    server.close();
   }
 }
 
