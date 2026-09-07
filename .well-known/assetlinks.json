@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.libertas_jyotish.app",
+      "sha256_cert_fingerprints": [
+        "C1:1B:97:1A:CD:4F:54:03:23:53:17:06:74:60:69:ED:C1:E1:CF:E1:8C:CA:0C:B3:D2:BA:80:57:2F:3A:5E:97"
+      ]
+    }
+  }
+]
