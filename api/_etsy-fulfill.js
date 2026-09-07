@@ -12,6 +12,7 @@ const ledger = require('./_etsy-ledger');
 const { parsePersonalization } = require('./_etsy-parse');
 const { renderReportPdf } = require('./_etsy-pdf');
 const mail = require('./_etsy-mail');
+const storage = require('./_etsy-storage');
 
 const CHAPTERS_PER_STEP = 3;
 const MAX_ATTEMPTS = 5;
@@ -46,13 +47,15 @@ function personalizationOf(receipt) {
 async function registerReceipt(receipt, ctx) {
   const receiptId = receipt.receipt_id;
   const existing = ctx.orders.find((o) => o.receipt_id === String(receiptId));
-  if (existing) return existing.status === STATUS.DELIVERED ? 'already_delivered' : 'known';
+  if (existing) return isFinal(existing) ? 'already_delivered' : 'known';
 
-  const buyerEmail = receipt.buyer_email || '';
   const buyerName = receipt.name || '';
   const personalization = personalizationOf(receipt);
   const parsed = parsePersonalization(personalization);
+  // Etsy API は buyer_email を返さないことが多い。入力欄にメールがあればそれを使い、無ければリンク納品（Etsy メッセージ）にする
+  const buyerEmail = receipt.buyer_email || parsed.email || '';
   const base = {
+    delivery: buyerEmail ? 'email' : 'etsy_message',
     transaction_id: (receipt.transactions || []).map((t) => t.transaction_id).join(','),
     buyer_email: buyerEmail,
     buyer_name: buyerName,
@@ -64,21 +67,25 @@ async function registerReceipt(receipt, ctx) {
     language: normalizeLang(parsed.language || 'en')
   };
 
-  if (!buyerEmail) {
-    ctx.orders.push(await ctx.store.upsertOrder(receiptId, { ...base, status: STATUS.ERROR, attempts: MAX_ATTEMPTS, last_error: 'buyer_email_missing' }));
-    if (ctx.mail) await mail.notifyOwner(`Etsy: buyer email missing (receipt ${receiptId})`, [`buyer: ${buyerName}`, `input: ${personalization}`]);
-    return 'error';
-  }
   if (parsed.missing.length) {
     if (ctx.mail) {
-      await mail.sendNeedsInfo({ to: buyerEmail, name: buyerName, personalization, missing: parsed.missing, notes: parsed.notes });
-      await mail.notifyOwner(`Etsy: needs info (receipt ${receiptId})`, [`buyer: ${buyerName} <${buyerEmail}>`, `missing: ${parsed.missing.join(', ')}`, `input: ${personalization}`]);
+      if (buyerEmail) await mail.sendNeedsInfo({ to: buyerEmail, name: buyerName, personalization, missing: parsed.missing, notes: parsed.notes });
+      await mail.notifyOwner(`Etsy: needs info (receipt ${receiptId})`, [
+        `buyer: ${buyerName} <${buyerEmail || 'no email — ask via Etsy Messages'}>`,
+        `missing: ${parsed.missing.join(', ')}`,
+        `input: ${personalization}`,
+        ...(buyerEmail ? [] : ['', 'Message to send on Etsy:', mail.needsInfoText({ name: buyerName, missing: parsed.missing, notes: parsed.notes })])
+      ]);
     }
     ctx.orders.push(await ctx.store.upsertOrder(receiptId, { ...base, status: STATUS.NEEDS_INFO, last_error: `missing:${parsed.missing.join(',')}` }));
     return 'needs_info';
   }
   ctx.orders.push(await ctx.store.upsertOrder(receiptId, { ...base, status: STATUS.NEW }));
   return 'new';
+}
+
+function isFinal(order) {
+  return order.status === STATUS.DELIVERED || order.status === STATUS.READY;
 }
 
 function isPending(order) {
@@ -115,7 +122,10 @@ async function advanceOrder(order, ctx) {
     if (!astro) {
       const geo = await geocodeBirthPlace(order.place, language);
       if (!geo) {
-        if (ctx.mail) await mail.sendNeedsInfo({ to: order.buyer_email, name: order.buyer_name, personalization: order.personalization, missing: ['place'], notes: [] });
+        if (ctx.mail) {
+          if (order.buyer_email) await mail.sendNeedsInfo({ to: order.buyer_email, name: order.buyer_name, personalization: order.personalization, missing: ['place'], notes: [] });
+          await mail.notifyOwner(`Etsy: needs info (receipt ${receiptId})`, [`buyer: ${order.buyer_name} <${order.buyer_email || 'no email — ask via Etsy Messages'}>`, `unknown birthplace: ${order.place}`]);
+        }
         await save({ status: STATUS.NEEDS_INFO, last_error: `unknown_birthplace: ${order.place}` });
         return 'needs_info';
       }
@@ -163,19 +173,30 @@ async function advanceOrder(order, ctx) {
     ctx.log(`  ${receiptId}: pdf ${Math.round(pdf.length / 1024)} KB`);
     if (ctx.onPdf) await ctx.onPdf(receiptId, filename, pdf);
 
-    let emailId = '';
-    if (ctx.mail) {
-      emailId = await mail.sendReport({
-        to: order.buyer_email,
-        name: order.buyer_name,
-        pdf,
-        filename,
-        meta: { dob: order.dob, tob, tobUnknown, place: order.place, language }
-      });
+    const pdfUrl = ctx.storePdf ? await ctx.storePdf(receiptId, filename, pdf) : '';
+    const downloadUrl = pdfUrl ? storage.downloadUrl(receiptId) : '';
+    await save({ pdf_url: pdfUrl, download_url: downloadUrl });
+    const meta = { dob: order.dob, tob, tobUnknown, place: order.place, language, downloadUrl };
+    const summary = [`buyer: ${order.buyer_name} <${order.buyer_email || 'no email'}>`, `birth: ${order.dob} ${tob} ${order.place}`, `language: ${language}`, `pdf: ${Math.round(pdf.length / 1024)} KB`, `link: ${downloadUrl || '(not stored)'}`];
+
+    if (order.buyer_email) {
+      let emailId = '';
+      if (ctx.mail) emailId = await mail.sendReport({ to: order.buyer_email, name: order.buyer_name, pdf, filename, meta });
+      await save({ status: STATUS.DELIVERED, delivered_at: new Date().toISOString(), email_id: emailId, last_error: '' });
+      if (ctx.mail) await mail.notifyOwner(`Etsy: delivered (receipt ${receiptId})`, summary);
+      return 'delivered';
     }
-    await save({ status: STATUS.DELIVERED, delivered_at: new Date().toISOString(), email_id: emailId, last_error: '' });
-    if (ctx.mail) await mail.notifyOwner(`Etsy: delivered (receipt ${receiptId})`, [`buyer: ${order.buyer_name} <${order.buyer_email}>`, `birth: ${order.dob} ${tob} ${order.place}`, `language: ${language}`, `pdf: ${Math.round(pdf.length / 1024)} KB`]);
-    return 'delivered';
+
+    // 購入者メールが無い注文: リンクを運営者に送り、Etsy メッセージで購入者へ貼ってもらう
+    if (!downloadUrl) throw new Error('no buyer email and PDF storage unavailable');
+    await save({ status: STATUS.READY, delivered_at: new Date().toISOString(), last_error: '' });
+    if (ctx.mail) {
+      await mail.notifyOwner(`Etsy: ready — send link via Etsy Messages (receipt ${receiptId})`, [
+        ...summary, '', `Etsy order: https://www.etsy.com/your/orders/sold/${receiptId}`, '', 'Message to send on Etsy:',
+        mail.deliveryText({ name: order.buyer_name, ...meta })
+      ]);
+    }
+    return 'ready';
   } catch (err) {
     const message = String(err.message || err).slice(0, 500);
     ctx.log(`  ${receiptId}: failed: ${message}`);
@@ -190,7 +211,7 @@ async function markShippedIfNeeded(ctx) {
   if (!ctx.client) return 0;
   let count = 0;
   for (const order of ctx.orders) {
-    if (order.status !== STATUS.DELIVERED || order.shipped === 'true') continue;
+    if (!isFinal(order) || order.shipped === 'true') continue;
     try {
       await ctx.client.markShipped(ctx.shopId, order.receipt_id);
       await ctx.store.upsertOrder(order.receipt_id, { shipped: 'true' });
@@ -236,8 +257,8 @@ function defaultGenerate() {
 
 // 1 回分の処理。deadline（epoch ms）までに終わるところまで進める。
 // options: { store, receipts, mail, generate, onPdf, log }（省略時は本番: Sheets・Etsy API・Gemini・Resend）
-async function runCycle({ deadline, store = ledger, receipts = null, mail: sendMail = true, generate = null, onPdf = null, log = console.log }) {
-  const ctx = { deadline, store, mail: sendMail, generate: generate || defaultGenerate(), onPdf, log, client: null, shopId: null, orders: [] };
+async function runCycle({ deadline, store = ledger, receipts = null, mail: sendMail = true, generate = null, onPdf = null, storePdf = storage.storePdf, log = console.log }) {
+  const ctx = { deadline, store, mail: sendMail, generate: generate || defaultGenerate(), onPdf, storePdf, log, client: null, shopId: null, orders: [] };
   const summary = { registered: {}, processed: {}, shipped: 0 };
 
   if (!receipts) {
@@ -262,7 +283,7 @@ async function runCycle({ deadline, store = ledger, receipts = null, mail: sendM
     log(`  → ${outcome}`);
     summary.processed[outcome] = (summary.processed[outcome] || 0) + 1;
   }
-  if (summary.processed.delivered) summary.shipped += await markShippedIfNeeded({ ...ctx, orders: await store.listOrders() });
+  if (summary.processed.delivered || summary.processed.ready) summary.shipped += await markShippedIfNeeded({ ...ctx, orders: await store.listOrders() });
   return summary;
 }
 

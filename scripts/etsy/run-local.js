@@ -55,7 +55,7 @@ const onPdf = outDir ? async (id, filename, pdf) => {
   const budget = Number(args.budget || 50000);
   for (let i = 0; i < cycles; i += 1) {
     console.log(`--- cycle ${i + 1}`);
-    const summary = await runCycle({ deadline: Date.now() + budget, store: memoryStore, receipts, mail: false, generate, onPdf });
+    const summary = await runCycle({ deadline: Date.now() + budget, store: memoryStore, receipts, mail: false, generate, onPdf, storePdf: null });
     console.log(JSON.stringify(summary));
   }
   console.log('--- ledger');

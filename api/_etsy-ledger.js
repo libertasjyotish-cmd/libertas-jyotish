@@ -12,6 +12,7 @@ const ORDER_HEADERS = [
   'receipt_id', 'transaction_id', 'buyer_email', 'buyer_name', 'personalization',
   'dob', 'tob', 'tob_unknown', 'place', 'language',
   'status', 'attempts', 'last_error', 'created_at', 'updated_at', 'delivered_at', 'email_id', 'shipped',
+  'pdf_url', 'download_url', 'delivery',
   ...REPORT_FIELDS
 ];
 
@@ -21,6 +22,7 @@ const STATUS = {
   NEW: 'new',
   GENERATING: 'generating',
   DELIVERED: 'delivered',
+  READY: 'ready',
   NEEDS_INFO: 'needs_info',
   ERROR: 'error'
 };
