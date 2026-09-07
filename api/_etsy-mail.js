@@ -1,6 +1,7 @@
 // Resend 経由のメール送信。Etsy の購入者は英語圏が大半なので本文は英語、鑑定書本体は選択言語で作る。
 const FROM = process.env.ETSY_MAIL_FROM || 'Libertas Jyotish <info@libertas-jyotish.com>';
 const OWNER = process.env.ETSY_OWNER_EMAIL || 'info@libertas-jyotish.com';
+const { LINK_TTL_DAYS } = require('./_etsy-storage');
 
 const LANGUAGE_NAMES = { en: 'English', ja: '日本語 (Japanese)', es: 'Español', pt: 'Português', ar: 'العربية (Arabic)', id: 'Bahasa Indonesia' };
 
@@ -39,10 +40,11 @@ async function send({ to, subject, html, attachments, replyTo }) {
   return data.id || '';
 }
 
-function deliveryHtml({ name, dob, tob, tobUnknown, place, language }) {
+function deliveryHtml({ name, dob, tob, tobUnknown, place, language, downloadUrl }) {
   return wrap(`
     <p>Dear ${esc(name || 'friend')},</p>
     <p>Thank you for your order. Your personalized Vedic astrology report is attached to this email as a PDF.</p>
+    ${downloadUrl ? `<p style="font-size:14px;">You can also download it here (link valid for ${LINK_TTL_DAYS} days): <a href="${esc(downloadUrl)}">${esc(downloadUrl)}</a></p>` : ''}
     <table style="font-size:14px; border-collapse:collapse; margin:12px 0;">
       <tr><td style="padding:3px 12px 3px 0; color:#7a6a58;">Date of birth</td><td>${esc(dob)}</td></tr>
       <tr><td style="padding:3px 12px 3px 0; color:#7a6a58;">Time of birth</td><td>${esc(tob)}${tobUnknown ? ' (unknown — calculated at noon)' : ''}</td></tr>
@@ -79,6 +81,43 @@ function needsInfoHtml({ name, personalization, missing, notes }) {
     <p>With gratitude,<br>Libertas Jyotish</p>`);
 }
 
+// Etsy メッセージに貼るプレーンテキスト（購入者メールが取れない注文用）
+function deliveryText({ name, dob, tob, tobUnknown, place, language, downloadUrl }) {
+  return [
+    `Dear ${name || 'friend'},`,
+    '',
+    'Thank you for your order. Your personalized Vedic astrology report (PDF) is ready.',
+    `Download (valid for ${LINK_TTL_DAYS} days): ${downloadUrl}`,
+    '',
+    `Date of birth: ${dob}`,
+    `Time of birth: ${tob}${tobUnknown ? ' (unknown - calculated at noon)' : ''}`,
+    `Place of birth: ${place}`,
+    `Report language: ${LANGUAGE_NAMES[language] || language}`,
+    '',
+    ...(tobUnknown ? ['Because the birth time was not provided, the ascendant and house positions are approximate. The Moon sign, nakshatra and Dasha timeline remain reliable. If you later learn your birth time, message us and we will re-issue the report at no charge.', ''] : []),
+    'If anything in the birth data above is wrong, just reply here and we will correct and resend the report.',
+    'If the report resonates with you, a short review would help other seekers find this reading. Thank you.',
+    '',
+    'With gratitude,',
+    'Libertas Jyotish'
+  ].join('\n');
+}
+
+function needsInfoText({ name, missing, notes }) {
+  return [
+    `Dear ${name || 'friend'},`,
+    '',
+    'Thank you for your order. Before we can calculate your chart we need one more detail. Please reply with:',
+    ...missing.map((m) => `- ${MISSING_LABELS[m] || m}`),
+    ...notes.map((n) => NOTE_LABELS[n] || n),
+    '',
+    'As soon as we hear from you, your report will be prepared and sent within one business day.',
+    '',
+    'With gratitude,',
+    'Libertas Jyotish'
+  ].join('\n');
+}
+
 async function sendReport({ to, name, pdf, filename, meta }) {
   return send({
     to,
@@ -105,4 +144,4 @@ async function notifyOwner(subject, lines) {
   });
 }
 
-module.exports = { sendReport, sendNeedsInfo, notifyOwner, LANGUAGE_NAMES };
+module.exports = { sendReport, sendNeedsInfo, notifyOwner, deliveryText, needsInfoText, LANGUAGE_NAMES };

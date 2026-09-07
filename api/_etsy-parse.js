@@ -19,6 +19,8 @@ const LANGUAGE_HINTS = [
   ['en', /english|inglés|ingles|inglês/gi]
 ];
 
+const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/;
+
 const UNKNOWN_TIME = /\b(unknown|don'?t know|not sure|no idea|n\/a|desconocid[oa]|não sei|nao sei|tidak tahu|不明|わからない|分からない|غير معروف|لا أعرف)\b/i;
 
 function pad(n) {
@@ -94,16 +96,22 @@ function parsePlace(text, consumed) {
     ? inline[inline.length - 1]
     : labelled
     ? labelled.replace(LABEL, '')
-    : lines.find((l) => /[\p{L}]{3,}/u.test(l) && !/^(report|language|idioma|bahasa|言語|اللغة)/i.test(l));
+    : lines.find((l) => /[\p{L}]{3,}/u.test(l) && !/^(report|language|idioma|bahasa|言語|اللغة|e-?mail|correo|メール)/i.test(l));
   if (!candidate) return null;
-  return candidate.replace(/\b(report\s+)?languages?\b.*$/i, '').replace(/[\s:,\-–—]+$/g, '').trim() || null;
+  return candidate.replace(/\b(report\s+)?languages?\b.*$/i, '').replace(/\b(e-?mail|correo)\b.*$/i, '').replace(/[\s:,\-–—]+$/g, '').trim() || null;
 }
 
-// 戻り値: { dob, tob, tobUnknown, place, language, missing: [], notes: [] }
+// 戻り値: { dob, tob, tobUnknown, place, language, email, missing: [], notes: [] }
 function parsePersonalization(raw) {
   const text = String(raw || '').replace(/\r/g, '').trim();
-  const out = { dob: null, tob: null, tobUnknown: false, place: null, language: 'en', missing: [], notes: [] };
+  const out = { dob: null, tob: null, tobUnknown: false, place: null, language: 'en', email: null, missing: [], notes: [] };
   const consumed = [];
+
+  const email = text.match(EMAIL);
+  if (email) {
+    out.email = email[0].toLowerCase();
+    consumed.push(email[0]);
+  }
 
   const date = parseDate(text);
   if (date && date.value) {
