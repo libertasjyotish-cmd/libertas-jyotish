@@ -4,7 +4,7 @@ const API_BASE = 'https://openapi.etsy.com/v3/application';
 const AUTHORIZE_URL = 'https://www.etsy.com/oauth/connect';
 
 // 注文の読み取り・完了更新と、購入者メールの取得に必要なスコープ
-const SCOPES = ['transactions_r', 'transactions_w', 'email_r', 'shops_r'];
+const SCOPES = ['transactions_r', 'transactions_w', 'email_r', 'shops_r', 'listings_r', 'listings_w'];
 
 function requireEnv(name) {
   const value = process.env[name];
