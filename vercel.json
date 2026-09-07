@@ -12,6 +12,6 @@
     "api/etsy-cron.js": { "maxDuration": 60 }
   },
   "crons": [
-    { "path": "/api/etsy-cron", "schedule": "0 3 * * *" }
+    { "path": "/api/etsy-cron", "schedule": "*/10 * * * *" }
   ]
 }
