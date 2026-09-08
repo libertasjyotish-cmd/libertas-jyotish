@@ -991,15 +991,46 @@ if (res.ok && data && data.pdf_purchased) {
 const link = document.getElementById('btn-open-pdf-report');
 if (link) link.style.display = 'inline';
 }
+if (res.ok && data) ljBilling = data;
 } catch (e) {
 console.error('purchase status check failed', e);
 }
 }
 
-// Gumroad の購入者向け画面へ案内する（支払い方法の変更・サブスク解約）
-function openBillingPortal() {
+// 請求情報（purchase_status の応答）。billing が komoju ならサイト内で解約、それ以外は Gumroad の購入者画面へ。
+let ljBilling = null;
+
+function formatPaidUntil(value) {
+const d = value ? new Date(value) : null;
+if (!d || isNaN(d.getTime())) return '';
+return d.toLocaleDateString('ar', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+async function openBillingPortal() {
+if (!ljBilling || ljBilling.billing !== 'komoju') {
 alert('سيتم فتح صفحة مشترياتك على Gumroad. تتولى Gumroad إدارة المدفوعات، لذا يلزم تسجيل الدخول إلى Gumroad وليس بكلمة مرور هذا الموقع. أدخل البريد الإلكتروني الذي استخدمته عند الشراء وسترسل لك Gumroad رابط دخول عبر البريد، دون الحاجة إلى كلمة مرور. بعد تسجيل الدخول يمكنك إلغاء الاشتراك أو تغيير طريقة الدفع.');
 window.open(GUMROAD_LIBRARY_URL, '_blank');
+return;
+}
+if (!ljBilling.subscription_active) {
+alert('تم استلام طلب الإلغاء. تبقى عضوية بريميوم متاحة حتى {date}.'.replace('{date}', formatPaidUntil(ljBilling.paid_until)));
+return;
+}
+if (!confirm('هل تريد إلغاء عضوية بريميوم؟\nستبقى إمكانية الوصول حتى نهاية الفترة الحالية ({date}). لا رسوم بعد ذلك.'.replace('{date}', formatPaidUntil(ljBilling.paid_until)))) return;
+try {
+const res = await fetch('/api/komoju-cancel', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ email: localStorage.getItem('lj_user_email'), session: localStorage.getItem('lj_session') })
+});
+const data = await res.json().catch(() => null);
+if (!res.ok || !data || !data.ok) throw new Error('cancel_failed');
+ljBilling.subscription_active = false;
+ljBilling.paid_until = data.paid_until || ljBilling.paid_until;
+alert('تم استلام طلب الإلغاء. تبقى عضوية بريميوم متاحة حتى {date}.'.replace('{date}', formatPaidUntil(ljBilling.paid_until)));
+} catch (e) {
+alert('فشل الإلغاء. يرجى المحاولة لاحقًا أو التواصل عبر info@libertas-jyotish.com.');
+}
 }
 
 function logout() {

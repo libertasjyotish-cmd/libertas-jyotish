@@ -43,7 +43,14 @@
     },
     // 購入者メールを引き渡し、商品ページを経由せず Gumroad の決済画面へ直行させる。
     // 会員権はこのメールアドレスで当サイトのアカウントに紐づける。
+    // 日本（provider: komoju）は自サイトの /api/komoju-checkout 経由で KOMOJU の決済ページへ遷移する。
     checkoutUrlFor: function (product, email) {
+      if (resolved.provider === 'komoju') {
+        var lang = (window.LJ_I18N && window.LJ_I18N.lang) || 'ja';
+        return '/api/komoju-checkout?product=' + encodeURIComponent(product) +
+          '&lang=' + encodeURIComponent(lang) +
+          (email ? '&email=' + encodeURIComponent(email) : '');
+      }
       var url = window.LJCheckout.linkFor(product);
       var params = 'wanted=true';
       if (email) params += '&email=' + encodeURIComponent(email);

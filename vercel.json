@@ -9,9 +9,12 @@
     "api/jyotish.js": { "maxDuration": 60 },
     "api/gumroad-webhook.js": { "maxDuration": 30 },
     "api/pdf-report.js": { "maxDuration": 60 },
-    "api/etsy-cron.js": { "maxDuration": 60 }
+    "api/etsy-cron.js": { "maxDuration": 60 },
+    "api/komoju-return.js": { "maxDuration": 30 },
+    "api/komoju-webhook.js": { "maxDuration": 30 }
   },
   "crons": [
-    { "path": "/api/etsy-cron", "schedule": "*/10 * * * *" }
+    { "path": "/api/etsy-cron", "schedule": "*/10 * * * *" },
+    { "path": "/api/komoju-cron", "schedule": "15 3 * * *" }
   ]
 }

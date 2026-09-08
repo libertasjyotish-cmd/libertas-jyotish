@@ -246,7 +246,10 @@ module.exports = async function handler(req, res) {
         const member = await getMemberRecord(email);
         return res.status(200).json({
           status: member ? member.status : 'free',
-          pdf_purchased: Boolean(member && member.pdfPurchased)
+          pdf_purchased: Boolean(member && member.pdfPurchased),
+          billing: (member && member.billing) || null,
+          subscription_active: Boolean(member && member.komojuSubscriptionId),
+          paid_until: (member && member.paidUntil) || null
         });
       } catch (err) {
         console.error('Purchase status lookup failed:', err?.message);
