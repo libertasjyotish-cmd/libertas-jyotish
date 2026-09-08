@@ -45,6 +45,15 @@ A free reading can be run end-to-end from any language top page with a reserved 
 - On the Stripe page, `page.wait_for_load_state("networkidle")` often times out (Stripe keeps sockets open). Wrap it in try/except and just wait a fixed few seconds before screenshotting.
 - Safety: verify the URL, product name, amount and `prefilled_email` only. Never enter card data, never click Pay/Subscribe, never cancel a subscription.
 
+## KOMOJU (JP provider) TEST-mode flow on production
+- `/api/checkout-links` only picks KOMOJU when Vercel geo = JP, so from a non-JP VM hit the endpoint directly: `/api/komoju-checkout?product=pdf|premium&lang=ja&email=<member>`. It 302s to `komoju.com/sessions/<id>` (PDF = payment mode with amount; premium = customer mode "保存" card registration, no amount shown).
+- Only proceed if the KOMOJU dashboard banner shows `TEST モード` / `TEST MODE`. Test card `4100000000000100`, any future expiry, any CVC. Card form: name → number → `1229` → CVC (plain typing works). PDF flow shows a 3DS challenge page; premium ends on "お支払い情報を保存しました" and you must click "Libertas Jyotishに戻る" (no auto-redirect) → `/api/komoju-return` → `/ja/mypage?c=1`.
+- Server truth: `curl -X POST https://www.libertas-jyotish.com/api/jyotish -d '{"action":"purchase_status","email":"<member>"}'` (no auth) returns `status/pdf_purchased/billing/subscription_active/paid_until`. Check it before starting to be sure the account is clean.
+- Dashboard (already logged in on the VM): `https://app.komoju.com/merchant/subscriptions` (定期課金 list/detail incl. event timeline), `komoju.com/merchant/webhooks?account_id=<id>&mode=test` → click webhook → "View deliveries" for HTTP result codes. The webhook edit page shows the secret key in clear text — do not zoom/screenshot it. Guessing `komoju.com/merchant/<account_id>/...` URLs gives 404.
+- mypage login: enter email → "コード送信" → read the 6-digit code from the mailbox (libertasjyotish@gmail.com Gmail is open on the VM) → "認証する". The PDF "完全鑑定書を開く" link and `ljBilling` are only computed on page load, so **reload mypage after logging in** before checking entitlement / cancel button.
+- Pitfall: if the birth-data form is submitted right after logging in (without reloading), `templates/mypage.html` saves `email: ""` into `jyotish_user`/`lj_user_email` and the next reload shows you logged out. Log in again (birth data is kept) or reload before submitting birth data.
+- Cancel: "プランの管理" → confirm (shows paid-until date) → alert "解約を受け付けました…"; expect `subscription_active=false`, `status` still `paid`, `paid_until` unchanged, and the KOMOJU subscription `削除済み`.
+
 ## Arabic / RTL checks (`/ar`)
 `ar/*.html` declares `<html lang="ar" dir="rtl">` and loads `/css/rtl.css`. Expected:
 - body/headings/table cells right-aligned; heading accent rule flipped from `border-left` to `border-right`
@@ -57,4 +66,4 @@ Regression-check `/ja` and `/en` after any rtl.css change: they must stay LTR wi
 The member page daily reading (`/<lang>/mypage`, "Today's moon sign outlook") is served from an API that appears **not to be language-aware**: on `/ar/mypage` and `/en/mypage` the sign names and horoscope body come back in Japanese (山羊座 / 蟹座 / ヴィシャーカー) while only the static labels are localized. `/<lang>/result` from the free reading *is* correctly localized, so the two endpoints differ. Re-verify this on any i18n change — if it is still Japanese, it is a live defect, not a caching artifact.
 
 ## Devin Secrets Needed
-none — all testing is unauthenticated production browsing; no credentials required.
+none for unauthenticated browsing. For KOMOJU/mypage flows you need a mailbox you can read for the login code (Gmail for libertasjyotish@gmail.com was already signed in on the VM) or `REVIEW_LOGIN_EMAIL` / `REVIEW_LOGIN_CODE` (fixed review account, not provisioned as secrets by default). `KOMOJU_TEST_SECRET_KEY` exists as a session secret but was not needed.
