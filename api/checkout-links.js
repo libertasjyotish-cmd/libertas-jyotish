@@ -1,8 +1,7 @@
-// 訪問者の国に応じた Gumroad 決済リンクを返す: /api/checkout-links
-// 国コードは Vercel が付与する x-vercel-ip-country を使い、data/price-tiers.json で価格帯に変換する。
-// 判定できない国・テーブルに無い国は既定の価格帯（T2）にフォールバックする。
-const priceTiers = require('../data/price-tiers.json');
+// 訪問者の国に応じた決済先（Gumroad リンク or KOMOJU）と価格を返す: /api/checkout-links
+// 価格帯・決済事業者の解決は api/_pricing.js。
 const currencyRates = require('../data/currency-rates.json');
+const { CURRENCY, AMOUNTS, resolveTier, resolveProvider, countryFrom } = require('./_pricing');
 
 // 価格帯ごとの Gumroad 商品リンク。商品を作り直したらここだけ更新する。
 const LINKS = {
@@ -18,17 +17,16 @@ const LINKS = {
   }
 };
 
-// 表示用の価格ラベル（日本語）。リンクの金額と必ず揃える。
+// 表示用の価格ラベル（日本語）。金額は AMOUNTS と必ず揃える。
 const LABELS = {
-  premium: { T1: '月額 980円（米ドル決済）', T2: '月額 550円（米ドル決済）', T3: '月額 380円（米ドル決済）' },
-  pdf: { T1: '買い切り 8,800円（米ドル決済）', T2: '買い切り 5,980円（米ドル決済）', T3: '買い切り 3,480円（米ドル決済）' }
-};
-
-// 日本語以外のページは、この金額を閲覧言語の書式に整形して表示する。
-const CURRENCY = 'JPY';
-const AMOUNTS = {
-  premium: { T1: 980, T2: 550, T3: 380 },
-  pdf: { T1: 8800, T2: 5980, T3: 3480 }
+  gumroad: {
+    premium: { T1: '月額 980円（米ドル決済）', T2: '月額 550円（米ドル決済）', T3: '月額 380円（米ドル決済）' },
+    pdf: { T1: '買い切り 8,800円（米ドル決済）', T2: '買い切り 5,980円（米ドル決済）', T3: '買い切り 3,480円（米ドル決済）' }
+  },
+  komoju: {
+    premium: { T1: '月額 980円（税込）', T2: '月額 550円（税込）', T3: '月額 380円（税込）' },
+    pdf: { T1: '買い切り 8,800円（税込）', T2: '買い切り 5,980円（税込）', T3: '買い切り 3,480円（税込）' }
+  }
 };
 
 // 円以外の国には現地通貨の概算額を添える（確定額はGumroadの決済画面）。
@@ -56,22 +54,19 @@ function approxFor(country, tier) {
   return { currency, premium, pdf };
 }
 
-function resolveTier(country) {
-  const entry = country && priceTiers.countries[country];
-  return (entry && entry.tier) || priceTiers.defaultTier;
-}
-
 module.exports = (req, res) => {
-  const country = String(req.headers['x-vercel-ip-country'] || '').trim().toUpperCase() || null;
+  const country = countryFrom(req);
   const tier = resolveTier(country);
+  const provider = resolveProvider(country);
 
   // 国ごとに内容が変わるため共有キャッシュには載せない。
   res.setHeader('Cache-Control', 'private, max-age=3600');
   return res.status(200).json({
     country,
     tier,
+    provider,
     links: { premium: LINKS.premium[tier], pdf: LINKS.pdf[tier] },
-    labels: { premium: LABELS.premium[tier], pdf: LABELS.pdf[tier] },
+    labels: { premium: LABELS[provider].premium[tier], pdf: LABELS[provider].pdf[tier] },
     currency: CURRENCY,
     amounts: { premium: AMOUNTS.premium[tier], pdf: AMOUNTS.pdf[tier] },
     approx: approxFor(country, tier)

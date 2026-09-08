@@ -187,8 +187,82 @@ async function getMemberRecord(email) {
     city: row.get('city') || '',
     language: row.get('language') || 'ja',
     pdfPurchased: String(row.get('pdf_purchased') || '').trim().toLowerCase() === 'true',
-    pdfPurchasedAt: row.get('pdf_purchased_at') || ''
+    pdfPurchasedAt: row.get('pdf_purchased_at') || '',
+    billing: String(row.get('billing') || '').trim().toLowerCase(),
+    komojuCustomerId: row.get('komoju_customer_id') || '',
+    komojuSubscriptionId: row.get('komoju_subscription_id') || '',
+    paidUntil: row.get('paid_until') || ''
   };
+}
+
+const KOMOJU_COLUMNS = ['billing', 'komoju_customer_id', 'komoju_subscription_id', 'paid_until'];
+
+// KOMOJU の定期課金を会員行に紐づけ、有料化する。paid_until は次回請求日（解約後の利用期限）。
+async function setKomojuSubscription(email, { customerId, subscriptionId, paidUntil, language }) {
+  if (!email) return false;
+  const sheet = await getMemberSheet();
+  if (!sheet) return false;
+  await ensureColumns(sheet, KOMOJU_COLUMNS);
+
+  const nowStr = new Date().toISOString();
+  const fields = {
+    status: 'paid',
+    billing: 'komoju',
+    komoju_customer_id: customerId || '',
+    komoju_subscription_id: subscriptionId || '',
+    paid_until: paidUntil || '',
+    updated_at: nowStr
+  };
+  const row = await findMemberRow(email);
+  if (row) {
+    Object.entries(fields).forEach(([k, v]) => row.set(k, v));
+    await row.save();
+  } else {
+    await sheet.addRow({
+      email: normalizeEmail(email),
+      auth_provider: 'komoju',
+      created_at: nowStr,
+      language: language || 'ja',
+      ...fields
+    });
+  }
+  return true;
+}
+
+// KOMOJU 定期課金の状態変化（更新・解約予約・失敗）を反映する。
+async function updateKomojuSubscription(email, { status, paidUntil, subscriptionId }) {
+  const row = await findMemberRow(email);
+  if (!row) return false;
+  const sheet = await getMemberSheet();
+  await ensureColumns(sheet, KOMOJU_COLUMNS);
+  if (status) row.set('status', status);
+  if (paidUntil !== undefined) row.set('paid_until', paidUntil || '');
+  if (subscriptionId !== undefined) row.set('komoju_subscription_id', subscriptionId || '');
+  row.set('billing', 'komoju');
+  row.set('updated_at', new Date().toISOString());
+  await row.save();
+  return true;
+}
+
+// 解約済み（subscription_id 空）で paid_until を過ぎた KOMOJU 会員を無料へ戻す。
+async function expireKomojuMembers(now = new Date()) {
+  const sheet = await getMemberSheet();
+  if (!sheet) return [];
+  await ensureColumns(sheet, KOMOJU_COLUMNS);
+  const rows = await sheet.getRows();
+  const expired = [];
+  for (const row of rows) {
+    if (String(row.get('billing') || '').trim().toLowerCase() !== 'komoju') continue;
+    if (String(row.get('status') || '').trim().toLowerCase() !== 'paid') continue;
+    if (String(row.get('komoju_subscription_id') || '').trim()) continue;
+    const until = Date.parse(row.get('paid_until') || '');
+    if (!Number.isFinite(until) || until > now.getTime()) continue;
+    row.set('status', 'free');
+    row.set('updated_at', now.toISOString());
+    await row.save();
+    expired.push(normalizeEmail(row.get('email')));
+  }
+  return expired;
 }
 
 // PDF購入用の列が無いシートでも動くよう、必要なヘッダーを足しておく
@@ -365,6 +439,9 @@ module.exports = {
   revokePdfPurchase,
   getLastSheetIssue,
   getMemberRecord,
+  setKomojuSubscription,
+  updateKomojuSubscription,
+  expireKomojuMembers,
   setPdfPurchased,
   getPdfReport,
   savePdfReport,

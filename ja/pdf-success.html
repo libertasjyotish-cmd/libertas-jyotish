@@ -155,12 +155,14 @@ window.LJ_I18N = {
   </footer>
 
   <script>
-    // 購入状態は Gumroad の Webhook を受けてサーバ側で記録される。この画面では購入済みの判定を行わない。
+    // 購入状態は決済事業者（Gumroad / KOMOJU）の Webhook を受けてサーバ側で記録される。この画面では購入済みの判定を行わない。
     document.addEventListener('DOMContentLoaded', () => {
       const note = document.getElementById('success-note');
       const email = localStorage.getItem('lj_user_email');
       const session = localStorage.getItem('lj_session');
-      if (!email || !session) {
+      if (new URLSearchParams(location.search).get('pending') === '1') {
+        note.textContent = '決済の処理中です。反映まで少しお待ちください（コンビニ払いはお支払い確認後に反映されます）。';
+      } else if (!email || !session) {
         note.innerHTML = '鑑定書の閲覧にはご購入時のメールアドレスでのログインが必要です。<a href=\"/ja/mypage\">マイページ</a>からログインしてください。';
       }
     });
