@@ -1,11 +1,14 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "com.libertas_jyotish.app",
       "sha256_cert_fingerprints": [
-        "C1:1B:97:1A:CD:4F:54:03:23:53:17:06:74:60:69:ED:C1:E1:CF:E1:8C:CA:0C:B3:D2:BA:80:57:2F:3A:5E:97"
+        "C1:1B:97:1A:CD:4F:54:03:23:53:17:06:74:60:69:ED:C1:E1:CF:E1:8C:CA:0C:B3:D2:BA:80:57:2F:3A:5E:97",
+        "4C:CC:08:B9:99:FE:A9:17:DC:86:61:D7:4B:30:C7:B0:B6:C8:D4:5B:3F:78:13:7A:8C:AE:CC:60:1A:29:12:5B"
       ]
     }
   }
