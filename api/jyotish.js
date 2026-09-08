@@ -16,6 +16,9 @@ function sendReadingUnavailable(res, reason, detail, geminiMeta) {
 }
 
 const AUTH_SECRET = process.env.AUTH_SECRET;
+// ストア審査担当者用の固定コードアカウント（メール受信なしでログインできる）
+const REVIEW_LOGIN_EMAIL = (process.env.REVIEW_LOGIN_EMAIL || '').trim().toLowerCase();
+const REVIEW_LOGIN_CODE = (process.env.REVIEW_LOGIN_CODE || '').trim();
 
 // 認証コードメールの文面。未対応の言語は英語にフォールバックする。
 const AUTH_MAIL = {
@@ -134,12 +137,17 @@ module.exports = async function handler(req, res) {
 
       const mailText = authMailText(language);
 
-      const verificationCode = String(crypto.randomInt(100000, 1000000));
+      const isReviewAccount = REVIEW_LOGIN_EMAIL && REVIEW_LOGIN_CODE && email.trim().toLowerCase() === REVIEW_LOGIN_EMAIL;
+      const verificationCode = isReviewAccount ? REVIEW_LOGIN_CODE : String(crypto.randomInt(100000, 1000000));
       const expiry = Date.now() + 10 * 60 * 1000;
 
       const dataToSign = `${email}:${verificationCode}:${expiry}`;
       const signature = crypto.createHmac('sha256', AUTH_SECRET).update(dataToSign).digest('hex');
       const securityToken = `${expiry}:${signature}`;
+
+      if (isReviewAccount) {
+        return res.status(200).json({ status: 'success', token: securityToken });
+      }
 
       try {
         // 安全設計：本物のキーは書き込まず、Vercelに設定された環境変数から100%安全に読み込みます
