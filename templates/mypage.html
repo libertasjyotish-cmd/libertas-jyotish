@@ -750,6 +750,7 @@ return;
 }
 
 // ローカルキャッシュの再構築
+savedEmail = savedEmail || localStorage.getItem('lj_user_email') || '';
 const savedUserStr = localStorage.getItem('jyotish_user');
 let savedUser = {};
 if (savedUserStr) {
