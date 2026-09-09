@@ -267,4 +267,4 @@ async function generateChapters(astro, ids, apiKey, models, { lang, timeoutMs = 
   return { chapters, failed };
 }
 
-module.exports = { CHAPTERS, CHAPTER_IDS, generateChapters };
+module.exports = { CHAPTERS, CHAPTER_IDS, generateChapters, findViolations };

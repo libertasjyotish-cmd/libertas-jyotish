@@ -2,6 +2,7 @@
 const crypto = require('crypto');
 const { getMemberSheet, getLastSheetIssue, getMemberRecord } = require('./_sheets');
 const { listGeminiModels, generateWithGemini } = require('./_gemini');
+const { findViolations } = require('./_report');
 const { issueSession } = require('./_auth');
 const { createTerms } = require('./_terms');
 const { nakshatraFromLongitude } = require('./_astrology');
@@ -396,10 +397,14 @@ module.exports = async function handler(req, res) {
                   generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'premium'), 40000, startedAt + FUNCTION_BUDGET_MS)
                 ]);
 
-                if (base.json) {
+                const baseViolations = base.json ? findViolations(JSON.stringify(base.json), finalLang) : [];
+                if (baseViolations.length) {
+                  console.warn('Daily reading contains banned expressions:', baseViolations.join(', '));
+                  fallbackReason = 'banned_expression';
+                } else if (base.json) {
                   cleanJsonResult = base.json;
                   cleanJsonResult.generated_by = base.model;
-                  if (premium.json && premium.json.premium_reading) {
+                  if (premium.json && premium.json.premium_reading && !findViolations(JSON.stringify(premium.json), finalLang).length) {
                     cleanJsonResult.premium_reading = premium.json.premium_reading;
                   } else {
                     fallbackReason = premium.reason || 'gemini_premium_missing';
@@ -409,7 +414,11 @@ module.exports = async function handler(req, res) {
                 }
               } else {
                 const result = await generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, false, finalLang), 45000, startedAt + FUNCTION_BUDGET_MS);
-                if (result.json) {
+                const violations = result.json ? findViolations(JSON.stringify(result.json), finalLang) : [];
+                if (violations.length) {
+                  console.warn('Daily reading contains banned expressions:', violations.join(', '));
+                  fallbackReason = 'banned_expression';
+                } else if (result.json) {
                   cleanJsonResult = result.json;
                   cleanJsonResult.generated_by = result.model;
                   cleanJsonResult.gemini_meta = result.meta;
@@ -727,6 +736,12 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
   - 「本日の運勢」「本日受ける星の影響」は、必ず ${todayJst} のトランジット天体配置と出生図の関係（アスペクト・在住ハウス）から導くこと。日付が変われば内容も変わるのが正しい振る舞いです。
   - ポエムや使い回しの文章は一切禁止。本当に天体配置と月の位置、ナクシャトラの特徴から、相談者の心へ誠実かつ深い内省を促すように語りかけてください。
   - トーンは高貴で、神秘的でありながら、現実的で温かい励ましに満ちた言葉遣い。
+
+  【安全規則（厳守）】
+  - 鑑定はエンターテインメントとしての自己理解の補助である。将来の出来事・結果を断定せず、「傾向」「〜しやすい」「〜に向く時期」の表現に留めること。
+  - 医療・健康（診断・治療・病気の回復可否）、投資・金融（銘柄・儲け・元本）、法律（訴訟・違法性）、生死・寿命・事故・災害に関する断定や助言を一切書かないこと。
+  - 不安や恐怖を煽る表現、誇張表現（「必ず」「絶対に」「運命が決まる」等）を使わないこと。悪い配置も前向きな調整の指針として書くこと。
+  - 特定の人物・企業・宗教行為・商品の推奨や、除霊・祈祷に類する提案を書かないこと。
   - 有料鑑定の場合は、プロフェッショナル鑑定書に相応しい、各セクションの最低文字数を必ず厳守して、重厚かつ詳細に運命を紐解いてください。
 
   【出力言語 / Output language】
