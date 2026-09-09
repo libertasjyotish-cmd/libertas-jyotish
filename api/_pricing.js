@@ -18,8 +18,11 @@ function resolveTier(country) {
   return (entry && entry.tier) || priceTiers.defaultTier;
 }
 
+// TEST 鍵（sk_test_…）では本番の購入導線を開かない。E2E 検証時のみ KOMOJU_ALLOW_TEST=1 で解放する。
 function komojuEnabled() {
-  return Boolean(process.env.KOMOJU_SECRET_KEY);
+  const key = process.env.KOMOJU_SECRET_KEY || '';
+  if (!key) return false;
+  return key.startsWith('sk_live_') || process.env.KOMOJU_ALLOW_TEST === '1';
 }
 
 function resolveProvider(country) {
