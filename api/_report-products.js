@@ -198,7 +198,40 @@ const COMPAT_CHAPTERS = [
   },
   {
     id: 'ch7',
-    title: '第7章 この関係を育てるために',
+    title: '第7章 この縁の意味（二人が出会った理由）',
+    pick: (a) => ({
+      relation: relationOf(a), karmic: a.karmic, moonDistance: a.moonDistance, lagnaDistance: a.lagnaDistance,
+      nakshatraA: a.personA.nakshatra, nakshatraB: a.personB.nakshatra,
+      rahuA: a.personA.rahu?.sign, ketuA: a.personA.ketu?.sign, rahuB: a.personB.rahu?.sign, ketuB: a.personB.ketu?.sign
+    }),
+    schema: `{
+      "whyMet": "確定データ（相手の月・太陽・金星が自分の月から何室か、ラーフ・ケートゥ軸の重なり）から読む、この二人が出会った意味（350文字程度。前世の断定はしない。関係の種類に沿って書く）",
+      "lesson": "この関係がそれぞれに教えてくれること（AとBそれぞれについて、合計300文字程度）",
+      "bonds": ["この縁を結ぶ具体的な配置とその意味（各 60 文字以内。確定データにあるものだけ）", "", ""],
+      "destiny": "この縁を活かしたときに二人が到達できる場所（250文字程度。希望を持てる語調で、断定はしない）"
+    }`
+  },
+  {
+    id: 'ch8',
+    title: '第8章 関係が動く時期（今後 12 か月）',
+    pick: (a) => ({
+      relation: relationOf(a), period: a.period, dashaChanges: a.dashaChanges,
+      currentDashaA: a.personA.currentDasha, currentDashaB: a.personB.currentDasha,
+      timeline: a.timeline.map((m) => ({
+        month: m.month,
+        ...Object.fromEntries(m.planets.map((p) => [p.planetKey, `A:${p.houseFromMoonA}室 B:${p.houseFromMoonB}室${p.retrograde ? ' R' : ''}`]))
+      }))
+    }),
+    schema: `{
+      "overview": "今後 12 か月の二人の関係の大きな流れ（250文字程度。二人のダシャーと木星・土星の位置から）",
+      "phases": [{ "month": "確定データの YYYY-MM をそのまま", "phase": "局面の名前（15文字以内。例: 近づく時期、試される時期、決める時期）", "text": "その月に何が起こりやすく、二人がどう動くと良いか（120文字以内。金星・木星・土星のハウスやダシャー切替を根拠に）" }],
+      "bestWindow": "関係を一歩進める（深める・始める・決める）のに最も向く月とその理由（150文字程度。YYYY-MM を明記）",
+      "careWindow": "話し合いを急がず、距離を整えたい月とその理由（150文字程度。YYYY-MM を明記。恐れを煽る表現は使わない）"
+    }`
+  },
+  {
+    id: 'ch9',
+    title: '第9章 この関係を育てるために',
     pick: (a) => ({ relation: relationOf(a), moonDistance: a.moonDistance, overlayAonB: a.overlayAonB.slice(0, 3), overlayBonA: a.overlayBonA.slice(0, 3), band: a.matching.band }),
     schema: `{
       "roles": "二人の自然な役割分担（300文字程度。関係の種類に沿って書く）",
@@ -208,8 +241,8 @@ const COMPAT_CHAPTERS = [
     }`
   },
   {
-    id: 'ch8',
-    title: '第8章 伝統的な相性指標（36 点法）',
+    id: 'ch10',
+    title: '第10章 伝統的な相性指標（36 点法）',
     pick: (a) => ({ relation: relationOf(a), matching: a.matching }),
     schema: `{
       "intro": "36 点法（アシュタクータ）とは何か、結婚向けの伝統指標であり関係の種類によっては参考程度に読むこと（200文字程度）",
@@ -220,9 +253,9 @@ const COMPAT_CHAPTERS = [
   }
 ];
 
-// 36 点法（第8章）は結婚向けの伝統指標なので、恋愛・結婚以外の関係では省く
+// 36 点法（第10章）は結婚向けの伝統指標なので、恋愛・結婚以外の関係では省く
 function compatChapterIdsFor(relation) {
-  return COMPAT_CHAPTERS.filter((c) => c.id !== 'ch8' || relation === 'romance').map((c) => c.id);
+  return COMPAT_CHAPTERS.filter((c) => c.id !== 'ch10' || relation === 'romance').map((c) => c.id);
 }
 
 module.exports = { YEARLY_CHAPTERS, COMPAT_CHAPTERS, compatChapterIdsFor, RELATION_JA };
