@@ -503,6 +503,12 @@
     "pdf-report.prodMonthly": "مواقع الكواكب شهرياً",
     "pdf-report.prodMonth": "الشهر",
     "pdf-report.prodHouseNote": "الأرقام بين القوسين هي البيوت محسوبة من قمر الميلاد. R تعني الحركة التراجعية.",
-    "pdf-report.prodScore": "مجموع أشتاكوتا"
+    "pdf-report.prodScore": "مجموع أشتاكوتا",
+    "pdf-report.prodCareer": "تقرير المهنة والرسالة والمال (رسالتك في العمل)",
+    "pdf-report.prodCareerHouses": "بيوت العمل والمال",
+    "pdf-report.prodTheme": "المجال",
+    "pdf-report.prodLord": "الحاكم (← موضعه)",
+    "pdf-report.prodOccupants": "الكواكب في البيت",
+    "pdf-report.prodLagnaHouseNote": "الأرقام بين القوسين هي البيوت محسوبة من الطالع (البيت الأول). R تعني الحركة التراجعية."
   }
 }

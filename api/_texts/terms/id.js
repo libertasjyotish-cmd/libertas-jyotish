@@ -240,7 +240,8 @@ const CHAPTER_TITLE = {
   yearly_ch5: 'Bab 5 — Kuartal ketiga',
   yearly_ch6: 'Bab 6 — Kuartal keempat',
   yearly_ch7: 'Bab 7 — Tahun ini per tema: kerja, uang, relasi, kesejahteraan',
-  yearly_ch8: 'Bab 8 — Memanfaatkan tahun ini sebaik-baiknya',
+  yearly_ch8: 'Bab 8 — Tahun untuk bergerak atau tahun untuk bersiap? Waktu keputusan besar',
+  yearly_ch9: 'Bab 9 — Memanfaatkan tahun ini sebaik-baiknya',
   compat_summary: 'Hubungan Anda berdua dalam sekilas',
   compat_ch1: 'Bab 1 — Dua cetak biru',
   compat_ch2: 'Bab 2 — Kecocokan hati (Bulan dan Bulan)',
@@ -251,7 +252,15 @@ const CHAPTER_TITLE = {
   compat_ch7: 'Bab 7 — Makna ikatan ini (mengapa kalian bertemu)',
   compat_ch8: 'Bab 8 — Kapan hubungan bergerak (12 bulan ke depan)',
   compat_ch9: 'Bab 9 — Merawat hubungan ini',
-  compat_ch10: 'Bab 10 — Skor kecocokan tradisional (36 poin)'
+  compat_ch10: 'Bab 10 — Skor kecocokan tradisional (36 poin)',
+  career_summary: 'Panggilan hidup Anda sekilas',
+  career_ch1: 'Bab 1 — Bentuk panggilan Anda (rumah 10 dan penguasanya)',
+  career_ch2: 'Bab 2 — Talenta dan keterampilan (rumah 3, 5, dan planet terkuat Anda)',
+  career_ch3: 'Bab 3 — Bekerja di organisasi atau mandiri? (rumah 6, 7, dan 10)',
+  career_ch4: 'Bab 4 — Pola keuangan Anda (rumah 2, 11, dan Ashtakavarga)',
+  career_ch5: 'Bab 5 — Siklus kehidupan kerja Anda (Dasha)',
+  career_ch6: 'Bab 6 — Kapan karier Anda bergerak (12 bulan ke depan)',
+  career_ch7: 'Bab 7 — Rencana tindakan menuju panggilan Anda'
 };
 
 const REASON = {

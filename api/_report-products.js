@@ -104,7 +104,24 @@ const YEARLY_CHAPTERS = [
   },
   {
     id: 'ch8',
-    title: '第8章 この 1 年を最大限に活かすために',
+    title: '第8章 転機の年か、仕込みの年か（大きな決断の時期）',
+    pick: (a) => ({
+      period: a.period, currentDasha: a.dasha?.current, sadeSati: a.sadeSati,
+      turningPoints: a.turningPoints,
+      strength: a.strength?.slice(0, 3)
+    }),
+    schema: `{
+      "verdict": "turningPoints.scale が major なら「動く年」、moderate なら「一部の領域で動く年」、preparation なら「次の転機に向けて仕込む年」と、確定データのまま正直に判定し、その根拠となる配置（惑星名・月から何室・切替のダシャー）を必ず名指しで書く（300文字程度）",
+      "destiny": "その配置が人生の流れの中で何を意味するか。運命的な文脈で書くが、前世・具体的な出来事・成否は断定しない（250文字程度）",
+      "decisionWindows": [{ "month": "確定データの YYYY-MM をそのまま（turningPoints.events または monthlyMomentum の score が高い月のみ）", "kind": "転職・独立・移住・学び直し・関係の決断など、その配置に対応する決断の種類（30文字以内。断定ではなく「向く」）", "text": "なぜその月か（根拠の配置）と、踏み出す前に整えておくこと（180文字程度）" }],
+      "prepare": "決断の前に整えるべきこと（資金・関係・スキル等、確定データの弱い領域に基づく。250文字程度）",
+      "hold": "急がない方がよい月または領域と、その配置上の理由（150文字程度。無ければ「特に無い」と短く）",
+      "message": "決断を迫らず、しかし背中を押す締めの言葉（150文字程度）"
+    }`
+  },
+  {
+    id: 'ch9',
+    title: '第9章 この 1 年を最大限に活かすために',
     pick: (a) => ({ keyShifts: a.keyShifts, dashaChanges: a.dashaChanges, strength: a.strength?.slice(0, 3), period: a.period }),
     schema: `{
       "bestMonths": [{ "month": "確定データの YYYY-MM をそのまま", "text": "追い風になる理由と使い方（100文字以内）" }],
@@ -258,4 +275,105 @@ function compatChapterIdsFor(relation) {
   return COMPAT_CHAPTERS.filter((c) => c.id !== 'ch10' || relation === 'romance').map((c) => c.id);
 }
 
-module.exports = { YEARLY_CHAPTERS, COMPAT_CHAPTERS, compatChapterIdsFor, RELATION_JA };
+const careerHouse = (a, n) => (a.careerHouses || []).find((h) => h.house === n) || null;
+
+const CAREER_CHAPTERS = [
+  {
+    id: 'summary',
+    title: 'あなたの天職の見取り図',
+    pick: (a) => ({
+      ascendant: a.ascendant, moon: a.moon, sun: a.sun, nakshatra: a.nakshatra,
+      tenth: careerHouse(a, 10), second: careerHouse(a, 2), eleventh: careerHouse(a, 11),
+      strongest: a.strength?.slice(0, 3), currentDasha: a.dasha?.current
+    }),
+    schema: `{
+      "catchphrase": "この人の働き方を一文で（30文字以内）",
+      "essence": "10 室・2 室・11 室の支配星と在住惑星、最も強い惑星から読む、仕事人生の全体像（300文字程度。職種名は断定しない）",
+      "callingType": "天職の型（創る／伝える／整える／導く／支える／探究する のいずれか。確定データに従う）",
+      "gifts": ["仕事で武器になる資質（各30文字以内）", "", ""],
+      "stance": "仕事とお金に向き合う基本姿勢（150文字程度）"
+    }`
+  },
+  {
+    id: 'ch1',
+    title: '第1章 天職の型（10 室と支配星）',
+    pick: (a) => ({ tenth: careerHouse(a, 10), koto: a.boosters?.koto, sun: a.sun, strongest: a.strength?.slice(0, 3), d10Available: Boolean(a.charts?.d10) }),
+    schema: `{
+      "intro": "10 室（仕事・社会的な立場）の読み方（150文字程度）",
+      "text": "10 室のサイン・支配星・その支配星の在住ハウスと品位から、どんな役割で力が出るか（500文字程度。職種名は断定せず、向く仕事の性質で書く）",
+      "fields": ["向いている仕事の領域・性質（各40文字以内。例: 人に教える・伝える仕事）", "", ""],
+      "avoid": "消耗しやすい働き方（200文字程度）"
+    }`
+  },
+  {
+    id: 'ch2',
+    title: '第2章 才能と技能（3 室・5 室・最強の惑星）',
+    pick: (a) => ({ third: careerHouse(a, 3), fifth: careerHouse(a, 5), strength: a.strength, mercury: a.planets?.find((p) => p.key === 'Mercury'), mars: a.planets?.find((p) => p.key === 'Mars') }),
+    schema: `{
+      "talents": [{ "name": "才能の名前（20文字以内）", "text": "その才能の根拠となる配置と、仕事での使い方（150文字程度）" }],
+      "learning": "学び方・スキルの伸ばし方の向き（250文字程度）",
+      "hidden": "まだ使い切っていない才能（200文字程度）"
+    }`
+  },
+  {
+    id: 'ch3',
+    title: '第3章 雇われるか、独立するか（6 室・7 室・10 室）',
+    pick: (a) => ({ sixth: careerHouse(a, 6), seventh: careerHouse(a, 7), tenth: careerHouse(a, 10), saturn: a.planets?.find((p) => p.key === 'Saturn'), rahu: a.planets?.find((p) => p.key === 'Rahu') }),
+    schema: `{
+      "intro": "6 室（勤め・奉仕）と 7 室（取引・パートナー）と 10 室の力関係の読み方（150文字程度）",
+      "text": "組織で働く・独立する・共同経営するのどれに適性が寄るか、確定データの根拠を示して（450文字程度。断定ではなく「寄る」）",
+      "conditions": ["独立や転職を考えるときに満たしておきたい条件（各40文字以内）", "", ""],
+      "team": "上司・同僚・取引相手との関わり方の型（200文字程度）"
+    }`
+  },
+  {
+    id: 'ch4',
+    title: '第4章 お金の型（2 室・11 室・アシュタカヴァルガ）',
+    pick: (a) => ({ second: careerHouse(a, 2), eleventh: careerHouse(a, 11), ashtakavarga: a.ashtakavarga, venus: a.planets?.find((p) => p.key === 'Venus'), jupiter: a.planets?.find((p) => p.key === 'Jupiter') }),
+    schema: `{
+      "intro": "2 室（自分で稼ぐ・蓄える）と 11 室（得る・人脈）の読み方（150文字程度）",
+      "earning": "収入が入りやすい経路（労働・専門技能・人脈・仕組み など）と根拠（350文字程度。投資助言は書かない）",
+      "keeping": "貯める・守る力と、支出が膨らみやすい条件（300文字程度）",
+      "scores": "アシュタカヴァルガの 2 室・10 室・11 室の点数（確定データのものだけ）が示す厚み（200文字程度）",
+      "advice": ["金運を活かす行動（各40文字以内）", "", ""]
+    }`
+  },
+  {
+    id: 'ch5',
+    title: '第5章 仕事人生の周期（ダシャー）',
+    pick: (a) => ({ current: a.dasha?.current, upcoming: a.dasha?.upcoming, timeline: a.dasha?.timeline, tenth: careerHouse(a, 10), second: careerHouse(a, 2) }),
+    schema: `{
+      "intro": "ダシャー（運気の周期）が仕事に与える影響の考え方（200文字程度）",
+      "now": "現在の大周期・中周期の支配星が 10 室・2 室とどう関わり、仕事の今をどう作っているか（400文字程度）",
+      "periods": [{ "lord": "確定データの支配星名をそのまま", "text": "その周期に仕事・収入がどう動きやすいか（150文字程度。年は確定データのもの）" }],
+      "golden": "仕事の上で最も実りやすい周期とその使い方（250文字程度）"
+    }`
+  },
+  {
+    id: 'ch6',
+    title: '第6章 キャリアが動く時期（今後 12 か月）',
+    pick: (a) => ({
+      period: a.period, careerWindows: a.careerWindows, dashaChanges: a.dashaChanges, currentDasha: a.dasha?.current,
+      transits: (a.careerTransits || []).map((m) => ({ month: m.month, ...Object.fromEntries(m.planets.map((p) => [p.planetKey, `L${p.houseFromLagna}/M${p.houseFromMoon}${p.retrograde ? ' R' : ''}`])) }))
+    }),
+    schema: `{
+      "overview": "今後 12 か月のキャリアの大きな流れ（250文字程度。期間は確定データの年月のみ）",
+      "windows": [{ "month": "確定データの YYYY-MM をそのまま", "kind": "転職に向く・独立の準備・昇進や評価・収入の見直し・学び直し など（30文字以内）", "text": "なぜその月か（木星・土星のハウス、ダシャー切替）と、どう動くとよいか（180文字程度）" }],
+      "bestMonth": "大きな決断に最も向く月とその根拠（150文字程度。該当が無ければ「今期は準備期」と正直に）",
+      "holdMonth": "急がない方がよい月または領域と根拠（120文字程度。無ければ短く）"
+    }`
+  },
+  {
+    id: 'ch7',
+    title: '第7章 天職に近づくための行動計画',
+    pick: (a) => ({ strongest: a.strength?.slice(0, 3), tenth: careerHouse(a, 10), koto: a.boosters?.koto, careerWindows: a.careerWindows?.slice(0, 3) }),
+    schema: `{
+      "now": ["今から 3 か月でできること（各40文字以内）", "", ""],
+      "year": ["この 1 年で整えること（各40文字以内）", "", ""],
+      "habit": "天職の型に合った働き方の習慣（250文字程度）",
+      "message": "決断を迫らず、しかし背中を押す締めの言葉（200文字程度）"
+    }`
+  }
+];
+
+module.exports = { YEARLY_CHAPTERS, COMPAT_CHAPTERS, CAREER_CHAPTERS, compatChapterIdsFor, RELATION_JA };

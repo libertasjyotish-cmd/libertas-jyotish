@@ -2,10 +2,10 @@
 // 関数の制限時間内で進められるところまで進めて台帳（Google Sheets）に保存し、次回に続きを行う。
 //   注文取得 → パーソナライズ解析 → 天体計算 → 章を数個ずつ生成 → 揃ったら PDF → Resend → Etsy 注文を完了に更新
 // 台帳は receipt_id ごとに 1 行。再実行しても二重生成・二重送信しない。
-const { fetchReportData, fetchYearlyData, fetchCompatData } = require('./_astrology');
+const { fetchReportData, fetchYearlyData, fetchCompatData, fetchCareerData } = require('./_astrology');
 const { listGeminiModels } = require('./_gemini');
 const { CHAPTERS, CHAPTER_IDS, generateChapters } = require('./_report');
-const { YEARLY_CHAPTERS, COMPAT_CHAPTERS, compatChapterIdsFor } = require('./_report-products');
+const { YEARLY_CHAPTERS, COMPAT_CHAPTERS, CAREER_CHAPTERS, compatChapterIdsFor } = require('./_report-products');
 const { normalizeLang } = require('./_terms');
 const { geocodeBirthPlace } = require('./_geocode');
 const etsy = require('./_etsy-api');
@@ -32,8 +32,8 @@ const REVIEW_PAGE = `
   <p class="disclaimer">Libertas Jyotish · www.libertas-jyotish.com · This report is for self-reflection and entertainment
   and is not medical, legal, financial or psychological advice.</p>`;
 
-// 商品種別: natal（出生図）/ yearly（年間運勢）/ compat（相性）。
-// ETSY_LISTING_PRODUCTS="<listing_id>:yearly,<listing_id>:compat" で明示し、無ければ商品名から推定する。
+// 商品種別: natal（出生図）/ yearly（年間運勢）/ compat（相性）/ career（仕事・適職・金運）。
+// ETSY_LISTING_PRODUCTS="<listing_id>:yearly,<listing_id>:compat,<listing_id>:career" で明示し、無ければ商品名から推定する。
 function listingProducts() {
   const map = {};
   for (const pair of String(process.env.ETSY_LISTING_PRODUCTS || '').split(',')) {
@@ -51,6 +51,7 @@ function productOf(receipt) {
     const title = String(tx.title || '');
     if (/compatib|synastry|relationship|couple/i.test(title)) return 'compat';
     if (/year[- ]?ahead|yearly|annual|12[- ]month|forecast/i.test(title)) return 'yearly';
+    if (/career|vocation|profession|wealth|money|job/i.test(title)) return 'career';
   }
   return 'natal';
 }
@@ -58,6 +59,7 @@ function productOf(receipt) {
 function chapterDefsFor(order) {
   if (order.product === 'yearly') return { defs: YEARLY_CHAPTERS, ids: YEARLY_CHAPTERS.map((c) => c.id) };
   if (order.product === 'compat') return { defs: COMPAT_CHAPTERS, ids: compatChapterIdsFor(order.relation || 'general') };
+  if (order.product === 'career') return { defs: CAREER_CHAPTERS, ids: CAREER_CHAPTERS.map((c) => c.id) };
   return { defs: CHAPTERS, ids: CHAPTER_IDS };
 }
 
@@ -179,7 +181,9 @@ async function advanceOrder(order, ctx) {
         astro.personA.city = order.place;
         astro.personB.city = order.place_b;
       } else {
-        astro = order.product === 'yearly' ? await fetchYearlyData(a) : await fetchReportData(a);
+        astro = order.product === 'yearly' ? await fetchYearlyData(a)
+          : order.product === 'career' ? await fetchCareerData(a)
+          : await fetchReportData(a);
       }
       astro.city = order.place;
       astro.geo_precision = geo.precision;
@@ -222,6 +226,7 @@ async function advanceOrder(order, ctx) {
     const pdf = await renderReportPdf({ lang: language, report: { astro, chapters }, extraHtml: REVIEW_PAGE });
     const filename = order.product === 'yearly' ? `Libertas-Jyotish-Year-Ahead-${order.dob}.pdf`
       : order.product === 'compat' ? `Libertas-Jyotish-Compatibility-${order.dob}-${order.dob_b}.pdf`
+      : order.product === 'career' ? `Libertas-Jyotish-Career-${order.dob}.pdf`
       : `Libertas-Jyotish-Report-${order.dob}.pdf`;
     ctx.log(`  ${receiptId}: pdf ${Math.round(pdf.length / 1024)} KB`);
     if (ctx.onPdf) await ctx.onPdf(receiptId, filename, pdf);
