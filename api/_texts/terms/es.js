@@ -231,7 +231,25 @@ const CHAPTER_TITLE = {
   ch9: 'Capítulo 9 — El mapa de tu vida (línea temporal vital)',
   ch10: 'Capítulo 10 — Dónde te encuentras ahora',
   ch11: 'Capítulo 11 — El periodo dorado que llega',
-  ch12: 'Capítulo 12 — Convertir las pruebas en cimientos'
+  ch12: 'Capítulo 12 — Convertir las pruebas en cimientos',
+  yearly_summary: 'Tu año de un vistazo',
+  yearly_ch1: 'Capítulo 1 — El ciclo en el que estás ahora',
+  yearly_ch2: 'Capítulo 2 — Los grandes movimientos planetarios del año',
+  yearly_ch3: 'Capítulo 3 — Primer trimestre (los tres primeros meses)',
+  yearly_ch4: 'Capítulo 4 — Segundo trimestre',
+  yearly_ch5: 'Capítulo 5 — Tercer trimestre',
+  yearly_ch6: 'Capítulo 6 — Cuarto trimestre',
+  yearly_ch7: 'Capítulo 7 — El año por temas: trabajo, dinero, relaciones, bienestar',
+  yearly_ch8: 'Capítulo 8 — Cómo aprovechar al máximo este año',
+  compat_summary: 'Vuestra relación de un vistazo',
+  compat_ch1: 'Capítulo 1 — Dos planos',
+  compat_ch2: 'Capítulo 2 — Cómo encajan vuestros corazones (Luna y Luna)',
+  compat_ch3: 'Capítulo 3 — Lo que cada uno aporta al otro',
+  compat_ch4: 'Capítulo 4 — Conversación y valores (Mercurio, Sol, Júpiter)',
+  compat_ch5: 'Capítulo 5 — Impulso y calidez (Marte y Venus)',
+  compat_ch6: 'Capítulo 6 — Responsabilidad y permanencia (Saturno)',
+  compat_ch7: 'Capítulo 7 — Cultivar esta relación',
+  compat_ch8: 'Capítulo 8 — La puntuación tradicional de compatibilidad (36 puntos)'
 };
 
 const REASON = {

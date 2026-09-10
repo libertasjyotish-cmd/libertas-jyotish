@@ -242,6 +242,10 @@
     function render(data) {
       const a = data.astro || {};
       const c = data.chapters || {};
+      if (a.product === 'yearly' || a.product === 'compat') {
+        bookEl.innerHTML = renderProduct(a, c, data);
+        return;
+      }
       const html = [];
 
       html.push(cover(a));
@@ -482,6 +486,86 @@
       return page(`<h2 class="chapter-title">Lampiran Data planet</h2>
         <table><thead><tr><th>Planet</th><th>Zodiak</th><th>Derajat</th><th>Rumah</th><th>Nakshatra</th><th>Retrograd</th><th>Martabat</th></tr></thead>
         <tbody>${rows}</tbody></table>`);
+    }
+
+    // --- 年間運勢・相性鑑定: 章スキーマが商品ごとに異なるため、値の型に応じて汎用的に描く ---
+    const PROD_ORDER = ['summary', 'ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'ch6', 'ch7', 'ch8'];
+    const list = (arr) => `<ul>${arr.filter(Boolean).map((v) => `<li>${esc(v)}</li>`).join('')}</ul>`;
+
+    function genericValue(v) {
+      if (v == null || v === '') return '';
+      if (typeof v === 'string') return para(v);
+      if (Array.isArray(v)) {
+        if (!v.length) return '';
+        if (typeof v[0] === 'string') return list(v);
+        return v.map((item) => {
+          const head = item.month || item.name || item.planet || item.label || '';
+          const sub = item.theme || '';
+          const body = item.text || '';
+          const todo = item.todo ? `<ul><li>${esc(item.todo)}</li></ul>` : '';
+          return `<div class="fact"><strong>${esc(head)}</strong>${sub ? `　${esc(sub)}` : ''}</div>${para(body)}${todo}`;
+        }).join('');
+      }
+      if (typeof v === 'object') return Object.values(v).map(genericValue).join('');
+      return para(String(v));
+    }
+
+    function genericPage(ch) {
+      const parts = [];
+      for (const [key, v] of Object.entries(ch)) {
+        if (key === 'title') continue;
+        if (key === 'catchphrase') { parts.push(`<div class="lead">${esc(v)}</div>`); continue; }
+        parts.push(genericValue(v));
+      }
+      return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>${parts.join('')}`);
+    }
+
+    function personLine(p) {
+      if (!p) return '';
+      const b = p.birth || {};
+      return `${esc(b.dob || '')} ${esc(b.tob || '')}${p.city ? ` · ${esc(p.city)}` : ''}<br>
+        Lagna  ${esc(p.ascendant?.sign || '')}  /  Bulan  ${esc(p.moon?.sign || '')}  /  ${esc(p.nakshatra || '')}`;
+    }
+
+    function productCover(a) {
+      const sub = a.product === 'yearly' ? 'Ramalan Tahun Depan (12 bulan ke depan)' : 'Laporan Kecocokan';
+      const owner = a.product === 'yearly'
+        ? `${esc(a.period?.start || '')} — ${esc(a.period?.end || '')}<br>${personLine(a)}`
+        : `<strong>A</strong> ${personLine(a.personA)}<br><br><strong>B</strong> ${personLine(a.personB)}`;
+      return `<section class="page cover">
+        <div><img class="logo" src="/img/libertas-logo.png" alt="Libertas Jyotish"></div>
+        <div><h1>Libertas Jyotish</h1><div class="sub">${sub}</div></div>
+        <div class="owner">${owner}</div>
+      </section>`;
+    }
+
+    function yearlyDataPage(a) {
+      const rows = (a.months || []).map((m) => `<tr><td>${esc(m.month)}</td>${m.planets.filter((p) => ['Sun', 'Mars', 'Jupiter', 'Saturn', 'Rahu', 'Ketu', 'Venus'].includes(p.key)).map((p) => `<td>${esc(p.sign)}${p.houseFromMoon ? ` (${esc(p.houseFromMoon)})` : ''}${p.retrograde ? 'Retrograd' : ''}</td>`).join('')}</tr>`).join('');
+      const first = (a.months || [])[0];
+      const heads = first ? first.planets.filter((p) => ['Sun', 'Mars', 'Jupiter', 'Saturn', 'Rahu', 'Ketu', 'Venus'].includes(p.key)).map((p) => `<th>${esc(p.name)}</th>`).join('') : '';
+      return page(`<h2 class="chapter-title">Posisi planet per bulan</h2>
+        <table><thead><tr><th>Bulan</th>${heads}</tr></thead><tbody>${rows}</tbody></table>
+        <p class="disclaimer">Angka dalam kurung adalah rumah dihitung dari Bulan natal. R menandai gerak retrograde.</p>`);
+    }
+
+    function compatDataPage(a) {
+      const col = (p) => (p.planets || []).map((pl) => `<tr><td>${esc(pl.name)}</td><td>${esc(pl.sign)}</td><td>${pl.house == null ? '' : esc(pl.house)}</td><td>${esc(pl.nakshatra)}</td></tr>`).join('');
+      const table = (p, label) => `<h3>${label}</h3><table><thead><tr><th>Planet</th><th>Zodiak</th><th>Rumah</th><th>Nakshatra</th></tr></thead><tbody>${col(p)}</tbody></table>`;
+      const m = a.matching || {};
+      const kootas = (m.kootas || []).length && a.relation === 'romance'
+        ? `<h3>Total Ashtakoota ${esc(m.total)} / ${esc(m.max)}</h3><table><tbody>${m.kootas.map((k) => `<tr><td>${esc(k.name)}</td><td>${esc(k.points)} / ${esc(k.max)}</td></tr>`).join('')}</tbody></table>`
+        : '';
+      return page(`<h2 class="chapter-title">Lampiran Data planet</h2>${table(a.personA || {}, 'A')}${table(a.personB || {}, 'B')}${kootas}`);
+    }
+
+    function renderProduct(a, c, data) {
+      const chapters = PROD_ORDER.map((id) => c[id]).filter(Boolean);
+      const html = [productCover(a)];
+      html.push(page(`<h2 class="chapter-title">Daftar isi</h2><ul class="toc">${chapters.map((ch) => `<li>${esc(ch.title)}</li>`).join('')}</ul>`));
+      for (const ch of chapters) html.push(genericPage(ch));
+      html.push(a.product === 'yearly' ? yearlyDataPage(a) : compatDataPage(a));
+      html.push(disclaimerPage(data));
+      return html.join('');
     }
 
     function disclaimerPage(data) {

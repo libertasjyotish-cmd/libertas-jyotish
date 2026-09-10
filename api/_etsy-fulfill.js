@@ -2,14 +2,15 @@
 // 関数の制限時間内で進められるところまで進めて台帳（Google Sheets）に保存し、次回に続きを行う。
 //   注文取得 → パーソナライズ解析 → 天体計算 → 章を数個ずつ生成 → 揃ったら PDF → Resend → Etsy 注文を完了に更新
 // 台帳は receipt_id ごとに 1 行。再実行しても二重生成・二重送信しない。
-const { fetchReportData } = require('./_astrology');
+const { fetchReportData, fetchYearlyData, fetchCompatData } = require('./_astrology');
 const { listGeminiModels } = require('./_gemini');
-const { CHAPTER_IDS, generateChapters } = require('./_report');
+const { CHAPTERS, CHAPTER_IDS, generateChapters } = require('./_report');
+const { YEARLY_CHAPTERS, COMPAT_CHAPTERS, compatChapterIdsFor } = require('./_report-products');
 const { normalizeLang } = require('./_terms');
 const { geocodeBirthPlace } = require('./_geocode');
 const etsy = require('./_etsy-api');
 const ledger = require('./_etsy-ledger');
-const { parsePersonalization } = require('./_etsy-parse');
+const { parsePersonalization, parseCompatPersonalization } = require('./_etsy-parse');
 const { renderReportPdf } = require('./_etsy-pdf');
 const mail = require('./_etsy-mail');
 const storage = require('./_etsy-storage');
@@ -31,6 +32,35 @@ const REVIEW_PAGE = `
   <p class="disclaimer">Libertas Jyotish · www.libertas-jyotish.com · This report is for self-reflection and entertainment
   and is not medical, legal, financial or psychological advice.</p>`;
 
+// 商品種別: natal（出生図）/ yearly（年間運勢）/ compat（相性）。
+// ETSY_LISTING_PRODUCTS="<listing_id>:yearly,<listing_id>:compat" で明示し、無ければ商品名から推定する。
+function listingProducts() {
+  const map = {};
+  for (const pair of String(process.env.ETSY_LISTING_PRODUCTS || '').split(',')) {
+    const [id, product] = pair.split(':').map((s) => s && s.trim());
+    if (id && product) map[id] = product;
+  }
+  return map;
+}
+
+function productOf(receipt) {
+  const map = listingProducts();
+  for (const tx of receipt.transactions || []) {
+    const mapped = map[String(tx.listing_id)];
+    if (mapped) return mapped;
+    const title = String(tx.title || '');
+    if (/compatib|synastry|relationship|couple/i.test(title)) return 'compat';
+    if (/year[- ]?ahead|yearly|annual|12[- ]month|forecast/i.test(title)) return 'yearly';
+  }
+  return 'natal';
+}
+
+function chapterDefsFor(order) {
+  if (order.product === 'yearly') return { defs: YEARLY_CHAPTERS, ids: YEARLY_CHAPTERS.map((c) => c.id) };
+  if (order.product === 'compat') return { defs: COMPAT_CHAPTERS, ids: compatChapterIdsFor(order.relation || 'general') };
+  return { defs: CHAPTERS, ids: CHAPTER_IDS };
+}
+
 function personalizationOf(receipt) {
   const parts = [];
   for (const tx of receipt.transactions || []) {
@@ -51,10 +81,14 @@ async function registerReceipt(receipt, ctx) {
 
   const buyerName = receipt.name || '';
   const personalization = personalizationOf(receipt);
-  const parsed = parsePersonalization(personalization);
+  const product = productOf(receipt);
+  const compat = product === 'compat' ? parseCompatPersonalization(personalization) : null;
+  const parsed = compat ? { ...compat.a, language: compat.language, email: compat.email, missing: compat.missing, notes: compat.notes } : parsePersonalization(personalization);
   // Etsy API は buyer_email を返さないことが多い。入力欄にメールがあればそれを使い、無ければリンク納品（Etsy メッセージ）にする
   const buyerEmail = receipt.buyer_email || parsed.email || '';
   const base = {
+    product,
+    relation: compat ? compat.relation : '',
     delivery: buyerEmail ? 'email' : 'etsy_message',
     transaction_id: (receipt.transactions || []).map((t) => t.transaction_id).join(','),
     buyer_email: buyerEmail,
@@ -64,6 +98,10 @@ async function registerReceipt(receipt, ctx) {
     tob: parsed.tob || '',
     tob_unknown: parsed.tobUnknown ? 'true' : 'false',
     place: parsed.place || '',
+    dob_b: compat ? compat.b.dob || '' : '',
+    tob_b: compat ? compat.b.tob || '' : '',
+    tob_unknown_b: compat && compat.b.tobUnknown ? 'true' : 'false',
+    place_b: compat ? compat.b.place || '' : '',
     language: normalizeLang(parsed.language || 'en')
   };
 
@@ -109,10 +147,12 @@ async function advanceOrder(order, ctx) {
   const remaining = () => ctx.deadline - Date.now();
   const save = (fields) => ctx.store.upsertOrder(receiptId, fields);
 
-  if (!order.dob || !order.place) {
+  const isCompat = order.product === 'compat';
+  if (!order.dob || !order.place || (isCompat && (!order.dob_b || !order.place_b))) {
     await save({ status: STATUS.NEEDS_INFO, last_error: 'missing:dob/place (fill in and set status to new)' });
     return 'needs_info';
   }
+  const { defs, ids: chapterIds } = chapterDefsFor(order);
 
   const attempts = order.status === STATUS.ERROR ? order.attempts + 1 : Math.max(order.attempts, 1);
   await save({ status: STATUS.GENERATING, attempts, last_error: '' });
@@ -120,33 +160,44 @@ async function advanceOrder(order, ctx) {
   try {
     let astro = parseJson(order.astro);
     if (!astro) {
-      const geo = await geocodeBirthPlace(order.place, language);
-      if (!geo) {
+      const needsInfo = async (place, missingKey) => {
         if (ctx.mail) {
-          if (order.buyer_email) await mail.sendNeedsInfo({ to: order.buyer_email, name: order.buyer_name, personalization: order.personalization, missing: ['place'], notes: [] });
-          await mail.notifyOwner(`Etsy: needs info (receipt ${receiptId})`, [`buyer: ${order.buyer_name} <${order.buyer_email || 'no email — ask via Etsy Messages'}>`, `unknown birthplace: ${order.place}`]);
+          if (order.buyer_email) await mail.sendNeedsInfo({ to: order.buyer_email, name: order.buyer_name, personalization: order.personalization, missing: [missingKey], notes: [] });
+          await mail.notifyOwner(`Etsy: needs info (receipt ${receiptId})`, [`buyer: ${order.buyer_name} <${order.buyer_email || 'no email — ask via Etsy Messages'}>`, `unknown birthplace: ${place}`]);
         }
-        await save({ status: STATUS.NEEDS_INFO, last_error: `unknown_birthplace: ${order.place}` });
+        await save({ status: STATUS.NEEDS_INFO, last_error: `unknown_birthplace: ${place}` });
         return 'needs_info';
+      };
+      const geo = await geocodeBirthPlace(order.place, language);
+      if (!geo) return needsInfo(order.place, isCompat ? 'a.place' : 'place');
+      const a = { dob: order.dob, tob, lat: geo.lat, lon: geo.lon, lang: language };
+      if (isCompat) {
+        const geoB = await geocodeBirthPlace(order.place_b, language);
+        if (!geoB) return needsInfo(order.place_b, 'b.place');
+        const b = { dob: order.dob_b, tob: order.tob_b || '12:00', lat: geoB.lat, lon: geoB.lon };
+        astro = await fetchCompatData({ a, b, lang: language, relation: order.relation || 'general' });
+        astro.personA.city = order.place;
+        astro.personB.city = order.place_b;
+      } else {
+        astro = order.product === 'yearly' ? await fetchYearlyData(a) : await fetchReportData(a);
       }
-      astro = await fetchReportData({ dob: order.dob, tob, lat: geo.lat, lon: geo.lon, lang: language });
       astro.city = order.place;
       astro.geo_precision = geo.precision;
       if (geo.notice) astro.geo_notice = geo.notice;
       await save({ astro: JSON.stringify(astro) });
-      ctx.log(`  ${receiptId}: astro ready`);
+      ctx.log(`  ${receiptId}: astro ready (${order.product || 'natal'})`);
     }
 
     const chapters = {};
-    for (const id of CHAPTER_IDS) {
+    for (const id of chapterIds) {
       const value = parseJson(order[id]);
       if (value) chapters[id] = value;
     }
-    let missing = CHAPTER_IDS.filter((id) => !chapters[id]);
+    let missing = chapterIds.filter((id) => !chapters[id]);
 
     while (missing.length && remaining() > MIN_MS_FOR_CHAPTERS) {
       const batch = missing.slice(0, CHAPTERS_PER_STEP);
-      const result = await ctx.generate(astro, batch, language, remaining() - 8000);
+      const result = await ctx.generate(astro, batch, language, remaining() - 8000, { chapters: defs, product: order.product || 'natal' });
       const saved = {};
       for (const [id, value] of Object.entries(result.chapters)) {
         chapters[id] = value;
@@ -155,7 +206,7 @@ async function advanceOrder(order, ctx) {
       if (Object.keys(saved).length) await save(saved);
       if (result.failed.length) ctx.log(`  ${receiptId}: failed ${result.failed.map((f) => `${f.id}(${f.reason})`).join(', ')}`);
       const before = missing.length;
-      missing = CHAPTER_IDS.filter((id) => !chapters[id]);
+      missing = chapterIds.filter((id) => !chapters[id]);
       if (missing.length === before) throw new Error(`chapters_failed: ${result.failed.map((f) => f.id).join(',') || batch.join(',')}`);
     }
     // 時間内に終わらない分は new に戻して次回に続きを行う（generating は実行中ロックの意味）
@@ -169,15 +220,17 @@ async function advanceOrder(order, ctx) {
     }
 
     const pdf = await renderReportPdf({ lang: language, report: { astro, chapters }, extraHtml: REVIEW_PAGE });
-    const filename = `Libertas-Jyotish-Report-${order.dob}.pdf`;
+    const filename = order.product === 'yearly' ? `Libertas-Jyotish-Year-Ahead-${order.dob}.pdf`
+      : order.product === 'compat' ? `Libertas-Jyotish-Compatibility-${order.dob}-${order.dob_b}.pdf`
+      : `Libertas-Jyotish-Report-${order.dob}.pdf`;
     ctx.log(`  ${receiptId}: pdf ${Math.round(pdf.length / 1024)} KB`);
     if (ctx.onPdf) await ctx.onPdf(receiptId, filename, pdf);
 
     const pdfUrl = ctx.storePdf ? await ctx.storePdf(receiptId, filename, pdf) : '';
     const downloadUrl = pdfUrl ? storage.downloadUrl(receiptId) : '';
     await save({ pdf_url: pdfUrl, download_url: downloadUrl });
-    const meta = { dob: order.dob, tob, tobUnknown, place: order.place, language, downloadUrl };
-    const summary = [`buyer: ${order.buyer_name} <${order.buyer_email || 'no email'}>`, `birth: ${order.dob} ${tob} ${order.place}`, `language: ${language}`, `pdf: ${Math.round(pdf.length / 1024)} KB`, `link: ${downloadUrl || '(not stored)'}`];
+    const meta = { product: order.product || 'natal', dob: order.dob, tob, tobUnknown, place: order.place, dobB: order.dob_b, tobB: order.tob_b, placeB: order.place_b, language, downloadUrl };
+    const summary = [`buyer: ${order.buyer_name} <${order.buyer_email || 'no email'}>`, `product: ${meta.product}`, `birth: ${order.dob} ${tob} ${order.place}`, ...(isCompat ? [`birth B: ${order.dob_b} ${order.tob_b || '12:00'} ${order.place_b}`] : []), `language: ${language}`, `pdf: ${Math.round(pdf.length / 1024)} KB`, `link: ${downloadUrl || '(not stored)'}`];
 
     if (order.buyer_email) {
       let emailId = '';
@@ -249,9 +302,9 @@ function defaultGenerate() {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY is not set');
   let modelsPromise = null;
-  return async (astro, ids, lang, timeoutMs) => {
+  return async (astro, ids, lang, timeoutMs, extra = {}) => {
     if (!modelsPromise) modelsPromise = process.env.GEMINI_MODEL ? Promise.resolve([process.env.GEMINI_MODEL]) : listGeminiModels(apiKey);
-    return generateChapters(astro, ids, apiKey, await modelsPromise, { lang, timeoutMs: Math.max(10000, timeoutMs) });
+    return generateChapters(astro, ids, apiKey, await modelsPromise, { lang, timeoutMs: Math.max(10000, timeoutMs), ...extra });
   };
 }
 
@@ -287,4 +340,4 @@ async function runCycle({ deadline, store = ledger, receipts = null, mail: sendM
   return summary;
 }
 
-module.exports = { runCycle, personalizationOf };
+module.exports = { runCycle, personalizationOf, productOf };

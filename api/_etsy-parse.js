@@ -155,4 +155,77 @@ function parsePersonalization(raw) {
   return out;
 }
 
-module.exports = { parsePersonalization, parseDate, parseTime, parseLanguage };
+// --- 相性鑑定: 2 人分の入力 ---
+// 「Person A: …」「Person B: …」の 2 ブロック（無ければ 2 つ目の日付が現れる行で分割）を個別に解析する。
+const PERSON_LABEL = /^\s*(?:person|partner|pessoa|persona|orang|人物|الشخص|شخص)?\s*(?:a|b|1|2|me|myself|you|partner|私|自分|相手|first|second)\s*[:：\-–—)）]\s*/i;
+// \b は ASCII 語にしか効かないので、日本語・アラビア語は境界なしで照合する
+const RELATION_HINTS = [
+  ['romance', /\b(romance|romantic|marriage|married|spouse|wedding|love|couple|boyfriend|girlfriend|husband|wife|pareja|matrimonio|amor|casamento|namorad[oa]|pernikahan|pacar|cinta)\b|恋愛|結婚|夫婦|恋人|زواج|حب/i],
+  ['business', /\b(business|work|colleague|co-?worker|partnership|negocio|trabajo|negócio|trabalho|bisnis|kerja)\b|仕事|ビジネス|同僚|عمل|شريك/i],
+  ['friend', /\b(friends?|friendship|amig[oa]s?|amistad|amizade|teman|sahabat)\b|友人|友達|友情|صديق|صداقة/i]
+];
+const RELATION_LINE = /^\s*(relationship|relation|type|relación|relação|hubungan|関係|العلاقة)\s*[:：\-–—]/i;
+const GENDER_HINTS = [
+  ['female', /\b(female|woman|girl|she|her|mujer|femenino|mulher|feminino|wanita|perempuan)\b|女性|女|أنثى|امرأة/i],
+  ['male', /\b(male|man|boy|he|him|hombre|masculino|homem|pria|laki-laki)\b|男性|男|ذكر|رجل/i]
+];
+
+function parseRelation(text) {
+  for (const [key, re] of RELATION_HINTS) if (re.test(text)) return key;
+  return 'general';
+}
+
+function parseGender(text) {
+  for (const [key, re] of GENDER_HINTS) if (re.test(text)) return key;
+  return null;
+}
+
+function stripLabels(lines) {
+  return lines.filter((l) => !RELATION_LINE.test(l)).map((l) => {
+    let out = l.replace(PERSON_LABEL, '');
+    for (const [, re] of GENDER_HINTS) out = out.replace(re, ' ');
+    return out.replace(/[（(]\s*[)）]/g, ' ');
+  }).join('\n');
+}
+
+// 戻り値: { a, b, relation, language, email, missing: ['a.dob', 'b.place', ...], notes }
+function parseCompatPersonalization(raw) {
+  const text = String(raw || '').replace(/\r/g, '').trim();
+  const lines = text.split('\n');
+
+  // 2 人目の開始行: 「B」ラベルの行、無ければ 2 つ目の日付を含む行
+  let split = lines.findIndex((l) => /^\s*(?:person|partner|pessoa|persona|orang|人物|الشخص|شخص)?\s*(?:b|2|partner|相手|second)\s*[:：\-–—)）]/i.test(l));
+  if (split <= 0) {
+    let seen = 0;
+    split = lines.findIndex((l) => {
+      const d = parseDate(l);
+      if (!d) return false;
+      seen += 1;
+      return seen === 2;
+    });
+  }
+  const relationText = lines.filter((l) => RELATION_LINE.test(l)).join(' ') || text;
+  const out = {
+    relation: parseRelation(relationText),
+    language: parseLanguage(text) || 'en',
+    email: (text.match(EMAIL) || [null])[0]?.toLowerCase() || null,
+    missing: [],
+    notes: []
+  };
+
+  const linesA = split > 0 ? lines.slice(0, split) : lines;
+  const linesB = split > 0 ? lines.slice(split) : [];
+  const person = (segLines, label) => {
+    const gender = parseGender(segLines.join('\n').replace(EMAIL, ' '));
+    const parsed = parsePersonalization(stripLabels(segLines).replace(EMAIL, ' '));
+    for (const m of parsed.missing) out.missing.push(`${label}.${m}`);
+    for (const n of parsed.notes) out.notes.push(`${label}.${n}`);
+    return { label, dob: parsed.dob, tob: parsed.tob, tobUnknown: parsed.tobUnknown, place: parsed.place, gender };
+  };
+  out.a = person(linesA, 'a');
+  out.b = linesB.length ? person(linesB, 'b') : { label: 'b', dob: null, tob: null, tobUnknown: false, place: null, gender: null };
+  if (!linesB.length) out.missing.push('b.dob', 'b.tob', 'b.place');
+  return out;
+}
+
+module.exports = { parsePersonalization, parseCompatPersonalization, parseDate, parseTime, parseLanguage };

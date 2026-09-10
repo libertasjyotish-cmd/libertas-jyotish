@@ -232,7 +232,25 @@ const CHAPTER_TITLE = {
   ch9: 'Chapter 9 — The map of your life (lifetime timeline)',
   ch10: 'Chapter 10 — Where you stand right now',
   ch11: 'Chapter 11 — The golden period ahead',
-  ch12: 'Chapter 12 — Turning trials into foundations'
+  ch12: 'Chapter 12 — Turning trials into foundations',
+  yearly_summary: 'Your year at a glance',
+  yearly_ch1: 'Chapter 1 — The cycle you are in now',
+  yearly_ch2: 'Chapter 2 — The big planetary movements of the year',
+  yearly_ch3: 'Chapter 3 — First quarter (the first three months)',
+  yearly_ch4: 'Chapter 4 — Second quarter',
+  yearly_ch5: 'Chapter 5 — Third quarter',
+  yearly_ch6: 'Chapter 6 — Fourth quarter',
+  yearly_ch7: 'Chapter 7 — The year by theme: work, money, relationships, wellbeing',
+  yearly_ch8: 'Chapter 8 — Making the most of this year',
+  compat_summary: 'Your relationship at a glance',
+  compat_ch1: 'Chapter 1 — Two blueprints',
+  compat_ch2: 'Chapter 2 — How your hearts fit (Moon and Moon)',
+  compat_ch3: 'Chapter 3 — What each of you brings to the other',
+  compat_ch4: 'Chapter 4 — Conversation and values (Mercury, Sun, Jupiter)',
+  compat_ch5: 'Chapter 5 — Drive and warmth (Mars and Venus)',
+  compat_ch6: 'Chapter 6 — Responsibility and staying power (Saturn)',
+  compat_ch7: 'Chapter 7 — Nurturing this relationship',
+  compat_ch8: 'Chapter 8 — The traditional compatibility score (36 points)'
 };
 
 const REASON = {

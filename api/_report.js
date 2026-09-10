@@ -229,10 +229,15 @@ function stripInternalKeys(value) {
   return value;
 }
 
-function buildPrompt(chapter, astro, terms) {
+// 商品ごとに章タイトルの語彙キーを分ける（natal は既存互換のため接頭辞なし）
+function titleKey(chapter, product) {
+  return product === 'natal' ? chapter.id : `${product}_${chapter.id}`;
+}
+
+function buildPrompt(chapter, astro, terms, product) {
   const rules = terms.lang === 'ja' ? COMMON_RULES_JA : commonRulesFor(terms.outputLanguage);
   return `${rules}
-【章】${terms.chapterTitle(chapter.id, chapter.title)}
+【章】${terms.chapterTitle(titleKey(chapter, product), chapter.title)}
 
 【確定データ（JSON）】
 ${JSON.stringify(stripInternalKeys(chapter.pick(astro, terms)), null, 1)}
@@ -242,11 +247,12 @@ ${chapter.schema}`;
 }
 
 // 章を並列生成する。1章が失敗しても他章は返し、未生成の章は次回リクエストで補完する。
-async function generateChapters(astro, ids, apiKey, models, { lang, timeoutMs = 40000 } = {}) {
+// options.chapters / options.product で年間運勢・相性など別商品の章定義を差し込める
+async function generateChapters(astro, ids, apiKey, models, { lang, timeoutMs = 40000, chapters: defs = CHAPTERS, product = 'natal' } = {}) {
   const terms = createTerms(lang);
-  const targets = CHAPTERS.filter((c) => ids.includes(c.id));
+  const targets = defs.filter((c) => ids.includes(c.id));
   const results = await Promise.all(targets.map(async (chapter) => {
-    const result = await generateWithGemini(apiKey, models, buildPrompt(chapter, astro, terms), timeoutMs);
+    const result = await generateWithGemini(apiKey, models, buildPrompt(chapter, astro, terms, product), timeoutMs);
     if (!result.json) return { id: chapter.id, ok: false, reason: result.reason };
 
     const violations = findViolations(JSON.stringify(result.json), terms.lang);
@@ -254,7 +260,7 @@ async function generateChapters(astro, ids, apiKey, models, { lang, timeoutMs = 
       console.warn(`Chapter ${chapter.id} contains banned expressions: ${violations.join(', ')}`);
       return { id: chapter.id, ok: false, reason: 'banned_expression' };
     }
-    const title = terms.chapterTitle(chapter.id, chapter.title);
+    const title = terms.chapterTitle(titleKey(chapter, product), chapter.title);
     return { id: chapter.id, ok: true, value: { title, ...result.json } };
   }));
 

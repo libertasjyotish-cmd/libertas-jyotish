@@ -11,6 +11,7 @@ const REPORT_FIELDS = ['astro', 'summary', 'ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'c
 const ORDER_HEADERS = [
   'receipt_id', 'transaction_id', 'buyer_email', 'buyer_name', 'personalization',
   'dob', 'tob', 'tob_unknown', 'place', 'language',
+  'product', 'relation', 'dob_b', 'tob_b', 'tob_unknown_b', 'place_b',
   'status', 'attempts', 'last_error', 'created_at', 'updated_at', 'delivered_at', 'email_id', 'shipped',
   'pdf_url', 'download_url', 'delivery',
   ...REPORT_FIELDS
