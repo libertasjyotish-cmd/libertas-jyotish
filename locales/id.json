@@ -497,6 +497,12 @@
     "mypage.jsCachedAt": "Menampilkan pembacaan yang diambil pukul {time}.",
     "mypage.jsRefresh": "Perbarui sekarang",
     "checkout.emailNotice": "Jangan mengubah alamat email di halaman pembayaran. Alamat itu dipakai untuk menautkan pembelian dengan akun Anda.",
-    "checkout.authRequired": "Email Anda perlu diverifikasi sebelum pembayaran. Masukkan kode verifikasi di Halaman Saya."
+    "checkout.authRequired": "Email Anda perlu diverifikasi sebelum pembayaran. Masukkan kode verifikasi di Halaman Saya.",
+    "pdf-report.prodYearly": "Ramalan Tahun Depan (12 bulan ke depan)",
+    "pdf-report.prodCompat": "Laporan Kecocokan",
+    "pdf-report.prodMonthly": "Posisi planet per bulan",
+    "pdf-report.prodMonth": "Bulan",
+    "pdf-report.prodHouseNote": "Angka dalam kurung adalah rumah dihitung dari Bulan natal. R menandai gerak retrograde.",
+    "pdf-report.prodScore": "Total Ashtakoota"
   }
 }

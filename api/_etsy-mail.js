@@ -40,16 +40,26 @@ async function send({ to, subject, html, attachments, replyTo }) {
   return data.id || '';
 }
 
-function deliveryHtml({ name, dob, tob, tobUnknown, place, language, downloadUrl }) {
+const PRODUCT_NAMES = {
+  natal: 'Vedic astrology birth chart report',
+  yearly: 'Vedic astrology year-ahead forecast',
+  compat: 'Vedic astrology compatibility report'
+};
+
+function deliveryHtml({ name, product, dob, tob, tobUnknown, place, dobB, tobB, placeB, language, downloadUrl }) {
+  const row = (label, value) => `<tr><td style="padding:3px 12px 3px 0; color:#7a6a58;">${label}</td><td>${esc(value)}</td></tr>`;
+  const personB = product === 'compat' ? `${row('Date of birth (B)', dobB)}${row('Time of birth (B)', tobB || '12:00 (unknown)')}${row('Place of birth (B)', placeB)}` : '';
+  const aLabel = product === 'compat' ? ' (A)' : '';
   return wrap(`
     <p>Dear ${esc(name || 'friend')},</p>
-    <p>Thank you for your order. Your personalized Vedic astrology report is attached to this email as a PDF.</p>
+    <p>Thank you for your order. Your personalized ${PRODUCT_NAMES[product] || PRODUCT_NAMES.natal} is attached to this email as a PDF.</p>
     ${downloadUrl ? `<p style="font-size:14px;">You can also download it here (link valid for ${LINK_TTL_DAYS} days): <a href="${esc(downloadUrl)}">${esc(downloadUrl)}</a></p>` : ''}
     <table style="font-size:14px; border-collapse:collapse; margin:12px 0;">
-      <tr><td style="padding:3px 12px 3px 0; color:#7a6a58;">Date of birth</td><td>${esc(dob)}</td></tr>
-      <tr><td style="padding:3px 12px 3px 0; color:#7a6a58;">Time of birth</td><td>${esc(tob)}${tobUnknown ? ' (unknown — calculated at noon)' : ''}</td></tr>
-      <tr><td style="padding:3px 12px 3px 0; color:#7a6a58;">Place of birth</td><td>${esc(place)}</td></tr>
-      <tr><td style="padding:3px 12px 3px 0; color:#7a6a58;">Report language</td><td>${esc(LANGUAGE_NAMES[language] || language)}</td></tr>
+      ${row(`Date of birth${aLabel}`, dob)}
+      ${row(`Time of birth${aLabel}`, `${tob}${tobUnknown ? ' (unknown — calculated at noon)' : ''}`)}
+      ${row(`Place of birth${aLabel}`, place)}
+      ${personB}
+      ${row('Report language', LANGUAGE_NAMES[language] || language)}
     </table>
     ${tobUnknown ? '<p style="font-size:14px;">Because the birth time was not provided, the ascendant and house positions are approximate. The Moon sign, nakshatra and Dasha timeline remain reliable. If you later learn your birth time, reply to this email and we will re-issue the report at no charge.</p>' : ''}
     <p>If anything in the birth data above is wrong, simply reply to this email and we will correct and resend the report.</p>
@@ -60,9 +70,16 @@ function deliveryHtml({ name, dob, tob, tobUnknown, place, language, downloadUrl
 const MISSING_LABELS = {
   dob: 'your date of birth (please write it as YYYY-MM-DD, e.g. 1990-05-14)',
   tob: 'your time of birth in 24-hour format (e.g. 14:35), or write "unknown"',
-  place: 'your place of birth (city and country)'
+  place: 'your place of birth (city and country)',
+  'a.dob': 'date of birth of person A (YYYY-MM-DD, e.g. 1990-05-14)',
+  'a.tob': 'time of birth of person A in 24-hour format (e.g. 14:35), or write "unknown"',
+  'a.place': 'place of birth of person A (city and country)',
+  'b.dob': 'date of birth of person B (YYYY-MM-DD, e.g. 1990-05-14)',
+  'b.tob': 'time of birth of person B in 24-hour format (e.g. 14:35), or write "unknown"',
+  'b.place': 'place of birth of person B (city and country)'
 };
 
+const NOTE_KEY = (n) => n.replace(/^[ab]\./, '');
 const NOTE_LABELS = {
   date_ambiguous_day_month: 'The date you entered could be read as either day/month or month/day, so please write it as YYYY-MM-DD.',
   time_needs_am_pm: 'The time you entered could be morning or afternoon, so please add AM/PM or use 24-hour format.'
@@ -70,7 +87,7 @@ const NOTE_LABELS = {
 
 function needsInfoHtml({ name, personalization, missing, notes }) {
   const items = missing.map((m) => `<li>${esc(MISSING_LABELS[m] || m)}</li>`).join('');
-  const hints = notes.map((n) => `<p style="font-size:14px;">${esc(NOTE_LABELS[n] || n)}</p>`).join('');
+  const hints = notes.map((n) => `<p style="font-size:14px;">${esc(NOTE_LABELS[NOTE_KEY(n)] || n)}</p>`).join('');
   return wrap(`
     <p>Dear ${esc(name || 'friend')},</p>
     <p>Thank you for your order. Before we can calculate your chart we need one more detail. Please reply to this email with:</p>
@@ -82,16 +99,18 @@ function needsInfoHtml({ name, personalization, missing, notes }) {
 }
 
 // Etsy メッセージに貼るプレーンテキスト（購入者メールが取れない注文用）
-function deliveryText({ name, dob, tob, tobUnknown, place, language, downloadUrl }) {
+function deliveryText({ name, product, dob, tob, tobUnknown, place, dobB, tobB, placeB, language, downloadUrl }) {
+  const aLabel = product === 'compat' ? ' (A)' : '';
   return [
     `Dear ${name || 'friend'},`,
     '',
-    'Thank you for your order. Your personalized Vedic astrology report (PDF) is ready.',
+    `Thank you for your order. Your personalized ${PRODUCT_NAMES[product] || PRODUCT_NAMES.natal} (PDF) is ready.`,
     `Download (valid for ${LINK_TTL_DAYS} days): ${downloadUrl}`,
     '',
-    `Date of birth: ${dob}`,
-    `Time of birth: ${tob}${tobUnknown ? ' (unknown - calculated at noon)' : ''}`,
-    `Place of birth: ${place}`,
+    `Date of birth${aLabel}: ${dob}`,
+    `Time of birth${aLabel}: ${tob}${tobUnknown ? ' (unknown - calculated at noon)' : ''}`,
+    `Place of birth${aLabel}: ${place}`,
+    ...(product === 'compat' ? [`Date of birth (B): ${dobB}`, `Time of birth (B): ${tobB || '12:00 (unknown)'}`, `Place of birth (B): ${placeB}`] : []),
     `Report language: ${LANGUAGE_NAMES[language] || language}`,
     '',
     ...(tobUnknown ? ['Because the birth time was not provided, the ascendant and house positions are approximate. The Moon sign, nakshatra and Dasha timeline remain reliable. If you later learn your birth time, message us and we will re-issue the report at no charge.', ''] : []),
@@ -109,7 +128,7 @@ function needsInfoText({ name, missing, notes }) {
     '',
     'Thank you for your order. Before we can calculate your chart we need one more detail. Please reply with:',
     ...missing.map((m) => `- ${MISSING_LABELS[m] || m}`),
-    ...notes.map((n) => NOTE_LABELS[n] || n),
+    ...notes.map((n) => NOTE_LABELS[NOTE_KEY(n)] || n),
     '',
     'As soon as we hear from you, your report will be prepared and sent within one business day.',
     '',

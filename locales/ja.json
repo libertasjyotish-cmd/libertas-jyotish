@@ -497,6 +497,12 @@
     "mypage.jsCachedAt": "{time} 時点の鑑定結果を表示しています。",
     "mypage.jsRefresh": "最新に更新する",
     "checkout.emailNotice": "決済画面のメールアドレスは、ログイン中のアドレスから変更しないでください。会員の紐づけに使用します。",
-    "checkout.authRequired": "購入前にメールアドレスの確認が必要です。マイページで認証コードを入力してください。"
+    "checkout.authRequired": "購入前にメールアドレスの確認が必要です。マイページで認証コードを入力してください。",
+    "pdf-report.prodYearly": "年間運勢鑑定書（今後 12 か月）",
+    "pdf-report.prodCompat": "相性鑑定書",
+    "pdf-report.prodMonthly": "月別の惑星配置",
+    "pdf-report.prodMonth": "月",
+    "pdf-report.prodHouseNote": "括弧内は出生時の月から見たハウス（領域）。R は逆行。",
+    "pdf-report.prodScore": "36 点法 合計"
   }
 }

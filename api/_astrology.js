@@ -507,8 +507,241 @@ async function fetchReportData({ dob, tob, lat, lon, lang }) {
   };
 }
 
+// --- 年間運勢（Year Ahead） ---
+// 今後 12 か月の各月初の惑星位置を取得し、出生の月・ラグナから見たハウスに変換する。
+// 期間の区切り（月）と惑星名・サイン・ハウスはここで確定し、AI は意味づけだけを行う。
+const TRANSIT_PLANETS = ['Sun', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu'];
+const SLOW_PLANETS = ['Jupiter', 'Saturn', 'Rahu', 'Ketu'];
+
+function monthStartsFrom(now, count) {
+  const out = [];
+  const y = now.getUTCFullYear();
+  const m = now.getUTCMonth();
+  for (let i = 1; i <= count; i += 1) {
+    const d = new Date(Date.UTC(y, m + i, 1));
+    out.push(`${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`);
+  }
+  return out;
+}
+
+function houseFrom(baseSignKey, signKey) {
+  const a = SIGN_ORDER.indexOf(baseSignKey);
+  const b = SIGN_ORDER.indexOf(signKey);
+  return a >= 0 && b >= 0 ? ((b - a + 12) % 12) + 1 : null;
+}
+
+function houseLabel(house, terms) {
+  const ja = HOUSE_DOMAIN.find((h) => h.house === house);
+  if (!ja) return '';
+  const resolved = terms.houseDomain(house, ja);
+  return resolved && resolved.label ? resolved.label : ja.label;
+}
+
+// 期間内に切り替わる中周期・小周期を月単位で列挙する
+function dashaChangesWithin(kundli, startMonth, endMonth, terms) {
+  const periods = kundli?.data?.dasha_periods || [];
+  const lordName = (key) => terms.planet(key, PLANET_JA[key] || key);
+  const toMonth = (s) => String(s || '').slice(0, 7);
+  const changes = [];
+  const inWindow = (s) => { const mth = toMonth(s); return mth >= startMonth && mth <= endMonth; };
+  for (const p of periods) {
+    if (inWindow(p.start)) changes.push({ level: 'maha', month: toMonth(p.start), lord: lordName(p.name), lordKey: p.name });
+    for (const a of p.antardasha || []) {
+      if (inWindow(a.start)) changes.push({ level: 'antar', month: toMonth(a.start), maha: lordName(p.name), lord: lordName(a.name), lordKey: a.name });
+    }
+  }
+  return changes.sort((x, y) => x.month.localeCompare(y.month));
+}
+
+async function fetchYearlyData({ dob, tob, lat, lon, lang }) {
+  const terms = createTerms(lang);
+  const token = await getAccessToken();
+  const time = tob && tob.length === 5 ? `${tob}:00` : (tob || '12:00:00');
+  const coordinates = `${lat},${lon}`;
+  const base = { datetime: `${dob}T${time}+09:00`, coordinates, ayanamsa: 1 };
+  const months = monthStartsFrom(new Date(), 12);
+
+  const [planetPosition, kundli, sadeSati, ...monthly] = await Promise.all([
+    callEndpoint(token, 'astrology/planet-position', base),
+    callEndpoint(token, 'astrology/kundli/advanced', base),
+    callEndpoint(token, 'astrology/sade-sati/advanced', base),
+    ...months.map((ym) => callEndpoint(token, 'astrology/planet-position', { datetime: `${ym}-01T12:00:00+09:00`, coordinates, ayanamsa: 1 }))
+  ]);
+  if (!planetPosition) throw new Error('prokerala_position_failed');
+  if (monthly.filter(Boolean).length < 10) throw new Error('prokerala_transit_failed');
+
+  const natal = normalizePlanets(planetPosition, terms);
+  const asc = natal.find((p) => p.key === 'Ascendant');
+  const moon = natal.find((p) => p.key === 'Moon');
+  const dasha = normalizeDasha(kundli, terms);
+
+  const monthsOut = months.map((ym, i) => {
+    const planets = normalizePlanets(monthly[i] || { data: {} }, terms)
+      .filter((p) => TRANSIT_PLANETS.includes(p.key))
+      .map((p) => {
+        const fromMoon = moon ? houseFrom(moon.signKey, p.signKey) : null;
+        const fromLagna = asc ? houseFrom(asc.signKey, p.signKey) : null;
+        return {
+          key: p.key, name: p.name, sign: p.sign, signKey: p.signKey, retrograde: p.retrograde,
+          houseFromMoon: fromMoon, houseFromMoonLabel: houseLabel(fromMoon, terms),
+          houseFromLagna: fromLagna, houseFromLagnaLabel: houseLabel(fromLagna, terms)
+        };
+      });
+    return { month: ym, planets };
+  });
+
+  // 遅い惑星（木星・土星・ラーフ・ケートゥ）のサイン移動＝その年の大きな節目
+  const keyShifts = [];
+  for (const key of SLOW_PLANETS) {
+    let prev = null;
+    for (const m of monthsOut) {
+      const p = m.planets.find((x) => x.key === key);
+      if (!p) continue;
+      if (prev && prev.signKey !== p.signKey) {
+        keyShifts.push({ month: m.month, planet: p.name, planetKey: key, from: prev.sign, to: p.sign, houseFromMoon: p.houseFromMoon, houseFromMoonLabel: p.houseFromMoonLabel });
+      }
+      prev = p;
+    }
+  }
+
+  const slowNow = monthsOut[0].planets.filter((p) => SLOW_PLANETS.includes(p.key));
+  return {
+    generated_at: toJstIsoString(new Date()),
+    lang: terms.lang,
+    product: 'yearly',
+    birth: { dob, tob: tob || '12:00', lat, lon },
+    period: { start: months[0], end: months[months.length - 1] },
+    ascendant: asc ? { sign: asc.sign, degree: asc.degree } : null,
+    moon: moon || null,
+    sun: natal.find((p) => p.key === 'Sun') || null,
+    planets: natal,
+    strength: normalizeDignity(natal, terms),
+    dasha: dasha ? { current: dasha.current, upcoming: dasha.upcoming.slice(0, 4) } : null,
+    dashaChanges: dashaChangesWithin(kundli, months[0], months[months.length - 1], terms),
+    sadeSati: normalizeSadeSati(sadeSati, terms),
+    slowPlanetsNow: slowNow,
+    keyShifts,
+    months: monthsOut,
+    quarters: [0, 3, 6, 9].map((i) => ({ index: i / 3 + 1, months: monthsOut.slice(i, i + 3) }))
+  };
+}
+
+// --- 相性鑑定（Compatibility） ---
+// アシュタクータ（36点法）は Prokerala の kundli-matching で確定させる。向きは girl=A / boy=B。
+function personSummary(planets, kundli, terms) {
+  const asc = planets.find((p) => p.key === 'Ascendant');
+  const moon = planets.find((p) => p.key === 'Moon');
+  const details = kundli?.data?.nakshatra_details || null;
+  const nakKey = details?.nakshatra?.name ? toJapaneseNakshatra(details.nakshatra.name) : (moon?.nakshatraKey || '');
+  return {
+    ascendant: asc ? { sign: asc.sign, degree: asc.degree } : null,
+    moon: moon || null,
+    sun: planets.find((p) => p.key === 'Sun') || null,
+    mercury: planets.find((p) => p.key === 'Mercury') || null,
+    venus: planets.find((p) => p.key === 'Venus') || null,
+    mars: planets.find((p) => p.key === 'Mars') || null,
+    saturn: planets.find((p) => p.key === 'Saturn') || null,
+    nakshatra: terms.nakshatra(nakKey),
+    strength: normalizeDignity(planets, terms).slice(0, 3),
+    mangalDosha: kundli?.data?.mangal_dosha ? { hasDosha: Boolean(kundli.data.mangal_dosha.has_dosha) } : null,
+    currentDasha: normalizeDasha(kundli, terms)?.current || null,
+    planets
+  };
+}
+
+const KOOTA = {
+  varna: { ja: 'ヴァルナ（価値観の階層）', en: 'Varna (hierarchy of values)', max: 1 },
+  vasya: { ja: 'ヴァシャ（引き合う力）', en: 'Vasya (mutual attraction)', max: 2 },
+  tara: { ja: 'ターラー（運の相互作用）', en: 'Tara (interplay of fortune)', max: 3 },
+  yoni: { ja: 'ヨーニ（本能的な相性）', en: 'Yoni (instinctive compatibility)', max: 4 },
+  graha_maitri: { ja: 'グラハ・マイトリ（心の友好）', en: 'Graha Maitri (friendship of minds)', max: 5 },
+  gana: { ja: 'ガナ（気質の型）', en: 'Gana (temperament type)', max: 6 },
+  bhakoot: { ja: 'バクート（生活と感情の同調）', en: 'Bhakoot (harmony of life and emotion)', max: 7 },
+  nadi: { ja: 'ナーディ（体質と生命力）', en: 'Nadi (constitution and vitality)', max: 8 }
+};
+
+function normalizeMatching(matching, terms) {
+  const d = matching?.data || {};
+  const gm = d.guna_milan || d.ashtakoota || d.koota || d;
+  const rawKootas = gm.kootas || gm.koota || gm.guna || [];
+  const kootas = (Array.isArray(rawKootas) ? rawKootas : Object.entries(rawKootas).map(([k, v]) => ({ id: k, ...(typeof v === 'object' ? v : { points: v }) })))
+    .map((k) => {
+      const id = String(k.id || k.name || k.koota || '').toLowerCase().replace(/[\s-]+/g, '_').replace('grahamaitri', 'graha_maitri').replace('bhakut', 'bhakoot');
+      const dict = KOOTA[id] || { ja: k.name || id, en: k.name || id, max: k.maximum_points ?? k.max_points ?? null };
+      return {
+        id,
+        name: terms.lang === 'ja' ? dict.ja : dict.en,
+        points: Number(k.points ?? k.obtained_points ?? k.score ?? 0),
+        max: Number(k.maximum_points ?? k.max_points ?? dict.max ?? 0),
+        description: k.description || ''
+      };
+    });
+  const total = Number(gm.total_points ?? gm.obtained_points ?? gm.total ?? kootas.reduce((s, k) => s + k.points, 0));
+  const max = Number(gm.maximum_points ?? gm.max_points ?? 36);
+  return {
+    total,
+    max,
+    ratio: max ? Math.round((total / max) * 100) : null,
+    band: total >= 28 ? 'excellent' : total >= 24 ? 'very_good' : total >= 18 ? 'good' : 'needs_care',
+    kootas,
+    mangalDosha: d.mangal_dosha_compatibility || d.mangal_dosha || null,
+    message: d.message?.description || d.message || ''
+  };
+}
+
+async function fetchCompatData({ a, b, lang, relation = 'general' }) {
+  const terms = createTerms(lang);
+  const token = await getAccessToken();
+  const dt = (p) => `${p.dob}T${p.tob && p.tob.length === 5 ? `${p.tob}:00` : (p.tob || '12:00:00')}+09:00`;
+  const baseOf = (p) => ({ datetime: dt(p), coordinates: `${p.lat},${p.lon}`, ayanamsa: 1 });
+
+  const [posA, kundliA, posB, kundliB, matching] = await Promise.all([
+    callEndpoint(token, 'astrology/planet-position', baseOf(a)),
+    callEndpoint(token, 'astrology/kundli/advanced', baseOf(a)),
+    callEndpoint(token, 'astrology/planet-position', baseOf(b)),
+    callEndpoint(token, 'astrology/kundli/advanced', baseOf(b)),
+    callEndpoint(token, 'astrology/kundli-matching/advanced', {
+      girl_dob: dt(a), girl_coordinates: `${a.lat},${a.lon}`,
+      boy_dob: dt(b), boy_coordinates: `${b.lat},${b.lon}`, ayanamsa: 1
+    })
+  ]);
+  if (!posA || !posB) throw new Error('prokerala_position_failed');
+  if (!matching) throw new Error('prokerala_matching_failed');
+
+  const planetsA = normalizePlanets(posA, terms);
+  const planetsB = normalizePlanets(posB, terms);
+  const moonA = planetsA.find((p) => p.key === 'Moon');
+  const moonB = planetsB.find((p) => p.key === 'Moon');
+  const ascA = planetsA.find((p) => p.key === 'Ascendant');
+  const ascB = planetsB.find((p) => p.key === 'Ascendant');
+
+  // 相手の主要惑星が自分のどのハウスに入るか（月基準・ラグナ基準）
+  const overlay = (mine, theirs) => ['Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn'].map((key) => {
+    const p = theirs.find((x) => x.key === key);
+    if (!p) return null;
+    const h = mine ? houseFrom(mine.signKey, p.signKey) : null;
+    return { planet: p.name, planetKey: key, sign: p.sign, house: h, houseLabel: houseLabel(h, terms) };
+  }).filter(Boolean);
+
+  return {
+    generated_at: toJstIsoString(new Date()),
+    lang: terms.lang,
+    product: 'compat',
+    relation,
+    personA: { label: a.label || 'A', birth: { dob: a.dob, tob: a.tob || '12:00' }, ...personSummary(planetsA, kundliA, terms) },
+    personB: { label: b.label || 'B', birth: { dob: b.dob, tob: b.tob || '12:00' }, ...personSummary(planetsB, kundliB, terms) },
+    matching: normalizeMatching(matching, terms),
+    moonDistance: moonA && moonB ? houseFrom(moonA.signKey, moonB.signKey) : null,
+    lagnaDistance: ascA && ascB ? houseFrom(ascA.signKey, ascB.signKey) : null,
+    overlayAonB: overlay(moonB, planetsA),
+    overlayBonA: overlay(moonA, planetsB)
+  };
+}
+
 module.exports = {
   fetchReportData,
+  fetchYearlyData,
+  fetchCompatData,
   toJstIsoString,
   toJapaneseSign,
   toJapaneseNakshatra,

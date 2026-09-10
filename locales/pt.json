@@ -497,6 +497,12 @@
     "mypage.jsCachedAt": "Exibindo a leitura obtida às {time}.",
     "mypage.jsRefresh": "Atualizar agora",
     "checkout.emailNotice": "Não altere o e-mail na página de pagamento: é a chave que usamos para vincular a compra à sua conta.",
-    "checkout.authRequired": "Precisamos verificar seu e-mail antes do pagamento. Digite o código de verificação em Minha página."
+    "checkout.authRequired": "Precisamos verificar seu e-mail antes do pagamento. Digite o código de verificação em Minha página.",
+    "pdf-report.prodYearly": "Previsão do ano (próximos 12 meses)",
+    "pdf-report.prodCompat": "Relatório de compatibilidade",
+    "pdf-report.prodMonthly": "Posições planetárias por mês",
+    "pdf-report.prodMonth": "Mês",
+    "pdf-report.prodHouseNote": "Entre parênteses, a casa contada a partir da Lua natal. R indica movimento retrógrado.",
+    "pdf-report.prodScore": "Total Ashtakoota"
   }
 }

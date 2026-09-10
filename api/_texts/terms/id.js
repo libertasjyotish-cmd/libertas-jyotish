@@ -231,7 +231,25 @@ const CHAPTER_TITLE = {
   ch9: 'Bab 9 — Peta hidup Anda (garis waktu kehidupan)',
   ch10: 'Bab 10 — Di mana Anda berdiri sekarang',
   ch11: 'Bab 11 — Masa keemasan yang akan datang',
-  ch12: 'Bab 12 — Mengubah ujian menjadi fondasi'
+  ch12: 'Bab 12 — Mengubah ujian menjadi fondasi',
+  yearly_summary: 'Tahun Anda dalam sekilas',
+  yearly_ch1: 'Bab 1 — Siklus yang sedang Anda jalani',
+  yearly_ch2: 'Bab 2 — Pergerakan besar planet tahun ini',
+  yearly_ch3: 'Bab 3 — Kuartal pertama (tiga bulan pertama)',
+  yearly_ch4: 'Bab 4 — Kuartal kedua',
+  yearly_ch5: 'Bab 5 — Kuartal ketiga',
+  yearly_ch6: 'Bab 6 — Kuartal keempat',
+  yearly_ch7: 'Bab 7 — Tahun ini per tema: kerja, uang, relasi, kesejahteraan',
+  yearly_ch8: 'Bab 8 — Memanfaatkan tahun ini sebaik-baiknya',
+  compat_summary: 'Hubungan Anda berdua dalam sekilas',
+  compat_ch1: 'Bab 1 — Dua cetak biru',
+  compat_ch2: 'Bab 2 — Kecocokan hati (Bulan dan Bulan)',
+  compat_ch3: 'Bab 3 — Apa yang masing-masing bawa untuk yang lain',
+  compat_ch4: 'Bab 4 — Percakapan dan nilai (Merkurius, Matahari, Jupiter)',
+  compat_ch5: 'Bab 5 — Dorongan dan kehangatan (Mars dan Venus)',
+  compat_ch6: 'Bab 6 — Tanggung jawab dan daya tahan (Saturnus)',
+  compat_ch7: 'Bab 7 — Merawat hubungan ini',
+  compat_ch8: 'Bab 8 — Skor kecocokan tradisional (36 poin)'
 };
 
 const REASON = {
