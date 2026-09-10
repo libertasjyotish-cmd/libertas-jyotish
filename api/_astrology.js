@@ -446,7 +446,7 @@ function buildBoosters(planets, dasha, terms) {
 }
 
 // 鑑定書1冊分のデータを一括取得する。個々の失敗は null として扱い、該当章のみ省略する。
-async function fetchReportData({ dob, tob, lat, lon, lang }) {
+async function fetchReportData({ dob, tob, lat, lon, lang }, { withRaw = false } = {}) {
   const terms = createTerms(lang);
   const token = await getAccessToken();
   const time = tob && tob.length === 5 ? `${tob}:00` : (tob || '12:00:00');
@@ -503,7 +503,8 @@ async function fetchReportData({ dob, tob, lat, lon, lang }) {
       ? { hasDosha: Boolean(kundli.data.mangal_dosha.has_dosha), description: kundli.data.mangal_dosha.description || '' }
       : null,
     boosters: buildBoosters(planets, dasha, terms),
-    charts: { d1: chartD1 || null, d9: chartD9 || null, d10: chartD10 || null }
+    charts: { d1: chartD1 || null, d9: chartD9 || null, d10: chartD10 || null },
+    ...(withRaw ? { raw: { kundli } } : {})
   };
 }
 
@@ -551,6 +552,46 @@ function dashaChangesWithin(kundli, startMonth, endMonth, terms) {
     }
   }
   return changes.sort((x, y) => x.month.localeCompare(y.month));
+}
+
+// 転機の検出。すべて確定データ（ダシャー切替・遅い惑星の月からのハウス移動）から機械的に判定し、根拠を明示する。
+// Jupiter: 1/2/5/7/9/11 室 = 拡大・好機、10 室 = 社会的な立場。Saturn: 1/4/7/10 室 = 基盤の作り直し、12/1/2 室 = サディサティ。
+const TURNING_RULES = {
+  Jupiter: { 1: 'new_cycle', 2: 'resources', 5: 'creation', 7: 'partnership', 9: 'fortune', 10: 'career', 11: 'gains' },
+  Saturn: { 1: 'rebuild_self', 4: 'rebuild_home', 7: 'rebuild_partnership', 10: 'rebuild_career', 12: 'sade_sati', 2: 'sade_sati' },
+  Rahu: { 1: 'ambition_self', 10: 'ambition_career', 7: 'ambition_partnership' },
+  Ketu: { 1: 'release_self', 10: 'release_career', 7: 'release_partnership' }
+};
+const TURNING_WEIGHT = { maha: 5, antar: 2, Jupiter: 3, Saturn: 3, Rahu: 2, Ketu: 2 };
+
+function detectTurningPoints({ monthsOut, keyShifts, dashaChanges }) {
+  const events = [];
+  for (const c of dashaChanges) {
+    events.push({ month: c.month, kind: c.level === 'maha' ? 'maha_dasha_change' : 'antar_dasha_change', level: c.level, lord: c.lord, weight: TURNING_WEIGHT[c.level] });
+  }
+  for (const s of keyShifts) {
+    const theme = TURNING_RULES[s.planetKey]?.[s.houseFromMoon];
+    if (!theme) continue;
+    events.push({ month: s.month, kind: 'transit', planet: s.planet, planetKey: s.planetKey, houseFromMoon: s.houseFromMoon, houseFromMoonLabel: s.houseFromMoonLabel, theme, weight: TURNING_WEIGHT[s.planetKey] });
+  }
+  // 期間の初月から既にその位置にある遅い惑星（年内に移動しないもの）も背景要因として記録する
+  const background = monthsOut[0].planets
+    .filter((p) => SLOW_PLANETS.includes(p.key) && TURNING_RULES[p.key]?.[p.houseFromMoon])
+    .map((p) => ({ planet: p.name, planetKey: p.key, houseFromMoon: p.houseFromMoon, houseFromMoonLabel: p.houseFromMoonLabel, theme: TURNING_RULES[p.key][p.houseFromMoon] }));
+
+  // 月ごとの「動きやすさ」: 木星が月から 1/2/5/7/9/11 室、土星が 3/6/11 室にある月は伝統的に追い風
+  const monthlyMomentum = monthsOut.map((m) => {
+    const j = m.planets.find((p) => p.key === 'Jupiter');
+    const s = m.planets.find((p) => p.key === 'Saturn');
+    const jupiterGood = j ? [1, 2, 5, 7, 9, 11].includes(j.houseFromMoon) : false;
+    const saturnGood = s ? [3, 6, 11].includes(s.houseFromMoon) : false;
+    const saturnHard = s ? [1, 2, 4, 7, 8, 10, 12].includes(s.houseFromMoon) : false;
+    return { month: m.month, jupiterHouse: j?.houseFromMoon ?? null, saturnHouse: s?.houseFromMoon ?? null, jupiterRetro: Boolean(j?.retrograde), saturnRetro: Boolean(s?.retrograde), score: (jupiterGood ? 2 : 0) + (saturnGood ? 1 : 0) - (saturnHard ? 1 : 0) };
+  });
+
+  const total = events.reduce((n, e) => n + e.weight, 0);
+  const scale = total >= 5 ? 'major' : total >= 2 ? 'moderate' : 'preparation';
+  return { scale, events: events.sort((a, b) => a.month.localeCompare(b.month)), background, monthlyMomentum };
 }
 
 async function fetchYearlyData({ dob, tob, lat, lon, lang }) {
@@ -605,10 +646,12 @@ async function fetchYearlyData({ dob, tob, lat, lon, lang }) {
   }
 
   const slowNow = monthsOut[0].planets.filter((p) => SLOW_PLANETS.includes(p.key));
+  const dashaChanges = dashaChangesWithin(kundli, months[0], months[months.length - 1], terms);
   return {
     generated_at: toJstIsoString(new Date()),
     lang: terms.lang,
     product: 'yearly',
+    turningPoints: detectTurningPoints({ monthsOut, keyShifts, dashaChanges }),
     birth: { dob, tob: tob || '12:00', lat, lon },
     period: { start: months[0], end: months[months.length - 1] },
     ascendant: asc ? { sign: asc.sign, degree: asc.degree } : null,
@@ -617,12 +660,91 @@ async function fetchYearlyData({ dob, tob, lat, lon, lang }) {
     planets: natal,
     strength: normalizeDignity(natal, terms),
     dasha: dasha ? { current: dasha.current, upcoming: dasha.upcoming.slice(0, 4) } : null,
-    dashaChanges: dashaChangesWithin(kundli, months[0], months[months.length - 1], terms),
+    dashaChanges,
     sadeSati: normalizeSadeSati(sadeSati, terms),
     slowPlanetsNow: slowNow,
     keyShifts,
     months: monthsOut,
     quarters: [0, 3, 6, 9].map((i) => ({ index: i / 3 + 1, months: monthsOut.slice(i, i + 3) }))
+  };
+}
+
+// --- 仕事・適職・金運（Career） ---
+// 出生図一式（fetchReportData と同じ取得）に、仕事・収入に関わるハウス（2・6・10・11 室）の支配星と在住惑星、
+// D10（職業分割図）の情報、今後 12 か月の木星・土星の 10 室・2 室・11 室通過を加える。
+const CAREER_HOUSES = { 2: 'income', 6: 'service', 10: 'career', 11: 'gains', 3: 'skills', 5: 'creativity', 7: 'business', 9: 'fortune' };
+
+function lordOfHouse(ascSignKey, house) {
+  const idx = SIGN_ORDER.indexOf(ascSignKey);
+  if (idx < 0) return null;
+  const signKey = SIGN_ORDER[(idx + house - 1) % 12];
+  return { signKey, lordKey: SIGN_LORD[signKey] || null };
+}
+
+async function fetchCareerData({ dob, tob, lat, lon, lang }) {
+  const terms = createTerms(lang);
+  const { raw, ...base } = await fetchReportData({ dob, tob, lat, lon, lang }, { withRaw: true });
+  const token = await getAccessToken();
+  const coordinates = `${lat},${lon}`;
+  const months = monthStartsFrom(new Date(), 12);
+  const monthly = await Promise.all(months.map((ym) => callEndpoint(token, 'astrology/planet-position', { datetime: `${ym}-01T12:00:00+09:00`, coordinates, ayanamsa: 1 })));
+
+  const planets = base.planets;
+  const asc = planets.find((p) => p.key === 'Ascendant');
+  const moon = planets.find((p) => p.key === 'Moon');
+  const byKey = (k) => planets.find((p) => p.key === k) || null;
+  const planetName = (k) => terms.planet(k, PLANET_JA[k] || k);
+  const dignityOfKey = new Map((base.strength || []).map((s) => [s.key, s.dignity]));
+
+  const houses = Object.entries(CAREER_HOUSES).map(([h, theme]) => {
+    const house = Number(h);
+    const lord = asc ? lordOfHouse(asc.signKey, house) : null;
+    const lordPlanet = lord?.lordKey ? byKey(lord.lordKey) : null;
+    return {
+      house, theme, label: houseLabel(house, terms),
+      sign: lord ? terms.sign(lord.signKey) : null,
+      lord: lord?.lordKey ? planetName(lord.lordKey) : null,
+      lordKey: lord?.lordKey || null,
+      lordPlacedIn: lordPlanet ? { house: lordPlanet.house, label: houseLabel(lordPlanet.house, terms), sign: lordPlanet.sign, dignity: dignityOfKey.get(lordPlanet.key) || null, retrograde: lordPlanet.retrograde } : null,
+      occupants: planets.filter((p) => p.key !== 'Ascendant' && p.house === house).map((p) => ({ planet: p.name, planetKey: p.key, dignity: dignityOfKey.get(p.key) || null, retrograde: p.retrograde }))
+    };
+  });
+
+  const careerTransits = months.map((ym, i) => {
+    const pos = normalizePlanets(monthly[i] || { data: {} }, terms).filter((p) => ['Jupiter', 'Saturn', 'Rahu', 'Ketu'].includes(p.key));
+    return {
+      month: ym,
+      planets: pos.map((p) => {
+        const fromMoon = moon ? houseFrom(moon.signKey, p.signKey) : null;
+        const fromLagna = asc ? houseFrom(asc.signKey, p.signKey) : null;
+        return { planet: p.name, planetKey: p.key, sign: p.sign, retrograde: p.retrograde, houseFromMoon: fromMoon, houseFromLagna: fromLagna, careerTheme: CAREER_HOUSES[fromLagna] || CAREER_HOUSES[fromMoon] || null };
+      })
+    };
+  });
+
+  const careerWindows = [];
+  for (const key of ['Jupiter', 'Saturn']) {
+    let prev = null;
+    for (const m of careerTransits) {
+      const p = m.planets.find((x) => x.planetKey === key);
+      if (!p) continue;
+      const hit = [2, 10, 11, 6].includes(p.houseFromLagna) || [2, 10, 11].includes(p.houseFromMoon);
+      if (hit && (!prev || prev.houseFromLagna !== p.houseFromLagna)) {
+        careerWindows.push({ month: m.month, planet: p.name, planetKey: key, houseFromLagna: p.houseFromLagna, houseFromMoon: p.houseFromMoon, theme: p.careerTheme });
+      }
+      prev = p;
+    }
+  }
+
+  return {
+    ...base,
+    product: 'career',
+    period: { start: months[0], end: months[months.length - 1] },
+    careerHouses: houses,
+    tenth: base.boosters?.tenthSign ? { sign: base.boosters.tenthSign, lord: base.boosters.tenthLord } : null,
+    careerTransits,
+    careerWindows,
+    dashaChanges: dashaChangesWithin(raw.kundli, months[0], months[months.length - 1], terms)
   };
 }
 
@@ -794,6 +916,7 @@ async function fetchCompatData({ a, b, lang, relation = 'general' }) {
 module.exports = {
   fetchReportData,
   fetchYearlyData,
+  fetchCareerData,
   fetchCompatData,
   toJstIsoString,
   toJapaneseSign,

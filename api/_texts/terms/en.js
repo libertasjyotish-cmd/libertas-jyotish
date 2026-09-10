@@ -241,7 +241,8 @@ const CHAPTER_TITLE = {
   yearly_ch5: 'Chapter 5 — Third quarter',
   yearly_ch6: 'Chapter 6 — Fourth quarter',
   yearly_ch7: 'Chapter 7 — The year by theme: work, money, relationships, wellbeing',
-  yearly_ch8: 'Chapter 8 — Making the most of this year',
+  yearly_ch8: 'Chapter 8 — A year to move, or a year to prepare? Timing your big decisions',
+  yearly_ch9: 'Chapter 9 — Making the most of this year',
   compat_summary: 'Your relationship at a glance',
   compat_ch1: 'Chapter 1 — Two blueprints',
   compat_ch2: 'Chapter 2 — How your hearts fit (Moon and Moon)',
@@ -252,7 +253,15 @@ const CHAPTER_TITLE = {
   compat_ch7: 'Chapter 7 — The meaning of this bond (why you met)',
   compat_ch8: 'Chapter 8 — When the relationship moves (next 12 months)',
   compat_ch9: 'Chapter 9 — Nurturing this relationship',
-  compat_ch10: 'Chapter 10 — The traditional compatibility score (36 points)'
+  compat_ch10: 'Chapter 10 — The traditional compatibility score (36 points)',
+  career_summary: 'Your calling at a glance',
+  career_ch1: 'Chapter 1 — The shape of your calling (10th house and its lord)',
+  career_ch2: 'Chapter 2 — Talents and skills (3rd, 5th houses and your strongest planet)',
+  career_ch3: 'Chapter 3 — Employed or independent? (6th, 7th and 10th houses)',
+  career_ch4: 'Chapter 4 — Your money pattern (2nd, 11th houses and Ashtakavarga)',
+  career_ch5: 'Chapter 5 — The cycles of your working life (Dasha)',
+  career_ch6: 'Chapter 6 — When your career moves (next 12 months)',
+  career_ch7: 'Chapter 7 — An action plan toward your calling'
 };
 
 const REASON = {

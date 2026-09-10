@@ -503,6 +503,12 @@
     "pdf-report.prodMonthly": "Monthly planetary positions",
     "pdf-report.prodMonth": "Month",
     "pdf-report.prodHouseNote": "Numbers in brackets are houses counted from your natal Moon. R marks retrograde motion.",
-    "pdf-report.prodScore": "Ashtakoota total"
+    "pdf-report.prodScore": "Ashtakoota total",
+    "pdf-report.prodCareer": "Career, Vocation & Wealth Report (Your Calling)",
+    "pdf-report.prodCareerHouses": "Houses of work and money",
+    "pdf-report.prodTheme": "Theme",
+    "pdf-report.prodLord": "Lord (→ placed in)",
+    "pdf-report.prodOccupants": "Planets in house",
+    "pdf-report.prodLagnaHouseNote": "Numbers in brackets are houses counted from your ascendant (1st house). R marks retrograde motion."
   }
 }

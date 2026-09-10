@@ -503,6 +503,12 @@
     "pdf-report.prodMonthly": "Posisi planet per bulan",
     "pdf-report.prodMonth": "Bulan",
     "pdf-report.prodHouseNote": "Angka dalam kurung adalah rumah dihitung dari Bulan natal. R menandai gerak retrograde.",
-    "pdf-report.prodScore": "Total Ashtakoota"
+    "pdf-report.prodScore": "Total Ashtakoota",
+    "pdf-report.prodCareer": "Laporan Karier, Panggilan & Keuangan (Panggilan Hidup Anda)",
+    "pdf-report.prodCareerHouses": "Rumah pekerjaan dan uang",
+    "pdf-report.prodTheme": "Tema",
+    "pdf-report.prodLord": "Penguasa (→ berada di)",
+    "pdf-report.prodOccupants": "Planet di rumah",
+    "pdf-report.prodLagnaHouseNote": "Angka dalam kurung adalah rumah dihitung dari ascendant (rumah 1). R menandai gerak retrograde."
   }
 }

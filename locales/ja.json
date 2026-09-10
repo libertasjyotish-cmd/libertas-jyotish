@@ -503,6 +503,12 @@
     "pdf-report.prodMonthly": "月別の惑星配置",
     "pdf-report.prodMonth": "月",
     "pdf-report.prodHouseNote": "括弧内は出生時の月から見たハウス（領域）。R は逆行。",
-    "pdf-report.prodScore": "36 点法 合計"
+    "pdf-report.prodScore": "36 点法 合計",
+    "pdf-report.prodCareer": "仕事・適職・金運 鑑定書（あなたの天職）",
+    "pdf-report.prodCareerHouses": "仕事とお金に関わるハウス",
+    "pdf-report.prodTheme": "領域",
+    "pdf-report.prodLord": "支配星（→ 在住ハウス）",
+    "pdf-report.prodOccupants": "在住惑星",
+    "pdf-report.prodLagnaHouseNote": "括弧内はラグナ（1 室）から見たハウス。R は逆行。"
   }
 }

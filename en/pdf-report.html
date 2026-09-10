@@ -242,7 +242,7 @@
     function render(data) {
       const a = data.astro || {};
       const c = data.chapters || {};
-      if (a.product === 'yearly' || a.product === 'compat') {
+      if (a.product === 'yearly' || a.product === 'compat' || a.product === 'career') {
         bookEl.innerHTML = renderProduct(a, c, data);
         return;
       }
@@ -500,7 +500,7 @@
         if (typeof v[0] === 'string') return list(v);
         return v.map((item) => {
           const head = item.month || item.name || item.planet || item.label || '';
-          const sub = item.phase || item.theme || '';
+          const sub = item.phase || item.theme || item.kind || '';
           const body = item.text || '';
           const todo = item.todo ? `<ul><li>${esc(item.todo)}</li></ul>` : '';
           return `<div class="fact"><strong>${esc(head)}</strong>${sub ? `　${esc(sub)}` : ''}</div>${para(body)}${todo}`;
@@ -528,9 +528,12 @@
     }
 
     function productCover(a) {
-      const sub = a.product === 'yearly' ? 'Year-Ahead Forecast (next 12 months)' : 'Compatibility Report';
+      const sub = a.product === 'yearly' ? 'Year-Ahead Forecast (next 12 months)'
+        : a.product === 'career' ? 'Career, Vocation & Wealth Report (Your Calling)'
+        : 'Compatibility Report';
       const owner = a.product === 'yearly'
         ? `${esc(a.period?.start || '')} — ${esc(a.period?.end || '')}<br>${personLine(a)}`
+        : a.product === 'career' ? personLine(a)
         : `<strong>A</strong> ${personLine(a.personA)}<br><br><strong>B</strong> ${personLine(a.personB)}`;
       return `<section class="page cover">
         <div><img class="logo" src="/img/libertas-logo.png" alt="Libertas Jyotish"></div>
@@ -558,12 +561,27 @@
       return page(`<h2 class="chapter-title">Appendix Planetary data</h2>${table(a.personA || {}, 'A')}${table(a.personB || {}, 'B')}${kootas}`);
     }
 
+    function careerDataPage(a) {
+      const houses = (a.careerHouses || []).map((h) => `<tr><td>${esc(h.house)}</td><td>${esc(h.label)}</td><td>${esc(h.sign)}</td>
+        <td>${esc(h.lord)}${h.lordPlacedIn ? ` → ${esc(h.lordPlacedIn.label)}${h.lordPlacedIn.dignity ? ` (${esc(h.lordPlacedIn.dignity)})` : ''}` : ''}</td>
+        <td>${(h.occupants || []).map((o) => `${esc(o.planet)}${o.retrograde ? 'Retrograde' : ''}`).join(', ')}</td></tr>`).join('');
+      const rows = (a.careerTransits || []).map((m) => `<tr><td>${esc(m.month)}</td>${m.planets.map((p) => `<td>${esc(p.sign)} (${esc(p.houseFromLagna)})${p.retrograde ? 'Retrograde' : ''}</td>`).join('')}</tr>`).join('');
+      const first = (a.careerTransits || [])[0];
+      const heads = first ? first.planets.map((p) => `<th>${esc(p.name)}</th>`).join('') : '';
+      return page(`<h2 class="chapter-title">Houses of work and money</h2>
+        <table><thead><tr><th>House</th><th>Theme</th><th>Sign</th><th>Lord (→ placed in)</th><th>Planets in house</th></tr></thead><tbody>${houses}</tbody></table>
+        <h3>Monthly planetary positions</h3>
+        <table><thead><tr><th>Month</th>${heads}</tr></thead><tbody>${rows}</tbody></table>
+        <p class="disclaimer">Numbers in brackets are houses counted from your ascendant (1st house). R marks retrograde motion.</p>`);
+    }
+
     function renderProduct(a, c, data) {
       const chapters = PROD_ORDER.map((id) => c[id]).filter(Boolean);
       const html = [productCover(a)];
       html.push(page(`<h2 class="chapter-title">Contents</h2><ul class="toc">${chapters.map((ch) => `<li>${esc(ch.title)}</li>`).join('')}</ul>`));
       for (const ch of chapters) html.push(genericPage(ch));
-      html.push(a.product === 'yearly' ? yearlyDataPage(a) : compatDataPage(a));
+      if (a.product === 'career') { html.push(careerDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
+      else html.push(a.product === 'yearly' ? yearlyDataPage(a) : compatDataPage(a));
       html.push(disclaimerPage(data));
       return html.join('');
     }

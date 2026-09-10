@@ -503,6 +503,12 @@
     "pdf-report.prodMonthly": "Posiciones planetarias por mes",
     "pdf-report.prodMonth": "Mes",
     "pdf-report.prodHouseNote": "Entre paréntesis, la casa contada desde la Luna natal. R indica retrogradación.",
-    "pdf-report.prodScore": "Total Ashtakoota"
+    "pdf-report.prodScore": "Total Ashtakoota",
+    "pdf-report.prodCareer": "Informe de carrera, vocación y dinero (tu vocación)",
+    "pdf-report.prodCareerHouses": "Casas del trabajo y el dinero",
+    "pdf-report.prodTheme": "Tema",
+    "pdf-report.prodLord": "Regente (→ ubicado en)",
+    "pdf-report.prodOccupants": "Planetas en la casa",
+    "pdf-report.prodLagnaHouseNote": "Entre paréntesis, la casa contada desde el ascendente (casa 1). R indica retrogradación."
   }
 }

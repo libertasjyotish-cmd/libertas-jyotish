@@ -240,7 +240,8 @@ const CHAPTER_TITLE = {
   yearly_ch5: 'Capítulo 5 — Tercer trimestre',
   yearly_ch6: 'Capítulo 6 — Cuarto trimestre',
   yearly_ch7: 'Capítulo 7 — El año por temas: trabajo, dinero, relaciones, bienestar',
-  yearly_ch8: 'Capítulo 8 — Cómo aprovechar al máximo este año',
+  yearly_ch8: 'Capítulo 8 — ¿Año de cambio o año de preparación? El momento de las grandes decisiones',
+  yearly_ch9: 'Capítulo 9 — Cómo aprovechar al máximo este año',
   compat_summary: 'Vuestra relación de un vistazo',
   compat_ch1: 'Capítulo 1 — Dos planos',
   compat_ch2: 'Capítulo 2 — Cómo encajan vuestros corazones (Luna y Luna)',
@@ -251,7 +252,15 @@ const CHAPTER_TITLE = {
   compat_ch7: 'Capítulo 7 — El sentido de este vínculo (por qué se encontraron)',
   compat_ch8: 'Capítulo 8 — Cuándo se mueve la relación (próximos 12 meses)',
   compat_ch9: 'Capítulo 9 — Cultivar esta relación',
-  compat_ch10: 'Capítulo 10 — La puntuación tradicional de compatibilidad (36 puntos)'
+  compat_ch10: 'Capítulo 10 — La puntuación tradicional de compatibilidad (36 puntos)',
+  career_summary: 'Tu vocación de un vistazo',
+  career_ch1: 'Capítulo 1 — La forma de tu vocación (casa 10 y su regente)',
+  career_ch2: 'Capítulo 2 — Talentos y habilidades (casas 3 y 5, tu planeta más fuerte)',
+  career_ch3: 'Capítulo 3 — ¿Empleado o independiente? (casas 6, 7 y 10)',
+  career_ch4: 'Capítulo 4 — Tu patrón con el dinero (casas 2 y 11, Ashtakavarga)',
+  career_ch5: 'Capítulo 5 — Los ciclos de tu vida laboral (Dasha)',
+  career_ch6: 'Capítulo 6 — Cuándo se mueve tu carrera (próximos 12 meses)',
+  career_ch7: 'Capítulo 7 — Plan de acción hacia tu vocación'
 };
 
 const REASON = {
