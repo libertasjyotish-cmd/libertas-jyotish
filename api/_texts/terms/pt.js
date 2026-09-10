@@ -248,8 +248,10 @@ const CHAPTER_TITLE = {
   compat_ch4: 'Capítulo 4 — Conversa e valores (Mercúrio, Sol, Júpiter)',
   compat_ch5: 'Capítulo 5 — Impulso e afeto (Marte e Vênus)',
   compat_ch6: 'Capítulo 6 — Responsabilidade e durabilidade (Saturno)',
-  compat_ch7: 'Capítulo 7 — Cultivar esta relação',
-  compat_ch8: 'Capítulo 8 — A pontuação tradicional de compatibilidade (36 pontos)'
+  compat_ch7: 'Capítulo 7 — O sentido deste vínculo (por que se encontraram)',
+  compat_ch8: 'Capítulo 8 — Quando a relação se move (próximos 12 meses)',
+  compat_ch9: 'Capítulo 9 — Cultivar esta relação',
+  compat_ch10: 'Capítulo 10 — A pontuação tradicional de compatibilidade (36 pontos)'
 };
 
 const REASON = {

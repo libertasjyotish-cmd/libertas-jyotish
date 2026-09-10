@@ -641,6 +641,8 @@ function personSummary(planets, kundli, terms) {
     venus: planets.find((p) => p.key === 'Venus') || null,
     mars: planets.find((p) => p.key === 'Mars') || null,
     saturn: planets.find((p) => p.key === 'Saturn') || null,
+    rahu: planets.find((p) => p.key === 'Rahu') || null,
+    ketu: planets.find((p) => p.key === 'Ketu') || null,
     nakshatra: terms.nakshatra(nakKey),
     strength: normalizeDignity(planets, terms).slice(0, 3),
     mangalDosha: kundli?.data?.mangal_dosha ? { hasDosha: Boolean(kundli.data.mangal_dosha.has_dosha) } : null,
@@ -695,7 +697,8 @@ async function fetchCompatData({ a, b, lang, relation = 'general' }) {
   const dt = (p) => `${p.dob}T${p.tob && p.tob.length === 5 ? `${p.tob}:00` : (p.tob || '12:00:00')}+09:00`;
   const baseOf = (p) => ({ datetime: dt(p), coordinates: `${p.lat},${p.lon}`, ayanamsa: 1 });
 
-  const [posA, kundliA, posB, kundliB, matching] = await Promise.all([
+  const months = monthStartsFrom(new Date(), 12);
+  const [posA, kundliA, posB, kundliB, matching, ...monthly] = await Promise.all([
     callEndpoint(token, 'astrology/planet-position', baseOf(a)),
     callEndpoint(token, 'astrology/kundli/advanced', baseOf(a)),
     callEndpoint(token, 'astrology/planet-position', baseOf(b)),
@@ -703,7 +706,8 @@ async function fetchCompatData({ a, b, lang, relation = 'general' }) {
     callEndpoint(token, 'astrology/kundli-matching/advanced', {
       girl_dob: dt(a), girl_coordinates: `${a.lat},${a.lon}`,
       boy_dob: dt(b), boy_coordinates: `${b.lat},${b.lon}`, ayanamsa: 1
-    })
+    }),
+    ...months.map((ym) => callEndpoint(token, 'astrology/planet-position', { datetime: `${ym}-01T12:00:00+09:00`, coordinates: `${a.lat},${a.lon}`, ayanamsa: 1 }))
   ]);
   if (!posA || !posB) throw new Error('prokerala_position_failed');
   if (!matching) throw new Error('prokerala_matching_failed');
@@ -723,11 +727,60 @@ async function fetchCompatData({ a, b, lang, relation = 'general' }) {
     return { planet: p.name, planetKey: key, sign: p.sign, house: h, houseLabel: houseLabel(h, terms) };
   }).filter(Boolean);
 
+  // 関係が動く時期: 木星・土星・ラーフ・ケートゥ・金星が二人それぞれの月から何室を通るか（月初値）と、二人のダシャー切替
+  const TIMING_PLANETS = ['Jupiter', 'Saturn', 'Rahu', 'Ketu', 'Venus'];
+  const timeline = months.map((ym, i) => {
+    const transit = normalizePlanets(monthly[i] || { data: {} }, terms).filter((p) => TIMING_PLANETS.includes(p.key));
+    return {
+      month: ym,
+      planets: transit.map((p) => ({
+        planet: p.name, planetKey: p.key, sign: p.sign, retrograde: p.retrograde,
+        houseFromMoonA: moonA ? houseFrom(moonA.signKey, p.signKey) : null,
+        houseFromMoonB: moonB ? houseFrom(moonB.signKey, p.signKey) : null
+      }))
+    };
+  });
+  const first = months[0];
+  const last = months[months.length - 1];
+  const dashaChanges = [
+    ...dashaChangesWithin(kundliA, first, last, terms).map((c) => ({ ...c, person: 'A' })),
+    ...dashaChangesWithin(kundliB, first, last, terms).map((c) => ({ ...c, person: 'B' }))
+  ].sort((x, y) => x.month.localeCompare(y.month));
+
+  // 縁の要素: 相手の月・太陽・金星が自分の月から見て 1/5/7/9/11 室（縦・結び目のハウス）にあるか、ラーフ・ケートゥ軸が相手の月・太陽に重なるか
+  const KARMIC_HOUSES = { 1: 'union', 5: 'affection', 7: 'partnership', 9: 'guidance', 11: 'friendship', 4: 'home', 10: 'work', 6: 'service', 8: 'transformation', 12: 'letting_go', 2: 'resources', 3: 'communication' };
+  const bond = (mine, theirs, label) => theirs
+    .filter((p) => ['Moon', 'Sun', 'Venus'].includes(p.key))
+    .map((p) => {
+      const h = mine ? houseFrom(mine.signKey, p.signKey) : null;
+      return { from: label, planet: p.name, planetKey: p.key, house: h, houseLabel: houseLabel(h, terms), theme: KARMIC_HOUSES[h] || null };
+    });
+  const nodeAxis = (nodes, theirs, label) => nodes
+    .filter(Boolean)
+    .flatMap((n) => theirs.filter((p) => ['Moon', 'Sun'].includes(p.key) && p.signKey === n.signKey).map((p) => ({ node: n.name, nodeKey: n.key, of: label, touches: p.name, touchesKey: p.key, sign: p.sign })));
+  const karmic = {
+    bondsAonB: bond(moonB, planetsA, 'A'),
+    bondsBonA: bond(moonA, planetsB, 'B'),
+    nodeContacts: [
+      ...nodeAxis([planetsA.find((p) => p.key === 'Rahu'), planetsA.find((p) => p.key === 'Ketu')], planetsB, 'A'),
+      ...nodeAxis([planetsB.find((p) => p.key === 'Rahu'), planetsB.find((p) => p.key === 'Ketu')], planetsA, 'B')
+    ],
+    sameNakshatra: Boolean(moonA && moonB && moonA.nakshatraKey && moonA.nakshatraKey === moonB.nakshatraKey),
+    saturnOnMoon: [
+      ...(moonB && planetsA.find((p) => p.key === 'Saturn' && p.signKey === moonB.signKey) ? ['A_saturn_on_B_moon'] : []),
+      ...(moonA && planetsB.find((p) => p.key === 'Saturn' && p.signKey === moonA.signKey) ? ['B_saturn_on_A_moon'] : [])
+    ]
+  };
+
   return {
     generated_at: toJstIsoString(new Date()),
     lang: terms.lang,
     product: 'compat',
     relation,
+    period: { start: first, end: last },
+    timeline,
+    dashaChanges,
+    karmic,
     personA: { label: a.label || 'A', birth: { dob: a.dob, tob: a.tob || '12:00' }, ...personSummary(planetsA, kundliA, terms) },
     personB: { label: b.label || 'B', birth: { dob: b.dob, tob: b.tob || '12:00' }, ...personSummary(planetsB, kundliB, terms) },
     matching: normalizeMatching(matching, terms),

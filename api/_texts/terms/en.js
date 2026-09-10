@@ -249,8 +249,10 @@ const CHAPTER_TITLE = {
   compat_ch4: 'Chapter 4 — Conversation and values (Mercury, Sun, Jupiter)',
   compat_ch5: 'Chapter 5 — Drive and warmth (Mars and Venus)',
   compat_ch6: 'Chapter 6 — Responsibility and staying power (Saturn)',
-  compat_ch7: 'Chapter 7 — Nurturing this relationship',
-  compat_ch8: 'Chapter 8 — The traditional compatibility score (36 points)'
+  compat_ch7: 'Chapter 7 — The meaning of this bond (why you met)',
+  compat_ch8: 'Chapter 8 — When the relationship moves (next 12 months)',
+  compat_ch9: 'Chapter 9 — Nurturing this relationship',
+  compat_ch10: 'Chapter 10 — The traditional compatibility score (36 points)'
 };
 
 const REASON = {

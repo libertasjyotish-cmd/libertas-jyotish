@@ -248,8 +248,10 @@ const CHAPTER_TITLE = {
   compat_ch4: 'Bab 4 — Percakapan dan nilai (Merkurius, Matahari, Jupiter)',
   compat_ch5: 'Bab 5 — Dorongan dan kehangatan (Mars dan Venus)',
   compat_ch6: 'Bab 6 — Tanggung jawab dan daya tahan (Saturnus)',
-  compat_ch7: 'Bab 7 — Merawat hubungan ini',
-  compat_ch8: 'Bab 8 — Skor kecocokan tradisional (36 poin)'
+  compat_ch7: 'Bab 7 — Makna ikatan ini (mengapa kalian bertemu)',
+  compat_ch8: 'Bab 8 — Kapan hubungan bergerak (12 bulan ke depan)',
+  compat_ch9: 'Bab 9 — Merawat hubungan ini',
+  compat_ch10: 'Bab 10 — Skor kecocokan tradisional (36 poin)'
 };
 
 const REASON = {
