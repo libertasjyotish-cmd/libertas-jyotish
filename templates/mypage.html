@@ -558,6 +558,7 @@ fetchUserDataAndRender(email, true);
 
 function isFreshReading(user) {
 if (!user || !user.lastResult || !isTodaysReading(user.lastResult)) return false;
+if (user.lastResult.status === 'paid' && !user.lastResult.premium_reading) return false;
 const fetchedAt = Number(user.lastFetchedAt || 0);
 return fetchedAt > 0 && Date.now() - fetchedAt < READING_TTL_MS;
 }

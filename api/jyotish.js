@@ -799,6 +799,8 @@ function reusableReading(profile, ctx) {
   if (last.is_fallback) { lastReadingCacheReason = 'fallback'; return null; }
   if (last.reading_date !== toJstIsoString(new Date()).slice(0, 10)) { lastReadingCacheReason = 'other_day'; return null; }
   if (String(last.status || 'free') !== ctx.status) { lastReadingCacheReason = 'status_changed'; return null; }
+  // 有料でプレミアム詳細が欠けた部分失敗は当日分として固定せず、次回開いたときに作り直す
+  if (ctx.status === 'paid' && !last.premium_reading) { lastReadingCacheReason = 'partial'; return null; }
   // 出生データ・言語は保存済み鑑定内の鍵と照合する（Sheets 側の日付・時刻書式のゆれを避ける）
   if (!last.birth_key) { lastReadingCacheReason = 'no_birth_key'; return null; }
   if (last.birth_key !== ctx.birthKey) { lastReadingCacheReason = 'birth_changed'; return null; }
