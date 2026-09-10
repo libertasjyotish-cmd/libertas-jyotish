@@ -397,14 +397,14 @@ module.exports = async function handler(req, res) {
                   generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'premium'), 40000, startedAt + FUNCTION_BUDGET_MS)
                 ]);
 
-                const baseViolations = base.json ? findViolations(JSON.stringify(base.json), finalLang) : [];
+                const baseViolations = base.json ? findViolations(JSON.stringify(base.json), finalLang, { allowDates: true }) : [];
                 if (baseViolations.length) {
                   console.warn('Daily reading contains banned expressions:', baseViolations.join(', '));
                   fallbackReason = 'banned_expression';
                 } else if (base.json) {
                   cleanJsonResult = base.json;
                   cleanJsonResult.generated_by = base.model;
-                  if (premium.json && premium.json.premium_reading && !findViolations(JSON.stringify(premium.json), finalLang).length) {
+                  if (premium.json && premium.json.premium_reading && !findViolations(JSON.stringify(premium.json), finalLang, { allowDates: true }).length) {
                     cleanJsonResult.premium_reading = premium.json.premium_reading;
                   } else {
                     fallbackReason = premium.reason || 'gemini_premium_missing';
@@ -414,7 +414,7 @@ module.exports = async function handler(req, res) {
                 }
               } else {
                 const result = await generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, false, finalLang), 45000, startedAt + FUNCTION_BUDGET_MS);
-                const violations = result.json ? findViolations(JSON.stringify(result.json), finalLang) : [];
+                const violations = result.json ? findViolations(JSON.stringify(result.json), finalLang, { allowDates: true }) : [];
                 if (violations.length) {
                   console.warn('Daily reading contains banned expressions:', violations.join(', '));
                   fallbackReason = 'banned_expression';

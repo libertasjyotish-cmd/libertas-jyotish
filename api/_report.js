@@ -211,8 +211,10 @@ const BANNED_PATTERNS_LATIN = [
   /\b(lawsuit|prosecut\w*|illegal|legally binding)\b/i
 ];
 
-function findViolations(text, lang) {
-  const patterns = lang === 'ja' ? BANNED_PATTERNS : [...BANNED_PATTERNS, ...BANNED_PATTERNS_LATIN];
+// 日付の名指しは有料鑑定書（時期を月単位に留める）では禁止、日次鑑定では当日の日付が本文に出るのが正しいので allowDates で除外する
+function findViolations(text, lang, { allowDates = false } = {}) {
+  let patterns = lang === 'ja' ? BANNED_PATTERNS : [...BANNED_PATTERNS, ...BANNED_PATTERNS_LATIN];
+  if (allowDates) patterns = patterns.filter((re) => re !== BANNED_PATTERNS[0] && re !== BANNED_PATTERNS_LATIN[0]);
   return patterns.filter((re) => re.test(text)).map((re) => re.source);
 }
 
