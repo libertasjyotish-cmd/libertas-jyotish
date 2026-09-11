@@ -26,6 +26,17 @@
     start: function (product, lang, hint) {
       var email = window.LJCheckoutGuard.verifiedEmail();
       if (email) {
+        // Android アプリ内は Play 課金（ストア規約）。完了後はページを再読み込みして権限を反映する。
+        var play = window.LJPlayBilling;
+        if (play && play.supported()) {
+          play.buy(product, email).then(function () {
+            window.location.reload();
+          }).catch(function (err) {
+            if (err && err.name === 'AbortError') return;
+            alert((window.LJ_I18N && window.LJ_I18N.playError) || 'Purchase failed. Please try again.');
+          });
+          return true;
+        }
         window.open(window.LJCheckout.checkoutUrlFor(product, email), '_blank');
         return true;
       }

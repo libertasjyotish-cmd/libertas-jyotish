@@ -271,6 +271,7 @@ background-size: cover; background-position: center center; background-repeat: n
 {{>i18n-globals}}
 <script defer src="/js/site-menu.js"></script>
 <script src="/js/checkout-links.js"></script>
+<script src="/js/play-billing.js"></script>
 <script src="/js/checkout-guard.js"></script>
 </head>
 <body>
@@ -969,6 +970,10 @@ return d.toLocaleDateString('{{lang}}', { year: 'numeric', month: 'long', day: '
 }
 
 async function openBillingPortal() {
+if (ljBilling && ljBilling.billing === 'play') {
+if (confirm(window.LJ_I18N.playManage)) window.open(window.LJPlayBilling.manageUrl(), '_blank');
+return;
+}
 if (!ljBilling || ljBilling.billing !== 'komoju') {
 alert('{{t.mypage.js20|js}}');
 window.open(GUMROAD_LIBRARY_URL, '_blank');

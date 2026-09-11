@@ -297,6 +297,8 @@ window.LJ_I18N = {
     pdfApprox: 'Sekitar {price} sekali bayar (termasuk pajak) — jumlah akhir ditampilkan saat checkout',
     checkoutOnly: 'Jumlah dalam mata uang lokal Anda ditampilkan saat checkout'
   },
+  playError: 'Pembelian Google Play tidak dapat diselesaikan. Silakan coba lagi.',
+  playManage: 'Langganan yang dibeli di aplikasi dikelola (batalkan, metode pembayaran) di Google Play → Langganan. Buka sekarang?',
   guide: {
     hub: '/id/guide',
     hubLabel: "Semua panduan",
@@ -308,6 +310,7 @@ window.LJ_I18N = {
 </script>
 <script defer src="/js/site-menu.js"></script>
 <script src="/js/checkout-links.js"></script>
+<script src="/js/play-billing.js"></script>
 <script src="/js/checkout-guard.js"></script>
 </head>
 <body>
@@ -1009,6 +1012,10 @@ return d.toLocaleDateString('id', { year: 'numeric', month: 'long', day: 'numeri
 }
 
 async function openBillingPortal() {
+if (ljBilling && ljBilling.billing === 'play') {
+if (confirm(window.LJ_I18N.playManage)) window.open(window.LJPlayBilling.manageUrl(), '_blank');
+return;
+}
 if (!ljBilling || ljBilling.billing !== 'komoju') {
 alert('Halaman pembelian Gumroad Anda akan dibuka. Pembayaran dikelola oleh Gumroad, jadi Anda masuk ke Gumroad, bukan dengan kata sandi situs ini. Masukkan email yang Anda gunakan saat membayar dan Gumroad akan mengirimkan tautan masuk lewat email, tanpa perlu kata sandi. Setelah masuk, Anda dapat membatalkan keanggotaan atau mengubah metode pembayaran.');
 window.open(GUMROAD_LIBRARY_URL, '_blank');

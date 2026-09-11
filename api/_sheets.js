@@ -191,8 +191,72 @@ async function getMemberRecord(email) {
     billing: String(row.get('billing') || '').trim().toLowerCase(),
     komojuCustomerId: row.get('komoju_customer_id') || '',
     komojuSubscriptionId: row.get('komoju_subscription_id') || '',
+    playPurchaseToken: row.get('play_purchase_token') || '',
+    playRenewing: String(row.get('play_renewing') || '').trim().toLowerCase() === 'true',
     paidUntil: row.get('paid_until') || ''
   };
+}
+
+const PLAY_COLUMNS = ['billing', 'play_purchase_token', 'play_renewing', 'paid_until'];
+
+// Google Play の定期購入を会員行に紐づけ、有料化する。purchaseToken は RTDN（状態通知）から会員を逆引きする鍵。
+async function setPlaySubscription(email, { purchaseToken, paidUntil, renewing, language }) {
+  if (!email) return false;
+  const sheet = await getMemberSheet();
+  if (!sheet) return false;
+  await ensureColumns(sheet, PLAY_COLUMNS);
+
+  const nowStr = new Date().toISOString();
+  const fields = {
+    status: 'paid',
+    billing: 'play',
+    play_purchase_token: purchaseToken || '',
+    play_renewing: renewing ? 'true' : 'false',
+    paid_until: paidUntil || '',
+    updated_at: nowStr
+  };
+  const row = await findMemberRow(email);
+  if (row) {
+    Object.entries(fields).forEach(([k, v]) => row.set(k, v));
+    await row.save();
+  } else {
+    await sheet.addRow({
+      email: normalizeEmail(email),
+      auth_provider: 'play',
+      created_at: nowStr,
+      language: language || 'ja',
+      ...fields
+    });
+  }
+  return true;
+}
+
+// RTDN の purchaseToken から会員行を探す（同じトークンは同じ定期購入を指す）。
+async function findMemberByPlayToken(purchaseToken) {
+  const token = String(purchaseToken || '').trim();
+  if (!token) return null;
+  const sheet = await getMemberSheet();
+  if (!sheet) return null;
+  await ensureColumns(sheet, PLAY_COLUMNS);
+  const rows = await sheet.getRows();
+  const row = rows.find(r => String(r.get('play_purchase_token') || '').trim() === token);
+  return row ? normalizeEmail(row.get('email')) : null;
+}
+
+// Play 定期購入の状態変化（更新・解約予約・失効）を反映する。entitled=false なら無料へ戻す。
+async function updatePlaySubscription(email, { entitled, renewing, paidUntil, purchaseToken }) {
+  const row = await findMemberRow(email);
+  if (!row) return false;
+  const sheet = await getMemberSheet();
+  await ensureColumns(sheet, PLAY_COLUMNS);
+  row.set('billing', 'play');
+  if (purchaseToken !== undefined) row.set('play_purchase_token', purchaseToken || '');
+  if (renewing !== undefined) row.set('play_renewing', renewing ? 'true' : 'false');
+  if (paidUntil !== undefined) row.set('paid_until', paidUntil || '');
+  if (entitled !== undefined) row.set('status', entitled ? 'paid' : 'free');
+  row.set('updated_at', new Date().toISOString());
+  await row.save();
+  return true;
 }
 
 const KOMOJU_COLUMNS = ['billing', 'komoju_customer_id', 'komoju_subscription_id', 'paid_until'];
@@ -244,17 +308,19 @@ async function updateKomojuSubscription(email, { status, paidUntil, subscription
   return true;
 }
 
-// 解約済み（subscription_id 空）で paid_until を過ぎた KOMOJU 会員を無料へ戻す。
+// 解約済み（KOMOJU: subscription_id 空 / Play: play_renewing=false）で paid_until を過ぎた会員を無料へ戻す。
 async function expireKomojuMembers(now = new Date()) {
   const sheet = await getMemberSheet();
   if (!sheet) return [];
-  await ensureColumns(sheet, KOMOJU_COLUMNS);
+  await ensureColumns(sheet, [...KOMOJU_COLUMNS, ...PLAY_COLUMNS.filter(c => !KOMOJU_COLUMNS.includes(c))]);
   const rows = await sheet.getRows();
   const expired = [];
   for (const row of rows) {
-    if (String(row.get('billing') || '').trim().toLowerCase() !== 'komoju') continue;
+    const billing = String(row.get('billing') || '').trim().toLowerCase();
+    if (billing !== 'komoju' && billing !== 'play') continue;
     if (String(row.get('status') || '').trim().toLowerCase() !== 'paid') continue;
-    if (String(row.get('komoju_subscription_id') || '').trim()) continue;
+    if (billing === 'komoju' && String(row.get('komoju_subscription_id') || '').trim()) continue;
+    if (billing === 'play' && String(row.get('play_renewing') || '').trim().toLowerCase() === 'true') continue;
     const until = Date.parse(row.get('paid_until') || '');
     if (!Number.isFinite(until) || until > now.getTime()) continue;
     row.set('status', 'free');
@@ -442,6 +508,9 @@ module.exports = {
   setKomojuSubscription,
   updateKomojuSubscription,
   expireKomojuMembers,
+  setPlaySubscription,
+  updatePlaySubscription,
+  findMemberByPlayToken,
   setPdfPurchased,
   getPdfReport,
   savePdfReport,

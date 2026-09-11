@@ -493,6 +493,8 @@
     "price.pdf": "{price} pago único (impuestos incl.)",
     "price.premiumApprox": "Unos {price} al mes (impuestos incl.); el importe final se muestra al pagar",
     "price.pdfApprox": "Unos {price} en pago único (impuestos incl.); el importe final se muestra al pagar",
+    "price.playError": "No se pudo completar la compra en Google Play. Inténtalo de nuevo.",
+    "price.playManage": "Las suscripciones compradas en la app se gestionan (cancelar, método de pago) en Google Play → Suscripciones. ¿Abrir ahora?",
     "price.checkoutOnly": "El importe en tu moneda local se muestra al pagar",
     "mypage.jsCachedAt": "Mostrando la lectura obtenida a las {time}.",
     "mypage.jsRefresh": "Actualizar ahora",

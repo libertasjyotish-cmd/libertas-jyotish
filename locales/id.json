@@ -493,6 +493,8 @@
     "price.pdf": "{price} sekali bayar (termasuk pajak)",
     "price.premiumApprox": "Sekitar {price} / bulan (termasuk pajak) — jumlah akhir ditampilkan saat checkout",
     "price.pdfApprox": "Sekitar {price} sekali bayar (termasuk pajak) — jumlah akhir ditampilkan saat checkout",
+    "price.playError": "Pembelian Google Play tidak dapat diselesaikan. Silakan coba lagi.",
+    "price.playManage": "Langganan yang dibeli di aplikasi dikelola (batalkan, metode pembayaran) di Google Play → Langganan. Buka sekarang?",
     "price.checkoutOnly": "Jumlah dalam mata uang lokal Anda ditampilkan saat checkout",
     "mypage.jsCachedAt": "Menampilkan pembacaan yang diambil pukul {time}.",
     "mypage.jsRefresh": "Perbarui sekarang",

@@ -249,7 +249,7 @@ module.exports = async function handler(req, res) {
           status: member ? member.status : 'free',
           pdf_purchased: Boolean(member && member.pdfPurchased),
           billing: (member && member.billing) || null,
-          subscription_active: Boolean(member && member.komojuSubscriptionId),
+          subscription_active: Boolean(member && (member.komojuSubscriptionId || (member.billing === 'play' && member.playRenewing))),
           paid_until: (member && member.paidUntil) || null
         });
       } catch (err) {
