@@ -297,6 +297,8 @@ window.LJ_I18N = {
     pdfApprox: 'Unos {price} en pago único (impuestos incl.); el importe final se muestra al pagar',
     checkoutOnly: 'El importe en tu moneda local se muestra al pagar'
   },
+  playError: 'No se pudo completar la compra en Google Play. Inténtalo de nuevo.',
+  playManage: 'Las suscripciones compradas en la app se gestionan (cancelar, método de pago) en Google Play → Suscripciones. ¿Abrir ahora?',
   guide: {
     hub: '/es/guide',
     hubLabel: "Todas las guías",
@@ -308,6 +310,7 @@ window.LJ_I18N = {
 </script>
 <script defer src="/js/site-menu.js"></script>
 <script src="/js/checkout-links.js"></script>
+<script src="/js/play-billing.js"></script>
 <script src="/js/checkout-guard.js"></script>
 </head>
 <body>
@@ -1009,6 +1012,10 @@ return d.toLocaleDateString('es', { year: 'numeric', month: 'long', day: 'numeri
 }
 
 async function openBillingPortal() {
+if (ljBilling && ljBilling.billing === 'play') {
+if (confirm(window.LJ_I18N.playManage)) window.open(window.LJPlayBilling.manageUrl(), '_blank');
+return;
+}
 if (!ljBilling || ljBilling.billing !== 'komoju') {
 alert('Se abrirá tu página de compras de Gumroad. Los pagos los gestiona Gumroad, así que debes iniciar sesión en Gumroad, no con la contraseña de este sitio. Introduce el correo que usaste al pagar y Gumroad te enviará un enlace de acceso, sin necesidad de contraseña. Después podrás cancelar la suscripción o cambiar el método de pago.');
 window.open(GUMROAD_LIBRARY_URL, '_blank');

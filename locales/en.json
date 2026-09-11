@@ -493,6 +493,8 @@
     "price.pdf": "{price} one-off (tax incl.)",
     "price.premiumApprox": "About {price} / month (tax incl.) — final amount shown at checkout",
     "price.pdfApprox": "About {price} one-off (tax incl.) — final amount shown at checkout",
+    "price.playError": "The Google Play purchase could not be completed. Please try again.",
+    "price.playManage": "Subscriptions bought in the app are managed (cancel, payment method) in Google Play → Subscriptions. Open it now?",
     "price.checkoutOnly": "The amount in your local currency is shown at checkout",
     "mypage.jsCachedAt": "Showing the reading retrieved at {time}.",
     "mypage.jsRefresh": "Refresh now",

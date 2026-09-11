@@ -493,6 +493,8 @@
     "price.pdf": "{price} pagamento único (impostos incl.)",
     "price.premiumApprox": "Cerca de {price} / mês (impostos incl.) — valor final exibido no checkout",
     "price.pdfApprox": "Cerca de {price} pagamento único (impostos incl.) — valor final exibido no checkout",
+    "price.playError": "Não foi possível concluir a compra no Google Play. Tente novamente.",
+    "price.playManage": "As assinaturas compradas no app são gerenciadas (cancelar, forma de pagamento) em Google Play → Assinaturas. Abrir agora?",
     "price.checkoutOnly": "O valor na sua moeda local é exibido no checkout",
     "mypage.jsCachedAt": "Exibindo a leitura obtida às {time}.",
     "mypage.jsRefresh": "Atualizar agora",
