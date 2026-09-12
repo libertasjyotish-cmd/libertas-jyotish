@@ -226,7 +226,7 @@
     "mypage.js45": "🔮 Kundali preciso: o destino escrito nos seus nove planetas",
     "mypage.js46": "A partir do Lagna (ascendente) e da interação dos nove planetas, lemos em três dimensões os seus talentos, o trabalho adequado a você e os seus padrões de relacionamento. É uma análise completa, incluindo os yogas (combinações planetárias) e as avaliações de dignidade que a leitura gratuita não cobre.",
     "mypage.js47": "📅 Panorama diário e semanal detalhado",
-    "mypage.js48": "Junto com o mapa do dia, mostramos o fluxo da semana, os dias de atenção e os dias com o vento a favor. Também sugerimos remédios que aliviam a pressão dos planetas.",
+    "mypage.js48": "[O que está acontecendo com você agora] Tem sentido esta semana que seu trabalho não é reconhecido? [Por que sente isso agora] A Lua e Mercúrio em trânsito pela casa 6 ativam sua Lua natal na casa 10. [Sua decisão] … [Ações para hoje e esta semana] • Quarta de manhã: relate o progresso ao chefe em números … [Dias de atenção / a favor] …",
     "mypage.js49": "📜 Mapa da vida em 108 divisões e leitura detalhada dos planetas regentes",
     "mypage.js50": "A partir de uma tabela de ciclos que divide a sua vida em 108 partes, mostramos em ordem cronológica os anos que marcam pontos de virada e as ações a tomar. Isso permite se preparar com antecedência para os altos e baixos da vida.",
     "mypage.js51": "Planeta",
@@ -549,6 +549,8 @@
     "reports.errEmail": "Informe seu e-mail.",
     "reports.errFields": "Há campos em falta ou inválidos.",
     "reports.errServer": "Não foi possível registrar o pedido. Tente novamente mais tarde.",
-    "reports.errUnavailable": "O pagamento online ainda não está disponível na sua região. Volte em breve."
+    "reports.errUnavailable": "O pagamento online ainda não está disponível na sua região. Volte em breve.",
+    "mypage.tplTeaserTitle": "🔒 Continua no relatório detalhado",
+    "mypage.tplTeaserCta": "Ver os dias de atenção, os dias a favor e 3 ações concretas →"
   }
 }

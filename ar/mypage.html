@@ -1333,6 +1333,7 @@ if (fr.horoscope) html += `<div style="margin-bottom:12px; line-height:1.7;"><st
 if (fr.influence) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>② تأثير النجوم:</strong><br>${fr.influence}</div>`;
 if (fr.dasha_summary) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>③ إرشاد الماها داشا الحالية:</strong><br>${fr.dasha_summary}</div>`;
 if (fr.lucky_element) html += `<div style="margin-top:15px; padding:10px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:6px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">④ ${fr.lucky_element}</div>`;
+if (data.status !== 'paid' && fr.premium_teaser) html += `<div style="margin-top:14px; padding:12px 14px; background:rgba(58,46,43,0.06); border-left:3px solid var(--color-gold-main); border-radius:6px; font-size:0.86rem; line-height:1.7; color:#4a3e36;"><div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:4px;">🔒 التتمة في التقرير المفصّل</div>${fr.premium_teaser}<div style="margin-top:8px;"><a href="#btn-upgrade-premium" onclick="document.getElementById('btn-upgrade-premium')?.scrollIntoView({behavior:'smooth',block:'center'});return false;" style="font-weight:600; color:var(--color-gold-dark); text-decoration:underline;">اطّلع على أيام الحذر وأيام الدفع و3 خطوات محددة ←</a></div></div>`;
 if (data.geo_notice) html += `<p style="margin-top:12px; font-size:0.78rem; color:#6b5b4a; line-height:1.6;">${data.geo_notice}</p>`;
 document.getElementById('today-transit-text').innerHTML = html;
 } else {
@@ -1407,7 +1408,7 @@ planets: [
 { name: 'القمر', sign: 'السرطان', house: 4, comment: 'يولد الاستقرار النفسي من البيت ومن أقرب الناس إليك.' },
 { name: 'المريخ', sign: 'الحمل', house: 7, comment: 'موضع يسهّل عليك أخذ زمام المبادرة في العلاقات.' }
 ],
-daily: { title: '📅 نظرة يومية وأسبوعية مفصّلة', text: 'إلى جانب خريطة اليوم نعرض مسار الأسبوع، والأيام التي تستدعي الانتباه، والأيام التي تسير فيها الرياح لصالحك. ونقترح كذلك علاجات تخفف ضغط الكواكب.' },
+daily: { title: '📅 نظرة يومية وأسبوعية مفصّلة', text: '[ما يحدث لك الآن] هل شعرت هذا الأسبوع بأن جهدك في العمل لا يُقدَّر؟ [لماذا تشعر بذلك الآن] القمر وعطارد العابران في بيتك السادس يحرّكان قمرك الأصلي في البيت العاشر. [قرارك] … [خطوات اليوم وهذا الأسبوع] • صباح الأربعاء: قدّم تقرير تقدمك لمديرك بالأرقام … [أيام الحذر وأيام الدفع] …' },
 cards: [
 { title: '🔮 كوندالي دقيق: القدر المكتوب في كواكبك التسعة', text: 'من اللاغنا (الطالع) وتفاعل الكواكب التسعة، نقرأ قراءة ثلاثية الأبعاد مواهبك والعمل الملائم لك وأنماطك في العلاقات. تحليل شامل يضم اليوغات (اقترانات الكواكب) وتقييمات مراتب الكواكب التي لا تشملها القراءة المجانية.' },
 { title: '📜 خريطة العمر في 108 أقسام وقراءة مفصّلة للكواكب الحاكمة', text: 'من جدول دورات يقسّم حياتك إلى 108 أجزاء، نعرض ترتيبًا زمنيًا السنوات التي تمثل نقاط تحول والخطوات التي ينبغي اتخاذها. وبذلك تستعد مبكرًا لصعود الحياة وهبوطها.' }

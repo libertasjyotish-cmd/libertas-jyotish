@@ -1333,6 +1333,7 @@ if (fr.horoscope) html += `<div style="margin-bottom:12px; line-height:1.7;"><st
 if (fr.influence) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>② Influencia astral:</strong><br>${fr.influence}</div>`;
 if (fr.dasha_summary) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>③ Orientación de la Mahadasha actual:</strong><br>${fr.dasha_summary}</div>`;
 if (fr.lucky_element) html += `<div style="margin-top:15px; padding:10px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:6px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">④ ${fr.lucky_element}</div>`;
+if (data.status !== 'paid' && fr.premium_teaser) html += `<div style="margin-top:14px; padding:12px 14px; background:rgba(58,46,43,0.06); border-left:3px solid var(--color-gold-main); border-radius:6px; font-size:0.86rem; line-height:1.7; color:#4a3e36;"><div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:4px;">🔒 Continúa en el informe detallado</div>${fr.premium_teaser}<div style="margin-top:8px;"><a href="#btn-upgrade-premium" onclick="document.getElementById('btn-upgrade-premium')?.scrollIntoView({behavior:'smooth',block:'center'});return false;" style="font-weight:600; color:var(--color-gold-dark); text-decoration:underline;">Ver los días de atención, los días a favor y 3 acciones concretas →</a></div></div>`;
 if (data.geo_notice) html += `<p style="margin-top:12px; font-size:0.78rem; color:#6b5b4a; line-height:1.6;">${data.geo_notice}</p>`;
 document.getElementById('today-transit-text').innerHTML = html;
 } else {
@@ -1407,7 +1408,7 @@ planets: [
 { name: 'Luna', sign: 'Cáncer', house: 4, comment: 'La estabilidad emocional nace del hogar y de las personas más cercanas.' },
 { name: 'Marte', sign: 'Aries', house: 7, comment: 'Una posición que facilita tomar la iniciativa en las relaciones.' }
 ],
-daily: { title: '📅 Panorama diario y semanal detallado', text: 'Junto al mapa del día, te mostramos el flujo de la semana, los días de atención y los días con el viento a favor. También sugerimos remedios que alivian la presión de los planetas.' },
+daily: { title: '📅 Panorama diario y semanal detallado', text: '[Lo que te está pasando ahora] ¿Sientes esta semana que no reconocen tu trabajo? [Por qué lo sientes ahora] La Luna y Mercurio en tránsito por tu casa 6 activan tu Luna natal en casa 10. [Tu decisión] … [Acciones para hoy y esta semana] • Miércoles por la mañana: informa avances a tu jefe con cifras … [Días de atención / a favor] …' },
 cards: [
 { title: '🔮 Kundali preciso: el destino escrito en tus nueve planetas', text: 'A partir del Lagna (ascendente) y de la interacción de los nueve planetas, leemos en tres dimensiones tus talentos, el trabajo que te conviene y tus patrones de relación. Es un análisis completo que incluye los yogas (combinaciones planetarias) y las valoraciones de dignidad que la lectura gratuita no cubre.' },
 { title: '📜 Mapa de la vida en 108 divisiones y lectura detallada de los planetas regentes', text: 'A partir de una tabla de ciclos que divide tu vida en 108 partes, mostramos en orden cronológico los años que marcan puntos de inflexión y las acciones que conviene tomar. Así puedes prepararte con antelación para los altibajos de la vida.' }
