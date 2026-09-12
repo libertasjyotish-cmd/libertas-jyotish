@@ -432,6 +432,8 @@ Carregando os dados do mapa de hoje...
 <div id="premium-gatekeeper" class="locked-wrapper">
 <div id="premium-content-area">
 
+<div id="premium-daily-slot"></div>
+
 <div class="card-box">
 <div class="card-title">Leitura do seu ciclo Maha Dasha</div>
 <p id="dasha-period-title" style="font-weight:600; font-size:0.9rem; color:#3A2E2B; margin-bottom:6px;">Ciclo atual: carregando...</p>
@@ -1361,20 +1363,19 @@ detailContainer.id = 'premium-detail-container';
 document.getElementById('premium-content-area').appendChild(detailContainer);
 }
 
+document.getElementById('premium-daily-slot').innerHTML = pr.detailed_horoscope ? `
+<div class="card-box">
+<div class="card-title">📅 Panorama diário e semanal detalhado</div>
+<div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify; white-space:pre-line;">${pr.detailed_horoscope}</div>
+</div>
+` : '';
+
 let detailHtml = '';
 if (pr.kundali_reading) {
 detailHtml += `
 <div class="card-box" style="margin-top:22px;">
 <div class="card-title">🔮 Kundali preciso: o destino escrito nos seus nove planetas</div>
 <div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify; white-space:pre-line;">${pr.kundali_reading}</div>
-</div>
-`;
-}
-if (pr.detailed_horoscope) {
-detailHtml += `
-<div class="card-box">
-<div class="card-title">📅 Panorama diário e semanal detalhado</div>
-<div style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify; white-space:pre-line;">${pr.detailed_horoscope}</div>
 </div>
 `;
 }
@@ -1406,9 +1407,9 @@ planets: [
 { name: 'Lua', sign: 'Câncer', house: 4, comment: 'A estabilidade emocional nasce do lar e das pessoas mais próximas.' },
 { name: 'Marte', sign: 'Áries', house: 7, comment: 'Uma posição que facilita tomar a iniciativa nos relacionamentos.' }
 ],
+daily: { title: '📅 Panorama diário e semanal detalhado', text: 'Junto com o mapa do dia, mostramos o fluxo da semana, os dias de atenção e os dias com o vento a favor. Também sugerimos remédios que aliviam a pressão dos planetas.' },
 cards: [
 { title: '🔮 Kundali preciso: o destino escrito nos seus nove planetas', text: 'A partir do Lagna (ascendente) e da interação dos nove planetas, lemos em três dimensões os seus talentos, o trabalho adequado a você e os seus padrões de relacionamento. É uma análise completa, incluindo os yogas (combinações planetárias) e as avaliações de dignidade que a leitura gratuita não cobre.' },
-{ title: '📅 Panorama diário e semanal detalhado', text: 'Junto com o mapa do dia, mostramos o fluxo da semana, os dias de atenção e os dias com o vento a favor. Também sugerimos remédios que aliviam a pressão dos planetas.' },
 { title: '📜 Mapa da vida em 108 divisões e leitura detalhada dos planetas regentes', text: 'A partir de uma tabela de ciclos que divide a sua vida em 108 partes, mostramos em ordem cronológica os anos que marcam pontos de virada e as ações a tomar. Isso permite se preparar com antecedência para os altos e baixos da vida.' }
 ]
 };
@@ -1437,12 +1438,14 @@ detailContainer = document.createElement('div');
 detailContainer.id = 'premium-detail-container';
 document.getElementById('premium-content-area').appendChild(detailContainer);
 }
-detailContainer.innerHTML = PREMIUM_SAMPLE.cards.map(c => `
-<div class="card-box" style="margin-top:22px;">
+const sampleCard = (c, style) => `
+<div class="card-box"${style ? ` style="${style}"` : ''}>
 <div class="card-title">${c.title}</div>
 <div class="preview-blur" style="font-size:0.88rem; color:#4a3e36; line-height:1.8; text-align:justify;">${c.text}</div>
 </div>
-`).join('');
+`;
+document.getElementById('premium-daily-slot').innerHTML = sampleCard(PREMIUM_SAMPLE.daily);
+detailContainer.innerHTML = PREMIUM_SAMPLE.cards.map(c => sampleCard(c, 'margin-top:22px;')).join('');
 }
 
 function renderPlanetTable(planets) {
