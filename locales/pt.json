@@ -548,6 +548,7 @@
     "reports.orderedPending": "Aguardando a confirmação do pagamento. A geração começa assim que for confirmado e o PDF é enviado em 24 horas.",
     "reports.errEmail": "Informe seu e-mail.",
     "reports.errFields": "Há campos em falta ou inválidos.",
-    "reports.errServer": "Não foi possível registrar o pedido. Tente novamente mais tarde."
+    "reports.errServer": "Não foi possível registrar o pedido. Tente novamente mais tarde.",
+    "reports.errUnavailable": "O pagamento online ainda não está disponível na sua região. Volte em breve."
   }
 }

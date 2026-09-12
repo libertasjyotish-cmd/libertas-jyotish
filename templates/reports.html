@@ -262,7 +262,8 @@
       var ERR = {
         email: '{{t.reports.errEmail|js}}',
         fields: '{{t.reports.errFields|js}}',
-        server: '{{t.reports.errServer|js}}'
+        server: '{{t.reports.errServer|js}}',
+        unavailable: '{{t.reports.errUnavailable|js}}'
       };
       var params = new URLSearchParams(location.search);
       var ordered = params.get('ordered');
@@ -328,7 +329,8 @@
         fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
           .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
           .then(function (res) {
-            if (!res.ok || !res.j.url) { errBox.textContent = res.j && res.j.error === 'invalid_fields' ? ERR.fields : ERR.server; btn.disabled = false; return; }
+            if (!res.ok || !res.j.url) { var code = res.j && res.j.error;
+              errBox.textContent = code === 'invalid_fields' ? ERR.fields : code === 'unavailable' ? ERR.unavailable : ERR.server; btn.disabled = false; return; }
             location.href = res.j.url;
           })
           .catch(function () { errBox.textContent = ERR.server; btn.disabled = false; });
