@@ -1333,6 +1333,7 @@ if (fr.horoscope) html += `<div style="margin-bottom:12px; line-height:1.7;"><st
 if (fr.influence) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>② Astro Influence:</strong><br>${fr.influence}</div>`;
 if (fr.dasha_summary) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>③ Current Mahadasha Guidance:</strong><br>${fr.dasha_summary}</div>`;
 if (fr.lucky_element) html += `<div style="margin-top:15px; padding:10px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:6px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">④ ${fr.lucky_element}</div>`;
+if (data.status !== 'paid' && fr.premium_teaser) html += `<div style="margin-top:14px; padding:12px 14px; background:rgba(58,46,43,0.06); border-left:3px solid var(--color-gold-main); border-radius:6px; font-size:0.86rem; line-height:1.7; color:#4a3e36;"><div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:4px;">🔒 Continued in the detailed report</div>${fr.premium_teaser}<div style="margin-top:8px;"><a href="#btn-upgrade-premium" onclick="document.getElementById('btn-upgrade-premium')?.scrollIntoView({behavior:'smooth',block:'center'});return false;" style="font-weight:600; color:var(--color-gold-dark); text-decoration:underline;">See this week’s days to watch, tailwind days and 3 concrete moves →</a></div></div>`;
 if (data.geo_notice) html += `<p style="margin-top:12px; font-size:0.78rem; color:#6b5b4a; line-height:1.6;">${data.geo_notice}</p>`;
 document.getElementById('today-transit-text').innerHTML = html;
 } else {
@@ -1407,7 +1408,7 @@ planets: [
 { name: 'Moon', sign: 'Cancer', house: 4, comment: 'Emotional stability grows out of home and the people closest to you.' },
 { name: 'Mars', sign: 'Aries', house: 7, comment: 'A placement that makes it easy to take the lead in relationships.' }
 ],
-daily: { title: '📅 Detailed daily and weekly outlook', text: 'Alongside the day\'s chart, we show the flow of the week, the days to watch and the days with the wind behind you. We also suggest remedies that ease the pressure of the planets.' },
+daily: { title: '📅 Detailed daily and weekly outlook', text: '[What is happening to you now] Have you kept feeling under-recognised at work this week? [Why you feel it now] The transiting Moon and Mercury in your 6th house are stirring your natal 10th-house Moon. [Your choice] … [Moves for today & this week] • Wednesday morning: report progress to your manager in numbers … [Days to watch / tailwind days] …' },
 cards: [
 { title: '🔮 Precise kundali: the destiny written in your nine planets', text: 'From the Lagna (ascendant) and the interplay of the nine planets, we read your talents, suitable work and relationship patterns in three dimensions. This is a full analysis, including yogas (planetary combinations) and dignity assessments that the free reading does not cover.' },
 { title: '📜 Lifetime chart in 108 divisions and detailed ruling-planet reading', text: 'From a cycle table dividing your life into 108 divisions, we show the years that mark turning points and the actions to take, in chronological order. It lets you prepare for the peaks and troughs of life in advance.' }

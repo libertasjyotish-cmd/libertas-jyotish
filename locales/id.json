@@ -226,7 +226,7 @@
     "mypage.js45": "🔮 Kundali presisi: takdir yang tertulis pada sembilan planet Anda",
     "mypage.js46": "Dari Lagna (ascendant) dan interaksi sembilan planet, kami membaca secara tiga dimensi bakat Anda, pekerjaan yang cocok, dan pola hubungan Anda. Analisis lengkap ini mencakup yoga (kombinasi planet) dan penilaian martabat planet yang tidak tercakup dalam pembacaan gratis.",
     "mypage.js47": "📅 Gambaran harian dan mingguan yang rinci",
-    "mypage.js48": "Selain peta hari ini, kami menampilkan aliran sepekan, hari yang perlu diwaspadai, dan hari yang berangin buah. Kami juga menyarankan remedi untuk meringankan tekanan planet.",
+    "mypage.js48": "[Yang sedang terjadi pada Anda] Apakah minggu ini Anda merasa kerja Anda kurang dihargai? [Mengapa terasa sekarang] Bulan dan Merkurius transit di rumah ke-6 menggerakkan Bulan natal Anda di rumah ke-10. [Pilihan Anda] … [Langkah hari ini & minggu ini] • Rabu pagi: laporkan kemajuan ke atasan dengan angka … [Hari waspada & hari berangin buah] …",
     "mypage.js49": "📜 Peta hidup 108 bagian dan pembacaan rinci planet penguasa",
     "mypage.js50": "Dari tabel siklus yang membagi hidup Anda menjadi 108 bagian, kami menampilkan secara kronologis tahun-tahun yang menjadi titik balik dan tindakan yang perlu diambil. Dengan begitu Anda dapat bersiap lebih awal menghadapi pasang surut kehidupan.",
     "mypage.js51": "Planet",
@@ -549,6 +549,8 @@
     "reports.errEmail": "Masukkan alamat email Anda.",
     "reports.errFields": "Ada kolom yang kosong atau tidak valid.",
     "reports.errServer": "Pesanan tidak dapat diproses. Coba lagi nanti.",
-    "reports.errUnavailable": "Pembayaran online belum tersedia di wilayah Anda. Silakan cek kembali nanti."
+    "reports.errUnavailable": "Pembayaran online belum tersedia di wilayah Anda. Silakan cek kembali nanti.",
+    "mypage.tplTeaserTitle": "🔒 Lanjutannya di laporan rinci",
+    "mypage.tplTeaserCta": "Lihat hari yang perlu diwaspadai, hari berangin buah, dan 3 langkah konkret →"
   }
 }

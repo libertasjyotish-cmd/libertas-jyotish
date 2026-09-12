@@ -226,7 +226,7 @@
     "mypage.js45": "🔮 Precise kundali: the destiny written in your nine planets",
     "mypage.js46": "From the Lagna (ascendant) and the interplay of the nine planets, we read your talents, suitable work and relationship patterns in three dimensions. This is a full analysis, including yogas (planetary combinations) and dignity assessments that the free reading does not cover.",
     "mypage.js47": "📅 Detailed daily and weekly outlook",
-    "mypage.js48": "Alongside the day's chart, we show the flow of the week, the days to watch and the days with the wind behind you. We also suggest remedies that ease the pressure of the planets.",
+    "mypage.js48": "[What is happening to you now] Have you kept feeling under-recognised at work this week? [Why you feel it now] The transiting Moon and Mercury in your 6th house are stirring your natal 10th-house Moon. [Your choice] … [Moves for today & this week] • Wednesday morning: report progress to your manager in numbers … [Days to watch / tailwind days] …",
     "mypage.js49": "📜 Lifetime chart in 108 divisions and detailed ruling-planet reading",
     "mypage.js50": "From a cycle table dividing your life into 108 divisions, we show the years that mark turning points and the actions to take, in chronological order. It lets you prepare for the peaks and troughs of life in advance.",
     "mypage.js51": "Planet",
@@ -549,6 +549,8 @@
     "reports.errEmail": "Please enter your email address.",
     "reports.errFields": "Some fields are missing or invalid.",
     "reports.errServer": "We could not take your order. Please try again later.",
-    "reports.errUnavailable": "Online payment is not yet available in your region. Please check back soon."
+    "reports.errUnavailable": "Online payment is not yet available in your region. Please check back soon.",
+    "mypage.tplTeaserTitle": "🔒 Continued in the detailed report",
+    "mypage.tplTeaserCta": "See this week’s days to watch, tailwind days and 3 concrete moves →"
   }
 }

@@ -226,7 +226,7 @@
     "mypage.js45": "🔮 Kundali preciso: el destino escrito en tus nueve planetas",
     "mypage.js46": "A partir del Lagna (ascendente) y de la interacción de los nueve planetas, leemos en tres dimensiones tus talentos, el trabajo que te conviene y tus patrones de relación. Es un análisis completo que incluye los yogas (combinaciones planetarias) y las valoraciones de dignidad que la lectura gratuita no cubre.",
     "mypage.js47": "📅 Panorama diario y semanal detallado",
-    "mypage.js48": "Junto al mapa del día, te mostramos el flujo de la semana, los días de atención y los días con el viento a favor. También sugerimos remedios que alivian la presión de los planetas.",
+    "mypage.js48": "[Lo que te está pasando ahora] ¿Sientes esta semana que no reconocen tu trabajo? [Por qué lo sientes ahora] La Luna y Mercurio en tránsito por tu casa 6 activan tu Luna natal en casa 10. [Tu decisión] … [Acciones para hoy y esta semana] • Miércoles por la mañana: informa avances a tu jefe con cifras … [Días de atención / a favor] …",
     "mypage.js49": "📜 Mapa de la vida en 108 divisiones y lectura detallada de los planetas regentes",
     "mypage.js50": "A partir de una tabla de ciclos que divide tu vida en 108 partes, mostramos en orden cronológico los años que marcan puntos de inflexión y las acciones que conviene tomar. Así puedes prepararte con antelación para los altibajos de la vida.",
     "mypage.js51": "Planeta",
@@ -549,6 +549,8 @@
     "reports.errEmail": "Introduce tu correo electrónico.",
     "reports.errFields": "Faltan campos o tienen un formato incorrecto.",
     "reports.errServer": "No pudimos registrar el pedido. Inténtalo más tarde.",
-    "reports.errUnavailable": "El pago en línea aún no está disponible en tu región. Vuelve pronto."
+    "reports.errUnavailable": "El pago en línea aún no está disponible en tu región. Vuelve pronto.",
+    "mypage.tplTeaserTitle": "🔒 Continúa en el informe detallado",
+    "mypage.tplTeaserCta": "Ver los días de atención, los días a favor y 3 acciones concretas →"
   }
 }
