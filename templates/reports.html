@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html {{htmlAttrs}}>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{t.reports.title}}</title>
+  <meta name="description" content="{{t.reports.desc|attr}}">
+  <!-- SNS共有カード（OGP / Twitter） -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Libertas Jyotish">
+  <meta property="og:locale" content="{{ogLocale}}">
+  <meta property="og:title" content="{{t.reports.title|attr}}">
+  <meta property="og:description" content="{{t.reports.desc|attr}}">
+  <meta property="og:url" content="{{canonical}}">
+  <meta property="og:image" content="https://www.libertas-jyotish.com/img/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="{{canonical}}">
+  {{hreflang}}
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0c1a1f">
+  <link rel="icon" type="image/png" href="/img/libertas-logo.png">
+  <link rel="apple-touch-icon" href="/img/libertas-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="{{fontHref}}" rel="stylesheet">
+  
+  <style>
+    :root {
+      --color-gold-light: #FDE047;
+      --color-gold-main: #D4AF37;
+      --color-gold-dark: #8B6B1B;
+      --color-text-dark: #2C221E;
+      --font-en: 'Cinzel', serif;
+      --font-ja: {{fontFamily}};
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-ja);
+      color: var(--color-text-dark);
+      line-height: 1.8;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-color: #0c1a1f;
+      display: flex; flex-direction: column;
+    }
+
+    .site-header {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+      background: rgba(12, 26, 31, 0.92);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(139, 107, 27, 0.3);
+      padding: 12px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .header-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--color-gold-main);
+      font-family: var(--font-en); font-weight: 600; font-size: 1.05rem;
+    }
+    .header-logo img { width: 32px; height: 32px; }
+    .header-nav { display: flex; gap: 18px; align-items: center; }
+    .header-nav a { color: #E2D9CE; text-decoration: none; font-size: 0.82rem; transition: color 0.3s; }
+    .header-nav a:hover { color: var(--color-gold-main); }
+
+    .main-section {
+      position: relative; flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 100px 20px 60px;
+      background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");
+      background-size: cover; background-position: center; background-attachment: fixed;
+    }
+
+    .card-container {
+      position: relative; z-index: 2; width: 100%; max-width: 680px;
+      background-image: 
+        radial-gradient(circle at 50% 25%, rgba(255, 253, 245, 0.98) 0%, rgba(245, 233, 208, 0.95) 55%, rgba(220, 200, 162, 0.96) 100%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.05) 100%);
+      background-blend-mode: overlay, normal;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-radius: 14px;
+      border: 1px solid rgba(184, 142, 60, 0.65);
+      outline: 1px solid rgba(212, 175, 55, 0.35); outline-offset: -7px;
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.75),
+        0 0 20px rgba(212, 175, 55, 0.18),
+        inset 0 0 35px rgba(139, 90, 43, 0.28),
+        inset 0 2px 4px rgba(255, 255, 255, 0.8);
+      padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
+      overflow: hidden;
+    }
+    /* 背面に薄く敷く曼荼羅（装飾のみ） */
+    .card-container::before {
+      content: ''; position: absolute; top: 4px; left: 50%;
+      width: min(520px, 96%); aspect-ratio: 1 / 1; transform: translateX(-50%);
+      z-index: 0; pointer-events: none;
+      background: url('/img/mandala-wheel.png') no-repeat center / contain;
+      opacity: 0.2;
+      -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 55%, transparent 82%);
+      mask-image: radial-gradient(circle at 50% 50%, #000 55%, transparent 82%);
+    }
+    .card-container > * { position: relative; z-index: 1; }
+
+    .data-confirm-box {
+      background: rgba(255, 252, 245, 0.85);
+      border: 1px solid rgba(139, 107, 27, 0.35); border-radius: 10px;
+      padding: 22px; margin-bottom: 25px; text-align: left;
+      box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.12);
+    }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px; }
+    .label-note { font-size: 0.72rem; font-weight: normal; color: #7a6a58; margin-left: 4px; }
+    
+    input[type="email"], input[type="text"], input[type="datetime-local"] {
+      width: 100%; padding: 11px 14px;
+      background-color: rgba(255, 252, 245, 0.85);
+      border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px;
+      font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none; transition: all 0.3s ease;
+      box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.12);
+    }
+    input:focus {
+      border-color: var(--color-gold-dark);
+      box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.15), 0 0 8px rgba(212, 175, 55, 0.3);
+      background-color: #FFFDF9;
+    }
+
+    .btn-purchase {
+      width: 100%; padding: 15px 28px; font-size: 1.05rem; font-weight: 600; font-family: var(--font-ja); color: #FFFDF9;
+      background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%); border: none; border-radius: 8px; cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4); transition: transform 0.2s;
+    }
+    .btn-purchase:hover { transform: translateY(-1px); }
+
+    .report-card {
+      background: rgba(255, 252, 245, 0.85);
+      border: 1px solid rgba(139, 107, 27, 0.35); border-radius: 10px;
+      padding: 22px; margin-bottom: 20px; text-align: left;
+      box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.12);
+    }
+    .report-card h3 { font-size: 1.05rem; color: var(--color-gold-dark); margin-bottom: 10px; border-bottom: 1px solid rgba(139, 107, 27, 0.2); padding-bottom: 5px; }
+    
+    .kundali-img-wrapper { text-align: center; padding: 12px; background: #FFFDF9; border: 1px solid rgba(139, 107, 27, 0.3); border-radius: 8px; margin-bottom: 15px; }
+    .kundali-img-wrapper img { max-width: 100%; height: auto; max-height: 280px; }
+
+    .timeline-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 8px; }
+    .timeline-table th, .timeline-table td { padding: 8px 10px; border: 1px solid rgba(139, 107, 27, 0.3); text-align: left; }
+    .timeline-table th { background: rgba(212, 175, 55, 0.15); color: var(--color-gold-dark); font-weight: 600; }
+
+    .site-footer { width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3); padding: 24px 20px; text-align: center; position: relative; z-index: 10; }
+    .footer-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+    .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
+    .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
+
+    @media print {
+      .site-header, .site-footer, .btn-purchase, #btn-print-pdf { display: none !important; }
+      body { background: #ffffff !important; color: #000000 !important; }
+      .main-section { padding: 0 !important; background: none !important; }
+      .card-container { max-width: 100% !important; box-shadow: none !important; border: none !important; outline: none !important; background: #ffffff !important; padding: 0 !important; }
+      .card-container::before { display: none !important; }
+      .report-card { background: #ffffff !important; border: 1px solid #ccc !important; page-break-inside: avoid; }
+    }
+    .product-tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; justify-content: center; }
+    .product-tab { flex: 1 1 30%; min-width: 120px; padding: 10px 8px; border: 1px solid var(--color-gold-dark); border-radius: 8px; background: rgba(255,255,255,0.6); cursor: pointer; font-family: var(--font-ja); font-size: 0.85rem; font-weight: 600; color: var(--color-text-dark); }
+    .product-tab.is-active { background: var(--color-gold-dark); color: #fff; }
+    .person-title { font-size: 0.9rem; font-weight: 700; color: var(--color-gold-dark); margin: 6px 0 10px; text-align: left; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #c9b78e; border-radius: 6px; font-size: 0.95rem; font-family: var(--font-ja); }
+    .check-line { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: #5A4E48; margin-top: 4px; text-align: left; }
+    .check-line input { width: auto; }
+    .price-note { font-size: 1.2rem; font-weight: 700; color: var(--color-gold-dark); margin: 12px 0; }
+    .form-error { color: #a32; font-size: 0.85rem; margin: 8px 0; min-height: 1.2em; }
+  </style>
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/rtl.css">
+{{>i18n-globals}}
+<script defer src="/js/site-menu.js"></script>
+</head>
+<body>
+
+  <header class="site-header" data-site-header></header>
+
+  <section class="main-section">
+    <div class="card-container">
+
+      <div id="ordered-view" style="display:none;">
+        <h1 style="font-size:1.5rem; margin-bottom:12px;">{{t.reports.orderedTitle}}</h1>
+        <p id="ordered-paid" style="font-size:0.9rem; color:#5A4E48; line-height:1.9;">{{t.reports.orderedPaid}}</p>
+        <p id="ordered-pending" style="display:none; font-size:0.9rem; color:#5A4E48; line-height:1.9;">{{t.reports.orderedPending}}</p>
+      </div>
+
+      <div id="order-view">
+        <h1 style="font-size:1.5rem; margin-bottom:12px;">{{t.reports.h1}}</h1>
+        <p style="font-size:0.88rem; color:#5A4E48; margin-bottom:18px; line-height:1.9; text-align:left;">{{t.reports.lead}}</p>
+
+        <div class="product-tabs" role="tablist">
+          <button type="button" class="product-tab" data-product="compat">{{t.reports.compat}}</button>
+          <button type="button" class="product-tab" data-product="yearly">{{t.reports.yearly}}</button>
+          <button type="button" class="product-tab" data-product="career">{{t.reports.career}}</button>
+        </div>
+        <p id="product-desc" style="font-size:0.85rem; color:#5A4E48; margin-bottom:16px; line-height:1.8; text-align:left;"></p>
+
+        <form id="order-form" class="data-confirm-box" novalidate>
+          <div class="form-group"><label for="f-email">{{t.reports.email}}</label><input type="email" id="f-email" name="email" autocomplete="email" required></div>
+          <div class="form-group"><label for="f-name">{{t.reports.name}} <span class="label-note">{{t.reports.optional}}</span></label><input type="text" id="f-name" name="name" autocomplete="name"></div>
+
+          <div class="person-title" id="title-a">{{t.reports.you}}</div>
+          <div class="row2">
+            <div class="form-group"><label for="f-dob">{{t.reports.dob}}</label><input type="date" id="f-dob" name="dob" required></div>
+            <div class="form-group"><label for="f-tob">{{t.reports.tob}}</label><input type="time" id="f-tob" name="tob"></div>
+          </div>
+          <label class="check-line"><input type="checkbox" id="f-tob-unknown" name="tob_unknown"> {{t.reports.tobUnknown}}</label>
+          <div class="form-group" style="margin-top:10px;"><label for="f-place">{{t.reports.place}}</label><input type="text" id="f-place" name="place" placeholder="{{t.reports.placeHint|attr}}" required></div>
+
+          <div id="person-b" style="display:none;">
+            <div class="person-title">{{t.reports.partner}}</div>
+            <div class="row2">
+              <div class="form-group"><label for="f-dob-b">{{t.reports.dob}}</label><input type="date" id="f-dob-b" name="dob_b"></div>
+              <div class="form-group"><label for="f-tob-b">{{t.reports.tob}}</label><input type="time" id="f-tob-b" name="tob_b"></div>
+            </div>
+            <label class="check-line"><input type="checkbox" id="f-tob-unknown-b" name="tob_unknown_b"> {{t.reports.tobUnknown}}</label>
+            <div class="form-group" style="margin-top:10px;"><label for="f-place-b">{{t.reports.place}}</label><input type="text" id="f-place-b" name="place_b" placeholder="{{t.reports.placeHint|attr}}"></div>
+            <div class="form-group"><label for="f-relation">{{t.reports.relation}}</label>
+              <select id="f-relation" name="relation">
+                <option value="romance">{{t.reports.relRomance}}</option>
+                <option value="business">{{t.reports.relBusiness}}</option>
+                <option value="friend">{{t.reports.relFriend}}</option>
+                <option value="general">{{t.reports.relGeneral}}</option>
+              </select>
+            </div>
+          </div>
+        </form>
+
+        <div class="price-note" id="price-label"></div>
+        <p style="font-size:0.78rem; color:#5A4E48; margin-bottom:12px; text-align:left;">{{t.reports.deliveryNote}}</p>
+        <div class="form-error" id="form-error"></div>
+        <button id="btn-order" class="btn-purchase">{{t.reports.submit}}</button>
+        <p style="font-size:0.78rem; color:#6A5E58; margin-top:12px;">{{t.reports.legalNote}}</p>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-links">{{>legal-links}}</div>
+    <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var LANG = '{{lang}}';
+      var DESC = {
+        compat: '{{t.reports.compatDesc|js}}',
+        yearly: '{{t.reports.yearlyDesc|js}}',
+        career: '{{t.reports.careerDesc|js}}'
+      };
+      var PRICE = {
+        compat: '{{t.reports.compatPrice|js}}',
+        yearly: '{{t.reports.yearlyPrice|js}}',
+        career: '{{t.reports.careerPrice|js}}'
+      };
+      var ERR = {
+        email: '{{t.reports.errEmail|js}}',
+        fields: '{{t.reports.errFields|js}}',
+        server: '{{t.reports.errServer|js}}'
+      };
+      var params = new URLSearchParams(location.search);
+      var ordered = params.get('ordered');
+      if (ordered) {
+        document.getElementById('order-view').style.display = 'none';
+        document.getElementById('ordered-view').style.display = 'block';
+        if (ordered !== 'paid') {
+          document.getElementById('ordered-paid').style.display = 'none';
+          document.getElementById('ordered-pending').style.display = 'block';
+        }
+        return;
+      }
+
+      var allowed = ['compat', 'yearly', 'career'];
+      var product = params.get('product');
+      if (allowed.indexOf(product) < 0) product = 'compat';
+
+      function select(p) {
+        product = p;
+        var tabs = document.querySelectorAll('.product-tab');
+        for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('is-active', tabs[i].getAttribute('data-product') === p);
+        document.getElementById('person-b').style.display = p === 'compat' ? 'block' : 'none';
+        document.getElementById('product-desc').textContent = DESC[p];
+        document.getElementById('price-label').textContent = PRICE[p];
+        history.replaceState(null, '', location.pathname + '?product=' + p);
+      }
+      var tabs = document.querySelectorAll('.product-tab');
+      for (var i = 0; i < tabs.length; i++) {
+        tabs[i].addEventListener('click', function () { select(this.getAttribute('data-product')); });
+      }
+      select(product);
+
+      function bindUnknown(cb, input) {
+        cb.addEventListener('change', function () { input.disabled = cb.checked; if (cb.checked) input.value = ''; });
+      }
+      bindUnknown(document.getElementById('f-tob-unknown'), document.getElementById('f-tob'));
+      bindUnknown(document.getElementById('f-tob-unknown-b'), document.getElementById('f-tob-b'));
+
+      var savedEmail = localStorage.getItem('lj_user_email') || '';
+      if (savedEmail) document.getElementById('f-email').value = savedEmail;
+      var dob = localStorage.getItem('dob'), tob = localStorage.getItem('tob'), city = localStorage.getItem('city');
+      if (dob) document.getElementById('f-dob').value = dob;
+      if (tob) document.getElementById('f-tob').value = tob;
+      if (city) document.getElementById('f-place').value = city;
+
+      var btn = document.getElementById('btn-order');
+      var errBox = document.getElementById('form-error');
+      btn.addEventListener('click', function () {
+        var form = document.getElementById('order-form');
+        var data = { product: product, lang: LANG };
+        var fd = new FormData(form);
+        fd.forEach(function (v, k) { data[k] = v; });
+        data.tob_unknown = document.getElementById('f-tob-unknown').checked;
+        data.tob_unknown_b = document.getElementById('f-tob-unknown-b').checked;
+        errBox.textContent = '';
+        if (!data.email || data.email.indexOf('@') < 0) { errBox.textContent = ERR.email; return; }
+        var need = ['dob', 'place'].concat(data.tob_unknown ? [] : ['tob']);
+        if (product === 'compat') need = need.concat(['dob_b', 'place_b'], data.tob_unknown_b ? [] : ['tob_b']);
+        for (var i = 0; i < need.length; i++) if (!data[need[i]]) { errBox.textContent = ERR.fields; return; }
+
+        localStorage.setItem('lj_user_email', data.email);
+        btn.disabled = true;
+        fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+          .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+          .then(function (res) {
+            if (!res.ok || !res.j.url) { errBox.textContent = res.j && res.j.error === 'invalid_fields' ? ERR.fields : ERR.server; btn.disabled = false; return; }
+            location.href = res.j.url;
+          })
+          .catch(function () { errBox.textContent = ERR.server; btn.disabled = false; });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -11,6 +11,7 @@
     "api/pdf-report.js": { "maxDuration": 60 },
     "api/etsy-cron.js": { "maxDuration": 60 },
     "api/komoju-return.js": { "maxDuration": 30 },
+    "api/report-order.js": { "maxDuration": 30 },
     "api/komoju-webhook.js": { "maxDuration": 30 }
   },
   "crons": [

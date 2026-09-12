@@ -8,7 +8,11 @@ const CURRENCY = 'JPY';
 // 商品 × 価格帯の金額（円・税込）。Gumroad 側の商品価格と必ず揃える。
 const AMOUNTS = {
   premium: { T1: 980, T2: 550, T3: 380 },
-  pdf: { T1: 8800, T2: 5980, T3: 3480 }
+  pdf: { T1: 8800, T2: 5980, T3: 3480 },
+  // 個別鑑定書（相性・年間運勢・仕事）。Etsy の米ドル価格（$69 / $49 / $49）と概ね揃える。
+  compat: { T1: 9800, T2: 6800, T3: 3980 },
+  yearly: { T1: 6800, T2: 4800, T3: 2980 },
+  career: { T1: 6800, T2: 4800, T3: 2980 }
 };
 
 const KOMOJU_COUNTRIES = new Set(['JP']);
