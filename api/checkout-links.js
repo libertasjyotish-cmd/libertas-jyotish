@@ -1,7 +1,7 @@
 // 訪問者の国に応じた決済先（Gumroad リンク or KOMOJU）と価格を返す: /api/checkout-links
 // 価格帯・決済事業者の解決は api/_pricing.js。
 const currencyRates = require('../data/currency-rates.json');
-const { CURRENCY, AMOUNTS, resolveTier, resolveProvider, countryFrom } = require('./_pricing');
+const { CURRENCY, AMOUNTS, resolveTier, resolveProvider, saleAvailable, countryFrom } = require('./_pricing');
 
 // 価格帯ごとの Gumroad 商品リンク。商品を作り直したらここだけ更新する。
 const LINKS = {
@@ -65,6 +65,7 @@ module.exports = (req, res) => {
     country,
     tier,
     provider,
+    available: { premium: saleAvailable('premium', provider), pdf: saleAvailable('pdf', provider) },
     links: { premium: LINKS.premium[tier], pdf: LINKS.pdf[tier] },
     labels: { premium: LABELS[provider].premium[tier], pdf: LABELS[provider].pdf[tier] },
     currency: CURRENCY,

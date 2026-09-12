@@ -551,6 +551,7 @@
     "reports.errServer": "We could not take your order. Please try again later.",
     "reports.errUnavailable": "Online payment is not yet available in your region. Please check back soon.",
     "mypage.tplTeaserTitle": "🔒 Continued in the detailed report",
-    "mypage.tplTeaserCta": "See this week’s days to watch, tailwind days and 3 concrete moves →"
+    "mypage.tplTeaserCta": "See this week’s days to watch, tailwind days and 3 concrete moves →",
+    "price.unavailable": "The monthly Premium plan is not on sale yet — online payment is being prepared. The PDF report is available now."
   }
 }

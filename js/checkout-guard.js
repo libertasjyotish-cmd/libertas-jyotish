@@ -24,6 +24,10 @@
     // 決済へ進む。未確認ならマイページの認証へ送り、認証後に決済を続行させる。
     // product は 'premium' か 'pdf'。hint は認証画面に埋める入力済みのアドレス。
     start: function (product, lang, hint) {
+      if (!window.LJCheckout.available(product)) {
+        alert(window.LJCheckout.unavailableMessage());
+        return false;
+      }
       var email = window.LJCheckoutGuard.verifiedEmail();
       if (email) {
         // Android アプリ内は Play 課金（ストア規約）。完了後はページを再読み込みして権限を反映する。

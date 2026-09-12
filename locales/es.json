@@ -551,6 +551,7 @@
     "reports.errServer": "No pudimos registrar el pedido. Inténtalo más tarde.",
     "reports.errUnavailable": "El pago en línea aún no está disponible en tu región. Vuelve pronto.",
     "mypage.tplTeaserTitle": "🔒 Continúa en el informe detallado",
-    "mypage.tplTeaserCta": "Ver los días de atención, los días a favor y 3 acciones concretas →"
+    "mypage.tplTeaserCta": "Ver los días de atención, los días a favor y 3 acciones concretas →",
+    "price.unavailable": "El plan Premium mensual aún no está a la venta: el pago en línea está en preparación. El informe PDF ya está disponible."
   }
 }

@@ -9,6 +9,8 @@
       pdf: 'https://libertajyoti.gumroad.com/l/report-t2'
     },
     labels: { premium: '月額 550円（米ドル決済）', pdf: '買い切り 5,980円（米ドル決済）' },
+    // 取得前・失敗時は月額を開かない（サブスクは KOMOJU 経由のみ販売するため fail-closed）。
+    available: { premium: false, pdf: true },
     approx: null
   };
   var CACHE_KEY = 'lj_checkout_links';
@@ -37,6 +39,15 @@
 
   window.LJCheckout = {
     ready: ready,
+    // その商品を今この訪問者に販売できるか（false なら「準備中」）。
+    available: function (product) {
+      var table = resolved.available || FALLBACK.available;
+      return table[product] !== false;
+    },
+    unavailableMessage: function () {
+      var i18n = window.LJ_I18N;
+      return (i18n && i18n.price && i18n.price.unavailable) || '現在サイト内決済の準備中です。公開までお待ちください。';
+    },
     // product は 'premium' か 'pdf'
     linkFor: function (product) {
       return resolved.links[product] || FALLBACK.links[product];

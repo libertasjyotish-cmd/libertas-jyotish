@@ -551,6 +551,7 @@
     "reports.errServer": "Pesanan tidak dapat diproses. Coba lagi nanti.",
     "reports.errUnavailable": "Pembayaran online belum tersedia di wilayah Anda. Silakan cek kembali nanti.",
     "mypage.tplTeaserTitle": "🔒 Lanjutannya di laporan rinci",
-    "mypage.tplTeaserCta": "Lihat hari yang perlu diwaspadai, hari berangin buah, dan 3 langkah konkret →"
+    "mypage.tplTeaserCta": "Lihat hari yang perlu diwaspadai, hari berangin buah, dan 3 langkah konkret →",
+    "price.unavailable": "Paket Premium bulanan belum dijual — pembayaran online sedang disiapkan. Laporan PDF sudah tersedia."
   }
 }

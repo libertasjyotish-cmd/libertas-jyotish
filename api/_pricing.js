@@ -33,8 +33,15 @@ function resolveProvider(country) {
   return komojuEnabled() && KOMOJU_COUNTRIES.has(country) ? 'komoju' : 'gumroad';
 }
 
+// 月額サブスクは KOMOJU（日本）でのみ販売する。Gumroad で始めると既存会員を後から移せないため、
+// KOMOJU 未接続の国では「準備中」にする。PREMIUM_SALES_OPEN=1 で全事業者に開放できる。
+function saleAvailable(product, provider) {
+  if (product !== 'premium') return true;
+  return provider === 'komoju' || process.env.PREMIUM_SALES_OPEN === '1';
+}
+
 function countryFrom(req) {
   return String(req.headers['x-vercel-ip-country'] || '').trim().toUpperCase() || null;
 }
 
-module.exports = { CURRENCY, AMOUNTS, resolveTier, resolveProvider, countryFrom, komojuEnabled };
+module.exports = { CURRENCY, AMOUNTS, resolveTier, resolveProvider, saleAvailable, countryFrom, komojuEnabled };
