@@ -5,6 +5,9 @@ const { AMOUNTS, resolveTier, countryFrom } = require('./_pricing');
 const { getSession, createSubscription, getSubscription } = require('./_komoju');
 const { setPdfPurchased, setKomojuSubscription, getMemberRecord } = require('./_sheets');
 const { normalizeLang } = require('./_terms');
+const { confirmWebOrder } = require('./_etsy-ledger');
+
+const REPORT_PRODUCTS = new Set(['compat', 'yearly', 'career']);
 
 function redirect(res, location) {
   res.setHeader('Cache-Control', 'no-store');
@@ -47,7 +50,8 @@ async function activateSubscription(session, { amount, lang }) {
 }
 
 module.exports = async (req, res) => {
-  const product = req.query.product === 'premium' ? 'premium' : 'pdf';
+  const product = req.query.product === 'premium' ? 'premium' : REPORT_PRODUCTS.has(req.query.product) ? req.query.product : 'pdf';
+  const orderId = String(req.query.order || '');
   const lang = normalizeLang(req.query.lang || 'ja');
   const sessionId = String(req.query.session_id || '');
   const mypage = `/${lang}/mypage`;
@@ -67,6 +71,14 @@ module.exports = async (req, res) => {
         return redirect(res, `${mypage}?checkout=error`);
       }
       return redirect(res, `${mypage}?c=1`);
+    }
+
+    // 個別鑑定書（サイト直販）: 台帳の行を決済確定にして生成キューへ。コンビニ等の入金待ちは Webhook が進める。
+    if (REPORT_PRODUCTS.has(product)) {
+      const payment = session.payment || {};
+      const id = orderId || (session.metadata && session.metadata.order_id) || '';
+      if (payment.status === 'captured' && id) await confirmWebOrder(id);
+      return redirect(res, `/${lang}/reports?ordered=${payment.status === 'captured' ? 'paid' : 'pending'}`);
     }
 
     // pdf: カードは completed 時点で captured。コンビニ等は authorized（入金待ち）→ Webhook で captured。

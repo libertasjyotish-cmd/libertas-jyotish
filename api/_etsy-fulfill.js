@@ -32,6 +32,9 @@ const REVIEW_PAGE = `
   <p class="disclaimer">Libertas Jyotish · www.libertas-jyotish.com · This report is for self-reflection and entertainment
   and is not medical, legal, financial or psychological advice.</p>`;
 
+// サイト直販（KOMOJU）向け: Etsy レビューの依頼を含めない
+const WEB_THANKS_PAGE = REVIEW_PAGE.replace(/If the reading helped you,[^<]*/, 'If the reading helped you, sharing www.libertas-jyotish.com with a friend helps other seekers find this work.');
+
 // 商品種別: natal（出生図）/ yearly（年間運勢）/ compat（相性）/ career（仕事・適職・金運）。
 // ETSY_LISTING_PRODUCTS="<listing_id>:yearly,<listing_id>:compat,<listing_id>:career" で明示し、無ければ商品名から推定する。
 function listingProducts() {
@@ -223,7 +226,7 @@ async function advanceOrder(order, ctx) {
       return 'in_progress';
     }
 
-    const pdf = await renderReportPdf({ lang: language, report: { astro, chapters }, extraHtml: REVIEW_PAGE });
+    const pdf = await renderReportPdf({ lang: language, report: { astro, chapters }, extraHtml: ledger.isWebOrder(receiptId) ? WEB_THANKS_PAGE : REVIEW_PAGE });
     const filename = order.product === 'yearly' ? `Libertas-Jyotish-Year-Ahead-${order.dob}.pdf`
       : order.product === 'compat' ? `Libertas-Jyotish-Compatibility-${order.dob}-${order.dob_b}.pdf`
       : order.product === 'career' ? `Libertas-Jyotish-Career-${order.dob}.pdf`
@@ -241,7 +244,7 @@ async function advanceOrder(order, ctx) {
       let emailId = '';
       if (ctx.mail) emailId = await mail.sendReport({ to: order.buyer_email, name: order.buyer_name, pdf, filename, meta });
       await save({ status: STATUS.DELIVERED, delivered_at: new Date().toISOString(), email_id: emailId, last_error: '' });
-      if (ctx.mail) await mail.notifyOwner(`Etsy: delivered (receipt ${receiptId})`, summary);
+      if (ctx.mail) await mail.notifyOwner(`${ledger.isWebOrder(receiptId) ? 'Web' : 'Etsy'}: delivered (receipt ${receiptId})`, summary);
       return 'delivered';
     }
 
@@ -269,7 +272,7 @@ async function markShippedIfNeeded(ctx) {
   if (!ctx.client) return 0;
   let count = 0;
   for (const order of ctx.orders) {
-    if (!isFinal(order) || order.shipped === 'true') continue;
+    if (!isFinal(order) || order.shipped === 'true' || ledger.isWebOrder(order.receipt_id)) continue;
     try {
       await ctx.client.markShipped(ctx.shopId, order.receipt_id);
       await ctx.store.upsertOrder(order.receipt_id, { shipped: 'true' });

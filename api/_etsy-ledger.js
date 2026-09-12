@@ -18,8 +18,11 @@ const ORDER_HEADERS = [
 ];
 
 // status の遷移: new → generating → delivered / needs_info / error
+// サイト直販（receipt_id が web- で始まる行）は awaiting_payment で登録し、決済確定で new に進む。
 // needs_info の行は運営者が dob/tob/place/language を補完して status を new に戻すと再処理される
 const STATUS = {
+  AWAITING_PAYMENT: 'awaiting_payment',
+  REFUNDED: 'refunded',
   NEW: 'new',
   GENERATING: 'generating',
   DELIVERED: 'delivered',
@@ -156,4 +159,26 @@ async function listOrders() {
   return rows.map(rowToOrder);
 }
 
-module.exports = { STATUS, ORDER_HEADERS, REPORT_FIELDS, getState, setState, upsertOrder, findOrder, listOrders };
+const WEB_PREFIX = 'web-';
+const isWebOrder = (receiptId) => String(receiptId).startsWith(WEB_PREFIX);
+
+// サイト直販の決済確定: awaiting_payment の行だけ new に進める（return と Webhook の両方から呼ばれても一度だけ）。
+async function confirmWebOrder(orderId) {
+  if (!isWebOrder(orderId)) return 'not_web_order';
+  const order = await findOrder(orderId);
+  if (!order) return 'not_found';
+  if (order.status !== STATUS.AWAITING_PAYMENT) return 'already_confirmed';
+  await upsertOrder(orderId, { status: STATUS.NEW, last_error: '' });
+  return 'confirmed';
+}
+
+// 返金・不正判定: 生成途中なら止め、納品済みなら台帳に記録だけ残す（ダウンロード URL の失効は手動）。
+async function refundWebOrder(orderId) {
+  if (!isWebOrder(orderId)) return 'not_web_order';
+  const order = await findOrder(orderId);
+  if (!order) return 'not_found';
+  await upsertOrder(orderId, { status: STATUS.REFUNDED, last_error: `refunded (was ${order.status})` });
+  return 'refunded';
+}
+
+module.exports = { STATUS, WEB_PREFIX, isWebOrder, confirmWebOrder, refundWebOrder, ORDER_HEADERS, REPORT_FIELDS, getState, setState, upsertOrder, findOrder, listOrders };

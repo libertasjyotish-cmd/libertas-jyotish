@@ -12,6 +12,9 @@ const {
   downgradeMember,
   getMemberRecord
 } = require('./_sheets');
+const { confirmWebOrder, refundWebOrder } = require('./_etsy-ledger');
+
+const REPORT_PRODUCTS = new Set(['compat', 'yearly', 'career']);
 
 module.exports.config = { api: { bodyParser: false } };
 
@@ -48,7 +51,9 @@ function assertWritten(ok) {
 // 買い切り（鑑定書）は payment.* を見る。定期課金の決済は subscription.* 側で扱うので、
 // metadata.product が pdf のものだけを対象にする。
 async function handlePayment(type, payment) {
-  if (metaOf(payment).product !== 'pdf') return 'ignored';
+  const meta = metaOf(payment);
+  if (REPORT_PRODUCTS.has(meta.product)) return handleReportPayment(type, meta.order_id);
+  if (meta.product !== 'pdf') return 'ignored';
   const email = emailOf(payment);
   if (!email) return 'no_email';
   switch (type) {
@@ -59,6 +64,20 @@ async function handlePayment(type, payment) {
     case 'payment.marked.as.fraud':
       assertWritten(await revokePdfPurchase(email));
       return 'pdf_revoked';
+    default:
+      return 'ignored';
+  }
+}
+
+// 個別鑑定書（サイト直販）は台帳の行を進めるだけ。生成・納品は etsy-cron。
+async function handleReportPayment(type, orderId) {
+  if (!orderId) return 'no_order';
+  switch (type) {
+    case 'payment.captured':
+      return `report_${await confirmWebOrder(orderId)}`;
+    case 'payment.refunded':
+    case 'payment.marked.as.fraud':
+      return `report_${await refundWebOrder(orderId)}`;
     default:
       return 'ignored';
   }

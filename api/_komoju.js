@@ -7,12 +7,18 @@ const API_BASE = 'https://komoju.com/api/v1';
 // 日本向けに申請した決済手段。TEST 環境では全手段が有効なので、ここで本番と同じ並びに絞る。
 const PAYMENT_TYPES = {
   pdf: ['credit_card', 'konbini', 'paypay'],
-  premium: ['credit_card'] // 定期課金はカードのみ
+  premium: ['credit_card'], // 定期課金はカードのみ
+  compat: ['credit_card', 'konbini', 'paypay'],
+  yearly: ['credit_card', 'konbini', 'paypay'],
+  career: ['credit_card', 'konbini', 'paypay']
 };
 
 const PRODUCT_NAMES = {
   pdf: { ja: '生涯総合鑑定書（PDF）', en: 'Lifetime Comprehensive Report (PDF)' },
-  premium: { ja: 'プレミアム会員（月額）', en: 'Premium Membership (monthly)' }
+  premium: { ja: 'プレミアム会員（月額）', en: 'Premium Membership (monthly)' },
+  compat: { ja: '相性鑑定書（PDF）', en: 'Compatibility Report (PDF)' },
+  yearly: { ja: '年間運勢鑑定書（PDF）', en: 'Year-Ahead Forecast (PDF)' },
+  career: { ja: '仕事・適職・金運 鑑定書（PDF）', en: 'Career & Wealth Report (PDF)' }
 };
 
 function productName(product, lang) {
@@ -50,7 +56,7 @@ async function komojuFetch(path, { method = 'GET', body } = {}) {
 }
 
 // ホストページのセッションを作る。pdf は都度払い、premium はカード保存のみ（課金はサブスク作成時）。
-function createSession({ product, amount, email, lang, returnUrl, externalCustomerId }) {
+function createSession({ product, amount, email, lang, returnUrl, externalCustomerId, metadata = {} }) {
   const common = {
     currency: 'JPY',
     email,
@@ -58,7 +64,7 @@ function createSession({ product, amount, email, lang, returnUrl, externalCustom
     default_locale: lang === 'ja' ? 'ja' : 'en',
     payment_types: PAYMENT_TYPES[product],
     external_customer_id: externalCustomerId,
-    metadata: { product, email, lang }
+    metadata: { product, email, lang, ...metadata }
   };
   if (product === 'premium') {
     return komojuFetch('/sessions', { method: 'POST', body: { ...common, mode: 'customer' } });
