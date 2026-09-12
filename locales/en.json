@@ -548,6 +548,7 @@
     "reports.orderedPending": "We are waiting for your payment to be confirmed. Report generation starts as soon as it clears, and the PDF is emailed within 24 hours.",
     "reports.errEmail": "Please enter your email address.",
     "reports.errFields": "Some fields are missing or invalid.",
-    "reports.errServer": "We could not take your order. Please try again later."
+    "reports.errServer": "We could not take your order. Please try again later.",
+    "reports.errUnavailable": "Online payment is not yet available in your region. Please check back soon."
   }
 }

@@ -548,6 +548,7 @@
     "reports.orderedPending": "Menunggu konfirmasi pembayaran. Pembuatan dimulai begitu terkonfirmasi dan PDF dikirim dalam 24 jam.",
     "reports.errEmail": "Masukkan alamat email Anda.",
     "reports.errFields": "Ada kolom yang kosong atau tidak valid.",
-    "reports.errServer": "Pesanan tidak dapat diproses. Coba lagi nanti."
+    "reports.errServer": "Pesanan tidak dapat diproses. Coba lagi nanti.",
+    "reports.errUnavailable": "Pembayaran online belum tersedia di wilayah Anda. Silakan cek kembali nanti."
   }
 }

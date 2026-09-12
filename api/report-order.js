@@ -1,7 +1,7 @@
 // 個別鑑定書（相性・年間運勢・仕事）のサイト直販: POST /api/report-order
 // 入力を台帳（Etsy と共通）に awaiting_payment で登録し、決済先の URL を返す。
 //   日本かつ KOMOJU 有効 … KOMOJU ホストページ（metadata.order_id で台帳行に紐づく）
-//   それ以外           … Etsy の該当リスティング（購入・納品は Etsy 側の流れ）
+//   それ以外           … 503 unavailable（サイト内決済が未接続の国・時期）
 // 決済確定（komoju-return / komoju-webhook）で status を new に進めると etsy-cron が生成・納品する。
 const crypto = require('crypto');
 const { AMOUNTS, resolveTier, resolveProvider, countryFrom } = require('./_pricing');
@@ -11,11 +11,6 @@ const ledger = require('./_etsy-ledger');
 
 const PRODUCTS = new Set(['compat', 'yearly', 'career']);
 const RELATIONS = new Set(['romance', 'friend', 'business', 'general']);
-const ETSY_LISTINGS = {
-  compat: 'https://www.etsy.com/listing/4572458099',
-  yearly: 'https://www.etsy.com/listing/4572470899',
-  career: 'https://www.etsy.com/listing/4572487096'
-};
 
 function siteOrigin(req) {
   const proto = String(req.headers['x-forwarded-proto'] || 'https').split(',')[0];
@@ -76,7 +71,7 @@ module.exports = async (req, res) => {
   const country = countryFrom(req);
   const provider = resolveProvider(country);
   if (provider !== 'komoju') {
-    return res.status(200).json({ provider: 'etsy', url: ETSY_LISTINGS[product] });
+    return res.status(503).json({ error: 'unavailable' });
   }
 
   const orderId = `${ledger.WEB_PREFIX}${crypto.randomBytes(8).toString('hex')}`;

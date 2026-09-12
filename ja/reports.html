@@ -304,7 +304,8 @@ window.LJ_I18N = {
       var ERR = {
         email: 'メールアドレスを入力してください。',
         fields: '未入力または形式が正しくない項目があります。',
-        server: '注文を受け付けられませんでした。時間をおいて再度お試しください。'
+        server: '注文を受け付けられませんでした。時間をおいて再度お試しください。',
+        unavailable: '現在この地域ではサイト内決済の準備中です。公開までお待ちください。'
       };
       var params = new URLSearchParams(location.search);
       var ordered = params.get('ordered');
@@ -370,7 +371,8 @@ window.LJ_I18N = {
         fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
           .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
           .then(function (res) {
-            if (!res.ok || !res.j.url) { errBox.textContent = res.j && res.j.error === 'invalid_fields' ? ERR.fields : ERR.server; btn.disabled = false; return; }
+            if (!res.ok || !res.j.url) { var code = res.j && res.j.error;
+              errBox.textContent = code === 'invalid_fields' ? ERR.fields : code === 'unavailable' ? ERR.unavailable : ERR.server; btn.disabled = false; return; }
             location.href = res.j.url;
           })
           .catch(function () { errBox.textContent = ERR.server; btn.disabled = false; });
