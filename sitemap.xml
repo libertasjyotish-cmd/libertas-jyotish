@@ -61,66 +61,6 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/"/>
   </url>
   <url>
-    <loc>https://www.libertas-jyotish.com/ja/legal</loc>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/legal"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/legal"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://www.libertas-jyotish.com/es/legal"/>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://www.libertas-jyotish.com/pt/legal"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar/legal"/>
-    <xhtml:link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id/legal"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/legal"/>
-  </url>
-  <url>
-    <loc>https://www.libertas-jyotish.com/en/legal</loc>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/legal"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/legal"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://www.libertas-jyotish.com/es/legal"/>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://www.libertas-jyotish.com/pt/legal"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar/legal"/>
-    <xhtml:link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id/legal"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/legal"/>
-  </url>
-  <url>
-    <loc>https://www.libertas-jyotish.com/es/legal</loc>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/legal"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/legal"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://www.libertas-jyotish.com/es/legal"/>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://www.libertas-jyotish.com/pt/legal"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar/legal"/>
-    <xhtml:link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id/legal"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/legal"/>
-  </url>
-  <url>
-    <loc>https://www.libertas-jyotish.com/pt/legal</loc>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/legal"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/legal"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://www.libertas-jyotish.com/es/legal"/>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://www.libertas-jyotish.com/pt/legal"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar/legal"/>
-    <xhtml:link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id/legal"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/legal"/>
-  </url>
-  <url>
-    <loc>https://www.libertas-jyotish.com/ar/legal</loc>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/legal"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/legal"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://www.libertas-jyotish.com/es/legal"/>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://www.libertas-jyotish.com/pt/legal"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar/legal"/>
-    <xhtml:link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id/legal"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/legal"/>
-  </url>
-  <url>
-    <loc>https://www.libertas-jyotish.com/id/legal</loc>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/legal"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/legal"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://www.libertas-jyotish.com/es/legal"/>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://www.libertas-jyotish.com/pt/legal"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar/legal"/>
-    <xhtml:link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id/legal"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/legal"/>
-  </url>
-  <url>
     <loc>https://www.libertas-jyotish.com/ja/pdf-purchase</loc>
     <xhtml:link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/pdf-purchase"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/pdf-purchase"/>
@@ -179,5 +119,149 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar/pdf-purchase"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id/pdf-purchase"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/pdf-purchase"/>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/ja/guide</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/ja/guide/indian-astrology</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/ja/guide/free-reading</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/ja/guide/marriage</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/ja/guide/career</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/ja/guide/horoscope</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/ja/guide/dasha</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/ja/guide/nakshatra</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/en/guide</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/en/guide/indian-astrology</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/en/guide/free-reading</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/en/guide/marriage</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/en/guide/career</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/en/guide/horoscope</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/en/guide/dasha</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/en/guide/nakshatra</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/es/guide</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/es/guide/indian-astrology</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/es/guide/free-reading</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/es/guide/marriage</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/es/guide/career</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/es/guide/horoscope</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/es/guide/dasha</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/es/guide/nakshatra</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/pt/guide</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/pt/guide/indian-astrology</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/pt/guide/free-reading</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/pt/guide/marriage</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/pt/guide/career</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/pt/guide/horoscope</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/pt/guide/dasha</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/pt/guide/nakshatra</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/ar/guide</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/ar/guide/indian-astrology</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/ar/guide/free-reading</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/ar/guide/marriage</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/ar/guide/career</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/ar/guide/horoscope</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/ar/guide/dasha</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/ar/guide/nakshatra</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/id/guide</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/id/guide/indian-astrology</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/id/guide/free-reading</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/id/guide/marriage</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/id/guide/career</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/id/guide/horoscope</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/id/guide/dasha</loc>
+  </url>
+  <url>
+    <loc>https://www.libertas-jyotish.com/id/guide/nakshatra</loc>
   </url>
 </urlset>

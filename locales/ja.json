@@ -551,6 +551,7 @@
     "reports.errServer": "注文を受け付けられませんでした。時間をおいて再度お試しください。",
     "reports.errUnavailable": "現在この地域ではサイト内決済の準備中です。公開までお待ちください。",
     "mypage.tplTeaserTitle": "🔒 続きは詳細レポートで",
-    "mypage.tplTeaserCta": "今週の注意日・追い風日と3つの一手を見る →"
+    "mypage.tplTeaserCta": "今週の注意日・追い風日と3つの一手を見る →",
+    "price.unavailable": "月額プレミアム会員はサイト内決済の準備中です。公開までお待ちください（鑑定書PDFは購入できます）。"
   }
 }

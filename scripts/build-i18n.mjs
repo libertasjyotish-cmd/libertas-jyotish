@@ -31,7 +31,7 @@ const BASE_LANG = 'ja';
 // 検索エンジンに見せる正規のオリジン（apex は www へ 308 転送される）。
 const SITE = 'https://www.libertas-jyotish.com';
 // sitemap.xml に載せる（＝検索結果に出したい）ページ。
-const SITEMAP_PAGES = ['index', 'legal', 'pdf-purchase'];
+const SITEMAP_PAGES = ['index', 'pdf-purchase'];
 // 解説記事（data/guide/<lang>.json）。
 //   linked: true    … トップの記事一覧と共通メニューに載せる（サイト内から辿れる）
 //   published: true … 上記に加えて sitemap.xml に載せる（検索エンジンに出す）

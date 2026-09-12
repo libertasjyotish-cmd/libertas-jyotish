@@ -551,6 +551,7 @@
     "reports.errServer": "Não foi possível registrar o pedido. Tente novamente mais tarde.",
     "reports.errUnavailable": "O pagamento online ainda não está disponível na sua região. Volte em breve.",
     "mypage.tplTeaserTitle": "🔒 Continua no relatório detalhado",
-    "mypage.tplTeaserCta": "Ver os dias de atenção, os dias a favor e 3 ações concretas →"
+    "mypage.tplTeaserCta": "Ver os dias de atenção, os dias a favor e 3 ações concretas →",
+    "price.unavailable": "O plano Premium mensal ainda não está à venda: o pagamento online está em preparação. O relatório em PDF já está disponível."
   }
 }

@@ -295,7 +295,8 @@ window.LJ_I18N = {
     pdf: '{price} دفعة واحدة (شامل الضرائب)',
     premiumApprox: 'نحو {price} شهريًا (شامل الضرائب) — يظهر المبلغ النهائي عند الدفع',
     pdfApprox: 'نحو {price} دفعة واحدة (شامل الضرائب) — يظهر المبلغ النهائي عند الدفع',
-    checkoutOnly: 'يظهر المبلغ بعملتك المحلية عند الدفع'
+    checkoutOnly: 'يظهر المبلغ بعملتك المحلية عند الدفع',
+    unavailable: 'خطة بريميوم الشهرية غير متاحة للبيع بعد — الدفع عبر الموقع قيد التجهيز. تقرير PDF متاح الآن.'
   },
   playError: 'تعذّر إتمام عملية الشراء عبر Google Play. يرجى المحاولة مرة أخرى.',
   playManage: 'تُدار الاشتراكات المشتراة داخل التطبيق (الإلغاء وطريقة الدفع) من Google Play ← الاشتراكات. هل تريد الفتح الآن؟',
@@ -766,6 +767,7 @@ if (nextTarget === 'checkout') {
   const verifiedEmail = window.LJCheckoutGuard.verifiedEmail();
   if (verifiedEmail) {
     window.LJCheckout.ready.then(() => {
+      if (!window.LJCheckout.available(product)) { alert(window.LJCheckout.unavailableMessage()); return; }
       window.location.href = window.LJCheckout.checkoutUrlFor(product, verifiedEmail);
     });
     return;
@@ -828,6 +830,7 @@ fetchUserDataAndRender(savedEmail);
 
 // Gumroad 決済ページ呼び出し。未認証なら先にメール認証を求める。
 document.getElementById('btn-upgrade-premium')?.addEventListener('click', () => {
+  if (!window.LJCheckout.available('premium')) { alert(window.LJCheckout.unavailableMessage()); return; }
   if (window.LJCheckoutGuard.verifiedEmail()) {
     window.LJCheckoutGuard.start('premium', 'ar');
     return;
@@ -918,6 +921,7 @@ if (String(window.ljPendingAfterAuth || '').indexOf('checkout:') === 0) {
 const product = window.ljPendingAfterAuth.slice('checkout:'.length);
 window.ljPendingAfterAuth = '';
 window.LJCheckout.ready.then(() => {
+if (!window.LJCheckout.available(product)) { alert(window.LJCheckout.unavailableMessage()); return; }
 window.location.href = window.LJCheckout.checkoutUrlFor(product, email);
 });
 }

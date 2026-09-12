@@ -295,7 +295,8 @@ window.LJ_I18N = {
     pdf: '買い切り {price}（税込）',
     premiumApprox: '月額 約{price}（税込・決済画面で確定）',
     pdfApprox: '買い切り 約{price}（税込・決済画面で確定）',
-    checkoutOnly: '金額はご利用の通貨で決済画面に表示されます'
+    checkoutOnly: '金額はご利用の通貨で決済画面に表示されます',
+    unavailable: '月額プレミアム会員はサイト内決済の準備中です。公開までお待ちください（鑑定書PDFは購入できます）。'
   },
   playError: 'Google Play での購入を完了できませんでした。もう一度お試しください。',
   playManage: '定期購入の管理（解約・支払い方法）は Google Play の「定期購入」画面で行います。開きますか？',
@@ -766,6 +767,7 @@ if (nextTarget === 'checkout') {
   const verifiedEmail = window.LJCheckoutGuard.verifiedEmail();
   if (verifiedEmail) {
     window.LJCheckout.ready.then(() => {
+      if (!window.LJCheckout.available(product)) { alert(window.LJCheckout.unavailableMessage()); return; }
       window.location.href = window.LJCheckout.checkoutUrlFor(product, verifiedEmail);
     });
     return;
@@ -828,6 +830,7 @@ fetchUserDataAndRender(savedEmail);
 
 // Gumroad 決済ページ呼び出し。未認証なら先にメール認証を求める。
 document.getElementById('btn-upgrade-premium')?.addEventListener('click', () => {
+  if (!window.LJCheckout.available('premium')) { alert(window.LJCheckout.unavailableMessage()); return; }
   if (window.LJCheckoutGuard.verifiedEmail()) {
     window.LJCheckoutGuard.start('premium', 'ja');
     return;
@@ -918,6 +921,7 @@ if (String(window.ljPendingAfterAuth || '').indexOf('checkout:') === 0) {
 const product = window.ljPendingAfterAuth.slice('checkout:'.length);
 window.ljPendingAfterAuth = '';
 window.LJCheckout.ready.then(() => {
+if (!window.LJCheckout.available(product)) { alert(window.LJCheckout.unavailableMessage()); return; }
 window.location.href = window.LJCheckout.checkoutUrlFor(product, email);
 });
 }
