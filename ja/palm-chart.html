@@ -81,6 +81,16 @@ body { font-family: 'Noto Serif JP', serif; }
 .pc-hero a.pc-link { color: #ffe08a; font-size: 0.85rem; text-decoration: underline; }
 .pc-note { font-size: 0.8rem; color: #7a6a58; margin-top: 10px; }
 @media (max-width: 640px) {
+  .pc-stack, .pc-stack tbody, .pc-stack tr, .pc-stack td { display: block; width: 100%; }
+  .pc-stack thead { display: none; }
+  .pc-stack tr { margin-bottom: 12px; border: 1px solid rgba(139,107,27,0.35); border-radius: 8px; overflow: hidden; background: rgba(255,252,245,0.7); }
+  .pc-stack td { border: 0; border-top: 1px solid rgba(139,107,27,0.2); padding: 8px 12px; white-space: normal; }
+  .pc-stack td:first-child { border-top: 0; background: rgba(212,175,55,0.15); font-weight: 700; color: #6b4f10; }
+  .pc-stack td::before { content: attr(data-label); display: block; font-size: 0.72rem; color: #8b6b1b; margin-bottom: 2px; }
+  .pc-stack td:first-child::before { display: none; }
+  .pc-body td, .pc-body th { font-size: 0.85rem; }
+}
+@media (max-width: 640px) {
   .pc-hero h1 { font-size: 1.25rem; }
   .pc-body { padding: 22px 16px 30px; }
 }
@@ -172,13 +182,13 @@ body { font-family: 'Noto Serif JP', serif; }
   <span class="tag">SAMPLE 2 · 第 3 章</span>
   <h3>天と地の照合</h3>
   <p>A さん（38 歳・木星ダシャー 3 年目）</p>
-  <div class="pc-table-wrap"><table>
+  <div class="pc-table-wrap"><table class="pc-stack">
   <thead><tr><th>惑星</th><th>出生図での約束</th><th>非利き手（携えてきたもの）</th><th>利き手（今の姿）</th><th>読み</th></tr></thead>
   <tbody>
-  <tr><td>木星</td><td>9 室・強い。導く者としての人生</td><td>木星丘が高く、縦線が明瞭</td><td>縦線は薄い。しかし太陽丘に新しい線</td><td>贈り物は受け取っている。ただ「教える」ではなく「評価される」形で先に現れ始めた。<strong>まだ開封していない部分が大きい贈り物</strong></td></tr>
-  <tr><td>土星</td><td>10 室。責務を通して名を得る</td><td>運命線が手首から一直線</td><td>中央で一度途切れ、外側から再開</td><td>30 代前半にキャリアを自分で切り替えた痕跡。サンチタの台本をクリヤマーナで書き換えた箇所</td></tr>
-  <tr><td>ラーフ</td><td>5 室。創造・表現への渇望</td><td>中央の窪みは浅い</td><td>窪みが深く、細かい線が集まる</td><td>この人生で「自分の表現」を強く求めるようになった。ラーフは渇望の惑星、これは生まれた後で目覚めたもの</td></tr>
-  <tr><td>ケートゥ</td><td>11 室。集団からの解放</td><td>手首線の上に小さな三角</td><td>同じ位置、やや鮮明</td><td>持ち越してきた「群れから離れる」課題。すでに半分ほど手放せている</td></tr>
+  <tr><td data-label="惑星">木星</td><td data-label="出生図での約束">9 室・強い。導く者としての人生</td><td data-label="非利き手（携えてきたもの）">木星丘が高く、縦線が明瞭</td><td data-label="利き手（今の姿）">縦線は薄い。しかし太陽丘に新しい線</td><td data-label="読み">贈り物は受け取っている。ただ「教える」ではなく「評価される」形で先に現れ始めた。<strong>まだ開封していない部分が大きい贈り物</strong></td></tr>
+  <tr><td data-label="惑星">土星</td><td data-label="出生図での約束">10 室。責務を通して名を得る</td><td data-label="非利き手（携えてきたもの）">運命線が手首から一直線</td><td data-label="利き手（今の姿）">中央で一度途切れ、外側から再開</td><td data-label="読み">30 代前半にキャリアを自分で切り替えた痕跡。サンチタの台本をクリヤマーナで書き換えた箇所</td></tr>
+  <tr><td data-label="惑星">ラーフ</td><td data-label="出生図での約束">5 室。創造・表現への渇望</td><td data-label="非利き手（携えてきたもの）">中央の窪みは浅い</td><td data-label="利き手（今の姿）">窪みが深く、細かい線が集まる</td><td data-label="読み">この人生で「自分の表現」を強く求めるようになった。ラーフは渇望の惑星、これは生まれた後で目覚めたもの</td></tr>
+  <tr><td data-label="惑星">ケートゥ</td><td data-label="出生図での約束">11 室。集団からの解放</td><td data-label="非利き手（携えてきたもの）">手首線の上に小さな三角</td><td data-label="利き手（今の姿）">同じ位置、やや鮮明</td><td data-label="読み">持ち越してきた「群れから離れる」課題。すでに半分ほど手放せている</td></tr>
   </tbody></table></div>
 </div>
 
@@ -246,12 +256,12 @@ body { font-family: 'Noto Serif JP', serif; }
 </ul>
 
 <h2>料金</h2>
-<div class="pc-table-wrap"><table class="pc-price">
+<div class="pc-table-wrap"><table class="pc-price pc-stack">
 <thead><tr><th>メニュー</th><th>内容</th><th>料金</th></tr></thead>
 <tbody>
-<tr><td>カル・クンダリ 鑑定書</td><td>両手 ＋ 出生図、全 8 章＋付章、惑星マップ・紋の図解付き</td><td>¥12,800（税込）</td></tr>
-<tr><td>再鑑定（定点観測）</td><td>3〜6 か月後の再撮影。比較図 ＋ 変化の読み ＋ 次の 12 か月更新</td><td>¥5,800（税込）</td></tr>
-<tr><td>月額会員</td><td>日次・週次鑑定に加え、再鑑定を年 2 回まで含む</td><td>会員ページ参照</td></tr>
+<tr><td data-label="メニュー">カル・クンダリ 鑑定書</td><td data-label="内容">両手 ＋ 出生図、全 8 章＋付章、惑星マップ・紋の図解付き</td><td data-label="料金">¥12,800（税込）</td></tr>
+<tr><td data-label="メニュー">再鑑定（定点観測）</td><td data-label="内容">3〜6 か月後の再撮影。比較図 ＋ 変化の読み ＋ 次の 12 か月更新</td><td data-label="料金">¥5,800（税込）</td></tr>
+<tr><td data-label="メニュー">月額会員</td><td data-label="内容">日次・週次鑑定に加え、再鑑定を年 2 回まで含む</td><td data-label="料金">会員ページ参照</td></tr>
 </tbody></table></div>
 
 <h2>よくある質問</h2>
