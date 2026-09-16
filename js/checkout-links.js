@@ -49,6 +49,7 @@
       return (i18n && i18n.price && i18n.price.unavailable) || '現在サイト内決済の準備中です。公開までお待ちください。';
     },
     // product は 'premium' か 'pdf'
+    provider: function () { return resolved.provider || 'gumroad'; },
     linkFor: function (product) {
       return resolved.links[product] || FALLBACK.links[product];
     },

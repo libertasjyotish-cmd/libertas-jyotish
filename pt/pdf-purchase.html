@@ -286,6 +286,9 @@ window.LJ_I18N = {
       // 国判定が返ってきたら価格表示を確定させる
       window.LJCheckout.ready.then(() => {
         document.getElementById('price-label').textContent = pdfPriceLabel();
+        if (window.LJCheckout.provider() === 'komoju') {
+          document.getElementById('btn-proceed-checkout').textContent = '💳 Ir para o pagamento';
+        }
       });
       // 本人確認済みのアドレスは会員の紐づけキーなので、ここで変更させない
       const verifiedEmail = window.LJCheckoutGuard.verifiedEmail();
