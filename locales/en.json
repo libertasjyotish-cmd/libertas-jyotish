@@ -576,6 +576,8 @@
     "contact.sent": "Sent. A confirmation email is on its way; we usually reply within 2 business days.",
     "contact.footer": "Contact",
     "contact.menu": "Contact us",
-    "menu.contact": "Contact us"
+    "menu.contact": "Contact us",
+    "legal.phoneLabel": "Phone",
+    "legal.phone": "+81 70-8465-8339 (weekdays 10:00–18:00 JST; email or the contact form is preferred)"
   }
 }
