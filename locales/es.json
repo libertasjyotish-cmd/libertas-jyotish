@@ -578,6 +578,7 @@
     "contact.menu": "Contacto",
     "menu.contact": "Contacto",
     "legal.phoneLabel": "Teléfono",
-    "legal.phone": "+81 70-8465-8339 (días laborables 10:00–18:00 JST; se prefiere el correo o el formulario de contacto)"
+    "legal.phone": "+81 70-8465-8339 (días laborables 10:00–18:00 JST; se prefiere el correo o el formulario de contacto)",
+    "pdf-purchase.proceedKomoju": "💳 Ir al pago"
   }
 }

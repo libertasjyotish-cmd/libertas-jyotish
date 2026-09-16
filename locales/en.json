@@ -578,6 +578,7 @@
     "contact.menu": "Contact us",
     "menu.contact": "Contact us",
     "legal.phoneLabel": "Phone",
-    "legal.phone": "+81 70-8465-8339 (weekdays 10:00–18:00 JST; email or the contact form is preferred)"
+    "legal.phone": "+81 70-8465-8339 (weekdays 10:00–18:00 JST; email or the contact form is preferred)",
+    "pdf-purchase.proceedKomoju": "💳 Continue to payment"
   }
 }
