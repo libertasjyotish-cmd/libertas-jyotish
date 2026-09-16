@@ -579,6 +579,8 @@
     "menu.contact": "Contato",
     "legal.phoneLabel": "Telefone",
     "legal.phone": "+81 70-8465-8339 (dias úteis 10:00–18:00 JST; preferimos e-mail ou o formulário de contato)",
-    "pdf-purchase.proceedKomoju": "💳 Ir para o pagamento"
+    "pdf-purchase.proceedKomoju": "💳 Ir para o pagamento",
+    "legal.payTimingLabel": "Prazo de pagamento",
+    "legal.payTiming": "Cartão de crédito: cobrado imediatamente na compra. Para métodos com prazo de pagamento (p. ex. loja de conveniência ou pagamento móvel), pague até o prazo exibido na tela de pagamento (em geral, 3 dias). A assinatura mensal é cobrada na adesão e depois automaticamente em cada data de renovação mensal."
   }
 }
