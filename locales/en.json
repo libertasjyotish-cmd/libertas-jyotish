@@ -579,6 +579,8 @@
     "menu.contact": "Contact us",
     "legal.phoneLabel": "Phone",
     "legal.phone": "+81 70-8465-8339 (weekdays 10:00–18:00 JST; email or the contact form is preferred)",
-    "pdf-purchase.proceedKomoju": "💳 Continue to payment"
+    "pdf-purchase.proceedKomoju": "💳 Continue to payment",
+    "legal.payTimingLabel": "Payment timing",
+    "legal.payTiming": "Credit card: charged immediately upon purchase. For methods with a payment deadline (e.g. convenience store or mobile payment), please pay by the deadline shown on the payment screen (generally within 3 days). Monthly membership is charged on sign-up and then automatically on each monthly renewal date."
   }
 }

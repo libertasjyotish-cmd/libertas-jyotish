@@ -579,6 +579,8 @@
     "menu.contact": "Hubungi kami",
     "legal.phoneLabel": "Telepon",
     "legal.phone": "+81 70-8465-8339 (hari kerja 10:00–18:00 JST; email atau formulir kontak lebih disukai)",
-    "pdf-purchase.proceedKomoju": "💳 Lanjut ke pembayaran"
+    "pdf-purchase.proceedKomoju": "💳 Lanjut ke pembayaran",
+    "legal.payTimingLabel": "Waktu pembayaran",
+    "legal.payTiming": "Kartu kredit: ditagih segera saat pembelian. Untuk metode dengan batas waktu pembayaran (misalnya minimarket atau pembayaran seluler), bayar sebelum batas waktu yang ditampilkan di layar pembayaran (umumnya dalam 3 hari). Keanggotaan bulanan ditagih saat pendaftaran, lalu otomatis pada setiap tanggal perpanjangan bulanan."
   }
 }
