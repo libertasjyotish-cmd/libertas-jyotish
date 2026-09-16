@@ -576,6 +576,8 @@
     "contact.sent": "Enviado. Um e-mail de confirmação foi enviado; respondemos em 2 dias úteis.",
     "contact.footer": "Contato",
     "contact.menu": "Contato",
-    "menu.contact": "Contato"
+    "menu.contact": "Contato",
+    "legal.phoneLabel": "Telefone",
+    "legal.phone": "+81 70-8465-8339 (dias úteis 10:00–18:00 JST; preferimos e-mail ou o formulário de contato)"
   }
 }
