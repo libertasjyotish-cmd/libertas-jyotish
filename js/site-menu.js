@@ -8,7 +8,7 @@
     menu: {
       top: 'トップ', free: '無料診断', about: 'Libertas Jyotishとは',
       report: '完全鑑定書（買い切り）', calendar: '年間運勢カレンダー', calendarNote: '準備中',
-      mypage: '会員マイページ', legal: '特定商取引法・利用規約',
+      mypage: '会員マイページ', legal: '特定商取引法・利用規約', contact: 'お問い合わせ',
       toggleLabel: 'メニュー', navLabel: 'サイトメニュー'
     }
   };
@@ -37,7 +37,8 @@
   LINKS.push(
     { divider: true },
     { href: home + '/mypage', label: t.mypage },
-    { href: home + '/legal', label: t.legal }
+    { href: home + '/legal', label: t.legal },
+    { href: home + '/contact', label: t.contact }
   );
 
   function currentPath() {

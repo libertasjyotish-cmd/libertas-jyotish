@@ -163,4 +163,4 @@ async function notifyOwner(subject, lines) {
   });
 }
 
-module.exports = { sendReport, sendNeedsInfo, notifyOwner, deliveryText, needsInfoText, LANGUAGE_NAMES };
+module.exports = { send, sendReport, sendNeedsInfo, notifyOwner, deliveryText, needsInfoText, LANGUAGE_NAMES };
