@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お問い合わせ | Libertas Jyotish</title>
+  <meta name="description" content="Libertas Jyotish へのお問い合わせフォーム。ご注文・決済・解約・アカウントに関するご質問はこちらから。">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://www.libertas-jyotish.com/ja/contact">
+  <link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/contact">
+<link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/contact">
+<link rel="alternate" hreflang="es" href="https://www.libertas-jyotish.com/es/contact">
+<link rel="alternate" hreflang="pt" href="https://www.libertas-jyotish.com/pt/contact">
+<link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar/contact">
+<link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id/contact">
+<link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/contact">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0c1a1f">
+  <link rel="icon" type="image/png" href="/img/libertas-logo.png">
+  <link rel="apple-touch-icon" href="/img/libertas-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --color-gold-light: #FDE047;
+      --color-gold-main: #D4AF37;
+      --color-gold-dark: #8B6B1B;
+      --color-text-dark: #2C221E;
+      --font-en: 'Cinzel', serif;
+      --font-ja: 'Noto Serif JP', serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-ja);
+      color: var(--color-text-dark);
+      line-height: 1.8;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-color: #0c1a1f;
+      display: flex; flex-direction: column;
+    }
+    .site-header {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+      background: rgba(12, 26, 31, 0.92);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(139, 107, 27, 0.3);
+      padding: 12px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .main-section {
+      position: relative; flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 100px 20px 60px;
+      background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");
+      background-size: cover; background-position: center; background-attachment: fixed;
+    }
+    .contact-container {
+      position: relative; z-index: 2; width: 100%; max-width: 620px;
+      background-image:
+        radial-gradient(circle at 50% 25%, rgba(255, 253, 245, 0.98) 0%, rgba(245, 233, 208, 0.95) 55%, rgba(220, 200, 162, 0.96) 100%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.05) 100%);
+      background-blend-mode: overlay, normal;
+      border-radius: 14px;
+      border: 1px solid rgba(184, 142, 60, 0.65);
+      outline: 1px solid rgba(212, 175, 55, 0.35); outline-offset: -7px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75), 0 0 20px rgba(212, 175, 55, 0.18), inset 0 0 35px rgba(139, 90, 43, 0.28), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+      padding: 45px 35px 40px; margin-bottom: 30px;
+    }
+    h1 { font-size: 1.5rem; margin-bottom: 10px; text-align: center; }
+    .lead { font-size: 0.9rem; color: #5A4E48; margin-bottom: 22px; text-align: center; }
+    .info { font-size: 0.85rem; color: #5A4E48; background: rgba(255, 252, 245, 0.7); border: 1px dashed rgba(139, 107, 27, 0.4); border-radius: 8px; padding: 12px 14px; margin-bottom: 24px; }
+    .info a { color: var(--color-gold-dark); }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; }
+    input, select, textarea {
+      width: 100%; padding: 11px 14px;
+      background-color: rgba(255, 252, 245, 0.85);
+      border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px;
+      font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none;
+      box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.12);
+    }
+    textarea { min-height: 160px; resize: vertical; }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--color-gold-dark);
+      box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.15), 0 0 8px rgba(212, 175, 55, 0.3);
+      background-color: #FFFDF9;
+    }
+    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    .submit-btn {
+      width: 100%; padding: 15px 28px; font-size: 1.05rem; font-weight: 600; font-family: var(--font-ja); color: #FFFDF9;
+      background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%); border: none; border-radius: 8px; cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4); transition: transform 0.2s;
+    }
+    .submit-btn:hover { transform: translateY(-1px); }
+    .submit-btn[disabled] { opacity: 0.6; cursor: wait; }
+    .note { font-size: 0.78rem; color: #7a6a58; margin-top: 12px; }
+    .note a { color: var(--color-gold-dark); }
+    #result-box { margin-top: 20px; display: none; padding: 14px; border-radius: 8px; font-size: 0.9rem; }
+    #result-box.ok { background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(139, 107, 27, 0.4); color: var(--color-gold-dark); font-weight: 600; }
+    #result-box.err { background: rgba(180, 60, 40, 0.1); border: 1px solid rgba(180, 60, 40, 0.4); color: #8a3a2a; }
+
+    .site-footer { width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3); padding: 24px 20px; text-align: center; position: relative; z-index: 10; }
+    .footer-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+    .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
+    .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
+  </style>
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/rtl.css">
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'ja',
+  menu: {
+    top: 'トップ',
+    free: '無料診断',
+    about: 'Libertas Jyotishとは',
+    report: '完全鑑定書（買い切り）',
+    calendar: '年間運勢カレンダー',
+    calendarNote: '準備中',
+    mypage: '会員マイページ',
+    legal: '特定商取引法・利用規約',
+    contact: 'お問い合わせ',
+    toggleLabel: 'メニュー',
+    navLabel: 'サイトメニュー'
+  },
+  price: {
+    premium: '月額 {price}（税込）',
+    pdf: '買い切り {price}（税込）',
+    premiumApprox: '月額 約{price}（税込・決済画面で確定）',
+    pdfApprox: '買い切り 約{price}（税込・決済画面で確定）',
+    checkoutOnly: '金額はご利用の通貨で決済画面に表示されます',
+    unavailable: '月額プレミアム会員はサイト内決済の準備中です。公開までお待ちください（鑑定書PDFは購入できます）。'
+  },
+  playError: 'Google Play での購入を完了できませんでした。もう一度お試しください。',
+  playManage: '定期購入の管理（解約・支払い方法）は Google Play の「定期購入」画面で行います。開きますか？',
+  guide: {
+    hub: '/ja/guide',
+    hubLabel: "解説記事一覧",
+    intro: '/ja/guide/indian-astrology',
+    introLabel: "インド占星術とは",
+    groupLabel: ""
+  }
+};
+</script>
+<script defer src="/js/site-menu.js"></script>
+</head>
+<body>
+
+  <header class="site-header" data-site-header></header>
+
+  <section class="main-section">
+    <div class="contact-container">
+      <h1>お問い合わせ</h1>
+      <p class="lead">ご注文・決済・解約・会員ページに関するご質問は、下記フォームからお送りください。通常2営業日以内にメールでご返信いたします。</p>
+      <div class="info">メールでのお問い合わせも受け付けています: <a href="mailto:info@libertas-jyotish.com">info@libertas-jyotish.com</a>（24時間受付）。運営者情報は<a href="/ja/legal">特定商取引法に基づく表記</a>をご覧ください。</div>
+
+      <form id="contact-form" novalidate>
+        <div class="form-group"><label for="c-name">お名前（任意）</label><input type="text" id="c-name" name="name" maxlength="80" autocomplete="name"></div>
+        <div class="form-group"><label for="c-email">メールアドレス（必須）</label><input type="email" id="c-email" name="email" maxlength="200" required autocomplete="email"></div>
+        <div class="form-group"><label for="c-topic">お問い合わせ種別</label>
+          <select id="c-topic" name="topic">
+            <option value="order">鑑定書・ご注文について</option>
+            <option value="payment">お支払い・領収書について</option>
+            <option value="cancel">解約・返金について</option>
+            <option value="account">会員ページ・ログインについて</option>
+            <option value="other">その他</option>
+          </select>
+        </div>
+        <div class="form-group"><label for="c-order">注文番号・ご購入メールアドレス（任意）</label><input type="text" id="c-order" name="orderId" maxlength="80"></div>
+        <div class="form-group"><label for="c-message">お問い合わせ内容（必須）</label><textarea id="c-message" name="message" maxlength="4000" required></textarea></div>
+        <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+        <button type="submit" class="submit-btn" id="c-submit">送信する</button>
+        <p class="note">送信いただいた内容は、お問い合わせ対応のためにのみ利用します（<a href="/ja/legal#privacy">プライバシーポリシー</a>）。</p>
+      </form>
+      <div id="result-box" role="status"></div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-links"><a href="/ja/legal">特定商取引法に基づく表記</a>
+<a href="/ja/legal#terms">利用規約</a>
+<a href="/ja/legal#privacy">プライバシーポリシー</a>
+<a href="/ja/legal#refund">返金ポリシー</a>
+<a href="/ja/contact">お問い合わせ</a></div>
+    <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var form = document.getElementById('contact-form');
+      var box = document.getElementById('result-box');
+      var btn = document.getElementById('c-submit');
+      var T = {
+        errEmail: 'メールアドレスの形式が正しくありません。',
+        errMessage: 'お問い合わせ内容を10文字以上でご記入ください。',
+        errServer: '送信に失敗しました。時間をおいて再度お試しいただくか、info@libertas-jyotish.com へ直接メールしてください。',
+        sent: '送信しました。確認メールをお送りしましたので、ご確認ください。通常2営業日以内にご返信いたします。'
+      };
+      function show(cls, text) { box.className = cls; box.textContent = text; box.style.display = 'block'; }
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var email = document.getElementById('c-email').value.trim();
+        var message = document.getElementById('c-message').value.trim();
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return show('err', T.errEmail);
+        if (message.length < 10) return show('err', T.errMessage);
+        btn.disabled = true;
+        box.style.display = 'none';
+        fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: document.getElementById('c-name').value.trim(),
+            email: email,
+            topic: document.getElementById('c-topic').value,
+            orderId: document.getElementById('c-order').value.trim(),
+            message: message,
+            website: form.elements.website.value,
+            lang: 'ja',
+            page: location.href
+          })
+        }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, data: d }; }); })
+          .then(function (res) {
+            if (!res.ok) throw new Error(res.data.error || 'server');
+            form.reset();
+            show('ok', T.sent);
+          })
+          .catch(function () { show('err', T.errServer); })
+          .then(function () { btn.disabled = false; });
+      });
+    })();
+  </script>
+</body>
+</html>

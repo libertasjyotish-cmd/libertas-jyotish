@@ -134,6 +134,7 @@ ${extra}`;
 <a href="/${LANG}/legal#terms">${esc(ui.footerTerms)}</a>
 <a href="/${LANG}/legal#privacy">${esc(ui.footerPrivacy)}</a>
 <a href="/${LANG}/legal#refund">${esc(ui.footerRefund)}</a>
+<a href="/${LANG}/contact">${esc(ui.footerContact)}</a>
 <p class="copyright">&copy; ${SITE_NAME} All Rights Reserved.</p>
 </footer>`;
   }
