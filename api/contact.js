@@ -80,7 +80,11 @@ module.exports = async (req, res) => {
     <p style="font-size:13px; color:#7a6a58; margin-top:16px;">${esc(ack.label)}:</p>
     <pre style="white-space:pre-wrap; font-family:inherit; font-size:13px; background:#fff; border:1px solid rgba(139,107,27,0.25); border-radius:8px; padding:12px;">${esc(message)}</pre>
   </div>`;
-  send({ to: email, subject: ack.subject, html: ackHtml }).catch((err) => console.error('contact: ack mail failed:', err.message));
+  try {
+    await send({ to: email, subject: ack.subject, html: ackHtml });
+  } catch (err) {
+    console.error('contact: ack mail failed:', err.message);
+  }
 
   return res.status(200).json({ ok: true });
 };
