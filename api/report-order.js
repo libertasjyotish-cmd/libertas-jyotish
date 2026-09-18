@@ -3,11 +3,13 @@
 //   日本かつ KOMOJU 有効 … KOMOJU ホストページ（metadata.order_id で台帳行に紐づく）
 //   それ以外           … 503 unavailable（サイト内決済が未接続の国・時期）
 // 決済確定（komoju-return / komoju-webhook）で status を new に進めると etsy-cron が生成・納品する。
+// オーナー検証用: Authorization: Bearer <CRON_SECRET> ＋ test:true で決済を飛ばし、確定済み（new / awaiting_photos）で登録する。
 const crypto = require('crypto');
 const { AMOUNTS, resolveTier, resolveProvider, countryFrom } = require('./_pricing');
 const { createSession } = require('./_komoju');
 const { normalizeLang } = require('./_terms');
 const ledger = require('./_etsy-ledger');
+const storage = require('./_etsy-storage');
 
 const PRODUCTS = new Set(['compat', 'yearly', 'career', 'palm']);
 const HANDS = new Set(['right', 'left']);
@@ -45,6 +47,14 @@ function person(body, suffix) {
   return { dob, tob, tobUnknown, place, errors };
 }
 
+function isOwnerTest(req, body) {
+  const secret = process.env.CRON_SECRET || '';
+  const supplied = String(req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+  if (!secret || !supplied || supplied.length !== secret.length) return false;
+  if (!crypto.timingSafeEqual(Buffer.from(supplied), Buffer.from(secret))) return false;
+  return body.test === true || body.test === 'true';
+}
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
   res.setHeader('Cache-Control', 'no-store');
@@ -74,15 +84,39 @@ module.exports = async (req, res) => {
   }
   if (errors.length) return res.status(400).json({ error: 'invalid_fields', fields: errors });
 
+  const ownerTest = isOwnerTest(req, body);
   const country = countryFrom(req);
   const provider = resolveProvider(country);
-  if (provider !== 'komoju') {
+  if (!ownerTest && provider !== 'komoju') {
     return res.status(503).json({ error: 'unavailable' });
   }
 
-  const orderId = `${ledger.WEB_PREFIX}${crypto.randomBytes(8).toString('hex')}`;
+  const orderId = `${ledger.WEB_PREFIX}${ownerTest ? 'test-' : ''}${crypto.randomBytes(8).toString('hex')}`;
   const amount = AMOUNTS[product][resolveTier(country)];
   try {
+    if (ownerTest) {
+      await ledger.upsertOrder(orderId, {
+        product,
+        relation,
+        hand,
+        delivery: 'email',
+        buyer_email: email,
+        buyer_name: name,
+        personalization: `web:${product}:test`,
+        dob: a.dob,
+        tob: a.tob,
+        tob_unknown: a.tobUnknown ? 'true' : 'false',
+        place: a.place,
+        dob_b: b ? b.dob : '',
+        tob_b: b ? b.tob : '',
+        tob_unknown_b: b && b.tobUnknown ? 'true' : 'false',
+        place_b: b ? b.place : '',
+        language: lang,
+        status: product === 'palm' ? ledger.STATUS.AWAITING_PHOTOS : ledger.STATUS.NEW
+      });
+      const uploadUrl = product === 'palm' ? storage.uploadUrl(orderId, lang) : null;
+      return res.status(200).json({ provider: 'test', order: orderId, uploadUrl });
+    }
     await ledger.upsertOrder(orderId, {
       product,
       relation,
