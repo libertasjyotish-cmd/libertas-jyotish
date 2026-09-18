@@ -389,12 +389,13 @@ module.exports = async function handler(req, res) {
                 ? [process.env.GEMINI_MODEL]
                 : await listGeminiModels(geminiApiKey);
 
+              const previous = previousReadingSummary(sheetsProfile && sheetsProfile.lastResult);
               if (isPaid) {
                 // 有料は出力量が多く1回の生成が長い。基本鑑定とプレミアム詳細を別プロンプトに割って
                 // 同時に生成することで、実行時間を最長のセクション1本分に抑える。
                 const [base, premium] = await Promise.all([
-                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'base'), 40000, startedAt + FUNCTION_BUDGET_MS),
-                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'premium'), 40000, startedAt + FUNCTION_BUDGET_MS)
+                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'base', previous), 40000, startedAt + FUNCTION_BUDGET_MS),
+                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'premium', previous), 40000, startedAt + FUNCTION_BUDGET_MS)
                 ]);
 
                 const baseViolations = base.json ? findViolations(JSON.stringify(base.json), finalLang, { allowDates: true }) : [];
@@ -413,7 +414,7 @@ module.exports = async function handler(req, res) {
                   fallbackReason = base.reason || 'gemini_error';
                 }
               } else {
-                const result = await generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, false, finalLang), 45000, startedAt + FUNCTION_BUDGET_MS);
+                const result = await generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, false, finalLang, 'all', previous), 45000, startedAt + FUNCTION_BUDGET_MS);
                 const violations = result.json ? findViolations(JSON.stringify(result.json), finalLang, { allowDates: true }) : [];
                 if (violations.length) {
                   console.warn('Daily reading contains banned expressions:', violations.join(', '));
@@ -622,9 +623,75 @@ function extractPlanets(prokeralaData) {
     // planet-position はナクシャトラを返さないため、黄経（13°20′刻み）から求める。
     nakshatra: p.nakshatra?.name || (typeof p.nakshatra === 'string' ? p.nakshatra : '') || nakshatraFromLongitude(p.longitude),
     degree: p.degree,
+    longitude: typeof p.longitude === 'number' ? p.longitude : undefined,
     house: p.position || p.house,
     is_retrograde: p.is_retrograde
   }));
+}
+
+const SIGN_ORDER_JA = ['牡羊座', '牡牛座', '双子座', '蟹座', '獅子座', '乙女座', '天秤座', '蠍座', '射手座', '山羊座', '水瓶座', '魚座'];
+const VARA_LORDS_JA = ['太陽', '月', '火星', '水星', '木星', '金星', '土星'];
+const TITHI_NAMES = ['プラティパダ', 'ドヴィティーヤ', 'トリティーヤ', 'チャトゥルティー', 'パンチャミー', 'シャシュティー', 'サプタミー', 'アシュタミー', 'ナヴァミー', 'ダシャミー', 'エーカーダシー', 'ドヴァーダシー', 'トラヨーダシー', 'チャトゥルダシー'];
+
+function signIndex(sign) {
+  return SIGN_ORDER_JA.indexOf(toJapaneseSign(sign));
+}
+
+// 星座 from から数えて星座 to が何番目のハウスか（1〜12）
+function houseFrom(fromSign, toSign) {
+  const a = signIndex(fromSign);
+  const b = signIndex(toSign);
+  if (a < 0 || b < 0) return null;
+  return ((b - a + 12) % 12) + 1;
+}
+
+// その日にしか成り立たない要素をコード側で確定させ、鑑定の軸として渡す。
+// （月の在住ハウス・重なる出生天体・曜日・ティティ・月の移動タイミング）
+function dailyFactors(natal, transit, todayJst) {
+  if (!transit.length) return null;
+  const tMoon = transit.find(p => p.name === 'Moon');
+  if (!tMoon || !tMoon.sign) return null;
+  const nMoon = natal.find(p => p.name === 'Moon') || {};
+  const nAsc = natal.find(p => p.name === 'Ascendant') || {};
+  const tSun = transit.find(p => p.name === 'Sun') || {};
+
+  const houseFromLagna = nAsc.sign ? houseFrom(nAsc.sign, tMoon.sign) : null;
+  const houseFromMoon = nMoon.sign ? houseFrom(nMoon.sign, tMoon.sign) : null;
+  const conjunct = natal.filter(p => p.name !== 'Ascendant' && p.sign && signIndex(p.sign) === signIndex(tMoon.sign)).map(p => p.name);
+  const opposite = natal.filter(p => p.name !== 'Ascendant' && p.sign && signIndex(p.sign) === (signIndex(tMoon.sign) + 6) % 12).map(p => p.name);
+
+  const jstDate = new Date(`${todayJst}T00:00:00+09:00`);
+  const varaLord = VARA_LORDS_JA[jstDate.getUTCDay()];
+
+  let tithi = null;
+  if (typeof tMoon.longitude === 'number' && typeof tSun.longitude === 'number') {
+    const diff = ((tMoon.longitude - tSun.longitude) % 360 + 360) % 360;
+    const n = Math.floor(diff / 12);
+    const paksha = n < 15 ? 'シュクラ（白分・満ちる月）' : 'クリシュナ（黒分・欠ける月）';
+    const idx = n % 15;
+    const name = idx === 14 ? (n < 15 ? 'プールニマー（満月）' : 'アマーヴァスヤー（新月）') : TITHI_NAMES[idx];
+    tithi = `${paksha} ${name}`;
+  }
+
+  let moonMove = null;
+  if (typeof tMoon.degree === 'number') {
+    const remainingDays = (30 - tMoon.degree) / 13.2;
+    const nextIdx = (signIndex(tMoon.sign) + 1) % 12;
+    moonMove = { remainingDays: Math.round(remainingDays * 10) / 10, nextSign: SIGN_ORDER_JA[nextIdx], nextHouseFromLagna: nAsc.sign ? houseFrom(nAsc.sign, SIGN_ORDER_JA[nextIdx]) : null };
+  }
+
+  const slow = transit.filter(p => ['Saturn', 'Jupiter', 'Rahu', 'Ketu'].includes(p.name) && p.sign).map(p => `${p.name}: ${toJapaneseSign(p.sign)}${nAsc.sign ? `（第${houseFrom(nAsc.sign, p.sign)}ハウス）` : ''}${p.is_retrograde ? ' 逆行' : ''}`);
+  const fast = transit.filter(p => ['Sun', 'Mercury', 'Venus', 'Mars'].includes(p.name) && p.sign).map(p => `${p.name}: ${toJapaneseSign(p.sign)}${nAsc.sign ? `（第${houseFrom(nAsc.sign, p.sign)}ハウス）` : ''}${p.is_retrograde ? ' 逆行' : ''}`);
+
+  return { houseFromLagna, houseFromMoon, conjunct, opposite, varaLord, tithi, moonMove, slow, fast };
+}
+
+// 前回の鑑定で扱ったテーマ（冒頭）を渡し、同じ言い当てを繰り返させない。
+function previousReadingSummary(last) {
+  if (!last || !last.reading_date) return null;
+  const text = last.free_reading && last.free_reading.horoscope;
+  if (!text) return null;
+  return { date: last.reading_date, head: String(text).slice(0, 120) };
 }
 
 // 詳細運勢は2つの見出しで構成し、見出しの前で必ず改行させる（画面側は white-space: pre-line で表示）。
@@ -651,7 +718,7 @@ const READING_STYLE = `
 `;
 
 // section: 'all'（既定）/ 'base'（プレミアム詳細以外）/ 'premium'（プレミアム詳細のみ）
-function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section = 'all') {
+function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section = 'all', previous = null) {
   const planetList = extractPlanets(prokeralaData);
   const ascRaw = prokeralaData.data?.ascendant || planetList.find(p => p.name === 'Ascendant') || {};
   const outputLanguage = OUTPUT_LANGUAGE[lang] || OUTPUT_LANGUAGE.ja;
@@ -673,6 +740,24 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
   const transitPlanets = extractPlanets(transitData);
   const todayJst = toJstIsoString(new Date()).slice(0, 10);
   const transitMoon = transitPlanets.find(p => p.name === 'Moon') || {};
+  const daily = dailyFactors(planetList, transitPlanets, todayJst);
+
+  const dailyBlock = daily ? `
+  【本日 ${todayJst} 固有の要素（鑑定の軸。必ずここから今日の悩みテーマを選ぶ）】
+  - トランジットの月: ${signFor(transitMoon.sign, lang)}${daily.houseFromLagna ? ` ＝ ラグナから第${daily.houseFromLagna}ハウス` : ''}${daily.houseFromMoon ? `、出生の月から第${daily.houseFromMoon}ハウス（チャンドラ・ラグナ）` : ''}
+  - 今日の月のナクシャトラ: ${nakshatraFor(transitMoon.nakshatra, lang) || '不明'}
+  - 月が重なる出生天体: ${daily.conjunct.length ? daily.conjunct.join('・') : 'なし'} ／ 月と対向する出生天体: ${daily.opposite.length ? daily.opposite.join('・') : 'なし'}
+  - 曜日の支配星（ヴァーラ）: ${daily.varaLord}${daily.tithi ? `\n  - ティティ: ${daily.tithi}` : ''}${daily.moonMove ? `\n  - 月の次の移動: 約${daily.moonMove.remainingDays}日後に ${signFor(daily.moonMove.nextSign, lang)}${daily.moonMove.nextHouseFromLagna ? `（第${daily.moonMove.nextHouseFromLagna}ハウス）` : ''} へ` : ''}
+  - 速い天体: ${daily.fast.join('、') || '不明'}
+  - 遅い天体（背景として1文まで）: ${daily.slow.join('、') || '不明'}
+
+  【日替わりの規則】
+  - 「本日の運勢」の悩みテーマは、トランジットの月が在住するハウス（ラグナから第${daily.houseFromLagna || '?'}ハウス）が示す生活領域と、月が重なる出生天体から選ぶ。土星・木星・ラーフ・ケートゥやダシャーは背景説明に留め、テーマの主役にしない。
+  - 今日の月のナクシャトラと曜日の支配星の性質を、今日の心の状態と「今日ひとつの行動」に必ず反映させる。月が同じハウスに留まる日でも、ナクシャトラと曜日が変わるので言い当ての場面・行動は変える。${previous ? `
+  - 前回（${previous.date}）の鑑定の冒頭:「${previous.head}」。今日は同じ状況描写・同じ行動を繰り返さないこと。月のハウスが変わっていれば生活領域も変える。` : ''}
+  ` : (previous ? `
+  【前回の鑑定】${previous.date}:「${previous.head}」。今日は同じ状況描写・同じ行動を繰り返さないこと。
+  ` : '');
 
   let formatSchema = '';
   if (isPaid && section === 'premium') {
@@ -752,7 +837,8 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
 
   【${todayJst} 現在のトランジット天体配置】
   ${transitPlanets.length ? JSON.stringify(transitPlanets) : '取得できませんでした'}
-  【本日のトランジット月】 ${signFor(transitMoon.sign, lang)} / ナクシャトラ: ${transitMoon.nakshatra || '不明'}
+  【本日のトランジット月】 ${signFor(transitMoon.sign, lang)} / ナクシャトラ: ${nakshatraFor(transitMoon.nakshatra, lang) || '不明'}
+  ${dailyBlock}
 
   【鑑定執筆の基本ガイドライン】
   - 「本日の運勢」「本日受ける星の影響」は、必ず ${todayJst} のトランジット天体配置と出生図の関係（アスペクト・在住ハウス）から導くこと。日付が変われば内容も変わるのが正しい振る舞いです。
