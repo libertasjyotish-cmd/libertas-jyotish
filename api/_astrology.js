@@ -235,7 +235,7 @@ function normalizeDignity(planets, terms) {
         name: p.name,
         sign: p.sign,
         house: p.house,
-        dignity: terms.dignity(dignity, DIGNITY_JA[dignity] || '中立'),
+        dignity: terms.dignity(dignity, DIGNITY_JA[dignity] || DIGNITY_JA.neutral),
         nakshatra: p.nakshatra,
         retrograde: p.retrograde,
         score,
