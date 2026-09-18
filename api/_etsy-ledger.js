@@ -14,14 +14,17 @@ const ORDER_HEADERS = [
   'product', 'relation', 'dob_b', 'tob_b', 'tob_unknown_b', 'place_b',
   'status', 'attempts', 'last_error', 'created_at', 'updated_at', 'delivered_at', 'email_id', 'shipped',
   'pdf_url', 'download_url', 'delivery',
+  'hand', 'photo_right', 'photo_left', 'palm', 'upload_mailed_at', 'photos_deleted_at',
   ...REPORT_FIELDS
 ];
 
 // status の遷移: new → generating → delivered / needs_info / error
 // サイト直販（receipt_id が web- で始まる行）は awaiting_payment で登録し、決済確定で new に進む。
+// 手相×出生図（product=palm）は決済確定後 awaiting_photos で写真を待ち、アップロードで new に進む。
 // needs_info の行は運営者が dob/tob/place/language を補完して status を new に戻すと再処理される
 const STATUS = {
   AWAITING_PAYMENT: 'awaiting_payment',
+  AWAITING_PHOTOS: 'awaiting_photos',
   REFUNDED: 'refunded',
   NEW: 'new',
   GENERATING: 'generating',
@@ -168,7 +171,8 @@ async function confirmWebOrder(orderId) {
   const order = await findOrder(orderId);
   if (!order) return 'not_found';
   if (order.status !== STATUS.AWAITING_PAYMENT) return 'already_confirmed';
-  await upsertOrder(orderId, { status: STATUS.NEW, last_error: '' });
+  const next = order.product === 'palm' ? STATUS.AWAITING_PHOTOS : STATUS.NEW;
+  await upsertOrder(orderId, { status: next, last_error: '' });
   return 'confirmed';
 }
 

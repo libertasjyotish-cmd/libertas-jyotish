@@ -260,7 +260,17 @@ const CHAPTER_TITLE = {
   career_ch4: 'Capítulo 4 — Tu patrón con el dinero (casas 2 y 11, Ashtakavarga)',
   career_ch5: 'Capítulo 5 — Los ciclos de tu vida laboral (Dasha)',
   career_ch6: 'Capítulo 6 — Cuándo se mueve tu carrera (próximos 12 meses)',
-  career_ch7: 'Capítulo 7 — Plan de acción hacia tu vocación'
+  career_ch7: 'Capítulo 7 — Plan de acción hacia tu vocación',
+  palm_summary: 'Tu Kar-Kundali de un vistazo',
+  palm_ch1: 'Capítulo 1 — El plano del alma (lo que dice tu carta natal)',
+  palm_ch2: 'Capítulo 2 — El mapa planetario en tu mano (Navagraha, montes, dedos y líneas)',
+  palm_ch3: 'Capítulo 3 — Cielo y tierra comparados (dónde coinciden o difieren carta y palma)',
+  palm_ch4: 'Capítulo 4 — Marcas sagradas (signos auspiciosos)',
+  palm_ch5: 'Capítulo 5 — Los tres karmas (acumulado, asignado, en creación)',
+  palm_ch6: 'Capítulo 6 — Vínculos, trabajo y decisiones',
+  palm_ch7: 'Capítulo 7 — Los próximos 12 meses',
+  palm_ch8: 'Capítulo 8 — Las manos cambian (una práctica de observación)',
+  palm_ch9: 'Apéndice — Pistas cuando la hora de nacimiento es incierta'
 };
 
 const REASON = {

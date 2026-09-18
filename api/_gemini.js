@@ -50,7 +50,15 @@ async function listGeminiModels(apiKey) {
 // 全モデルを1周しても未生成なら、残り時間をすべて使って主モデルをもう一度試す。
 // deadline（エポックms）を渡すと、その時刻を超える再試行は打ち切る。実行時間の上限がある
 // サーバーレス環境で、応答を返せないまま強制終了（504）になるのを防ぐため。
+// promptText は文字列か { text, images: [{ mimeType, data(base64) }] }（画像入力）。
+function buildParts(promptText) {
+  if (typeof promptText === 'string') return [{ text: promptText }];
+  const images = (promptText.images || []).map((img) => ({ inlineData: { mimeType: img.mimeType, data: img.data } }));
+  return [...images, { text: promptText.text }];
+}
+
 async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadline) {
+  const parts = buildParts(promptText);
   let reason = 'gemini_error';
   const MIN_ATTEMPT_MS = 6000;
   // 生成は正常なら数秒で返る。長引くのは一時的な不調なので、待たずに切り上げて再試行する。
@@ -104,7 +112,7 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [{ role: 'user', parts: [{ text: promptText }] }],
+            contents: [{ role: 'user', parts }],
             generationConfig: { responseMimeType: 'application/json', temperature: 1.0, ...extraConfig }
           })
         }, attemptTimeoutMs);

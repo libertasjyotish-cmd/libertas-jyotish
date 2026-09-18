@@ -260,7 +260,17 @@ const CHAPTER_TITLE = {
   career_ch4: 'Bab 4 — Pola keuangan Anda (rumah 2, 11, dan Ashtakavarga)',
   career_ch5: 'Bab 5 — Siklus kehidupan kerja Anda (Dasha)',
   career_ch6: 'Bab 6 — Kapan karier Anda bergerak (12 bulan ke depan)',
-  career_ch7: 'Bab 7 — Rencana tindakan menuju panggilan Anda'
+  career_ch7: 'Bab 7 — Rencana tindakan menuju panggilan Anda',
+  palm_summary: 'Kar-Kundali Anda sekilas',
+  palm_ch1: 'Bab 1 — Cetak biru jiwa (apa yang dikatakan peta kelahiran Anda)',
+  palm_ch2: 'Bab 2 — Peta planet di tangan Anda (Navagraha, bukit, jari dan garis)',
+  palm_ch3: 'Bab 3 — Langit dan bumi dibandingkan (di mana peta dan telapak sepakat atau berbeda)',
+  palm_ch4: 'Bab 4 — Tanda-tanda suci (pertanda baik)',
+  palm_ch5: 'Bab 5 — Tiga karma (terkumpul, ditetapkan, sedang dibuat)',
+  palm_ch6: 'Bab 6 — Ikatan, pekerjaan dan keputusan',
+  palm_ch7: 'Bab 7 — 12 bulan ke depan',
+  palm_ch8: 'Bab 8 — Tangan berubah (latihan pengamatan)',
+  palm_ch9: 'Lampiran — Petunjuk saat waktu lahir tidak pasti'
 };
 
 const REASON = {

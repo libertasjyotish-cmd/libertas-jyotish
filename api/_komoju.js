@@ -10,7 +10,8 @@ const PAYMENT_TYPES = {
   premium: ['credit_card'], // 定期課金はカードのみ
   compat: ['credit_card', 'konbini', 'paypay'],
   yearly: ['credit_card', 'konbini', 'paypay'],
-  career: ['credit_card', 'konbini', 'paypay']
+  career: ['credit_card', 'konbini', 'paypay'],
+  palm: ['credit_card', 'konbini', 'paypay']
 };
 
 const PRODUCT_NAMES = {
@@ -18,6 +19,7 @@ const PRODUCT_NAMES = {
   premium: { ja: 'プレミアム会員（月額）', en: 'Premium Membership (monthly)' },
   compat: { ja: '相性鑑定書（PDF）', en: 'Compatibility Report (PDF)' },
   yearly: { ja: '年間運勢鑑定書（PDF）', en: 'Year-Ahead Forecast (PDF)' },
+  palm: { ja: '手相×出生図 統合鑑定「カル・クンダリ」（PDF）', en: 'Kar-Kundali: Vedic Palm & Birth Chart Report (PDF)' },
   career: { ja: '仕事・適職・金運 鑑定書（PDF）', en: 'Career & Wealth Report (PDF)' }
 };
 
