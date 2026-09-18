@@ -2,7 +2,7 @@
 // 関数の制限時間内で進められるところまで進めて台帳（Google Sheets）に保存し、次回に続きを行う。
 //   注文取得 → パーソナライズ解析 → 天体計算 → 章を数個ずつ生成 → 揃ったら PDF → Resend → Etsy 注文を完了に更新
 // 台帳は receipt_id ごとに 1 行。再実行しても二重生成・二重送信しない。
-const { fetchReportData, fetchYearlyData, fetchCompatData, fetchCareerData, fetchPalmData } = require('./_astrology');
+const { fetchReportData, fetchYearlyData, fetchCompatData, fetchCareerData, fetchPalmData, setRateLimitDeadline, useEndpointCache, settleEndpointCalls } = require('./_astrology');
 const { listGeminiModels } = require('./_gemini');
 const { CHAPTERS, CHAPTER_IDS, generateChapters } = require('./_report');
 const { YEARLY_CHAPTERS, COMPAT_CHAPTERS, CAREER_CHAPTERS, compatChapterIdsFor } = require('./_report-products');
@@ -227,9 +227,20 @@ async function advanceOrder(order, ctx) {
   const attempts = order.status === STATUS.ERROR ? order.attempts + 1 : Math.max(order.attempts, 1);
   await save({ status: STATUS.GENERATING, attempts, last_error: '' });
 
+  // Prokerala のレスポンスは Blob に逐次保存し（astro_cache）、レート制限で途中終了しても次回は残りだけ取る。
+  const astroCache = parseJson(order.astro) ? null : (await storage.loadJson(order.astro_cache)) || {};
+  const persistAstroCache = async () => {
+    await settleEndpointCalls();
+    if (!Object.keys(astroCache).length) return;
+    const url = await storage.storeAstroCache(receiptId, astroCache);
+    await save({ astro_cache: url });
+    if (order.astro_cache) await ctx.deleteBlobs([order.astro_cache]).catch(() => null);
+  };
+
   try {
     let astro = parseJson(order.astro);
     if (!astro) {
+      useEndpointCache(astroCache);
       const needsInfo = async (place, missingKey) => {
         if (ctx.mail) {
           if (order.buyer_email) await mail.sendNeedsInfo({ to: order.buyer_email, name: order.buyer_name, personalization: order.personalization, missing: [missingKey], notes: [] });
@@ -257,7 +268,9 @@ async function advanceOrder(order, ctx) {
       astro.city = order.place;
       astro.geo_precision = geo.precision;
       if (geo.notice) astro.geo_notice = geo.notice;
-      await save({ astro: JSON.stringify(astro) });
+      useEndpointCache(null);
+      await save({ astro: JSON.stringify(astro), astro_cache: '' });
+      if (order.astro_cache) await ctx.deleteBlobs([order.astro_cache]).catch(() => null);
       ctx.log(`  ${receiptId}: astro ready (${order.product || 'natal'})`);
     }
 
@@ -357,6 +370,12 @@ async function advanceOrder(order, ctx) {
   } catch (err) {
     const message = String(err.message || err).slice(0, 500);
     ctx.log(`  ${receiptId}: failed: ${message}`);
+    useEndpointCache(null);
+    if (err.code === 'prokerala_rate_limited') {
+      await persistAstroCache();
+      await save({ status: STATUS.NEW, attempts: order.attempts, last_error: `pending:${message}` });
+      return 'in_progress';
+    }
     await save({ status: STATUS.ERROR, last_error: message });
     if (ctx.mail && attempts >= MAX_ATTEMPTS) await mail.notifyOwner(`Etsy: gave up (receipt ${receiptId})`, [`buyer: ${order.buyer_name} <${order.buyer_email}>`, `error: ${message}`]);
     return 'error';
@@ -432,6 +451,7 @@ async function runCycle({ deadline, store = ledger, receipts = null, mail: sendM
   const models = generate && analyze ? null : geminiModels();
   const ctx = { deadline, store, mail: sendMail, generate: generate || defaultGenerate(models), analyze: analyze || defaultAnalyze(models), onPdf, storePdf, deleteBlobs, log, client: null, shopId: null, orders: [] };
   const summary = { registered: {}, processed: {}, shipped: 0, uploadLinks: 0, photosDeleted: 0 };
+  setRateLimitDeadline(deadline);
 
   if (!receipts) {
     ({ client: ctx.client, shopId: ctx.shopId } = await connectEtsy(store));

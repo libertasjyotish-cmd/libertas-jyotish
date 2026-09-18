@@ -14,7 +14,7 @@ const ORDER_HEADERS = [
   'product', 'relation', 'dob_b', 'tob_b', 'tob_unknown_b', 'place_b',
   'status', 'attempts', 'last_error', 'created_at', 'updated_at', 'delivered_at', 'email_id', 'shipped',
   'pdf_url', 'download_url', 'delivery',
-  'hand', 'photo_right', 'photo_left', 'palm', 'upload_mailed_at', 'photos_deleted_at',
+  'hand', 'photo_right', 'photo_left', 'palm', 'upload_mailed_at', 'photos_deleted_at', 'astro_cache',
   ...REPORT_FIELDS
 ];
 

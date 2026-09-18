@@ -100,19 +100,69 @@ async function getAccessToken() {
 }
 
 // 失敗したエンドポイントがあっても鑑定書全体を落とさない（該当章だけ省略する）
-// レート制限（429）は Retry-After に従って待ってから再試行する
+// レート制限（429）は Retry-After に従って待ってから再試行する。
+// 待つと期限（setRateLimitDeadline）を越える場合は待たずに RateLimitError を投げ、呼び出し側が次回に持ち越す。
 const RATE_LIMIT_RETRIES = Number(process.env.PROKERALA_RATE_LIMIT_RETRIES || 3);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+let rateLimitDeadline = 0;
+function setRateLimitDeadline(ts) { rateLimitDeadline = Number(ts) || 0; }
+class RateLimitError extends Error {
+  constructor(path) { super(`prokerala_rate_limited:${path}`); this.code = 'prokerala_rate_limited'; }
+}
+
+// レスポンスキャッシュ（url → 本文）。呼び出し側が useEndpointCache(obj) で渡すと、取得済みは再取得せず、
+// 新たに取れたものは obj に追記される。レート制限で途中終了したとき、次回は残りだけ叩けばよい。
+// キャッシュ使用中は直列で叩き（一括で分当たりを食いつぶさない）、一度 429 で持ち越しを決めたら残りは叩かずに投げる。
+let endpointCache = null;
+let rateLimited = null;
+let queue = Promise.resolve();
+const inFlight = new Set();
+function useEndpointCache(cache) { endpointCache = cache || null; rateLimited = null; }
+async function settleEndpointCalls() { await Promise.allSettled([...inFlight]); }
+
+function serialized(fn) {
+  const run = queue.then(fn, fn);
+  queue = run.catch(() => null);
+  return run;
+}
 
 async function callEndpoint(token, path, params, asText = false) {
   const url = `${API_BASE}/v2/${path}?${new URLSearchParams(params).toString()}`;
+  const parse = (text) => (text === null ? null : asText ? text : JSON.parse(text));
+  if (endpointCache && url in endpointCache) return parse(endpointCache[url]);
+  const p = endpointCache
+    ? serialized(async () => {
+      if (rateLimited) throw new RateLimitError(rateLimited);
+      try {
+        return await callEndpointUncached(token, url, path);
+      } catch (err) {
+        if (err.code === 'prokerala_rate_limited') rateLimited = path;
+        throw err;
+      }
+    })
+    : callEndpointUncached(token, url, path);
+  inFlight.add(p);
+  try {
+    const text = await p;
+    if (endpointCache) endpointCache[url] = text; // 失敗（null）も記録し、次回に同じ失敗で枠を消費しない
+    return parse(text);
+  } finally {
+    inFlight.delete(p);
+  }
+}
+
+async function callEndpointUncached(token, url, path) {
   for (let attempt = 0; ; attempt++) {
     const res = await fetchWithTimeout(url, { headers: { Authorization: `Bearer ${token}` } }, 20000);
-    if (res.ok) return asText ? await res.text() : await res.json();
+    if (res.ok) return await res.text();
     const body = await res.text().catch(() => '');
     if (res.status === 429 && attempt < RATE_LIMIT_RETRIES) {
       const retryAfter = Number(res.headers.get('retry-after'));
       const waitMs = (Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter : 60) * 1000 + Math.random() * 3000;
+      if (rateLimitDeadline && Date.now() + waitMs > rateLimitDeadline) {
+        console.error(`Prokerala ${path} rate limited, no time to wait; deferring`);
+        throw new RateLimitError(path);
+      }
       console.error(`Prokerala ${path} rate limited, retrying in ${Math.round(waitMs / 1000)}s`);
       await sleep(waitMs);
       continue;
@@ -999,6 +1049,9 @@ module.exports = {
   fetchCareerData,
   fetchCompatData,
   fetchPalmData,
+  setRateLimitDeadline,
+  useEndpointCache,
+  settleEndpointCalls,
   toJstIsoString,
   toJapaneseSign,
   toJapaneseNakshatra,
