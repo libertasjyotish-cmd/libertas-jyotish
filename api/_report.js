@@ -236,9 +236,11 @@ function titleKey(chapter, product) {
   return product === 'natal' ? chapter.id : `${product}_${chapter.id}`;
 }
 
-function buildPrompt(chapter, astro, terms, product) {
+// voice: 商品ごとの語り口（安全規則に追加で、鑑定としての踊り方を指定する）。{ ja, en } の文字列
+function buildPrompt(chapter, astro, terms, product, voice) {
   const rules = terms.lang === 'ja' ? COMMON_RULES_JA : commonRulesFor(terms.outputLanguage);
-  return `${rules}
+  const style = voice ? `\n${terms.lang === 'ja' ? voice.ja : voice.en}\n` : '';
+  return `${rules}${style}
 【章】${terms.chapterTitle(titleKey(chapter, product), chapter.title)}
 
 【確定データ（JSON）】
@@ -250,11 +252,11 @@ ${chapter.schema}`;
 
 // 章を並列生成する。1章が失敗しても他章は返し、未生成の章は次回リクエストで補完する。
 // options.chapters / options.product で年間運勢・相性など別商品の章定義を差し込める
-async function generateChapters(astro, ids, apiKey, models, { lang, timeoutMs = 40000, chapters: defs = CHAPTERS, product = 'natal' } = {}) {
+async function generateChapters(astro, ids, apiKey, models, { lang, timeoutMs = 40000, chapters: defs = CHAPTERS, product = 'natal', voice = null } = {}) {
   const terms = createTerms(lang);
   const targets = defs.filter((c) => ids.includes(c.id));
   const results = await Promise.all(targets.map(async (chapter) => {
-    const result = await generateWithGemini(apiKey, models, buildPrompt(chapter, astro, terms, product), timeoutMs);
+    const result = await generateWithGemini(apiKey, models, buildPrompt(chapter, astro, terms, product, voice), timeoutMs);
     if (!result.json) return { id: chapter.id, ok: false, reason: result.reason };
 
     const violations = findViolations(JSON.stringify(result.json), terms.lang);

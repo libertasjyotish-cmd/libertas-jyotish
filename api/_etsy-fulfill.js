@@ -6,7 +6,7 @@ const { fetchReportData, fetchYearlyData, fetchCompatData, fetchCareerData, fetc
 const { listGeminiModels } = require('./_gemini');
 const { CHAPTERS, CHAPTER_IDS, generateChapters } = require('./_report');
 const { YEARLY_CHAPTERS, COMPAT_CHAPTERS, CAREER_CHAPTERS, compatChapterIdsFor } = require('./_report-products');
-const { PALM_CHAPTERS, PALM_CHAPTER_IDS } = require('./_report-palm');
+const { PALM_CHAPTERS, PALM_CHAPTER_IDS, PALM_VOICE } = require('./_report-palm');
 const { analyzePalm, palmUnreadable } = require('./_palm');
 const { normalizeLang } = require('./_terms');
 const { geocodeBirthPlace } = require('./_geocode');
@@ -75,7 +75,7 @@ function chapterDefsFor(order) {
   if (order.product === 'yearly') return { defs: YEARLY_CHAPTERS, ids: YEARLY_CHAPTERS.map((c) => c.id) };
   if (order.product === 'compat') return { defs: COMPAT_CHAPTERS, ids: compatChapterIdsFor(order.relation || 'general') };
   if (order.product === 'career') return { defs: CAREER_CHAPTERS, ids: CAREER_CHAPTERS.map((c) => c.id) };
-  if (order.product === 'palm') return { defs: PALM_CHAPTERS, ids: PALM_CHAPTER_IDS };
+  if (order.product === 'palm') return { defs: PALM_CHAPTERS, ids: PALM_CHAPTER_IDS, voice: PALM_VOICE };
   return { defs: CHAPTERS, ids: CHAPTER_IDS };
 }
 
@@ -222,7 +222,7 @@ async function advanceOrder(order, ctx) {
     await save({ status: STATUS.AWAITING_PHOTOS, last_error: 'missing:photos' });
     return 'awaiting_photos';
   }
-  const { defs, ids: chapterIds } = chapterDefsFor(order);
+  const { defs, ids: chapterIds, voice = null } = chapterDefsFor(order);
 
   const attempts = order.status === STATUS.ERROR ? order.attempts + 1 : Math.max(order.attempts, 1);
   await save({ status: STATUS.GENERATING, attempts, last_error: '' });
@@ -312,7 +312,7 @@ async function advanceOrder(order, ctx) {
 
     while (missing.length && remaining() > MIN_MS_FOR_CHAPTERS) {
       const batch = missing.slice(0, CHAPTERS_PER_STEP);
-      const result = await ctx.generate(astro, batch, language, remaining() - 8000, { chapters: defs, product: order.product || 'natal' });
+      const result = await ctx.generate(astro, batch, language, remaining() - 8000, { chapters: defs, product: order.product || 'natal', voice });
       const saved = {};
       for (const [id, value] of Object.entries(result.chapters)) {
         chapters[id] = value;
