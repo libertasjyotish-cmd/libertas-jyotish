@@ -616,6 +616,8 @@
     "pdf-report.prodPalmQuality": "Photo clarity",
     "pdf-report.prodPalmShape": "Hand shape",
     "pdf-report.prodPalmMarks": "Marks found",
+    "pdf-report.prodPalmPhoto": "Your hands (lines and marks as read)",
+    "pdf-report.prodPalmPhotoNote": "The numbers mark the approximate position of each line or mark read from the photo; angle and lighting may shift them slightly. Photos are deleted 30 days after delivery.",
     "pdf-report.prodPalmNote": "* dominant hand. This table lists the features an AI read mechanically from your photos; interpretations based on traditional Hasta Samudrika correspondences are in the chapters. Photo originals are deleted 30 days after delivery and are never used for identification or biometrics. Not for assessing health."
   }
 }

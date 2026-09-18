@@ -73,6 +73,26 @@ async function renderReportPdf({ lang, report, extraHtml = '' }) {
     // 章ページの薄い背景画像はページごとにビットマップとして埋め込まれ PDF が数十 MB になるため、表紙以外では外す
     await page.addStyleTag({ content: '.page:not(.cover)::before { background-image: none !important; }' });
     await page.evaluateHandle('document.fonts.ready');
+    // 手相写真（Blob URL）は本文差し込み後に読み込まれるので、描画完了を待つ（失敗した画像は空のまま進める）
+    await page.evaluate(() => Promise.all(
+      Array.from(document.images).filter((img) => !img.complete).map((img) => new Promise((done) => { img.onload = done; img.onerror = done; }))
+    ));
+    // スマホ写真は原寸（数 MB）のまま PDF に埋め込まれるので、描画幅に合わせて縮小して差し替える
+    await page.evaluate(() => {
+      for (const img of document.querySelectorAll('.palm-photo img')) {
+        if (!img.naturalWidth) continue;
+        const scale = Math.min(1, 900 / img.naturalWidth);
+        if (scale === 1) continue;
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.naturalWidth * scale);
+        canvas.height = Math.round(img.naturalHeight * scale);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        img.src = canvas.toDataURL('image/jpeg', 0.82);
+      }
+    });
+    await page.evaluate(() => Promise.all(
+      Array.from(document.images).filter((img) => !img.complete).map((img) => new Promise((done) => { img.onload = done; img.onerror = done; }))
+    ));
     await page.emulateMediaType('print');
     const pdf = await page.pdf({
       format: 'A4',

@@ -110,6 +110,14 @@
 
     .color-chip { display: inline-block; width: 16px; height: 16px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2); vertical-align: -3px; margin-right: 6px; }
     .disclaimer { font-size: 0.78rem; color: #6A5E58; line-height: 1.9; }
+    .palm-photos { display: flex; gap: 14px; justify-content: center; margin: 10px 0 14px; }
+    .palm-photo { position: relative; flex: 1 1 0; max-width: 48%; }
+    .palm-photo img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid #C9B79C; }
+    .palm-photo .cap { text-align: center; font-size: 0.8rem; color: #6A5E58; margin-top: 4px; }
+    .palm-photo .pin { position: absolute; transform: translate(-50%, -50%); width: 22px; height: 22px; border-radius: 50%; background: #7A1E1E; color: #fff; font-size: 0.72rem; font-weight: bold; line-height: 22px; text-align: center; border: 2px solid #fff; box-shadow: 0 0 0 1px #7A1E1E; }
+    .palm-legend { columns: 2; font-size: 0.82rem; line-height: 1.8; }
+    .palm-legend li { break-inside: avoid; }
+    .palm-legend .n { display: inline-block; min-width: 20px; height: 20px; border-radius: 50%; background: #7A1E1E; color: #fff; font-size: 0.7rem; line-height: 20px; text-align: center; margin-inline-end: 6px; }
 
     .status { color: #E2D9CE; text-align: center; padding: 140px 24px; font-size: 0.95rem; }
     .status a { color: var(--color-gold-main); }
@@ -585,13 +593,14 @@
       const rowPair = (label, r, l) => `<tr><td>${esc(label)}</td><td>${cell(r)}</td><td>${cell(l)}</td></tr>`;
       const head = `<thead><tr><th></th><th>右手${a.hand === 'right' ? ' *' : ''}</th><th>左手${a.hand === 'left' ? ' *' : ''}</th></tr></thead>`;
       const R = hands.right || {}, L = hands.left || {};
+      const terms = a.palmTerms || { lines: {}, mounts: {}, marks: {} };
       const rows = [
         rowPair('写真の鮮明さ', p.image_quality?.right, p.image_quality?.left),
         rowPair('手の形', R.hand_shape, L.hand_shape),
-        ...Object.keys(R.mounts || {}).map((m) => rowPair(`◎ ${m}`, R.mounts?.[m], L.mounts?.[m])),
-        ...Object.keys(R.lines || {}).map((ln) => rowPair(`― ${ln}`, `${R.lines?.[ln]?.clarity || ''} / ${R.lines?.[ln]?.length || ''}`, `${L.lines?.[ln]?.clarity || ''} / ${L.lines?.[ln]?.length || ''}`))
+        ...Object.keys(R.mounts || {}).map((m) => rowPair(`◎ ${terms.mounts[m] || m}`, R.mounts?.[m], L.mounts?.[m])),
+        ...Object.keys(R.lines || {}).map((ln) => rowPair(`― ${terms.lines[ln] || ln}`, `${R.lines?.[ln]?.clarity || ''} / ${R.lines?.[ln]?.length || ''}`, `${L.lines?.[ln]?.clarity || ''} / ${L.lines?.[ln]?.length || ''}`))
       ].join('');
-      const marks = (side, h) => (h.marks || []).map((m) => `<li>${esc(side)}: ${cell(m.type)} — ${esc(m.location)} (${esc(m.confidence)})</li>`).join('');
+      const marks = (side, h) => (h.marks || []).map((m) => `<li>${esc(side)}: ${cell(terms.marks[m.type] || m.type)} — ${esc(m.location)} (${esc(m.confidence)})</li>`).join('');
       const markList = marks('R', R) + marks('L', L);
       const unclear = (p.unclear || []).length ? `<p class="disclaimer">${esc(p.unclear.join(' / '))}</p>` : '';
       return page(`<h2 class="chapter-title">手の観察データ（写真から読み取った形）</h2>
@@ -601,13 +610,48 @@
         <p class="disclaimer">* は利き手。この表は AI が写真から機械的に読み取った形の一覧で、伝統的手相学の対応表に基づく解釈は本文にあります。写真の原本は納品後 30 日で削除され、本人確認や生体認証には使用しません。健康状態の判断には用いないでください。</p>`);
     }
 
+    // 手相×出生図: 写真に番号ラベルを重ねて、読み取った線・印の位置（Vision の at: 百分率）を正式名称で示す。
+    // 写真 URL が無い（古い注文・削除後）や位置情報が無い場合はページごと省く。
+    function palmPhotoPage(a) {
+      const photos = a.photos || {};
+      const terms = a.palmTerms || { lines: {}, marks: {}, hands: {} };
+      const hands = (a.palm && a.palm.hands) || {};
+      const sides = ['right', 'left'].filter((s) => photos[s]);
+      if (!sides.length) return '';
+      let n = 0;
+      const legend = [];
+      const blocks = sides.map((side) => {
+        const h = hands[side] || {};
+        const pins = [];
+        for (const [key, ln] of Object.entries(h.lines || {})) {
+          if (!ln || !ln.at) continue;
+          n += 1;
+          pins.push({ n, at: ln.at });
+          legend.push(`<li><span class="n">${n}</span>${esc(terms.hands[side] || side)}: ${esc(terms.lines[key] || key)}</li>`);
+        }
+        for (const m of h.marks || []) {
+          if (!m || !m.at) continue;
+          n += 1;
+          pins.push({ n, at: m.at });
+          legend.push(`<li><span class="n">${n}</span>${esc(terms.hands[side] || side)}: <strong>${esc(terms.marks[m.type] || m.type)}</strong></li>`);
+        }
+        const pinHtml = pins.map((p) => `<span class="pin" style="left:${p.at.x}%;top:${p.at.y}%">${p.n}</span>`).join('');
+        return `<div class="palm-photo"><img src="${esc(photos[side])}" alt="">${pinHtml}<div class="cap">${esc(terms.hands[side] || side)}${a.hand === side ? ' *' : ''}</div></div>`;
+      });
+      if (!n) return '';
+      return page(`<h2 class="chapter-title">あなたの手（読み取った線と印）</h2>
+        <div class="palm-photos">${blocks.join('')}</div>
+        <ul class="palm-legend">${legend.join('')}</ul>
+        <p class="disclaimer">番号は写真から読み取った線・印の位置を示す目安です。写真の角度や光の具合で位置がずれることがあります。写真は鑑定書の納品から 30 日後に削除されます。</p>`);
+    }
+
     function renderProduct(a, c, data) {
       const chapters = PROD_ORDER.map((id) => c[id]).filter(Boolean);
       const html = [productCover(a)];
       html.push(page(`<h2 class="chapter-title">目次</h2><ul class="toc">${chapters.map((ch) => `<li>${esc(ch.title)}</li>`).join('')}</ul>`));
       for (const ch of chapters) html.push(genericPage(ch));
       if (a.product === 'career') { html.push(careerDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
-      else if (a.product === 'palm') { html.push(palmDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
+      else if (a.product === 'palm') { html.push(palmPhotoPage(a)); html.push(palmDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
       else html.push(a.product === 'yearly' ? yearlyDataPage(a) : compatDataPage(a));
       html.push(disclaimerPage(data));
       return html.join('');

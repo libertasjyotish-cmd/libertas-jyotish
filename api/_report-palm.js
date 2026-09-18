@@ -9,6 +9,29 @@ const PALM_RULES = [
   '個人の特定・年齢・性別・人種・肌の状態に触れない。'
 ].join('\n');
 
+// 手相用語の正式名称（Vision スキーマのキー → 各言語）。章生成の【用語】と PDF の写真ラベルの両方で使い、
+// 「十字→三角」「感情線」のような揺れや一般語への言い換えを防ぐ。ja/en 以外は en を基本に必要な言語だけ上書き。
+const PALM_TERMS = {
+  ja: {
+    lines: { heart: '心の線（感情線）', head: '頭脳線（知恵の線）', life: '生命線', fate: '運命線（土星線）', sun: '太陽線（アポロの線）', mercury: '水星線' },
+    mounts: { jupiter: '木星丘', saturn: '土星丘', sun: '太陽丘', mercury: '水星丘', mars_upper: '第一火星丘', mars_lower: '第二火星丘', venus: '金星丘', moon: '月丘' },
+    marks: { mystic_cross: '神秘十字', great_triangle: '大三角', ring_of_solomon: 'ソロモンの環', girdle_of_venus: '金星帯', fish: '魚紋（マツヤ）', lotus: '蓮華紋（パドマ）', conch: '法螺貝紋（シャンカ）', trident: '三叉紋（トリシューラ）', star: '星紋', triangle: '三角紋', square: '方形紋（守りの四角）', cross: '十字紋', island: '島紋', grille: '格子紋', circle: '環紋', other: 'その他の印' },
+    hands: { right: '右手', left: '左手' }
+  },
+  en: {
+    lines: { heart: 'Heart line', head: 'Head line', life: 'Life line', fate: 'Fate line (line of Saturn)', sun: 'Sun line (line of Apollo)', mercury: 'Mercury line' },
+    mounts: { jupiter: 'Mount of Jupiter', saturn: 'Mount of Saturn', sun: 'Mount of the Sun', mercury: 'Mount of Mercury', mars_upper: 'Upper Mount of Mars', mars_lower: 'Lower Mount of Mars', venus: 'Mount of Venus', moon: 'Mount of the Moon' },
+    marks: { mystic_cross: 'Mystic Cross', great_triangle: 'Great Triangle', ring_of_solomon: 'Ring of Solomon', girdle_of_venus: 'Girdle of Venus', fish: 'Fish (Matsya)', lotus: 'Lotus (Padma)', conch: 'Conch (Shankha)', trident: 'Trident (Trishula)', star: 'Star', triangle: 'Triangle', square: 'Square (mark of protection)', cross: 'Cross', island: 'Island', grille: 'Grille', circle: 'Circle', other: 'Other mark' },
+    hands: { right: 'Right hand', left: 'Left hand' }
+  }
+};
+const palmTermsFor = (lang) => PALM_TERMS[lang] || PALM_TERMS.en;
+const glossaryText = (lang) => {
+  const t = palmTermsFor(lang);
+  const row = (obj) => Object.entries(obj).map(([k, v]) => `${k}=${v}`).join(', ');
+  return `lines: ${row(t.lines)}\nmounts: ${row(t.mounts)}\nmarks: ${row(t.marks)}`;
+};
+
 // 語り口。安全規則（COMMON_RULES）は維持したうえで、「説明」ではなく「この人への鑑定」を書かせる。
 const PALM_VOICE = {
   ja: `【語り口】
@@ -19,7 +42,9 @@ const PALM_VOICE = {
 4. この人の「普通ではないところ」を必ず探して書く。強い惑星・珍しい配置・目立つ印・手と星の一致は「これは誰にでもあるものではありません」と価値を言語化する。弱い惑星は「だからこう苦しんできたはず」と当てて、ただし必ず活かし方を作る。
 5. 各項目は【言い当て（あなたはこういう人）→根拠（星と手のどこから）→その才能・運命の使い方（指針）】の順で書く。指針は行動で結ぶ。
 6. 語りは物語として面白く。限られた選ばれ方をした一人に、古い寺院の占星術師が目を見て語りかけるように。ただし品格とです・ます調は維持。
-7. 【確定データ】にない配置・印・線を発明しない。unclear は正直に「今回の写真では読めなかった」とする。`,
+7. 【確定データ】にない配置・印・線を発明しない。unclear は正直に「今回の写真では読めなかった」とする。
+8. 手相の用語は必ず次の正式名称で書く（キーを訳し直さない。mystic_cross を「十字」や「三角」と言い換えない）。名前のある印（神秘十字・大三角・ソロモンの環・金星帯・魚紋…）は、その名で呼び、伝統でどう尊ばれてきたかを一文添えて神秘性を保つ:
+${glossaryText('ja')}`,
   en: `[Voice]
 This is not a textbook but a reading addressed to one person. Follow strictly:
 1. General explanation of a term or tradition: at most one sentence per field. Spend the rest on what is specific to this person ("you are ...").
@@ -28,7 +53,9 @@ This is not a textbook but a reading addressed to one person. Follow strictly:
 4. Always find and voice what is uncommon about this person: strong planets, rare placements, striking marks, agreement between hand and chart ("this is not something everyone has"). Weak planets: name the struggle they explain, then always give the way to use them.
 5. Each field follows: the call (who you are) -> the evidence (where in the stars and the hand) -> how to use that talent or destiny (guidance ending in an action).
 6. Tell it as a story, as an old temple astrologer speaking to one chosen person, while keeping a dignified, polite register.
-7. Never invent a placement, mark or line absent from the confirmed data; unclear features are honestly "not readable in this photo".`
+7. Never invent a placement, mark or line absent from the confirmed data; unclear features are honestly "not readable in this photo".
+8. Always use these traditional names for palm features (do not re-translate the keys; never call a mystic_cross a "cross" or a "triangle"). Named formations (Mystic Cross, Great Triangle, Ring of Solomon, Girdle of Venus, Fish...) are called by name, with one sentence on how the tradition honours them:
+${glossaryText('en')}`
 };
 
 // 惑星ごとの伝統的な対応（丘・指・線）。出力言語に依存しない固定表。
@@ -151,7 +178,7 @@ const PALM_CHAPTERS = [
     }),
     schema: `{
       "intro": "魚・蓮・法螺貝・三叉など吉祥の印の伝統を一文で、続けてこの人の手に何があったか（あるいは無かったか）を語りのように（150文字程度）",
-      "found": [{ "mark": "確定データの印の種類（fish→魚、lotus→蓮、conch→法螺貝、trident→三叉、star→星、triangle→三角、square→四角、cross→十字、island→島、grille→格子、circle→円 と訳す）", "where": "位置（確定データの location を訳す）", "confidence": "high/medium/low を「はっきり／おそらく／かすかに」と訳す", "tradition": "その印の伝統的な意味を一文で、続けてこの人の出生図のどの資質と呂応しているかを名指しで（150文字程度。具体的な出来事は断定しない）" }],
+      "found": [{ "mark": "確定データの印の正式名称（【語り口】8 の用語表どおり。例: mystic_cross→神秘十字、great_triangle→大三角、fish→魚紋（マツヤ））", "where": "位置（確定データの location を訳す）", "confidence": "high/medium/low を「はっきり／おそらく／かすかに」と訳す", "tradition": "その印の伝統的な意味を一文で、続けてこの人の出生図のどの資質と呂応しているかを名指しで（150文字程度。具体的な出来事は断定しない）" }],
       "none": "印が一つも見つからない場合: それは欠落ではなく、この人の守りは代わりにどこ（強い惑星・神格）にあるか（150文字程度。found が空でなければ空文字）",
       "deity": "出生ナクシャトラの神格がこの人に授けた性質と、手の印の主題とのつながり。「あなたは〜の神に見守られて生まれた」という語り（180文字程度）",
       "closing": "この人にとっての「守りの記憶」を一つの言葉にして持たせる（120文字程度）"
@@ -238,4 +265,4 @@ const PALM_CHAPTERS = [
 
 const PALM_CHAPTER_IDS = PALM_CHAPTERS.map((c) => c.id);
 
-module.exports = { PALM_CHAPTERS, PALM_CHAPTER_IDS, PALM_RULES, PALM_VOICE, PLANET_MAP };
+module.exports = { PALM_CHAPTERS, PALM_CHAPTER_IDS, PALM_RULES, PALM_VOICE, PALM_TERMS, palmTermsFor, PLANET_MAP };

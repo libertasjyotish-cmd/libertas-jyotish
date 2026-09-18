@@ -616,6 +616,8 @@
     "pdf-report.prodPalmQuality": "Kejelasan foto",
     "pdf-report.prodPalmShape": "Bentuk tangan",
     "pdf-report.prodPalmMarks": "Tanda yang ditemukan",
+    "pdf-report.prodPalmPhoto": "Tangan Anda (garis dan tanda yang terbaca)",
+    "pdf-report.prodPalmPhotoNote": "Angka menunjukkan posisi perkiraan setiap garis atau tanda yang terbaca dari foto; sudut dan pencahayaan dapat sedikit menggesernya. Foto dihapus 30 hari setelah pengiriman.",
     "pdf-report.prodPalmNote": "* tangan dominan. Tabel ini memuat ciri yang dibaca AI secara mekanis dari foto Anda; penafsiran berdasarkan padanan tradisional Hasta Samudrika ada di bab-bab. Foto asli dihapus 30 hari setelah pengiriman dan tidak pernah dipakai untuk identifikasi atau biometrik. Bukan untuk menilai kesehatan."
   }
 }

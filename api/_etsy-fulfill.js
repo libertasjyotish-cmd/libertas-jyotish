@@ -6,8 +6,8 @@ const { fetchReportData, fetchYearlyData, fetchCompatData, fetchCareerData, fetc
 const { listGeminiModels } = require('./_gemini');
 const { CHAPTERS, CHAPTER_IDS, generateChapters } = require('./_report');
 const { YEARLY_CHAPTERS, COMPAT_CHAPTERS, CAREER_CHAPTERS, compatChapterIdsFor } = require('./_report-products');
-const { PALM_CHAPTERS, PALM_CHAPTER_IDS, PALM_VOICE } = require('./_report-palm');
-const { analyzePalm, palmUnreadable } = require('./_palm');
+const { PALM_CHAPTERS, PALM_CHAPTER_IDS, PALM_VOICE, palmTermsFor } = require('./_report-palm');
+const { analyzePalm, palmUnreadable, fetchImage } = require('./_palm');
 const { normalizeLang } = require('./_terms');
 const { geocodeBirthPlace } = require('./_geocode');
 const etsy = require('./_etsy-api');
@@ -69,6 +69,20 @@ function handOf(personalization) {
   const s = String(personalization || '');
   if (/(dominant\s*hand|hand)\s*[:：]?\s*left\b|\bleft[- ]handed\b|利き手\s*[:：]?\s*左|左利き/i.test(s)) return 'left';
   return 'right';
+}
+
+async function photoDataUrls(order, ctx) {
+  const out = {};
+  for (const side of ['right', 'left']) {
+    const url = order[`photo_${side}`];
+    if (!url) continue;
+    try {
+      out[side] = `data:image/jpeg;base64,${(await ctx.fetchPhoto(url)).toString('base64')}`;
+    } catch (err) {
+      ctx.log(`  ${order.receipt_id}: photo ${side} unavailable (${err.message})`);
+    }
+  }
+  return out;
 }
 
 function chapterDefsFor(order) {
@@ -300,6 +314,7 @@ async function advanceOrder(order, ctx) {
       }
       astro.palm = palm;
       astro.hand = order.hand || 'right';
+      astro.palmTerms = palmTermsFor(language);
       astro.tob_unknown = order.tob_unknown;
     }
 
@@ -334,6 +349,8 @@ async function advanceOrder(order, ctx) {
       return 'in_progress';
     }
 
+    // 手相の写真ページ: 写真 Blob は 30 日で消すので URL 参照ではなく data URL で PDF に内包する（台帳の astro には保存しない）
+    if (order.product === 'palm') astro.photos = await photoDataUrls(order, ctx);
     const pdf = await renderReportPdf({ lang: language, report: { astro, chapters }, extraHtml: ledger.isWebOrder(receiptId) ? WEB_THANKS_PAGE : REVIEW_PAGE });
     const filename = order.product === 'yearly' ? `Libertas-Jyotish-Year-Ahead-${order.dob}.pdf`
       : order.product === 'compat' ? `Libertas-Jyotish-Compatibility-${order.dob}-${order.dob_b}.pdf`
@@ -447,9 +464,9 @@ function defaultAnalyze(models = geminiModels()) {
 
 // 1 回分の処理。deadline（epoch ms）までに終わるところまで進める。
 // options: { store, receipts, mail, generate, analyze, onPdf, storePdf, deleteBlobs, log }（省略時は本番: Sheets・Etsy API・Gemini・Resend・Blob）
-async function runCycle({ deadline, store = ledger, receipts = null, mail: sendMail = true, generate = null, analyze = null, onPdf = null, storePdf = storage.storePdf, deleteBlobs = storage.deleteBlobs, log = console.log }) {
+async function runCycle({ deadline, store = ledger, receipts = null, mail: sendMail = true, generate = null, analyze = null, onPdf = null, storePdf = storage.storePdf, deleteBlobs = storage.deleteBlobs, fetchPhoto = fetchImage, log = console.log }) {
   const models = generate && analyze ? null : geminiModels();
-  const ctx = { deadline, store, mail: sendMail, generate: generate || defaultGenerate(models), analyze: analyze || defaultAnalyze(models), onPdf, storePdf, deleteBlobs, log, client: null, shopId: null, orders: [] };
+  const ctx = { deadline, store, mail: sendMail, generate: generate || defaultGenerate(models), analyze: analyze || defaultAnalyze(models), onPdf, storePdf, deleteBlobs, fetchPhoto, log, client: null, shopId: null, orders: [] };
   const summary = { registered: {}, processed: {}, shipped: 0, uploadLinks: 0, photosDeleted: 0 };
   setRateLimitDeadline(deadline);
 
