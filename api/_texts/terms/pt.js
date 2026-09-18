@@ -265,12 +265,13 @@ const CHAPTER_TITLE = {
   palm_ch1: 'Capítulo 1 — O projeto da alma (o que diz o seu mapa natal)',
   palm_ch2: 'Capítulo 2 — O mapa planetário na sua mão (Navagraha, montes, dedos e linhas)',
   palm_ch3: 'Capítulo 3 — Céu e terra comparados (onde mapa e palma concordam ou divergem)',
-  palm_ch4: 'Capítulo 4 — Marcas sagradas (sinais auspiciosos)',
-  palm_ch5: 'Capítulo 5 — Os três karmas (acumulado, destinado, em construção)',
-  palm_ch6: 'Capítulo 6 — Vínculos, trabalho e decisões',
-  palm_ch7: 'Capítulo 7 — Os próximos 12 meses',
-  palm_ch8: 'Capítulo 8 — As mãos mudam (uma prática de observação)',
-  palm_ch9: 'Apêndice — Pistas quando a hora de nascimento é incerta'
+  palm_ch4: 'Capítulo 4 — O desenho recebido e a posição atual (para onde a diferença aponta)',
+  palm_ch5: 'Capítulo 5 — Marcas sagradas (sinais auspiciosos)',
+  palm_ch6: 'Capítulo 6 — Os três karmas (acumulado, destinado, em construção)',
+  palm_ch7: 'Capítulo 7 — Vínculos, trabalho e decisões',
+  palm_ch8: 'Capítulo 8 — Os próximos 12 meses',
+  palm_ch9: 'Capítulo 9 — As mãos mudam (uma prática de observação)',
+  palm_ch10: 'Apêndice — Pistas quando a hora de nascimento é incerta'
 };
 
 const REASON = {

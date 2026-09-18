@@ -265,12 +265,13 @@ const CHAPTER_TITLE = {
   palm_ch1: 'Bab 1 — Cetak biru jiwa (apa yang dikatakan peta kelahiran Anda)',
   palm_ch2: 'Bab 2 — Peta planet di tangan Anda (Navagraha, bukit, jari dan garis)',
   palm_ch3: 'Bab 3 — Langit dan bumi dibandingkan (di mana peta dan telapak sepakat atau berbeda)',
-  palm_ch4: 'Bab 4 — Tanda-tanda suci (pertanda baik)',
-  palm_ch5: 'Bab 5 — Tiga karma (terkumpul, ditetapkan, sedang dibuat)',
-  palm_ch6: 'Bab 6 — Ikatan, pekerjaan dan keputusan',
-  palm_ch7: 'Bab 7 — 12 bulan ke depan',
-  palm_ch8: 'Bab 8 — Tangan berubah (latihan pengamatan)',
-  palm_ch9: 'Lampiran — Petunjuk saat waktu lahir tidak pasti'
+  palm_ch4: 'Bab 4 — Rancangan bawaan dan posisi saat ini (ke mana perbedaan itu mengarah)',
+  palm_ch5: 'Bab 5 — Tanda-tanda suci (pertanda baik)',
+  palm_ch6: 'Bab 6 — Tiga karma (terkumpul, ditetapkan, sedang dibuat)',
+  palm_ch7: 'Bab 7 — Ikatan, pekerjaan dan keputusan',
+  palm_ch8: 'Bab 8 — 12 bulan ke depan',
+  palm_ch9: 'Bab 9 — Tangan berubah (latihan pengamatan)',
+  palm_ch10: 'Lampiran — Petunjuk saat waktu lahir tidak pasti'
 };
 
 const REASON = {

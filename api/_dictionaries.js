@@ -35,10 +35,11 @@ const DIGNITY_SCORE = {
   enemy: 35, greatenemy: 25, debilitated: 10
 };
 
+// 古典の「友好・中立・敵対」は読者に意味が伝わらず否定的に響くため、その星の力の出方で表す
 const DIGNITY_JA = {
-  exalted: '高揚', ownsign: '自室', own: '自室', moolatrikona: '定座',
-  greatfriend: '最良の友好', friend: '友好', neutral: '中立',
-  enemy: '敵対', greatenemy: '強い敵対', debilitated: '減衰'
+  exalted: '高揚（最高の輝き）', ownsign: '自室（本領の座）', own: '自室（本領の座）', moolatrikona: '定座（力の根）',
+  greatfriend: '心強い味方の座', friend: '味方の座', neutral: '穏やかな座',
+  enemy: '鍛えられる座', greatenemy: '試練で磨かれる座', debilitated: '減衰（伸びしろの座）'
 };
 
 // ①【モノ】ライフストーン: 1室（ラグナ）の支配星に対応する石
