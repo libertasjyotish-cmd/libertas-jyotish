@@ -9,7 +9,10 @@ const LEVELS = new Set(['prominent', 'average', 'flat', 'unclear']);
 const CLARITY = new Set(['clear', 'faint', 'broken', 'chained', 'absent', 'unclear']);
 const LENGTHS = new Set(['long', 'medium', 'short', 'unclear']);
 const HAND_SHAPES = new Set(['earth', 'air', 'water', 'fire', 'mixed', 'unclear']);
-const MARKS = new Set(['fish', 'lotus', 'conch', 'trident', 'star', 'triangle', 'square', 'cross', 'island', 'grille', 'circle', 'other']);
+// 名前を持つ古典的な形（神秘十字・大三角・ソロモンの環・金星帯）は一般名（cross/triangle）より優先して使わせる。
+const NAMED_MARKS = ['mystic_cross', 'great_triangle', 'ring_of_solomon', 'girdle_of_venus'];
+const MARKS = new Set([...NAMED_MARKS, 'fish', 'lotus', 'conch', 'trident', 'star', 'triangle', 'square', 'cross', 'island', 'grille', 'circle', 'other']);
+const MARK_TYPES = [...MARKS].join('|');
 const QUALITY = new Set(['good', 'fair', 'poor']);
 
 const SCHEMA = `{
@@ -20,14 +23,14 @@ const SCHEMA = `{
       "finger_lengths": { "index_vs_ring": "index_longer|ring_longer|equal|unclear", "little": "long|medium|short|unclear", "thumb": "long|medium|short|unclear" },
       "mounts": { "jupiter": "prominent|average|flat|unclear", "saturn": "...", "sun": "...", "mercury": "...", "mars_upper": "...", "mars_lower": "...", "venus": "...", "moon": "..." },
       "lines": {
-        "heart": { "clarity": "clear|faint|broken|chained|absent|unclear", "length": "long|medium|short|unclear", "course": "short text" },
-        "head":  { "clarity": "...", "length": "...", "course": "short text" },
-        "life":  { "clarity": "...", "length": "...", "course": "short text" },
-        "fate":  { "clarity": "...", "length": "...", "course": "short text" },
-        "sun":   { "clarity": "...", "length": "...", "course": "short text" },
-        "mercury": { "clarity": "...", "length": "...", "course": "short text" }
+        "heart": { "clarity": "clear|faint|broken|chained|absent|unclear", "length": "long|medium|short|unclear", "course": "short text", "at": { "x": 0-100, "y": 0-100 } },
+        "head":  { "clarity": "...", "length": "...", "course": "short text", "at": { "x": 0-100, "y": 0-100 } },
+        "life":  { "clarity": "...", "length": "...", "course": "short text", "at": { "x": 0-100, "y": 0-100 } },
+        "fate":  { "clarity": "...", "length": "...", "course": "short text", "at": { "x": 0-100, "y": 0-100 } },
+        "sun":   { "clarity": "...", "length": "...", "course": "short text", "at": { "x": 0-100, "y": 0-100 } },
+        "mercury": { "clarity": "...", "length": "...", "course": "short text", "at": { "x": 0-100, "y": 0-100 } }
       },
-      "marks": [ { "type": "fish|lotus|conch|trident|star|triangle|square|cross|island|grille|circle|other", "location": "short text (which mount/line)", "confidence": "high|medium|low" } ],
+      "marks": [ { "type": "${MARK_TYPES}", "location": "short text (which mount/line)", "confidence": "high|medium|low", "at": { "x": 0-100, "y": 0-100 } } ],
       "notes": "short text, English"
     },
     "left": { same structure }
@@ -42,6 +45,12 @@ image 1 = RIGHT palm, image 2 = LEFT palm. The person's dominant hand is: ${hand
 
 Describe ONLY what is visible: the shape of the hand, relative finger lengths, how raised each planetary mount appears,
 the clarity/length/course of the main lines, and any classical marks (fish, lotus, conch, trident, star, triangle, square, cross, island, grille, circle).
+Named classical formations — when the shape matches, use the named type instead of the generic one:
+- mystic_cross: an independent cross in the quadrangle between the heart line and the head line (usually under the middle/ring finger), not formed by the main lines themselves.
+- great_triangle: the large triangle enclosed by the head line, the life line and the fate line (or mercury line) in the centre of the palm.
+- ring_of_solomon: a curved line/arc around the base of the index finger (on the mount of Jupiter).
+- girdle_of_venus: a curved line above the heart line, arching under the middle and ring fingers.
+Positions: "at" is the point where a label should be drawn on THAT hand's photo — the centre of a mark, or a clearly visible midpoint of a line — as percentages of the image width (x) and height (y) from the top-left corner. Omit "at" if the feature is absent/unclear.
 Rules:
 - Do NOT interpret, predict, or give meanings. Do NOT mention health, illness, lifespan, pregnancy, death, accidents, wealth, or fortune.
 - Do NOT estimate or mention age, sex, gender, ethnicity, skin condition, identity, or anything that could identify the person.
@@ -53,6 +62,12 @@ ${SCHEMA}`;
 
 const pick = (v, set, fallback = 'unclear') => (set.has(v) ? v : fallback);
 const short = (v, max = 200) => (typeof v === 'string' ? v.slice(0, max) : '');
+const pct = (v) => (typeof v === 'number' && Number.isFinite(v) && v >= 0 && v <= 100 ? Math.round(v) : null);
+const point = (p) => {
+  if (!p || typeof p !== 'object') return null;
+  const x = pct(p.x), y = pct(p.y);
+  return x == null || y == null ? null : { x, y };
+};
 
 function normalizeHand(h) {
   const src = h && typeof h === 'object' ? h : {};
@@ -62,11 +77,16 @@ function normalizeHand(h) {
   const lines = {};
   for (const l of LINES) {
     const line = src.lines && typeof src.lines[l] === 'object' ? src.lines[l] : {};
-    lines[l] = { clarity: pick(line.clarity, CLARITY), length: pick(line.length, LENGTHS), course: short(line.course, 160) };
+    const clarity = pick(line.clarity, CLARITY);
+    const at = ['absent', 'unclear'].includes(clarity) ? null : point(line.at);
+    lines[l] = { clarity, length: pick(line.length, LENGTHS), course: short(line.course, 160), ...(at ? { at } : {}) };
   }
   const marks = (Array.isArray(src.marks) ? src.marks : []).slice(0, 12)
     .filter((m) => m && typeof m === 'object' && MARKS.has(m.type))
-    .map((m) => ({ type: m.type, location: short(m.location, 80), confidence: ['high', 'medium', 'low'].includes(m.confidence) ? m.confidence : 'low' }));
+    .map((m) => {
+      const at = point(m.at);
+      return { type: m.type, location: short(m.location, 80), confidence: ['high', 'medium', 'low'].includes(m.confidence) ? m.confidence : 'low', ...(at ? { at } : {}) };
+    });
   return {
     hand_shape: pick(src.hand_shape, HAND_SHAPES),
     finger_lengths: {
@@ -115,4 +135,4 @@ async function analyzePalm({ photoRight, photoLeft, hand = 'right', apiKey, mode
   return { palm: normalizePalm(result.json), model: result.model };
 }
 
-module.exports = { analyzePalm, normalizePalm, palmUnreadable, buildPrompt, MOUNTS, LINES };
+module.exports = { analyzePalm, normalizePalm, palmUnreadable, buildPrompt, fetchImage, MOUNTS, LINES, NAMED_MARKS };

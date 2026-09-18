@@ -1,7 +1,7 @@
 // Vercel Cron から呼ばれる Etsy 注文処理のエントリポイント（vercel.json の crons）。
 // Vercel は CRON_SECRET を Authorization: Bearer で付けて呼ぶ。手動実行は ?key=<CRON_SECRET> でも可。
 // ?retry=<receipt_id> を付けると、その注文を new に戻して（章・PDF は保持）再処理する。
-// ?regen=<receipt_id> は章を消して（天体データ・写真は保持）文面から作り直し、再納品する。
+// ?regen=<receipt_id> は章を消して（天体データ・写真は保持）文面から作り直し、再納品する。&vision=1 を足すと手相の解析もやり直す。
 const { runCycle } = require('./_etsy-fulfill');
 const ledger = require('./_etsy-ledger');
 
@@ -23,6 +23,7 @@ module.exports = async function handler(req, res) {
     const regen = req.query && req.query.regen;
     if (regen && await ledger.findOrder(regen)) {
       const cleared = Object.fromEntries(ledger.REPORT_FIELDS.filter((f) => f !== 'astro').map((f) => [f, '']));
+      if (req.query.vision) cleared.palm = '';
       await ledger.upsertOrder(regen, { ...cleared, status: ledger.STATUS.NEW, attempts: 0, last_error: '', pdf_url: '', download_url: '' });
     }
     const summary = await runCycle({ deadline });

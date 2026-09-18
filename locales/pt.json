@@ -616,6 +616,8 @@
     "pdf-report.prodPalmQuality": "Nitidez da foto",
     "pdf-report.prodPalmShape": "Forma da mão",
     "pdf-report.prodPalmMarks": "Marcas encontradas",
+    "pdf-report.prodPalmPhoto": "Suas mãos (linhas e marcas lidas)",
+    "pdf-report.prodPalmPhotoNote": "Os números indicam a posição aproximada de cada linha ou marca lida na foto; o ângulo e a luz podem deslocá-los ligeiramente. As fotos são apagadas 30 dias após a entrega.",
     "pdf-report.prodPalmNote": "* mão dominante. Esta tabela lista os traços que uma IA leu mecanicamente das suas fotos; as interpretações segundo as correspondências tradicionais de Hasta Samudrika estão nos capítulos. As fotos originais são excluídas 30 dias após a entrega e nunca são usadas para identificação ou biometria. Não serve para avaliar a saúde."
   }
 }

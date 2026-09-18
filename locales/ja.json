@@ -616,6 +616,8 @@
     "pdf-report.prodPalmQuality": "写真の鮮明さ",
     "pdf-report.prodPalmShape": "手の形",
     "pdf-report.prodPalmMarks": "見つかった印",
+    "pdf-report.prodPalmPhoto": "あなたの手（読み取った線と印）",
+    "pdf-report.prodPalmPhotoNote": "番号は写真から読み取った線・印の位置を示す目安です。写真の角度や光の具合で位置がずれることがあります。写真は鑑定書の納品から 30 日後に削除されます。",
     "pdf-report.prodPalmNote": "* は利き手。この表は AI が写真から機械的に読み取った形の一覧で、伝統的手相学の対応表に基づく解釈は本文にあります。写真の原本は納品後 30 日で削除され、本人確認や生体認証には使用しません。健康状態の判断には用いないでください。"
   }
 }
