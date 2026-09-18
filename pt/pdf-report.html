@@ -500,8 +500,8 @@
         if (typeof v[0] === 'string') return list(v);
         return v.map((item) => {
           const head = item.month || item.name || item.planet || item.label || item.mark || item.feature || '';
-          const sub = item.phase || item.theme || item.kind || item.where || '';
-          const used = new Set(['month', 'name', 'planet', 'label', 'mark', 'feature', 'phase', 'theme', 'kind', 'where', 'todo']);
+          const sub = item.phase || item.theme || item.title || item.kind || item.where || '';
+          const used = new Set(['month', 'name', 'planet', 'label', 'mark', 'feature', 'phase', 'theme', 'title', 'kind', 'where', 'todo']);
           const body = Object.entries(item).filter(([k, val]) => !used.has(k) && typeof val === 'string' && val).map(([, val]) => para(val)).join('');
           const todo = item.todo ? `<ul><li>${esc(item.todo)}</li></ul>` : '';
           return `<div class="fact"><strong>${esc(head)}</strong>${sub ? `　${esc(sub)}` : ''}</div>${body}${todo}`;

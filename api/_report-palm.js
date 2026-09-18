@@ -59,6 +59,28 @@ const planetsForMap = (a) => (a.planets || []).filter((p) => p.key !== 'Ascendan
   palmCorrespondence: PLANET_MAP[p.key] || null
 }));
 
+const natalByHouse = (a) => (a.planets || [])
+  .filter((p) => p.key !== 'Ascendant')
+  .map((p) => ({ planet: p.name, key: p.key, sign: p.sign, house: p.house }));
+
+// 各月のトランジット天体に、同じ星座にある出生天体（触れる天体）を添える。
+// 例: 土星が出生の土星の星座へ戻る（サターン・リターン）、ラーフが出生の月の上を通る、など個人固有の重なりを Gemini に渡す。
+function monthsWithTouches(a) {
+  const natal = natalByHouse(a);
+  return (a.months || []).map((m) => ({
+    month: m.month,
+    transits: m.planets.map((p) => {
+      const touches = natal.filter((n) => n.sign === p.sign).map((n) => ({
+        natalPlanet: n.planet, natalHouse: n.house, ...(n.key === p.key ? { return: true } : {})
+      }));
+      return {
+        planet: p.name, sign: p.sign, houseFromLagna: p.houseFromLagna, houseFromMoon: p.houseFromMoon,
+        ...(p.retrograde ? { retrograde: true } : {}), ...(touches.length ? { touches } : {})
+      };
+    })
+  }));
+}
+
 const PALM_CHAPTERS = [
   {
     id: 'summary',
@@ -168,15 +190,20 @@ const PALM_CHAPTERS = [
     id: 'ch7',
     title: '第7章 次の 12 か月（時の流れ）',
     pick: (a) => ({
-      period: a.period, dashaChanges: a.dashaChanges, currentDasha: a.dasha?.current, keyShifts: a.keyShifts, sadeSati: a.sadeSati,
-      months: (a.months || []).map((m) => ({ month: m.month, ...Object.fromEntries(m.planets.map((p) => [p.key, `L${p.houseFromLagna}/M${p.houseFromMoon}${p.retrograde ? ' R' : ''}`])) }))
+      period: a.period, dashaChanges: a.dashaChanges, currentDasha: a.dasha?.current, keyShifts: a.keyShifts,
+      sadeSati: a.sadeSati?.active ? { active: true, phase: a.sadeSati.phase } : { active: false },
+      natal: { ascendant: a.ascendant, moon: a.moon, sun: a.sun, atmakaraka: a.atmakaraka, strongest: a.strength?.slice(0, 2), planetsByHouse: natalByHouse(a) },
+      months: monthsWithTouches(a),
+      lines: { fate: handOf(a, dominant(a))?.lines?.fate, sun: handOf(a, dominant(a))?.lines?.sun, head: handOf(a, dominant(a))?.lines?.head }
     }),
     schema: `{
-      "overview": "今後 12 か月がこの人にとってどんな一年かを一言で名付け（例: 「○○の一年」）、その根拠と大きな流れ（250文字程度。期間は確定データの年月のみ）",
-      "windows": [{ "month": "確定データの YYYY-MM をそのまま（流れが動く月を 4〜6 つ選ぶ）", "theme": "その月の主題（30文字以内）", "text": "根拠（木星・土星・ラーフ/ケートゥの月からのハウス、ダシャー切替）→この人の人生のどの領域が動くか→その月にすべきこと一つ（150文字程度）" }],
-      "best": "この 12 か月で最も追い風が吹く月（YYYY-MM）と、そこで何を仕掛けるべきか（120文字程度）",
-      "handCheck": "この 12 か月のあとに手のどこが変わっているはずか（運命線・太陽線など。120文字程度）",
-      "closing": "この一年をどう乗り切るか、この人への言葉（120文字程度）"
+      "overview": "今後 12 か月をこの人のための一年として名付け（「○○の一年」）、なぜそう呼ぶかを、月から見た木星・土星・ラーフ/ケートゥの位置と、months[].transits[].touches に出ている「出生天体との重なり」（return は回帰）（例: 土星が出生の土星のいる牡羊座へ帰る、ラーフが出生の月の上を通る）を名指しして語る（250文字程度。期間は確定データの年月のみ）",
+      "months": [{ "month": "確定データの YYYY-MM を 12 か月ぶん、順にすべて", "title": "その月にこの人へ付ける見出し（20文字以内。「調整期」のような一般語ではなく、「独立へ動く月」「縁が結び直される月」のように、この人の人生で何が動くかを言い切る）", "text": "この月の空でこの人にだけ起きること: どの天体が出生図のどのハウス・どの天体（touches）に触れるか→人生のどの領域（縁・仕事・家・心・学び・お金の姿勢など）が動くか→その月にこの人がすべき行動を一つ（120文字程度。turning に挙げる転機の月には「ここで動く月です」と読者の背中を押す一文を必ず入れ、それ以外の月には使わない。動きの少ない月は「仕込みの月」として前月からの続きで何を積むかを書く）" }],
+      "turning": [{ "month": "YYYY-MM", "why": "keyShifts・touches のうち、この人にとって特別な意味を持つ移動（出生天体との重なり、ダシャー切替）を名指しして、なぜこの月が転機かを「この月、あなたは〜へ動きます」と言い切る（120文字程度。予言ではなく、何を始める・決める・手放す月かを示す）" }],
+      "best": "この 12 か月で最も追い風が吹く月（YYYY-MM）と、そこでこの人が何を仕掛けるべきか（120文字程度）",
+      "careful": "最も慎重に進むべき月（YYYY-MM）と、その月に守るべきこと一つ（100文字程度。不安を煽らず、恐怖表現なし）",
+      "handCheck": "この 12 か月のあとに手のどこが変わっているはずか（lines の運命線・太陽線・頭脳線の現状を名指しして。120文字程度）",
+      "closing": "この一年をどう生きるか、この人だけに向けた言葉（120文字程度）"
     }`
   },
   {
