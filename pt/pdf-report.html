@@ -242,7 +242,7 @@
     function render(data) {
       const a = data.astro || {};
       const c = data.chapters || {};
-      if (a.product === 'yearly' || a.product === 'compat' || a.product === 'career') {
+      if (a.product === 'yearly' || a.product === 'compat' || a.product === 'career' || a.product === 'palm') {
         bookEl.innerHTML = renderProduct(a, c, data);
         return;
       }
@@ -499,11 +499,12 @@
         if (!v.length) return '';
         if (typeof v[0] === 'string') return list(v);
         return v.map((item) => {
-          const head = item.month || item.name || item.planet || item.label || '';
-          const sub = item.phase || item.theme || item.kind || '';
-          const body = item.text || '';
+          const head = item.month || item.name || item.planet || item.label || item.mark || item.feature || '';
+          const sub = item.phase || item.theme || item.kind || item.where || '';
+          const used = new Set(['month', 'name', 'planet', 'label', 'mark', 'feature', 'phase', 'theme', 'kind', 'where', 'todo']);
+          const body = Object.entries(item).filter(([k, val]) => !used.has(k) && typeof val === 'string' && val).map(([, val]) => para(val)).join('');
           const todo = item.todo ? `<ul><li>${esc(item.todo)}</li></ul>` : '';
-          return `<div class="fact"><strong>${esc(head)}</strong>${sub ? `　${esc(sub)}` : ''}</div>${para(body)}${todo}`;
+          return `<div class="fact"><strong>${esc(head)}</strong>${sub ? `　${esc(sub)}` : ''}</div>${body}${todo}`;
         }).join('');
       }
       if (typeof v === 'object') return Object.values(v).map(genericValue).join('');
@@ -530,10 +531,11 @@
     function productCover(a) {
       const sub = a.product === 'yearly' ? 'Previsão do ano (próximos 12 meses)'
         : a.product === 'career' ? 'Relatório de carreira, vocação e dinheiro (a sua vocação)'
+        : a.product === 'palm' ? 'Kar-Kundali: Relatório védico de palma e mapa natal'
         : 'Relatório de compatibilidade';
       const owner = a.product === 'yearly'
         ? `${esc(a.period?.start || '')} — ${esc(a.period?.end || '')}<br>${personLine(a)}`
-        : a.product === 'career' ? personLine(a)
+        : a.product === 'career' || a.product === 'palm' ? personLine(a)
         : `<strong>A</strong> ${personLine(a.personA)}<br><br><strong>B</strong> ${personLine(a.personB)}`;
       return `<section class="page cover">
         <div><img class="logo" src="/img/libertas-logo.png" alt="Libertas Jyotish"></div>
@@ -575,12 +577,37 @@
         <p class="disclaimer">Entre parênteses, a casa contada a partir do ascendente (casa 1). R indica movimento retrógrado.</p>`);
     }
 
+    // 手相×出生図: 写真から読み取った「形」の一覧（観察データ。解釈は含まない）
+    function palmDataPage(a) {
+      const p = a.palm || {};
+      const hands = p.hands || {};
+      const cell = (v) => esc(v == null || v === '' ? '—' : String(v).replace(/_/g, ' '));
+      const rowPair = (label, r, l) => `<tr><td>${esc(label)}</td><td>${cell(r)}</td><td>${cell(l)}</td></tr>`;
+      const head = `<thead><tr><th></th><th>Mão direita${a.hand === 'right' ? ' *' : ''}</th><th>Mão esquerda${a.hand === 'left' ? ' *' : ''}</th></tr></thead>`;
+      const R = hands.right || {}, L = hands.left || {};
+      const rows = [
+        rowPair('Nitidez da foto', p.image_quality?.right, p.image_quality?.left),
+        rowPair('Forma da mão', R.hand_shape, L.hand_shape),
+        ...Object.keys(R.mounts || {}).map((m) => rowPair(`◎ ${m}`, R.mounts?.[m], L.mounts?.[m])),
+        ...Object.keys(R.lines || {}).map((ln) => rowPair(`― ${ln}`, `${R.lines?.[ln]?.clarity || ''} / ${R.lines?.[ln]?.length || ''}`, `${L.lines?.[ln]?.clarity || ''} / ${L.lines?.[ln]?.length || ''}`))
+      ].join('');
+      const marks = (side, h) => (h.marks || []).map((m) => `<li>${esc(side)}: ${cell(m.type)} — ${esc(m.location)} (${esc(m.confidence)})</li>`).join('');
+      const markList = marks('R', R) + marks('L', L);
+      const unclear = (p.unclear || []).length ? `<p class="disclaimer">${esc(p.unclear.join(' / '))}</p>` : '';
+      return page(`<h2 class="chapter-title">Observações da palma (traços lidos das suas fotos)</h2>
+        <table>${head}<tbody>${rows}</tbody></table>
+        ${markList ? `<h3>Marcas encontradas</h3><ul>${markList}</ul>` : ''}
+        ${unclear}
+        <p class="disclaimer">* mão dominante. Esta tabela lista os traços que uma IA leu mecanicamente das suas fotos; as interpretações segundo as correspondências tradicionais de Hasta Samudrika estão nos capítulos. As fotos originais são excluídas 30 dias após a entrega e nunca são usadas para identificação ou biometria. Não serve para avaliar a saúde.</p>`);
+    }
+
     function renderProduct(a, c, data) {
       const chapters = PROD_ORDER.map((id) => c[id]).filter(Boolean);
       const html = [productCover(a)];
       html.push(page(`<h2 class="chapter-title">Sumário</h2><ul class="toc">${chapters.map((ch) => `<li>${esc(ch.title)}</li>`).join('')}</ul>`));
       for (const ch of chapters) html.push(genericPage(ch));
       if (a.product === 'career') { html.push(careerDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
+      else if (a.product === 'palm') { html.push(palmDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
       else html.push(a.product === 'yearly' ? yearlyDataPage(a) : compatDataPage(a));
       html.push(disclaimerPage(data));
       return html.join('');

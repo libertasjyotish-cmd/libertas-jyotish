@@ -748,6 +748,75 @@ async function fetchCareerData({ dob, tob, lat, lon, lang }) {
   };
 }
 
+// --- 手相×出生図（Kar-Kundali / palm） ---
+// 出生図一式に、手相の惑星対応で使う確定要素を足す: アートマカーラカ（7 惑星中で度数最大）、
+// 出生ナクシャトラの神格（古典の対応表）、今後 12 か月の遅い惑星の月からのハウス、ダシャー切替。
+// 写真から読む観察（_palm.js）は別プロパティ palm に載せ、ここで確定する天文データと混ぜない。
+const NAKSHATRA_DEITY = {
+  'アシュヴィニー': 'Ashwini Kumaras', 'バラニー': 'Yama', 'クリッティカー': 'Agni', 'ローヒニー': 'Brahma (Prajapati)',
+  'ムリガシラス': 'Soma', 'アールドラー': 'Rudra', 'プナルヴァス': 'Aditi', 'プシャ': 'Brihaspati',
+  'アーシュレーシャ': 'Nagas (Sarpa)', 'マガー': 'Pitris', 'プールヴァ・パールグニー': 'Bhaga', 'ウッタラ・パールグニー': 'Aryaman',
+  'ハスタ': 'Savitar', 'チトラ': 'Vishvakarma (Tvashtar)', 'スヴァーティ': 'Vayu', 'ヴィシャーカー': 'Indra-Agni',
+  'アヌラーダ': 'Mitra', 'ジェーシュタ': 'Indra', 'ムーラ': 'Nirriti', 'プールヴァ・アシャーダー': 'Apas',
+  'ウッタラ・アシャーダー': 'Vishvadevas', 'シュラヴァナ': 'Vishnu', 'ダニシュター': 'Ashta Vasus', 'シャタビシャ': 'Varuna',
+  'プールヴァ・バードラパダー': 'Aja Ekapada', 'ウッタラ・バードラパダー': 'Ahir Budhnya', 'レーヴァティー': 'Pushan'
+};
+const KARAKA_PLANETS = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
+
+function atmakarakaOf(planets) {
+  const candidates = planets.filter((p) => KARAKA_PLANETS.includes(p.key) && typeof p.degree === 'number');
+  if (!candidates.length) return null;
+  const top = candidates.reduce((a, b) => (b.degree > a.degree ? b : a));
+  return { key: top.key, name: top.name, sign: top.sign, house: top.house, degree: top.degree };
+}
+
+async function fetchPalmData({ dob, tob, lat, lon, lang }) {
+  const terms = createTerms(lang);
+  const { raw, ...base } = await fetchReportData({ dob, tob, lat, lon, lang }, { withRaw: true });
+  const token = await getAccessToken();
+  const coordinates = `${lat},${lon}`;
+  const months = monthStartsFrom(new Date(), 12);
+  const monthly = await Promise.all(months.map((ym) => callEndpoint(token, 'astrology/planet-position', { datetime: `${ym}-01T12:00:00+09:00`, coordinates, ayanamsa: 1 })));
+  if (monthly.filter(Boolean).length < 10) throw new Error('prokerala_transit_failed');
+
+  const planets = base.planets;
+  const asc = planets.find((p) => p.key === 'Ascendant');
+  const moon = planets.find((p) => p.key === 'Moon');
+  const monthsOut = months.map((ym, i) => {
+    const transit = normalizePlanets(monthly[i] || { data: {} }, terms).filter((p) => SLOW_PLANETS.includes(p.key) || p.key === 'Mars');
+    return {
+      month: ym,
+      planets: transit.map((p) => {
+        const fromMoon = moon ? houseFrom(moon.signKey, p.signKey) : null;
+        const fromLagna = asc ? houseFrom(asc.signKey, p.signKey) : null;
+        return { key: p.key, name: p.name, sign: p.sign, signKey: p.signKey, retrograde: p.retrograde, houseFromMoon: fromMoon, houseFromLagna: fromLagna };
+      })
+    };
+  });
+  const keyShifts = [];
+  for (const key of SLOW_PLANETS) {
+    let prev = null;
+    for (const m of monthsOut) {
+      const p = m.planets.find((x) => x.key === key);
+      if (!p) continue;
+      if (prev && prev.signKey !== p.signKey) keyShifts.push({ month: m.month, planet: p.name, planetKey: key, from: prev.sign, to: p.sign, houseFromMoon: p.houseFromMoon });
+      prev = p;
+    }
+  }
+  const nakshatraKey = moon?.nakshatraKey || '';
+
+  return {
+    ...base,
+    product: 'palm',
+    period: { start: months[0], end: months[months.length - 1] },
+    atmakaraka: atmakarakaOf(planets),
+    nakshatraDeity: NAKSHATRA_DEITY[nakshatraKey] || '',
+    months: monthsOut,
+    keyShifts,
+    dashaChanges: dashaChangesWithin(raw.kundli, months[0], months[months.length - 1], terms)
+  };
+}
+
 // --- 相性鑑定（Compatibility） ---
 // アシュタクータ（36点法）は Prokerala の kundli-matching で確定させる。向きは girl=A / boy=B。
 function personSummary(planets, kundli, terms) {
@@ -918,6 +987,7 @@ module.exports = {
   fetchYearlyData,
   fetchCareerData,
   fetchCompatData,
+  fetchPalmData,
   toJstIsoString,
   toJapaneseSign,
   toJapaneseNakshatra,

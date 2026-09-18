@@ -43,8 +43,59 @@ async function send({ to, subject, html, attachments, replyTo }) {
 const PRODUCT_NAMES = {
   natal: 'Vedic astrology birth chart report',
   yearly: 'Vedic astrology year-ahead forecast',
-  compat: 'Vedic astrology compatibility report'
+  compat: 'Vedic astrology compatibility report',
+  career: 'Vedic astrology career & wealth report',
+  palm: 'Kar-Kundali (Vedic palm & birth chart) report'
 };
+
+// 手相×出生図: 写真のアップロード案内。日本語注文（サイト直販）は日本語、それ以外は英語。
+// retake=true は判読できなかったときの撮り直し依頼。
+const UPLOAD_TIPS = {
+  en: ['Bright natural light, palm open, camera directly above.', 'Include fingertips to wrist in the frame.', 'Avoid shadows across the lines (no flash needed).'],
+  ja: ['明るい自然光の下で、手のひらを開いて真上から。', '指先から手首まで全体が入るように。', '線に影がかからないように（フラッシュは不要）。']
+};
+
+function uploadHtml({ name, uploadUrl, language, retake }) {
+  const ja = language === 'ja';
+  const tips = UPLOAD_TIPS[ja ? 'ja' : 'en'].map((t) => `<li>${esc(t)}</li>`).join('');
+  if (ja) {
+    return wrap(`
+      <p>${esc(name || 'お客さま')} さま</p>
+      <p>${retake ? 'お送りいただいた写真が不鮮明で、線や丘を判読できませんでした。お手数ですが、下記のポイントをご確認のうえ両手の写真をもう一度お送りください（追加料金はございません）。' : 'カル・クンダリ（手相×出生図 統合鑑定）をご購入いただきありがとうございます。鑑定を始めるには、両手の写真 2 枚が必要です。'}</p>
+      <p style="text-align:center; margin:20px 0;"><a href="${esc(uploadUrl)}" style="display:inline-block; padding:12px 26px; background:#8B6B1B; color:#fff; text-decoration:none; border-radius:6px;">写真をアップロードする</a></p>
+      <p style="font-size:13px; color:#7a6a58;">ボタンが開かない場合はこちら: <a href="${esc(uploadUrl)}">${esc(uploadUrl)}</a><br>（このリンクはご注文専用です。他の方に共有しないでください）</p>
+      <ul style="font-size:14px;">${tips}</ul>
+      <p style="font-size:14px;">写真は鑑定のみに使用し、原本は納品後 30 日で自動削除します。本人確認や生体認証には使いません。アップロード後 24 時間以内に PDF をメールでお届けします。</p>
+      <p>Libertas Jyotish</p>`);
+  }
+  return wrap(`
+    <p>Dear ${esc(name || 'friend')},</p>
+    <p>${retake ? 'The photos you sent were too unclear for us to read the lines and mounts. Could you please send both palms again, following the tips below? There is no extra charge.' : 'Thank you for ordering the Kar-Kundali (Vedic palm & birth chart) report. To begin your reading we need two photos: your right palm and your left palm.'}</p>
+    <p style="text-align:center; margin:20px 0;"><a href="${esc(uploadUrl)}" style="display:inline-block; padding:12px 26px; background:#8B6B1B; color:#fff; text-decoration:none; border-radius:6px;">Upload your palm photos</a></p>
+    <p style="font-size:13px; color:#7a6a58;">If the button does not open: <a href="${esc(uploadUrl)}">${esc(uploadUrl)}</a><br>(This link is private to your order. Please do not share it.)</p>
+    <ul style="font-size:14px;">${tips}</ul>
+    <p style="font-size:14px;">Photos are used only for this reading; the originals are deleted automatically 30 days after delivery and are never used for identification or biometric matching. Your PDF will arrive by email within 24 hours of upload.</p>
+    <p>With gratitude,<br>Libertas Jyotish</p>`);
+}
+
+// Etsy メッセージに貼るアップロード案内（購入者メールが取れない注文用）
+function uploadText({ name, uploadUrl, retake }) {
+  return [
+    `Dear ${name || 'friend'},`,
+    '',
+    retake
+      ? 'The photos you sent were too unclear for us to read the lines and mounts. Could you please upload both palms again (no extra charge)?'
+      : 'Thank you for ordering the Kar-Kundali (Vedic palm & birth chart) report. To begin, please upload a photo of your right palm and your left palm here:',
+    uploadUrl,
+    '',
+    ...UPLOAD_TIPS.en.map((t) => `- ${t}`),
+    '',
+    'Photos are used only for this reading and deleted automatically 30 days after delivery. Your PDF will follow within 24 hours of upload.',
+    '',
+    'With gratitude,',
+    'Libertas Jyotish'
+  ].join('\n');
+}
 
 function deliveryHtml({ name, product, dob, tob, tobUnknown, place, dobB, tobB, placeB, language, downloadUrl }) {
   const row = (label, value) => `<tr><td style="padding:3px 12px 3px 0; color:#7a6a58;">${label}</td><td>${esc(value)}</td></tr>`;
@@ -146,6 +197,17 @@ async function sendReport({ to, name, pdf, filename, meta }) {
   });
 }
 
+async function sendUploadLink({ to, name, uploadUrl, language, retake = false }) {
+  const ja = language === 'ja';
+  return send({
+    to,
+    subject: ja
+      ? (retake ? '【カル・クンダリ】手の写真の撮り直しのお願い' : '【カル・クンダリ】両手の写真をお送りください')
+      : (retake ? 'Kar-Kundali: please re-take your palm photos' : 'Kar-Kundali: please upload your palm photos'),
+    html: uploadHtml({ name, uploadUrl, language, retake })
+  });
+}
+
 async function sendNeedsInfo({ to, name, personalization, missing, notes }) {
   return send({
     to,
@@ -163,4 +225,4 @@ async function notifyOwner(subject, lines) {
   });
 }
 
-module.exports = { send, sendReport, sendNeedsInfo, notifyOwner, deliveryText, needsInfoText, LANGUAGE_NAMES };
+module.exports = { send, sendReport, sendNeedsInfo, sendUploadLink, notifyOwner, deliveryText, needsInfoText, uploadText, LANGUAGE_NAMES };

@@ -261,7 +261,17 @@ const CHAPTER_TITLE = {
   career_ch4: 'Chapter 4 — Your money pattern (2nd, 11th houses and Ashtakavarga)',
   career_ch5: 'Chapter 5 — The cycles of your working life (Dasha)',
   career_ch6: 'Chapter 6 — When your career moves (next 12 months)',
-  career_ch7: 'Chapter 7 — An action plan toward your calling'
+  career_ch7: 'Chapter 7 — An action plan toward your calling',
+  palm_summary: 'Your Kar-Kundali at a glance',
+  palm_ch1: 'Chapter 1 — The soul’s blueprint (what your birth chart says)',
+  palm_ch2: 'Chapter 2 — The planet map on your hand (Navagraha, mounts, fingers and lines)',
+  palm_ch3: 'Chapter 3 — Heaven and earth compared (where chart and palm agree or differ)',
+  palm_ch4: 'Chapter 4 — Sacred marks (auspicious signs)',
+  palm_ch5: 'Chapter 5 — The three karmas (accumulated, allotted, in the making)',
+  palm_ch6: 'Chapter 6 — Bonds, work and decisions',
+  palm_ch7: 'Chapter 7 — The next 12 months',
+  palm_ch8: 'Chapter 8 — Hands change (a practice of observation)',
+  palm_ch9: 'Appendix — Clues when the birth time is uncertain'
 };
 
 const REASON = {

@@ -80,6 +80,13 @@ body { font-family: 'Noto Serif JP', serif; }
 .pc-hero .pc-btn-sub { color: #cfc3a8; }
 .pc-hero a.pc-link { color: #ffe08a; font-size: 0.85rem; text-decoration: underline; }
 .pc-note { font-size: 0.8rem; color: #7a6a58; margin-top: 10px; }
+.pc-order { margin: 18px 0 8px; padding: 20px; background: rgba(255,252,245,0.9); border: 1px solid rgba(139,107,27,0.35); border-radius: 12px; }
+.pc-order label { display: block; font-size: 0.85rem; color: #6b4f10; font-weight: 700; margin: 12px 0 4px; }
+.pc-order input[type=text], .pc-order input[type=email], .pc-order input[type=date], .pc-order input[type=time] { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid rgba(139,107,27,0.45); border-radius: 8px; font-size: 1rem; font-family: inherit; background: #fff; }
+.pc-order .pc-inline { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.9rem; font-weight: 400; color: #4a3a2a; margin-top: 8px; }
+.pc-order .pc-inline label { display: inline; font-weight: 400; margin: 0; color: #4a3a2a; }
+.pc-order .pc-err { color: #a33; font-size: 0.88rem; min-height: 1.2em; margin-top: 10px; }
+.pc-ordered { display: none; }
 @media (max-width: 640px) {
   .pc-stack, .pc-stack tbody, .pc-stack tr, .pc-stack td { display: block; width: 100%; }
   .pc-stack thead { display: none; }
@@ -114,8 +121,8 @@ body { font-family: 'Noto Serif JP', serif; }
     <li>健康・寿命など不安を煽る項目は扱いません</li>
   </ul>
   <div class="pc-cta">
-    <button class="pc-btn" type="button" disabled>あなたの手の上のホロスコープを開く（¥12,800）</button>
-    <span class="pc-btn-sub">サイト内決済の開設に合わせて受付を開始します</span>
+    <a class="pc-btn" href="#order">あなたの手の上のホロスコープを開く（¥12,800）</a>
+    <span class="pc-btn-sub">お申し込み → 決済 → 両手の写真をアップロード → 24 時間以内に PDF</span>
     <a class="pc-link" href="#samples">サンプル鑑定を見る ↓</a>
   </div>
 </section>
@@ -280,10 +287,78 @@ body { font-family: 'Noto Serif JP', serif; }
   <dd>原画像は 30 日で自動削除。解析データと低解像度の比較画像のみ保持します。</dd>
 </dl>
 
-<div class="pc-cta">
-  <button class="pc-btn" type="button" disabled>あなたの手の上のホロスコープを開く（¥12,800）</button>
-  <span class="pc-btn-sub">サイト内決済の開設に合わせて受付を開始します</span>
+<h2 id="order">お申し込み</h2>
+<div class="pc-ordered" id="ordered-view">
+  <p id="ordered-paid">ご購入ありがとうございます。写真アップロードのご案内をメールでお送りしました（届かない場合は迷惑メールフォルダをご確認ください）。両手の写真 2 枚をお送りいただくと鑑定を開始します。</p>
+  <p id="ordered-pending" style="display:none">お申し込みを受け付けました。お支払いの確認後、写真アップロードのご案内をメールでお送りします（コンビニ払い等は入金確認後）。</p>
 </div>
+<form class="pc-order" id="order-form" onsubmit="return false">
+  <p class="pc-note" style="margin-top:0">出生データを入力して決済に進みます。決済完了後、両手の写真をアップロードする専用ページをご案内します（写真は原本を納品後 30 日で削除）。</p>
+  <label for="f-email">メールアドレス（PDF のお届け先）</label>
+  <input id="f-email" name="email" type="email" autocomplete="email" required>
+  <label for="f-name">お名前（任意）</label>
+  <input id="f-name" name="name" type="text" autocomplete="name">
+  <label for="f-dob">生年月日</label>
+  <input id="f-dob" name="dob" type="date" required>
+  <label for="f-tob">出生時刻</label>
+  <input id="f-tob" name="tob" type="time">
+  <div class="pc-inline"><label><input id="f-tob-unknown" type="checkbox"> 出生時刻が分からない（付章で手相から候補を絞ります）</label></div>
+  <label for="f-place">出生地（市区町村・国）</label>
+  <input id="f-place" name="place" type="text" placeholder="例: 東京都新宿区 / Osaka, Japan" required>
+  <label>利き手</label>
+  <div class="pc-inline">
+    <label><input type="radio" name="hand" value="right" checked> 右</label>
+    <label><input type="radio" name="hand" value="left"> 左</label>
+  </div>
+  <div class="pc-err" id="form-error"></div>
+  <div class="pc-cta">
+    <button class="pc-btn" type="button" id="btn-order">決済に進む（¥12,800 税込）</button>
+    <span class="pc-btn-sub">クレジットカード・コンビニ・PayPay ／ 決済は KOMOJU のページで行われます</span>
+  </div>
+  <p class="pc-note">お申し込みにより<a href="/ja/legal#terms">利用規約</a>・<a href="/ja/legal#privacy">プライバシーポリシー</a>に同意いただいたものとします。鑑定書はデジタル商品のため、生成開始後の返金はお受けできません。</p>
+</form>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var ordered = params.get('ordered');
+  var form = document.getElementById('order-form');
+  if (ordered) {
+    form.style.display = 'none';
+    document.getElementById('ordered-view').style.display = 'block';
+    if (ordered !== 'paid') { document.getElementById('ordered-paid').style.display = 'none'; document.getElementById('ordered-pending').style.display = 'block'; }
+    document.getElementById('order').scrollIntoView();
+    return;
+  }
+  var cb = document.getElementById('f-tob-unknown'), tob = document.getElementById('f-tob');
+  cb.addEventListener('change', function () { tob.disabled = cb.checked; if (cb.checked) tob.value = ''; });
+  var savedEmail = localStorage.getItem('lj_user_email') || '';
+  if (savedEmail) document.getElementById('f-email').value = savedEmail;
+  var dob = localStorage.getItem('dob'), t = localStorage.getItem('tob'), city = localStorage.getItem('city');
+  if (dob) document.getElementById('f-dob').value = dob;
+  if (t) tob.value = t;
+  if (city) document.getElementById('f-place').value = city;
+  var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  var ERR = { email: 'メールアドレスを正しく入力してください。', fields: '生年月日・出生時刻（不明の場合はチェック）・出生地を入力してください。', server: '送信に失敗しました。時間をおいて再度お試しください。', unavailable: 'お住まいの地域ではサイト内決済を準備中です。お問い合わせフォームからご連絡ください。' };
+  btn.addEventListener('click', function () {
+    var data = { product: 'palm', lang: 'ja' };
+    new FormData(form).forEach(function (v, k) { data[k] = v; });
+    data.tob_unknown = cb.checked;
+    errBox.textContent = '';
+    if (!data.email || data.email.indexOf('@') < 0) { errBox.textContent = ERR.email; return; }
+    if (!data.dob || !data.place || (!data.tob_unknown && !data.tob)) { errBox.textContent = ERR.fields; return; }
+    localStorage.setItem('lj_user_email', data.email);
+    btn.disabled = true;
+    fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (res) {
+        if (!res.ok || !res.j.url) { var code = res.j && res.j.error;
+          errBox.textContent = code === 'invalid_fields' ? ERR.fields : code === 'unavailable' ? ERR.unavailable : code === 'invalid_email' ? ERR.email : ERR.server; btn.disabled = false; return; }
+        location.href = res.j.url;
+      })
+      .catch(function () { errBox.textContent = ERR.server; btn.disabled = false; });
+  });
+})();
+</script>
 
 </div>
 </article>

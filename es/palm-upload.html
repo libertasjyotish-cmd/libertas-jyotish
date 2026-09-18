@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sube las fotos de tus palmas | Kar-Kundali | Libertas Jyotish</title>
+  <meta name="description" content="Página privada para subir las fotos de ambas palmas para tu informe Kar-Kundali (quiromancia védica × carta natal).">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://www.libertas-jyotish.com/es/palm-upload">
+  <link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/palm-upload">
+<link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/palm-upload">
+<link rel="alternate" hreflang="es" href="https://www.libertas-jyotish.com/es/palm-upload">
+<link rel="alternate" hreflang="pt" href="https://www.libertas-jyotish.com/pt/palm-upload">
+<link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar/palm-upload">
+<link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id/palm-upload">
+<link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/palm-upload">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0c1a1f">
+  <link rel="icon" type="image/png" href="/img/libertas-logo.png">
+  <link rel="apple-touch-icon" href="/img/libertas-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --color-gold-light: #FDE047;
+      --color-gold-main: #D4AF37;
+      --color-gold-dark: #8B6B1B;
+      --color-text-dark: #2C221E;
+      --font-en: 'Cinzel', serif;
+      --font-ja: 'Noto Serif', serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-ja);
+      color: var(--color-text-dark);
+      line-height: 1.8;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-color: #0c1a1f;
+      display: flex; flex-direction: column;
+    }
+    .site-header {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+      background: rgba(12, 26, 31, 0.92);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(139, 107, 27, 0.3);
+      padding: 12px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .main-section {
+      position: relative; flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 100px 20px 60px;
+      background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");
+      background-size: cover; background-position: center; background-attachment: fixed;
+    }
+    .card {
+      position: relative; z-index: 2; width: 100%; max-width: 640px;
+      background-image:
+        radial-gradient(circle at 50% 25%, rgba(255, 253, 245, 0.98) 0%, rgba(245, 233, 208, 0.95) 55%, rgba(220, 200, 162, 0.96) 100%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.05) 100%);
+      background-blend-mode: overlay, normal;
+      border-radius: 14px;
+      border: 1px solid rgba(184, 142, 60, 0.65);
+      outline: 1px solid rgba(212, 175, 55, 0.35); outline-offset: -7px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75), 0 0 20px rgba(212, 175, 55, 0.18), inset 0 0 35px rgba(139, 90, 43, 0.28), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+      padding: 45px 35px 40px; margin-bottom: 30px;
+    }
+    .kicker { font-family: var(--font-en); letter-spacing: 0.18em; font-size: 0.72rem; color: var(--color-gold-dark); text-align: center; margin-bottom: 8px; }
+    h1 { font-size: 1.45rem; margin-bottom: 10px; text-align: center; }
+    .lead { font-size: 0.9rem; color: #5A4E48; margin-bottom: 22px; text-align: center; }
+    .tips { font-size: 0.85rem; color: #5A4E48; background: rgba(255, 252, 245, 0.7); border: 1px dashed rgba(139, 107, 27, 0.4); border-radius: 8px; padding: 12px 16px 12px 30px; margin-bottom: 24px; }
+    .tips li { margin: 3px 0; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; }
+    select {
+      width: 100%; padding: 11px 14px;
+      background-color: rgba(255, 252, 245, 0.85);
+      border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px;
+      font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none;
+    }
+    .hands { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 520px) { .hands { grid-template-columns: 1fr; } }
+    .hand { border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 10px; background: rgba(255, 252, 245, 0.75); padding: 12px; text-align: center; }
+    .hand h3 { font-size: 0.95rem; margin-bottom: 8px; }
+    .hand .drop {
+      display: block; min-height: 180px; border: 2px dashed rgba(139, 107, 27, 0.45); border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; overflow: hidden; background: rgba(255,255,255,0.4); color: #7a6a58; font-size: 0.82rem; padding: 8px;
+    }
+    .hand .drop img { max-width: 100%; max-height: 260px; display: block; border-radius: 6px; }
+    .hand input[type=file] { display: none; }
+    .hand .meta { font-size: 0.75rem; color: #7a6a58; margin-top: 6px; min-height: 1.2em; }
+    .submit-btn {
+      width: 100%; padding: 15px 28px; font-size: 1.05rem; font-weight: 600; font-family: var(--font-ja); color: #FFFDF9; margin-top: 8px;
+      background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%); border: none; border-radius: 8px; cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4); transition: transform 0.2s;
+    }
+    .submit-btn:hover { transform: translateY(-1px); }
+    .submit-btn[disabled] { opacity: 0.6; cursor: wait; }
+    .note { font-size: 0.78rem; color: #7a6a58; margin-top: 12px; }
+    .note a { color: var(--color-gold-dark); }
+    #result-box { margin-top: 20px; display: none; padding: 14px; border-radius: 8px; font-size: 0.9rem; }
+    #result-box.ok { background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(139, 107, 27, 0.4); color: var(--color-gold-dark); font-weight: 600; }
+    #result-box.err { background: rgba(180, 60, 40, 0.1); border: 1px solid rgba(180, 60, 40, 0.4); color: #8a3a2a; }
+    .hidden { display: none !important; }
+
+    .site-footer { width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3); padding: 24px 20px; text-align: center; position: relative; z-index: 10; }
+    .footer-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+    .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
+    .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
+  </style>
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/rtl.css">
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'es',
+  menu: {
+    top: 'Inicio',
+    free: 'Lectura gratuita',
+    about: 'Sobre Libertas Jyotish',
+    report: 'Informe Vitalicio (pago único)',
+    calendar: 'Calendario Anual de la Fortuna',
+    calendarNote: 'próximamente',
+    mypage: 'Página de miembro',
+    legal: 'Información legal y términos',
+    contact: 'Contacto',
+    toggleLabel: 'Menú',
+    navLabel: 'Menú del sitio'
+  },
+  price: {
+    premium: '{price} al mes (impuestos incl.)',
+    pdf: '{price} pago único (impuestos incl.)',
+    premiumApprox: 'Unos {price} al mes (impuestos incl.); el importe final se muestra al pagar',
+    pdfApprox: 'Unos {price} en pago único (impuestos incl.); el importe final se muestra al pagar',
+    checkoutOnly: 'El importe en tu moneda local se muestra al pagar',
+    unavailable: 'El plan Premium mensual aún no está a la venta: el pago en línea está en preparación. El informe PDF ya está disponible.'
+  },
+  playError: 'No se pudo completar la compra en Google Play. Inténtalo de nuevo.',
+  playManage: 'Las suscripciones compradas en la app se gestionan (cancelar, método de pago) en Google Play → Suscripciones. ¿Abrir ahora?',
+  guide: {
+    hub: '/es/guide',
+    hubLabel: "Todas las guías",
+    intro: '/es/guide/indian-astrology',
+    introLabel: "¿Qué es la astrología védica?",
+    groupLabel: ""
+  }
+};
+</script>
+<script defer src="/js/site-menu.js"></script>
+</head>
+<body>
+
+  <header class="site-header" data-site-header></header>
+
+  <section class="main-section">
+    <div class="card">
+      <p class="kicker">KAR-KUNDALI · HASTA SAMUDRIKA × JYOTISH</p>
+      <h1>Envíanos fotos de ambas manos</h1>
+      <p class="lead">Gracias por tu pedido. Cuando subas las dos fotos comenzamos tu lectura y enviamos el PDF por correo en 24 horas.</p>
+
+      <div id="state-loading" class="note">Comprobando tu pedido…</div>
+      <div id="state-invalid" class="hidden">
+        <div id="invalid-box" class="tips">Este enlace no es válido o ha caducado (60 días). Contáctanos indicando tu número de pedido.</div>
+        <p class="note"><a href="/es/contact">Contacto</a></p>
+      </div>
+      <div id="state-done" class="hidden">
+        <div class="tips">Hemos recibido tus fotos y estamos preparando tu informe (llega por correo en 24 horas). Te avisaremos si hace falta repetir una foto.</div>
+        <p class="note"><a href="/es/contact">Contacto</a></p>
+      </div>
+
+      <form id="upload-form" class="hidden" novalidate>
+        <ul class="tips">
+          <li>Fotografía con luz natural, palma abierta, cámara justo encima.</li>
+          <li>Incluye desde las puntas de los dedos hasta la muñeca.</li>
+          <li>Evita sombras sobre las líneas (sin flash).</li>
+          <li>Si una foto no se puede leer, te pediremos repetirla sin coste adicional.</li>
+        </ul>
+
+        <div class="form-group"><label for="u-hand">Mano dominante</label>
+          <select id="u-hand" name="hand">
+            <option value="right">Derecha</option>
+            <option value="left">Izquierda</option>
+          </select>
+        </div>
+
+        <div class="hands">
+          <div class="hand">
+            <h3>Mano derecha</h3>
+            <label class="drop" for="file-right" id="drop-right">Toca para elegir o tomar una foto</label>
+            <input type="file" id="file-right" accept="image/*" capture="environment">
+            <div class="meta" id="meta-right"></div>
+          </div>
+          <div class="hand">
+            <h3>Mano izquierda</h3>
+            <label class="drop" for="file-left" id="drop-left">Toca para elegir o tomar una foto</label>
+            <input type="file" id="file-left" accept="image/*" capture="environment">
+            <div class="meta" id="meta-left"></div>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="u-submit">Empezar mi lectura con estas dos fotos</button>
+        <p class="note">Las fotos se usan solo para esta lectura; los originales se eliminan automáticamente 30 días después de la entrega. Sin verificación de identidad ni biometría. El análisis usa IA de Google. <a href="/es/legal">Política de privacidad</a></p>
+      </form>
+      <div id="result-box" role="status"></div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-links"><a href="/es/legal">Información legal</a>
+<a href="/es/legal#terms">Términos de uso</a>
+<a href="/es/legal#privacy">Política de privacidad</a>
+<a href="/es/legal#refund">Política de reembolso</a>
+<a href="/es/contact">Contacto</a></div>
+    <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var T = {
+        errImage: 'No se pudo leer la imagen. Elige una foto JPEG/PNG.',
+        errBoth: 'Elige una foto de la mano derecha y otra de la izquierda.',
+        errServer: 'Error al subir. Inténtalo de nuevo en un momento.',
+        sent: 'Fotos recibidas. Tu informe llegará por correo en 24 horas.',
+        ready: 'Listo',
+        processing: 'Subiendo…'
+      };
+      var MAX_SIDE = 1600;
+      var token = new URLSearchParams(location.search).get('t') || '';
+      var form = document.getElementById('upload-form');
+      var box = document.getElementById('result-box');
+      var btn = document.getElementById('u-submit');
+      var images = { right: null, left: null };
+
+      function show(cls, text) { box.className = cls; box.textContent = text; box.style.display = 'block'; }
+      function el(id) { return document.getElementById(id); }
+      function state(id) {
+        ['state-loading', 'state-invalid', 'state-done', 'upload-form'].forEach(function (s) { el(s).classList.toggle('hidden', s !== id); });
+      }
+
+      // 端末側で長辺 1600px の JPEG に縮小してから送る（通信量と Blob 容量を抑え、HEIC 等も JPEG に揃える）
+      function toJpeg(file) {
+        return new Promise(function (resolve, reject) {
+          if (!/^image\//.test(file.type) && !/\.(heic|heif)$/i.test(file.name)) return reject(new Error('type'));
+          var url = URL.createObjectURL(file);
+          var img = new Image();
+          img.onload = function () {
+            var scale = Math.min(1, MAX_SIDE / Math.max(img.naturalWidth, img.naturalHeight));
+            var w = Math.round(img.naturalWidth * scale), h = Math.round(img.naturalHeight * scale);
+            var canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            URL.revokeObjectURL(url);
+            resolve(canvas.toDataURL('image/jpeg', 0.86));
+          };
+          img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('decode')); };
+          img.src = url;
+        });
+      }
+
+      function bind(side) {
+        var input = el('file-' + side), drop = el('drop-' + side), meta = el('meta-' + side);
+        input.addEventListener('change', function () {
+          var file = input.files && input.files[0];
+          if (!file) return;
+          meta.textContent = '…';
+          toJpeg(file).then(function (dataUrl) {
+            images[side] = dataUrl;
+            drop.innerHTML = '';
+            var img = document.createElement('img'); img.src = dataUrl; img.alt = side; drop.appendChild(img);
+            meta.textContent = T.ready + ' (' + Math.round(dataUrl.length * 0.75 / 1024) + ' KB)';
+            box.style.display = 'none';
+          }).catch(function () { images[side] = null; meta.textContent = ''; show('err', T.errImage); });
+        });
+      }
+      bind('right'); bind('left');
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!images.right || !images.left) return show('err', T.errBoth);
+        btn.disabled = true;
+        show('ok', T.processing);
+        fetch('/api/palm-upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ t: token, hand: el('u-hand').value, right: images.right, left: images.left })
+        }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, data: d }; }); })
+          .then(function (res) {
+            if (!res.ok) throw new Error(res.data.error || 'server');
+            form.classList.add('hidden');
+            show('ok', T.sent);
+          })
+          .catch(function (err) { btn.disabled = false; show('err', err.message === 'invalid_image' ? T.errImage : T.errServer); });
+      });
+
+      if (!token) { state('state-invalid'); return; }
+      fetch('/api/palm-upload?t=' + encodeURIComponent(token))
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error(String(r.status))); })
+        .then(function (d) {
+          if (d.hand) el('u-hand').value = d.hand;
+          if (d.accepting) state('upload-form');
+          else state('state-done');
+        })
+        .catch(function () { state('state-invalid'); });
+    })();
+  </script>
+</body>
+</html>

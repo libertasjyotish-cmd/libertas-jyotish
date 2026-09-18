@@ -9,7 +9,8 @@ const { createSession } = require('./_komoju');
 const { normalizeLang } = require('./_terms');
 const ledger = require('./_etsy-ledger');
 
-const PRODUCTS = new Set(['compat', 'yearly', 'career']);
+const PRODUCTS = new Set(['compat', 'yearly', 'career', 'palm']);
+const HANDS = new Set(['right', 'left']);
 const RELATIONS = new Set(['romance', 'friend', 'business', 'general']);
 
 function siteOrigin(req) {
@@ -60,6 +61,11 @@ module.exports = async (req, res) => {
   const errors = [...a.errors];
   let b = null;
   let relation = '';
+  let hand = '';
+  if (product === 'palm') {
+    hand = str(body.hand, 10);
+    if (!HANDS.has(hand)) hand = 'right';
+  }
   if (product === 'compat') {
     b = person(body, '_b');
     errors.push(...b.errors);
@@ -80,6 +86,7 @@ module.exports = async (req, res) => {
     await ledger.upsertOrder(orderId, {
       product,
       relation,
+      hand,
       delivery: 'email',
       buyer_email: email,
       buyer_name: name,

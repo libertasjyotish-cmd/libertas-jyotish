@@ -2,10 +2,12 @@
 // 関数の制限時間内で進められるところまで進めて台帳（Google Sheets）に保存し、次回に続きを行う。
 //   注文取得 → パーソナライズ解析 → 天体計算 → 章を数個ずつ生成 → 揃ったら PDF → Resend → Etsy 注文を完了に更新
 // 台帳は receipt_id ごとに 1 行。再実行しても二重生成・二重送信しない。
-const { fetchReportData, fetchYearlyData, fetchCompatData, fetchCareerData } = require('./_astrology');
+const { fetchReportData, fetchYearlyData, fetchCompatData, fetchCareerData, fetchPalmData } = require('./_astrology');
 const { listGeminiModels } = require('./_gemini');
 const { CHAPTERS, CHAPTER_IDS, generateChapters } = require('./_report');
 const { YEARLY_CHAPTERS, COMPAT_CHAPTERS, CAREER_CHAPTERS, compatChapterIdsFor } = require('./_report-products');
+const { PALM_CHAPTERS, PALM_CHAPTER_IDS } = require('./_report-palm');
+const { analyzePalm, palmUnreadable } = require('./_palm');
 const { normalizeLang } = require('./_terms');
 const { geocodeBirthPlace } = require('./_geocode');
 const etsy = require('./_etsy-api');
@@ -20,6 +22,8 @@ const MAX_ATTEMPTS = 5;
 const IN_PROGRESS_LOCK_MS = 2 * 60 * 1000;
 const MIN_MS_FOR_CHAPTERS = 25000;
 const MIN_MS_FOR_PDF = 30000;
+const MIN_MS_FOR_VISION = 45000;
+const PHOTO_RETENTION_DAYS = 30;
 const { STATUS } = ledger;
 
 const REVIEW_PAGE = `
@@ -54,15 +58,24 @@ function productOf(receipt) {
     const title = String(tx.title || '');
     if (/compatib|synastry|relationship|couple/i.test(title)) return 'compat';
     if (/year[- ]?ahead|yearly|annual|12[- ]month|forecast/i.test(title)) return 'yearly';
+    if (/palm|kar-kundali|hasta|palmistry/i.test(title)) return 'palm';
     if (/career|vocation|profession|wealth|money|job/i.test(title)) return 'career';
   }
   return 'natal';
+}
+
+// パーソナライズ文から利き手を拾う（“Dominant hand: left” / “left-handed” / 「利き手: 左」）。不明は右。
+function handOf(personalization) {
+  const s = String(personalization || '');
+  if (/(dominant\s*hand|hand)\s*[:：]?\s*left\b|\bleft[- ]handed\b|利き手\s*[:：]?\s*左|左利き/i.test(s)) return 'left';
+  return 'right';
 }
 
 function chapterDefsFor(order) {
   if (order.product === 'yearly') return { defs: YEARLY_CHAPTERS, ids: YEARLY_CHAPTERS.map((c) => c.id) };
   if (order.product === 'compat') return { defs: COMPAT_CHAPTERS, ids: compatChapterIdsFor(order.relation || 'general') };
   if (order.product === 'career') return { defs: CAREER_CHAPTERS, ids: CAREER_CHAPTERS.map((c) => c.id) };
+  if (order.product === 'palm') return { defs: PALM_CHAPTERS, ids: PALM_CHAPTER_IDS };
   return { defs: CHAPTERS, ids: CHAPTER_IDS };
 }
 
@@ -94,6 +107,7 @@ async function registerReceipt(receipt, ctx) {
   const base = {
     product,
     relation: compat ? compat.relation : '',
+    hand: product === 'palm' ? handOf(personalization) : '',
     delivery: buyerEmail ? 'email' : 'etsy_message',
     transaction_id: (receipt.transactions || []).map((t) => t.transaction_id).join(','),
     buyer_email: buyerEmail,
@@ -123,8 +137,54 @@ async function registerReceipt(receipt, ctx) {
     ctx.orders.push(await ctx.store.upsertOrder(receiptId, { ...base, status: STATUS.NEEDS_INFO, last_error: `missing:${parsed.missing.join(',')}` }));
     return 'needs_info';
   }
+  // 手相×出生図は写真が揃うまで待つ（アップロード案内は sendUploadLinks が送る）
+  if (product === 'palm') {
+    ctx.orders.push(await ctx.store.upsertOrder(receiptId, { ...base, status: STATUS.AWAITING_PHOTOS }));
+    return 'awaiting_photos';
+  }
   ctx.orders.push(await ctx.store.upsertOrder(receiptId, { ...base, status: STATUS.NEW }));
   return 'new';
+}
+
+// 写真待ちで案内未送の注文にアップロードリンクを送る（Etsy・サイト直販共通）。メールが無ければ運営者に Etsy メッセージ用の文面を送る。
+async function sendUploadLinks(ctx) {
+  let count = 0;
+  for (const order of ctx.orders) {
+    if (order.product !== 'palm' || order.status !== STATUS.AWAITING_PHOTOS || order.upload_mailed_at) continue;
+    const language = normalizeLang(order.language || 'en');
+    const url = storage.uploadUrl(order.receipt_id, language);
+    try {
+      if (ctx.mail) {
+        if (order.buyer_email) await mail.sendUploadLink({ to: order.buyer_email, name: order.buyer_name, uploadUrl: url, language });
+        else await mail.notifyOwner(`Etsy: send upload link via Etsy Messages (receipt ${order.receipt_id})`, [`buyer: ${order.buyer_name}`, `Etsy order: https://www.etsy.com/your/orders/sold/${order.receipt_id}`, '', 'Message to send on Etsy:', mail.uploadText({ name: order.buyer_name, uploadUrl: url })]);
+      }
+      order.upload_mailed_at = new Date().toISOString();
+      await ctx.store.upsertOrder(order.receipt_id, { upload_mailed_at: order.upload_mailed_at });
+      count += 1;
+    } catch (err) {
+      ctx.log(`  ${order.receipt_id}: upload link failed: ${err.message}`);
+    }
+  }
+  return count;
+}
+
+// 納品から 30 日経った手相写真の原本を Blob から消す。台帳には削除日時だけ残す。
+async function deleteExpiredPhotos(ctx) {
+  let count = 0;
+  const cutoff = Date.now() - PHOTO_RETENTION_DAYS * 86400000;
+  for (const order of ctx.orders) {
+    if (order.product !== 'palm' || !isFinal(order) || order.photos_deleted_at) continue;
+    if (!order.photo_right && !order.photo_left) continue;
+    if (!order.delivered_at || Date.parse(order.delivered_at) > cutoff) continue;
+    try {
+      await ctx.deleteBlobs([order.photo_right, order.photo_left]);
+      await ctx.store.upsertOrder(order.receipt_id, { photo_right: '', photo_left: '', photos_deleted_at: new Date().toISOString() });
+      count += 1;
+    } catch (err) {
+      ctx.log(`  ${order.receipt_id}: photo delete failed: ${err.message}`);
+    }
+  }
+  return count;
 }
 
 function isFinal(order) {
@@ -153,9 +213,14 @@ async function advanceOrder(order, ctx) {
   const save = (fields) => ctx.store.upsertOrder(receiptId, fields);
 
   const isCompat = order.product === 'compat';
+  const isPalm = order.product === 'palm';
   if (!order.dob || !order.place || (isCompat && (!order.dob_b || !order.place_b))) {
     await save({ status: STATUS.NEEDS_INFO, last_error: 'missing:dob/place (fill in and set status to new)' });
     return 'needs_info';
+  }
+  if (isPalm && (!order.photo_right || !order.photo_left)) {
+    await save({ status: STATUS.AWAITING_PHOTOS, last_error: 'missing:photos' });
+    return 'awaiting_photos';
   }
   const { defs, ids: chapterIds } = chapterDefsFor(order);
 
@@ -186,6 +251,7 @@ async function advanceOrder(order, ctx) {
       } else {
         astro = order.product === 'yearly' ? await fetchYearlyData(a)
           : order.product === 'career' ? await fetchCareerData(a)
+          : isPalm ? await fetchPalmData(a)
           : await fetchReportData(a);
       }
       astro.city = order.place;
@@ -193,6 +259,35 @@ async function advanceOrder(order, ctx) {
       if (geo.notice) astro.geo_notice = geo.notice;
       await save({ astro: JSON.stringify(astro) });
       ctx.log(`  ${receiptId}: astro ready (${order.product || 'natal'})`);
+    }
+
+    // 手相×出生図: 写真の特徴抽出（Vision）。結果は palm 列に保存して再実行でも再解析しない。
+    // 両手とも判読不能なら撮り直しを依頼して needs_info（アップロード画面は needs_info でも受け付ける）。
+    if (isPalm) {
+      let palm = parseJson(order.palm);
+      if (!palm) {
+        if (remaining() < MIN_MS_FOR_VISION) {
+          await save({ status: STATUS.NEW, last_error: 'pending:palm' });
+          return 'in_progress';
+        }
+        const result = await ctx.analyze({ photoRight: order.photo_right, photoLeft: order.photo_left, hand: order.hand || 'right', timeoutMs: remaining() - 8000 });
+        if (!result.palm) throw new Error(`palm_failed: ${result.reason}`);
+        palm = result.palm;
+        if (palmUnreadable(palm)) {
+          const url = storage.uploadUrl(receiptId, language);
+          if (ctx.mail) {
+            if (order.buyer_email) await mail.sendUploadLink({ to: order.buyer_email, name: order.buyer_name, uploadUrl: url, language, retake: true });
+            await mail.notifyOwner(`${ledger.isWebOrder(receiptId) ? 'Web' : 'Etsy'}: palm photos unreadable (receipt ${receiptId})`, [`buyer: ${order.buyer_name} <${order.buyer_email || 'no email — ask via Etsy Messages'}>`, `notes: ${palm.image_quality.notes}`, ...(order.buyer_email ? [] : ['', 'Message to send on Etsy:', mail.uploadText({ name: order.buyer_name, uploadUrl: url, retake: true })])]);
+          }
+          await save({ status: STATUS.NEEDS_INFO, last_error: 'unreadable_photos (retake requested)' });
+          return 'needs_info';
+        }
+        await save({ palm: JSON.stringify(palm) });
+        ctx.log(`  ${receiptId}: palm ready (${result.model || 'vision'})`);
+      }
+      astro.palm = palm;
+      astro.hand = order.hand || 'right';
+      astro.tob_unknown = order.tob_unknown;
     }
 
     const chapters = {};
@@ -230,6 +325,7 @@ async function advanceOrder(order, ctx) {
     const filename = order.product === 'yearly' ? `Libertas-Jyotish-Year-Ahead-${order.dob}.pdf`
       : order.product === 'compat' ? `Libertas-Jyotish-Compatibility-${order.dob}-${order.dob_b}.pdf`
       : order.product === 'career' ? `Libertas-Jyotish-Career-${order.dob}.pdf`
+      : isPalm ? `Libertas-Jyotish-Kar-Kundali-${order.dob}.pdf`
       : `Libertas-Jyotish-Report-${order.dob}.pdf`;
     ctx.log(`  ${receiptId}: pdf ${Math.round(pdf.length / 1024)} KB`);
     if (ctx.onPdf) await ctx.onPdf(receiptId, filename, pdf);
@@ -306,21 +402,36 @@ async function connectEtsy(store) {
   return { client, shopId };
 }
 
-function defaultGenerate() {
+function geminiModels() {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY is not set');
   let modelsPromise = null;
-  return async (astro, ids, lang, timeoutMs, extra = {}) => {
+  return async () => {
     if (!modelsPromise) modelsPromise = process.env.GEMINI_MODEL ? Promise.resolve([process.env.GEMINI_MODEL]) : listGeminiModels(apiKey);
-    return generateChapters(astro, ids, apiKey, await modelsPromise, { lang, timeoutMs: Math.max(10000, timeoutMs), ...extra });
+    return { apiKey, models: await modelsPromise };
+  };
+}
+
+function defaultGenerate(models = geminiModels()) {
+  return async (astro, ids, lang, timeoutMs, extra = {}) => {
+    const { apiKey, models: list } = await models();
+    return generateChapters(astro, ids, apiKey, list, { lang, timeoutMs: Math.max(10000, timeoutMs), ...extra });
+  };
+}
+
+function defaultAnalyze(models = geminiModels()) {
+  return async ({ photoRight, photoLeft, hand, timeoutMs }) => {
+    const { apiKey, models: list } = await models();
+    return analyzePalm({ photoRight, photoLeft, hand, apiKey, models: list, timeoutMs: Math.max(20000, timeoutMs) });
   };
 }
 
 // 1 回分の処理。deadline（epoch ms）までに終わるところまで進める。
-// options: { store, receipts, mail, generate, onPdf, log }（省略時は本番: Sheets・Etsy API・Gemini・Resend）
-async function runCycle({ deadline, store = ledger, receipts = null, mail: sendMail = true, generate = null, onPdf = null, storePdf = storage.storePdf, log = console.log }) {
-  const ctx = { deadline, store, mail: sendMail, generate: generate || defaultGenerate(), onPdf, storePdf, log, client: null, shopId: null, orders: [] };
-  const summary = { registered: {}, processed: {}, shipped: 0 };
+// options: { store, receipts, mail, generate, analyze, onPdf, storePdf, deleteBlobs, log }（省略時は本番: Sheets・Etsy API・Gemini・Resend・Blob）
+async function runCycle({ deadline, store = ledger, receipts = null, mail: sendMail = true, generate = null, analyze = null, onPdf = null, storePdf = storage.storePdf, deleteBlobs = storage.deleteBlobs, log = console.log }) {
+  const models = generate && analyze ? null : geminiModels();
+  const ctx = { deadline, store, mail: sendMail, generate: generate || defaultGenerate(models), analyze: analyze || defaultAnalyze(models), onPdf, storePdf, deleteBlobs, log, client: null, shopId: null, orders: [] };
+  const summary = { registered: {}, processed: {}, shipped: 0, uploadLinks: 0, photosDeleted: 0 };
 
   if (!receipts) {
     ({ client: ctx.client, shopId: ctx.shopId } = await connectEtsy(store));
@@ -335,6 +446,8 @@ async function runCycle({ deadline, store = ledger, receipts = null, mail: sendM
   }
 
   summary.shipped = await markShippedIfNeeded(ctx);
+  summary.uploadLinks = await sendUploadLinks(ctx);
+  summary.photosDeleted = await deleteExpiredPhotos(ctx);
 
   const pending = ctx.orders.filter(isPending).sort((a, b) => Date.parse(a.created_at || 0) - Date.parse(b.created_at || 0));
   for (const order of pending) {

@@ -6,8 +6,9 @@ const { getSession, createSubscription, getSubscription } = require('./_komoju')
 const { setPdfPurchased, setKomojuSubscription, getMemberRecord } = require('./_sheets');
 const { normalizeLang } = require('./_terms');
 const { confirmWebOrder } = require('./_etsy-ledger');
+const { uploadUrl } = require('./_etsy-storage');
 
-const REPORT_PRODUCTS = new Set(['compat', 'yearly', 'career']);
+const REPORT_PRODUCTS = new Set(['compat', 'yearly', 'career', 'palm']);
 
 function redirect(res, location) {
   res.setHeader('Cache-Control', 'no-store');
@@ -78,6 +79,11 @@ module.exports = async (req, res) => {
       const payment = session.payment || {};
       const id = orderId || (session.metadata && session.metadata.order_id) || '';
       if (payment.status === 'captured' && id) await confirmWebOrder(id);
+      // 手相×出生図は決済直後に写真のアップロード画面へ（同じリンクをメールでも送る）。入金待ちはメール待ち。
+      if (product === 'palm') {
+        if (payment.status === 'captured' && id) return redirect(res, uploadUrl(id, lang));
+        return redirect(res, `/${lang}/palm-chart?ordered=pending`);
+      }
       return redirect(res, `/${lang}/reports?ordered=${payment.status === 'captured' ? 'paid' : 'pending'}`);
     }
 
