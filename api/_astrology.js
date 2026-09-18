@@ -100,15 +100,26 @@ async function getAccessToken() {
 }
 
 // 失敗したエンドポイントがあっても鑑定書全体を落とさない（該当章だけ省略する）
+// レート制限（429）は Retry-After に従って待ってから再試行する
+const RATE_LIMIT_RETRIES = Number(process.env.PROKERALA_RATE_LIMIT_RETRIES || 3);
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 async function callEndpoint(token, path, params, asText = false) {
   const url = `${API_BASE}/v2/${path}?${new URLSearchParams(params).toString()}`;
-  const res = await fetchWithTimeout(url, { headers: { Authorization: `Bearer ${token}` } }, 20000);
-  if (!res.ok) {
+  for (let attempt = 0; ; attempt++) {
+    const res = await fetchWithTimeout(url, { headers: { Authorization: `Bearer ${token}` } }, 20000);
+    if (res.ok) return asText ? await res.text() : await res.json();
     const body = await res.text().catch(() => '');
+    if (res.status === 429 && attempt < RATE_LIMIT_RETRIES) {
+      const retryAfter = Number(res.headers.get('retry-after'));
+      const waitMs = (Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter : 60) * 1000 + Math.random() * 3000;
+      console.error(`Prokerala ${path} rate limited, retrying in ${Math.round(waitMs / 1000)}s`);
+      await sleep(waitMs);
+      continue;
+    }
     console.error(`Prokerala ${path} failed ${res.status}: ${body.slice(0, 200)}`);
     return null;
   }
-  return asText ? await res.text() : await res.json();
 }
 
 function nakshatraFromLongitude(longitude) {
