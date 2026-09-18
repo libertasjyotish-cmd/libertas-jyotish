@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kar-Kundali — Leitura integrada de palma × mapa natal (Céu e Terra, a forma completa) | Libertas Jyotish</title>
+<meta name="description" content="A quiromancia nasceu dentro da astrologia védica. Seu mapa natal (Céu) e as fotos das duas mãos (Terra) comparados pelo método clássico Hasta Samudrika: a forma completa de uma leitura. Cerca de 30 páginas escritas só para você, até a direção que a diferença entre o projeto e a posição atual aponta.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://www.libertas-jyotish.com/pt/palm-chart">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Libertas Jyotish">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Kar-Kundali — Leitura integrada de palma × mapa natal (Céu e Terra, a forma completa) | Libertas Jyotish">
+<meta property="og:description" content="A quiromancia nasceu dentro da astrologia védica. Só estrelas ou só mãos é meia leitura. Seu mapa natal e suas duas mãos comparados na linguagem dos nove planetas: um relatório pessoal de ~30 páginas que nomeia a sua direção.">
+<meta property="og:url" content="https://www.libertas-jyotish.com/pt/palm-chart">
+<meta property="og:image" content="https://www.libertas-jyotish.com/img/palm/sample-planet-map.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0c1a1f">
+<link rel="icon" type="image/png" href="/img/libertas-logo.png">
+<link rel="apple-touch-icon" href="/img/libertas-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/guide.css">
+<style>
+body { font-family: 'Noto Serif', serif; }
+.guide { max-width: 860px; }
+.guide article { padding: 0; overflow: hidden; }
+.pc-hero {
+  position: relative; color: #f3ead6; text-align: center;
+  padding: 40px 24px 36px;
+  background: linear-gradient(rgba(12,26,31,0.55), rgba(12,26,31,0.92)), url('/img/palm/hero-hands.jpg') center 40% / cover no-repeat;
+  border-bottom: 1px solid rgba(212,175,55,0.5);
+}
+.pc-hero .kicker { font-family: 'Cinzel', serif; letter-spacing: 0.18em; font-size: 0.78rem; color: #d4af37; margin-bottom: 10px; }
+.pc-hero h1 { border: 0; margin: 0 0 14px; padding: 0; font-size: 1.55rem; line-height: 1.6; color: #fff6dc; }
+.pc-hero .sub { font-size: 0.95rem; line-height: 1.9; max-width: 640px; margin: 0 auto 18px; color: #e6dcc6; }
+.pc-hero ul { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 14px; justify-content: center; font-size: 0.82rem; margin-bottom: 20px; color: #d8cdb4; }
+.pc-hero ul li::before { content: '✦ '; color: #d4af37; }
+.pc-body { padding: 28px 24px 36px; }
+.pc-body h2 { font-size: 1.25rem; color: #6b4f10; margin: 34px 0 12px; padding-left: 12px; border-left: 4px solid #d4af37; }
+.pc-body h2:first-child { margin-top: 0; }
+.pc-body h3 { font-size: 1.02rem; color: #8b5a1b; margin: 22px 0 8px; }
+.pc-body p { margin-bottom: 12px; }
+.pc-body table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 12px 0 18px; }
+.pc-body th, .pc-body td { padding: 8px 10px; border: 1px solid rgba(139,107,27,0.3); text-align: left; vertical-align: top; }
+.pc-body th { background: rgba(212,175,55,0.15); color: #6b4f10; font-weight: 600; white-space: nowrap; }
+.pc-table-wrap { overflow-x: auto; }
+.pc-quote { margin: 14px 0 18px; padding: 14px 18px; border-left: 3px solid #d4af37; background: rgba(212,175,55,0.08); font-size: 0.95rem; color: #4a3a2a; }
+.pc-karma { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 14px 0 18px; }
+.pc-karma div { background: rgba(255,252,245,0.85); border: 1px solid rgba(139,107,27,0.35); border-radius: 10px; padding: 14px; font-size: 0.9rem; }
+.pc-karma b { display: block; color: #6b4f10; margin-bottom: 4px; font-family: 'Cinzel', 'Noto Serif JP', serif; letter-spacing: 0.04em; }
+.pc-chapters { counter-reset: ch; list-style: none; }
+.pc-chapters li { position: relative; padding: 12px 0 12px 52px; border-bottom: 1px solid rgba(139,107,27,0.2); font-size: 0.92rem; }
+.pc-chapters li::before { counter-increment: ch; content: counter(ch); position: absolute; left: 0; top: 12px; width: 38px; height: 38px; border-radius: 50%; background: #8b6b1b; color: #fff6dc; font-family: 'Cinzel', serif; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.pc-chapters li.appendix::before { content: '+'; font-size: 1.1rem; }
+.pc-chapters b { display: block; color: #4a3a2a; margin-bottom: 2px; }
+.pc-sample { margin: 18px 0 26px; padding: 18px; background: rgba(255,252,245,0.85); border: 1px solid rgba(139,107,27,0.35); border-radius: 12px; }
+.pc-sample .tag { display: inline-block; font-size: 0.72rem; letter-spacing: 0.1em; color: #fff6dc; background: #8b6b1b; border-radius: 4px; padding: 2px 8px; margin-bottom: 8px; font-family: 'Cinzel', serif; }
+.pc-sample h3 { margin-top: 4px; }
+.pc-sample img { width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(139,107,27,0.4); display: block; margin: 10px 0; }
+.pc-sample .cap { font-size: 0.78rem; color: #7a6a58; }
+.pc-months li { margin: 0 0 10px 1.2em; font-size: 0.92rem; }
+.pc-months b { color: #6b4f10; }
+.pc-steps { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 12px 0 18px; counter-reset: st; }
+.pc-steps li { background: rgba(255,252,245,0.85); border: 1px solid rgba(139,107,27,0.35); border-radius: 10px; padding: 14px 14px 14px 52px; position: relative; font-size: 0.9rem; }
+.pc-steps li::before { counter-increment: st; content: counter(st); position: absolute; left: 12px; top: 12px; width: 30px; height: 30px; border-radius: 50%; border: 2px solid #8b6b1b; color: #8b6b1b; font-family: 'Cinzel', serif; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.pc-safe { list-style: none; }
+.pc-safe li { padding: 6px 0 6px 1.4em; position: relative; font-size: 0.9rem; }
+.pc-safe li::before { content: '✦'; position: absolute; left: 0; color: #d4af37; }
+.pc-price td:last-child { white-space: nowrap; font-weight: 700; color: #6b4f10; }
+.pc-faq dt { font-weight: 700; color: #4a3a2a; margin-top: 14px; }
+.pc-faq dd { margin: 4px 0 0 0; font-size: 0.92rem; }
+.pc-cta { text-align: center; margin: 26px 0 8px; }
+.pc-btn { display: inline-block; padding: 15px 34px; border-radius: 8px; font-weight: 600; font-size: 1.02rem; color: #fffdf9; text-decoration: none; background: linear-gradient(135deg, #C59B27 0%, #8B6B1B 100%); box-shadow: 0 8px 20px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.4); border: 0; cursor: pointer; font-family: inherit; }
+.pc-btn[disabled] { opacity: 0.55; cursor: default; }
+.pc-btn-sub { display: block; margin-top: 8px; font-size: 0.8rem; color: #7a6a58; }
+.pc-hero .pc-btn-sub { color: #cfc3a8; }
+.pc-hero a.pc-link { color: #ffe08a; font-size: 0.85rem; text-decoration: underline; }
+.pc-note { font-size: 0.8rem; color: #7a6a58; margin-top: 10px; }
+.pc-order { margin: 18px 0 8px; padding: 20px; background: rgba(255,252,245,0.9); border: 1px solid rgba(139,107,27,0.35); border-radius: 12px; }
+.pc-order label { display: block; font-size: 0.85rem; color: #6b4f10; font-weight: 700; margin: 12px 0 4px; }
+.pc-order input[type=text], .pc-order input[type=email], .pc-order input[type=date], .pc-order input[type=time] { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid rgba(139,107,27,0.45); border-radius: 8px; font-size: 1rem; font-family: inherit; background: #fff; }
+.pc-order .pc-inline { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.9rem; font-weight: 400; color: #4a3a2a; margin-top: 8px; }
+.pc-order .pc-inline label { display: inline; font-weight: 400; margin: 0; color: #4a3a2a; }
+.pc-order .pc-err { color: #a33; font-size: 0.88rem; min-height: 1.2em; margin-top: 10px; }
+.pc-ordered { display: none; }
+@media (max-width: 640px) {
+  .pc-stack, .pc-stack tbody, .pc-stack tr, .pc-stack td { display: block; width: 100%; }
+  .pc-stack thead { display: none; }
+  .pc-stack tr { margin-bottom: 12px; border: 1px solid rgba(139,107,27,0.35); border-radius: 8px; overflow: hidden; background: rgba(255,252,245,0.7); }
+  .pc-stack td { border: 0; border-top: 1px solid rgba(139,107,27,0.2); padding: 8px 12px; white-space: normal; }
+  .pc-stack td:first-child { border-top: 0; background: rgba(212,175,55,0.15); font-weight: 700; color: #6b4f10; }
+  .pc-stack td::before { content: attr(data-label); display: block; font-size: 0.72rem; color: #8b6b1b; margin-bottom: 2px; }
+  .pc-stack td:first-child::before { display: none; }
+  .pc-body td, .pc-body th { font-size: 0.85rem; }
+}
+@media (max-width: 640px) {
+  .pc-hero h1 { font-size: 1.25rem; }
+  .pc-body { padding: 22px 16px 30px; }
+}
+</style>
+<script>window.LJ_I18N = { lang: 'pt', menu: { top: 'Início', free: 'Leitura gratuita', about: 'Sobre a Libertas Jyotish', report: 'Relatório Vitalício (avulso)', calendar: 'Calendário Anual da Fortuna', calendarNote: 'em breve', mypage: 'Página de membro', legal: 'Informações legais e termos', contact: 'Contato', toggleLabel: 'Menu', navLabel: 'Menu do site' }, price: { premium: '{price} / mês (impostos incl.)', pdf: '{price} pagamento único (impostos incl.)', premiumApprox: 'Cerca de {price} / mês (impostos incl.) — valor final exibido no checkout', pdfApprox: 'Cerca de {price} pagamento único (impostos incl.) — valor final exibido no checkout', checkoutOnly: 'O valor na sua moeda local é exibido no checkout', unavailable: 'O plano Premium mensal ainda não está à venda: o pagamento online está em preparação. O relatório em PDF já está disponível.' }, playError: 'Não foi possível concluir a compra no Google Play. Tente novamente.', playManage: 'As assinaturas compradas no app são gerenciadas (cancelar, forma de pagamento) em Google Play → Assinaturas. Abrir agora?', guide: { hub: '/pt/guide', hubLabel: "Todos os guias", intro: '/pt/guide/indian-astrology', introLabel: "O que é astrologia védica?", groupLabel: "" } };</script>
+<script defer src="/js/site-menu.js"></script>
+</head>
+<body>
+<header class="site-header" data-site-header></header>
+<main class="guide">
+<article>
+
+<section class="pc-hero">
+  <p class="kicker">KAR-KUNDALI · HASTA SAMUDRIKA × JYOTISH</p>
+  <h1>A quiromancia nasceu dentro da astrologia védica.<br>Só quando Céu e Terra se encontram, a leitura é completa.</h1>
+  <p class="sub">A quiromancia (Hasta Samudrika) não é uma arte divinatória independente. Nasceu da mesma raiz do Jyotish (astrologia védica): a ciência de ler os sinais das estrelas onde eles aparecem no corpo. O Céu se lê no mapa natal; a Terra, nas suas duas mãos. Os mesmos nove planetas deixam as mesmas marcas no firmamento e nas suas palmas — por isso uma leitura só de estrelas, ou só de mãos, é meio corpo. Sobrepostas em um único relatório, mostram que projeto você trouxe ao nascer, onde está hoje e para onde deveria ir.</p>
+  <ul>
+    <li>Dados de nascimento + 2 fotos das mãos → PDF pessoal de cerca de 30 páginas</li>
+    <li>Suas próprias fotos das palmas com a posição de planetas, linhas e marcas auspiciosas</li>
+    <li>A direção a tomar, dita com clareza a partir da diferença entre o projeto (mapa) e a posição atual (mãos)</li>
+    <li>Entrega em 24 horas · 6 idiomas</li>
+    <li>Sem temas alarmistas como saúde ou longevidade</li>
+  </ul>
+  <div class="pc-cta">
+    <a class="pc-btn" href="#order">Abra o horóscopo das suas mãos (¥12.800)</a>
+    <span class="pc-btn-sub">Pedido → pagamento → envie as duas palmas → PDF em 24 horas</span>
+    <a class="pc-link" href="#samples">Ver uma leitura de amostra ↓</a>
+  </div>
+</section>
+
+<div class="pc-body">
+
+<h2>Uma astrologia da mão nascida na Índia há três mil anos</h2>
+<h3>Hasta Samudrika Shastra: a fonte da quiromancia</h3>
+<p>A maior parte da quiromancia do mundo tem origem na Índia. A quiromancia indiana nunca foi uma «leitura de mãos» independente: nasceu da mesma raiz do Jyotish, como <strong>a ciência de ler os sinais das estrelas tal como aparecem no corpo</strong>. O clássico Samudrika Shastra atribui os montes, linhas e marcas da palma aos nove planetas (Navagraha) e lê a mão como um «horóscopo que você carrega consigo». Por isso quiromancia e mapa natal nunca foram duas artes separadas, e sim <strong>um único sistema que lê os mesmos nove planetas no Céu e na Terra</strong>.</p>
+
+<h3>Por que precisam ser os dois</h3>
+<p>Uma leitura só do mapa natal diz o projeto que você recebeu ao nascer — mas não quanto dele você está de fato vivendo. Uma leitura só das mãos mostra a posição atual — mas não tem régua para julgar se essa posição é o seu verdadeiro terreno ou um desvio. <strong>Só ao comparar Céu e Terra podemos ler se as suas mãos já receberam o que as estrelas prometeram, quais portas continuam fechadas e para onde virar.</strong> O Kar-Kundali constrói essa forma completa em um único relatório a partir das suas fotos e dos seus dados de nascimento.</p>
+<div class="pc-table-wrap"><table class="pc-stack">
+<thead><tr><th>Tipo de leitura</th><th>O que mostra</th><th>O que não pode mostrar</th></tr></thead>
+<tbody>
+<tr><td data-label="Tipo de leitura">Só horóscopo / mapa natal</td><td data-label="O que mostra">O projeto que você recebeu; os tempos (dasha)</td><td data-label="O que não pode mostrar">Quanto do projeto você está vivendo. Onde está agora</td></tr>
+<tr><td data-label="Tipo de leitura">Só palma (apps, quiromancia geral)</td><td data-label="O que mostra">Tendências da forma atual da mão (quase sempre genéricas)</td><td data-label="O que não pode mostrar">Se é o seu terreno ou um desvio. Quando agir. Com que projeto comparar</td></tr>
+<tr><td data-label="Tipo de leitura"><strong>Kar-Kundali (Céu × Terra)</strong></td><td data-label="O que mostra"><strong>Coincidências e diferenças entre projeto e presente, portas adormecidas, a direção a tomar, os meses para agir</strong></td><td data-label="O que não pode mostrar">Saúde, longevidade, gravidez, acidentes (excluídos de propósito)</td></tr>
+</tbody></table></div>
+
+<h3>Nove planetas na sua mão</h3>
+<div class="pc-table-wrap"><table>
+<thead><tr><th>Parte da mão</th><th>Planeta</th><th>Rege</th></tr></thead>
+<tbody>
+<tr><td>Monte sob o indicador</td><td>Júpiter (Guru)</td><td>Sabedoria, orientação, fé, o vínculo com mestres</td></tr>
+<tr><td>Monte sob o dedo médio</td><td>Saturno (Shani)</td><td>Dever, paciência, o que se conquista com o tempo</td></tr>
+<tr><td>Monte sob o anelar</td><td>Sol (Surya)</td><td>Honra, expressão própria, o lugar onde você brilha</td></tr>
+<tr><td>Monte sob o mindinho</td><td>Mercúrio (Budha)</td><td>Palavra, comércio, presença de espírito</td></tr>
+<tr><td>Base do polegar</td><td>Vênus (Shukra)</td><td>Amor, beleza, a capacidade de receber alegria</td></tr>
+<tr><td>Parte baixa, lado do mindinho</td><td>Lua (Chandra)</td><td>Coração, imaginação, o materno</td></tr>
+<tr><td>Centro, lado do polegar e do mindinho</td><td>Marte (Mangala)</td><td>Coragem, espírito de luta, poder de proteger</td></tr>
+<tr><td>Cavidade central da palma</td><td>Rahu</td><td>Anseio, atração pelo desconhecido, o que você persegue neste mundo</td></tr>
+<tr><td>Junto às linhas do pulso</td><td>Ketu</td><td>O que vem do passado; soltar e libertar</td></tr>
+</tbody></table></div>
+<p>A premissa desta ciência: um planeta forte no mapa natal deixa uma marca no mesmo lugar da mão. Onde coincidem, «a mão já recebeu o que as estrelas prometeram». Onde diferem, «há um presente ainda não recebido».</p>
+
+<h3>Esquerda e direita: dois tempos, três karmas</h3>
+<p>A mão não dominante mostra <strong>o que você trouxe ao nascer (inato)</strong>; a dominante, <strong>o que cultivou nesta vida (adquirido)</strong>. A filosofia indiana fala do karma em três camadas.</p>
+<div class="pc-karma">
+  <div><b>Sanchita</b>O acervo que a alma trouxe consigo. Visto no mapa natal inteiro e na mão não dominante.</div>
+  <div><b>Prarabdha</b>A porção destinada a ser vivida nesta vida. Aparece como a sequência dos dashas (períodos planetários).</div>
+  <div><b>Kriyamana</b>O karma que você está criando agora. Aparece como mudanças nas linhas da mão dominante.</div>
+</div>
+<p>O mapa natal é o roteiro que a alma recebeu; a mão não dominante, uma cópia desse roteiro; a dominante, o palco em que você atua hoje. Este relatório lê os três lado a lado.</p>
+
+<h3>Marcas auspiciosas (Lakshana): sinais sagrados escondidos na mão</h3>
+<p>O que distingue decisivamente a quiromancia indiana é ler <strong>marcas</strong>, não só linhas: o peixe (Matsya), a concha (Shankha), o lótus (Padma), o tridente (Trishula), a roda (Chakra), a bandeira (Dhvaja), o templo (Mandir)… Nos clássicos, quando a forma do emblema de uma divindade aparece na mão, diz-se que sua proteção está presente. Que marcas há nas suas mãos e com que planeta ou divindade de nakshatra do seu mapa elas ressoam: este é o capítulo mais emocionante.</p>
+
+<h2>Seu relatório (9 capítulos + apêndice · cerca de 30 páginas)</h2>
+<p>Cada capítulo é escrito individualmente a partir do seu mapa natal e das suas fotos. Não é texto genérico reformulado: diz «você é assim», nomeia as estrelas e as partes da mão que o provam e diz quando, o quê e como agir.</p>
+<ol class="pc-chapters">
+  <li><b>O projeto da alma: seu mapa natal e sua história</b>Mapa Rashi, o nakshatra da Lua e sua divindade, o Atmakaraka (o planeta com que sua alma mais quer aprender nesta vida), o mahadasha atual. Que desafios e presentes você trouxe ao nascer, contados como uma história.</li>
+  <li><b>O mapa planetário da sua mão</b>Suas duas fotos com as linhas, montes e marcas lidas sobrepostas como etiquetas numeradas, com legenda. Seu planeta mais brilhante e seu planeta adormecido, num olhar.</li>
+  <li><b>Céu e Terra comparados: o que as estrelas prometeram, o que a mão recebeu</b>Planeta a planeta, a força no seu mapa diante do estado do mesmo monte na sua mão, separada em presentes já recebidos e presentes ainda fechados. O latente e o expresso, lidos na diferença esquerda–direita, também estão aqui.</li>
+  <li><b>Projeto recebido e posição atual: a direção que a diferença aponta</b>O mapa é o projeto que você recebeu; a mão, onde você está agora. Nomeamos as qualidades fortes no mapa mas ainda tênues na mão (portas adormecidas) e as crescidas na mão embora modestas no mapa (portas que você mesmo abriu), e dizemos em uma frase: «a direção que você deve tomar é…». Três passos concretos, quando começar e as mudanças que devem aparecer na sua mão pelo caminho.</li>
+  <li><b>Sinais sagrados: as marcas da sua mão</b>As marcas auspiciosas encontradas (ou formas próximas) ilustradas, com seu significado clássico, a divindade correspondente e a posição do mapa com que ressoam. Se não houver marca, cruzamentos em formação e linhas características são lidos pelo mesmo método.</li>
+  <li><b>Três karmas: o que você trouxe, o que encena, o que está criando</b>Mão não dominante, dasha e mão dominante em paralelo: como você interpretou o roteiro das estrelas e onde o reescreveu. Onde as viradas passadas (idade nas linhas) coincidem com mudanças de dasha, mostramos como prova.</li>
+  <li><b>Vínculos, trabalho, decisões: leituras em três palcos</b>Concretizado em três palcos: vínculos com pessoas (Vênus, Lua, casa 7), trabalho e honra (Sol, Saturno, casa 10), decisões e palavra (Mercúrio, Júpiter, Marte).</li>
+  <li><b>Os próximos 12 meses: quando os planetas batem na sua mão</b>Os doze meses, cada um com um título escrito para você, onde o céu daquele mês toca o seu mapa, a área que se move e o que fazer. Os meses de virada são ditos sem rodeios — «este é o mês de agir» — e os meses de vento a favor e de cautela são nomeados. Cada trecho difícil vem com o que espera adiante.</li>
+  <li><b>As mãos mudam: convite ao acompanhamento</b>O mapa natal não muda; suas mãos mudam com o seu karma Kriyamana. Indicamos que áreas planetárias observar ao fotografar de novo em 3–6 meses, e a leitura de acompanhamento compara as duas para ver se as suas escolhas começaram a ser escritas nas suas mãos.</li>
+  <li class="appendix"><b>Retificação da hora de nascimento (se você não a conhece ou é incerta)</b>As idades das viradas passadas lidas nas linhas são confrontadas com as mudanças de dasha para reduzir as horas candidatas. Candidatas, não uma resposta definitiva.</li>
+</ol>
+
+<h2 id="samples">Leitura de amostra: uma cliente fictícia, «A»</h2>
+<p class="pc-note">Exemplo fictício para ilustração. As imagens de mãos são amostras geradas por IA. Seu relatório é escrito individualmente a partir do seu mapa e das suas fotos.</p>
+
+<div class="pc-sample">
+  <span class="tag">SAMPLE 1 · Capítulo 2</span>
+  <h3>O mapa planetário da sua mão</h3>
+  <img src="/img/palm/sample-planet-map.jpg" alt="Amostra: as duas palmas com a posição dos nove planetas em etiquetas douradas" loading="lazy">
+  <p><strong>O planeta que mais brilha nas mãos de A: Júpiter.</strong> No mapa também, Júpiter está na casa 9 (mestres, fé, lugares distantes), e o nakshatra da Lua é Purva Phalguni, cuja divindade é Bhaga, deus dos pactos e do deleite. «A alegria de dar algo aos outros» está escrita no céu e nas mãos.</p>
+  <p class="cap">As etiquetas indicam as posições lidas na consulta; não são medições.</p>
+</div>
+
+<div class="pc-sample">
+  <span class="tag">SAMPLE 2 · Capítulo 3</span>
+  <h3>Céu e Terra comparados</h3>
+  <p>A (38 anos, terceiro ano do dasha de Júpiter)</p>
+  <div class="pc-table-wrap"><table class="pc-stack">
+  <thead><tr><th>Planeta</th><th>Promessa no mapa</th><th>Mão não dominante (o trazido)</th><th>Mão dominante (agora)</th><th>Leitura</th></tr></thead>
+  <tbody>
+  <tr><td data-label="Planeta">Júpiter</td><td data-label="Promessa no mapa">Casa 9, forte. Uma vida como guia</td><td data-label="Mão não dominante (o trazido)">Monte de Júpiter alto, linha vertical nítida</td><td data-label="Mão dominante (agora)">Linha vertical tênue, mas uma linha nova no monte do Sol</td><td data-label="Leitura">O presente foi recebido, mas começou a aparecer como «ser reconhecida» antes de «ensinar». <strong>Um presente ainda em grande parte fechado</strong></td></tr>
+  <tr><td data-label="Planeta">Saturno</td><td data-label="Promessa no mapa">Casa 10. Um nome conquistado pelo dever</td><td data-label="Mão não dominante (o trazido)">Linha do destino reta desde o pulso</td><td data-label="Mão dominante (agora)">Interrompe-se uma vez no meio e retoma pelo lado de fora</td><td data-label="Leitura">Marca de uma carreira trocada por decisão própria no início dos trinta: onde o roteiro Sanchita foi reescrito pelo Kriyamana</td></tr>
+  <tr><td data-label="Planeta">Rahu</td><td data-label="Promessa no mapa">Casa 5. Anseio de criação e expressão</td><td data-label="Mão não dominante (o trazido)">Cavidade central rasa</td><td data-label="Mão dominante (agora)">Cavidade profunda com linhas finas reunidas</td><td data-label="Leitura">Nesta vida passou a ansiar «a própria expressão». Rahu é o planeta do anseio; isso despertou depois de nascer</td></tr>
+  <tr><td data-label="Planeta">Ketu</td><td data-label="Promessa no mapa">Casa 11. Libertação do grupo</td><td data-label="Mão não dominante (o trazido)">Pequeno triângulo acima das linhas do pulso</td><td data-label="Mão dominante (agora)">Mesmo lugar, um pouco mais nítido</td><td data-label="Leitura">Uma tarefa herdada de «afastar-se do rebanho», já solta pela metade</td></tr>
+  </tbody></table></div>
+</div>
+
+<div class="pc-sample">
+  <span class="tag">SAMPLE · Capítulo 4</span>
+  <h3>Projeto recebido e posição atual: a direção a tomar</h3>
+  <ul class="pc-months">
+    <li><b>Projeto (mapa):</b> Júpiter na 9 e Sol na 10: um desenho em que «guiar pessoas se torna a sua honra».</li>
+    <li><b>Posição atual (mão dominante):</b> a linha do destino é grossa e a base está firme, mas a linha do Sol continua fina e a vertical do monte de Júpiter, tênue. Muito tempo no lado de «apoiar»; o de «sair para guiar» ainda sem uso.</li>
+    <li><b>Porta adormecida:</b> a linha do Sol. <b>Porta aberta por você:</b> Mercúrio, modesto no mapa, é nítido no monte sob o mindinho: um poder da palavra que você cultivou sozinha.</li>
+  </ul>
+  <div class="pc-quote">«A direção que você deve tomar é passar de quem apoia a quem guia com a palavra. O Júpiter da casa 9 promete isso no projeto, e a sua mão já terminou de se preparar no monte de Mercúrio. Só falta a linha do Sol: escolher o lugar onde você se coloca diante das pessoas. O primeiro passo, no período Júpiter/Mercúrio».</div>
+</div>
+
+<div class="pc-sample">
+  <span class="tag">SAMPLE 3 · Capítulo 5</span>
+  <h3>Sinais sagrados</h3>
+  <p><strong>Achado: uma forma próxima da marca do peixe (Matsya) sob o anelar (monte do Sol).</strong> Nos clássicos, o peixe é a primeira encarnação de Vishnu, símbolo de abundância e de «quem resgata». No monte do Sol, diz-se que mostra uma honra que chega na forma de ajudar os outros.</p>
+  <p>No mapa de A, o Sol está na casa 10 sob o aspecto de Júpiter: «colocar-se diante das pessoas se torna guiar alguém». <strong>O peixe da mão e a ressonância Júpiter–Sol do céu dizem a mesma coisa duas vezes.</strong></p>
+  <div class="pc-quote">«Sob o seu anelar há a forma de um peixe. No céu, Júpiter ilumina o Sol. Nas palavras de três mil anos atrás: quando você se coloca onde a luz cai, é alguém que resgata os outros».</div>
+</div>
+
+<div class="pc-sample">
+  <span class="tag">SAMPLE 4 · Capítulo 6</span>
+  <h3>Três karmas</h3>
+  <ul class="pc-months">
+    <li><b>O que você trouxe (Sanchita):</b> linha do destino reta e monte de Júpiter alto na mão não dominante. Um roteiro de «percorrer um caminho fixado como guia».</li>
+    <li><b>A ordem prevista (Prarabdha):</b> subperíodo Saturno/Rahu aos 32, no meio do dasha de Saturno (22–41 anos): uma posição em que ocorre «o afastamento das expectativas alheias».</li>
+    <li><b>O palco real (Kriyamana):</b> a linha do destino da mão dominante se interrompe na altura do início dos trinta e retoma pelo lado de fora. <strong>Idade na linha 31–33: coincide com o roteiro das estrelas.</strong> Aqui A mudou de rumo por vontade própria e a mão registrou.</li>
+    <li><b>E agora:</b> a cavidade de Rahu se aprofunda, linha nova no monte do Sol. Além do caminho reescrito, os planetas da expressão e da honra começam a se mover.</li>
+  </ul>
+</div>
+
+<div class="pc-sample">
+  <span class="tag">SAMPLE 5 · Capítulo 8</span>
+  <h3>Os próximos 12 meses</h3>
+  <ul class="pc-months">
+    <li><b>Out 2026 – jan 2027 (Júpiter/Saturno)</b> Saturno bate na mão. Tempo de organizar: pôr em palavras a base da carreira reescrita e comunicá-la a quem está ao redor.</li>
+    <li><b>Fev – mai 2027 (Júpiter/Mercúrio)</b> Janela em que Mercúrio e Júpiter despertam juntos. Se surgir a chance de falar, escrever ou ensinar, aceite. Primeira vez que o peixe da sua mão opera como «ajudar os outros pela honra».</li>
+    <li><b>Jun – set 2027</b> Vênus se move. Um acontecimento que fecha a «brecha interior–exterior» que a diferença esquerda–direita da linha do coração mostrava. <strong>O que espera adiante:</strong> uma relação que você mantinha à distância fica mais leve que antes.</li>
+  </ul>
+</div>
+
+<div class="pc-sample">
+  <span class="tag">SAMPLE 6 · Acompanhamento</span>
+  <h3>Acompanhamento: a diferença após 6 meses</h3>
+  <img src="/img/palm/sample-followup.jpg" alt="Amostra comparativa: a mesma mão direita há seis meses e agora, com as áreas alteradas emolduradas em dourado" loading="lazy">
+  <ul class="pc-months">
+    <li><b>Linha do monte do Sol:</b> «apenas surgindo» da última vez → agora uma linha nítida. O contorno do peixe também mais claro. → Resultado de assumir um papel de falar em público no período Júpiter/Mercúrio.</li>
+    <li><b>Fim da linha do coração:</b> ligeiramente estendida em direção ao indicador. → A tarefa de Vênus começou a se mover.</li>
+    <li><b>Linha do destino:</b> sem mudanças. → A base está firme. O próximo movimento, no período de Saturno de 2028.</li>
+  </ul>
+  <div class="pc-quote">«O presente de Júpiter que há seis meses escrevemos como “ainda fechado” começou a se abrir como uma linha no monte do Sol. Sua mão está alcançando a promessa do céu».</div>
+</div>
+
+<h2>Como pedir</h2>
+<ol class="pc-steps">
+  <li><b>Informe seus dados de nascimento</b><br>Data, hora e local de nascimento. Se não souber a hora, o apêndice a retifica.</li>
+  <li><b>Envie as fotos das duas mãos</b><br>Pela página de envio que você recebe após a compra. Compradores da Etsy também recebem uma URL por pedido automaticamente.</li>
+  <li><b>PDF em 24 horas</b><br>Por e-mail ou download na sua página de membro.</li>
+</ol>
+<h3>Dicas para as fotos (2 fotos, 1 minuto)</h3>
+<ul class="pc-safe">
+  <li>Com luz natural forte, palma aberta naturalmente, fotografada de cima</li>
+  <li>Enquadre das pontas dos dedos ao pulso. Evite sombras sobre as linhas</li>
+  <li>Se uma foto for difícil de ler, podemos pedir que refaça (sem custo extra)</li>
+</ul>
+
+<h2>O que prezamos</h2>
+<ul class="pc-safe">
+  <li><strong>Não tratamos:</strong> saúde, longevidade, doença, acidentes, gravidez e parto, questões legais, resultados de investimentos.</li>
+  <li><strong>Como escrevemos:</strong> cada período difícil vem acompanhado do que espera adiante.</li>
+  <li><strong>Suas fotos:</strong> usadas só para a leitura; os originais são excluídos automaticamente 30 dias após a conclusão. Nunca usadas para identificação ou comparação de identidade. Para o acompanhamento guardamos só dados de análise e imagens comparativas de baixa resolução. Sem repasse a terceiros (usamos a IA do Google para a análise de imagem).</li>
+  <li><strong>Idade:</strong> para clientes com 18 anos ou mais.</li>
+  <li><strong>Posicionamento:</strong> uma interpretação baseada nas tradições da astrologia védica e da quiromancia, não um diagnóstico médico ou científico. As marcas auspiciosas são identificadas segundo as leituras tradicionais.</li>
+</ul>
+
+<h2>Preços</h2>
+<div class="pc-table-wrap"><table class="pc-price pc-stack">
+<thead><tr><th>Serviço</th><th>Conteúdo</th><th>Preço</th></tr></thead>
+<tbody>
+<tr><td data-label="Serviço">Relatório Kar-Kundali</td><td data-label="Conteúdo">Duas mãos + mapa natal, 9 capítulos + apêndice, cerca de 30 páginas, diagramas etiquetados das suas palmas</td><td data-label="Preço">¥12.800 (impostos incl.)</td></tr>
+<tr><td data-label="Serviço">Leitura de acompanhamento</td><td data-label="Conteúdo">Novas fotos após 3–6 meses. Diagrama comparativo + leitura das mudanças + 12 meses atualizados</td><td data-label="Preço">¥5.800 (impostos incl.)</td></tr>
+<tr><td data-label="Serviço">Assinatura mensal</td><td data-label="Conteúdo">Leituras diárias e semanais, mais até 2 leituras de acompanhamento por ano</td><td data-label="Preço">Ver página de membro</td></tr>
+</tbody></table></div>
+<p class="pc-note">Preços em ienes japoneses (¥12.800 ≈ US$79). O valor na sua moeda local, e o preço regional quando aplicável, é exibido no checkout.</p>
+
+<h2>Perguntas frequentes</h2>
+<dl class="pc-faq">
+  <dt>P. Qual a diferença para um app de quiromancia?</dt>
+  <dd>Um app devolve texto genérico a partir de uma única foto. Este relatório compara o seu mapa natal e as suas duas mãos na linguagem dos mesmos nove planetas e escreve como uma só história a diferença entre projeto e presente, a direção a tomar, as três camadas do karma, as marcas auspiciosas e os tempos do dasha. Até onde sabemos, nenhum outro relatório integra palma e mapa natal em um único volume escrito de forma tão individual. E você pode acompanhar as mudanças com novas fotos.</dd>
+  <dt>P. E se a palma e o mapa disserem coisas diferentes?</dt>
+  <dd>Esse é o coração desta leitura. O mapa é o projeto que você recebeu; a mão, onde você está agora. A diferença não é um defeito: é lida como um poder ainda não esgotado ou uma porta que você mesmo abriu, e dela derivamos a direção a tomar (capítulo 4).</dd>
+  <dt>P. E se eu não tiver marcas auspiciosas?</dt>
+  <dd>O valor não é decidido pelas marcas. Cruzamentos em formação e linhas características são lidos pelo mesmo método, junto com sua ressonância com o seu mapa.</dd>
+  <dt>P. Não sei minha hora de nascimento.</dt>
+  <dd>Peça só com data e local de nascimento. O apêndice reduz as candidatas a partir da idade nas linhas e das viradas passadas.</dd>
+  <dt>P. Por que as duas mãos?</dt>
+  <dd>A mão não dominante mostra o que você trouxe; a dominante, o que encena agora. Com uma só mão não se leem as três camadas do karma.</dd>
+  <dt>P. Vai dizer coisas ruins?</dt>
+  <dd>Não tratamos saúde nem longevidade. Os períodos difíceis sempre vêm com a razão e com o que espera adiante.</dd>
+  <dt>P. Por quanto tempo as fotos ficam guardadas?</dt>
+  <dd>Os originais são excluídos automaticamente após 30 dias. Só dados de análise e imagens comparativas de baixa resolução são mantidos.</dd>
+</dl>
+
+<h2 id="order">Pedido</h2>
+<div class="pc-ordered" id="ordered-view">
+  <p id="ordered-paid">Obrigado pela compra. Enviamos por e-mail as instruções para enviar as fotos (verifique a pasta de spam se não chegar). A leitura começa ao recebermos as 2 fotos das suas palmas.</p>
+  <p id="ordered-pending" style="display:none">Recebemos o seu pedido. Assim que o pagamento for confirmado, enviaremos por e-mail as instruções para enviar as fotos.</p>
+</div>
+<form class="pc-order" id="order-form" onsubmit="return false">
+  <p class="pc-note" style="margin-top:0">Informe seus dados de nascimento e siga para o pagamento. Após o pagamento enviaremos uma página dedicada para o envio das duas palmas (os originais são excluídos 30 dias após a entrega).</p>
+  <label for="f-email">E-mail (para onde o PDF é enviado)</label>
+  <input id="f-email" name="email" type="email" autocomplete="email" required>
+  <label for="f-name">Nome (opcional)</label>
+  <input id="f-name" name="name" type="text" autocomplete="name">
+  <label for="f-dob">Data de nascimento</label>
+  <input id="f-dob" name="dob" type="date" required>
+  <label for="f-tob">Hora de nascimento</label>
+  <input id="f-tob" name="tob" type="time">
+  <div class="pc-inline"><label><input id="f-tob-unknown" type="checkbox"> Não sei minha hora de nascimento (o apêndice a reduz a partir da palma)</label></div>
+  <label for="f-place">Local de nascimento (cidade, país)</label>
+  <input id="f-place" name="place" type="text" placeholder="ex.: São Paulo, Brasil" required>
+  <label>Mão dominante</label>
+  <div class="pc-inline">
+    <label><input type="radio" name="hand" value="right" checked> Direita</label>
+    <label><input type="radio" name="hand" value="left"> Esquerda</label>
+  </div>
+  <div class="pc-err" id="form-error"></div>
+  <div class="pc-cta">
+    <button class="pc-btn" type="button" id="btn-order">Ir para o pagamento (¥12.800 impostos incl.)</button>
+    <span class="pc-btn-sub">Cartão de crédito e outros métodos / o pagamento é concluído na página da KOMOJU</span>
+  </div>
+  <p class="pc-note">Ao pedir, você concorda com os <a href="/pt/legal#terms">Termos de serviço</a> e a <a href="/pt/legal#privacy">Política de privacidade</a>. Por ser um produto digital, não há reembolso após o início da geração.</p>
+</form>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var ordered = params.get('ordered');
+  var form = document.getElementById('order-form');
+  if (ordered) {
+    form.style.display = 'none';
+    document.getElementById('ordered-view').style.display = 'block';
+    if (ordered !== 'paid') { document.getElementById('ordered-paid').style.display = 'none'; document.getElementById('ordered-pending').style.display = 'block'; }
+    document.getElementById('order').scrollIntoView();
+    return;
+  }
+  var cb = document.getElementById('f-tob-unknown'), tob = document.getElementById('f-tob');
+  cb.addEventListener('change', function () { tob.disabled = cb.checked; if (cb.checked) tob.value = ''; });
+  var savedEmail = localStorage.getItem('lj_user_email') || '';
+  if (savedEmail) document.getElementById('f-email').value = savedEmail;
+  var dob = localStorage.getItem('dob'), t = localStorage.getItem('tob'), city = localStorage.getItem('city');
+  if (dob) document.getElementById('f-dob').value = dob;
+  if (t) tob.value = t;
+  if (city) document.getElementById('f-place').value = city;
+  var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  var ERR = {"email": "Informe um endereço de e-mail válido.", "fields": "Informe data de nascimento, hora (ou marque «não sei») e local de nascimento.", "server": "Falha no envio. Tente novamente mais tarde.", "unavailable": "O pagamento no site ainda não está disponível na sua região. Fale conosco pelo formulário de contato."};
+  btn.addEventListener('click', function () {
+    var data = { product: 'palm', lang: 'pt' };
+    new FormData(form).forEach(function (v, k) { data[k] = v; });
+    data.tob_unknown = cb.checked;
+    errBox.textContent = '';
+    if (!data.email || data.email.indexOf('@') < 0) { errBox.textContent = ERR.email; return; }
+    if (!data.dob || !data.place || (!data.tob_unknown && !data.tob)) { errBox.textContent = ERR.fields; return; }
+    localStorage.setItem('lj_user_email', data.email);
+    btn.disabled = true;
+    fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (res) {
+        if (!res.ok || !res.j.url) { var code = res.j && res.j.error;
+          errBox.textContent = code === 'invalid_fields' ? ERR.fields : code === 'unavailable' ? ERR.unavailable : code === 'invalid_email' ? ERR.email : ERR.server; btn.disabled = false; return; }
+        location.href = res.j.url;
+      })
+      .catch(function () { errBox.textContent = ERR.server; btn.disabled = false; });
+  });
+})();
+</script>
+
+</div>
+</article>
+</main>
+<footer class="guide-footer">
+<a href="/pt/legal">Informações legais</a>
+<a href="/pt/legal#terms">Termos de serviço</a>
+<a href="/pt/legal#privacy">Política de privacidade</a>
+<a href="/pt/legal#refund">Política de reembolso</a>
+<a href="/pt/contact">Contato</a>
+<p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+</footer>
+</body>
+</html>
