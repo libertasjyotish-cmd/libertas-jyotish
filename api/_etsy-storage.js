@@ -52,6 +52,19 @@ async function storePhoto(receiptId, side, jpeg) {
   return putBlob(`palm/${receiptId}/${nonce}/${side}.jpg`, jpeg, 'image/jpeg');
 }
 
+// Prokerala レスポンスの途中結果（JSON）。天体計算が揃ったら deleteBlobs で消す。
+async function storeAstroCache(receiptId, cache) {
+  const nonce = crypto.randomBytes(16).toString('hex');
+  return putBlob(`etsy/${receiptId}/${nonce}/astro-cache.json`, JSON.stringify(cache), 'application/json');
+}
+
+async function loadJson(url) {
+  if (!url) return null;
+  const res = await fetch(url);
+  if (!res.ok) return null;
+  return res.json().catch(() => null);
+}
+
 async function deleteBlobs(urls) {
   const targets = urls.filter(Boolean);
   if (!targets.length) return;
@@ -102,4 +115,4 @@ function verifyUploadToken(t) {
   return { receiptId };
 }
 
-module.exports = { storePdf, storePhoto, deleteBlobs, downloadUrl, verifyToken, uploadToken, uploadUrl, verifyUploadToken, LINK_TTL_DAYS, UPLOAD_TTL_DAYS };
+module.exports = { storePdf, storePhoto, storeAstroCache, loadJson, deleteBlobs, downloadUrl, verifyToken, uploadToken, uploadUrl, verifyUploadToken, LINK_TTL_DAYS, UPLOAD_TTL_DAYS };
