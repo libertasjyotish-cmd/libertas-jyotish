@@ -83,15 +83,16 @@
         needs_info: 'We could not read part of your birth data. Please check your Etsy Messages — we have sent you a question there.',
         error: 'Something went wrong while preparing your report. Please message us on Etsy and we will fix it right away.',
         not_found: 'No order matched that number and date of birth. Please check both and try again. If you just purchased, allow up to 15 minutes for the order to appear.<br><span style="font-size:.8rem">注文番号と生年月日が一致する注文が見つかりません。ご購入直後の場合は 15 分ほどお待ちください。</span>',
-        invalid_input: 'Please enter your order number and date of birth.',
+        invalid_input: 'Please enter your order number and date of birth.<br><span style="font-size:.8rem">注文番号と生年月日の両方を入力してください。</span>',
+        checking: 'Checking your order&hellip;',
         server_error: 'Temporary error. Please try again in a minute.'
       };
       f.addEventListener('submit', function (e) {
         e.preventDefault();
         var receipt = document.getElementById('receipt').value.replace(/\D/g, '');
         var dob = document.getElementById('dob').value;
-        if (!receipt || !dob) { out.className = 'err'; out.innerHTML = MSG.invalid_input; return; }
-        btn.disabled = true; out.className = ''; out.style.display = 'none';
+        if (!receipt || !dob) { out.className = 'err'; out.innerHTML = MSG.invalid_input; out.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); return; }
+        btn.disabled = true; out.className = 'ok'; out.innerHTML = MSG.checking; out.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         fetch('/api/etsy-claim', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ receipt: receipt, dob: dob }) })
           .then(function (r) { return r.json().catch(function () { return { ok: false, error: 'server_error' }; }); })
           .then(function (d) {
@@ -100,7 +101,7 @@
             else { out.className = 'err'; out.innerHTML = MSG[d.error] || MSG.server_error; }
           })
           .catch(function () { out.className = 'err'; out.innerHTML = MSG.server_error; })
-          .then(function () { btn.disabled = false; });
+          .then(function () { btn.disabled = false; out.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
       });
     })();
   </script>
