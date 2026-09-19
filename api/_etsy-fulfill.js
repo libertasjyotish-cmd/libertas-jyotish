@@ -378,8 +378,8 @@ async function advanceOrder(order, ctx) {
     if (!downloadUrl) throw new Error('no buyer email and PDF storage unavailable');
     await save({ status: STATUS.READY, delivered_at: new Date().toISOString(), last_error: '' });
     if (ctx.mail) {
-      await mail.notifyOwner(`Etsy: ready — send link via Etsy Messages (receipt ${receiptId})`, [
-        ...summary, '', `Etsy order: https://www.etsy.com/your/orders/sold/${receiptId}`, '', 'Message to send on Etsy:',
+      await mail.notifyOwner(`Etsy: ready (receipt ${receiptId}) — buyer can self-download at /etsy/download`, [
+        ...summary, '', `Etsy order: https://www.etsy.com/your/orders/sold/${receiptId}`, '', 'Message to send on Etsy if the buyer asks:',
         mail.deliveryText({ name: order.buyer_name, ...meta })
       ]);
     }
