@@ -89,6 +89,8 @@
         needs_info: 'We could not read part of the birth data you typed at checkout. Please fill in the missing items below and your report will be generated automatically.<br><span class="sub">購入時に入力された出生データの一部が読み取れませんでした。下の項目を入力すると、鑑定書が自動で作成されます。</span>',
         completed: 'Thank you — your data is complete and your report is now being calculated. It is normally ready within 24 hours; come back to this page with your order number and date of birth to download it.<br><span class="sub">ありがとうございます。データが揃い、鑑定書の作成を開始しました。通常 24 時間以内に完成します。注文番号と生年月日でこのページから受け取れます。</span>',
         missing_fields: 'Please fill in all the required items.<br><span class="sub">必要な項目をすべて入力してください。</span>',
+        place_not_found: 'We could not find “{place}” on the map. Please enter the nearest large city and the country, e.g. “Tokyo, Japan” or “New York, USA”.<br><span class="sub">「{place}」が地図で見つかりませんでした。近くの大きな都市と国を入力してください（例: 東京, 日本）。</span>',
+        place_hint: 'The place of birth you typed could not be found on the map. Please enter the nearest large city and the country.<br><span class="sub">入力された出生地が地図で見つかりませんでした。近くの大きな都市と国を入力してください。</span>',
         error: 'Something went wrong while preparing your report. Please message us on Etsy and we will fix it right away.',
         not_found: 'No order matched that number and date of birth. Please check both and try again. If you just purchased, allow up to 15 minutes for the order to appear.<br><span style="font-size:.8rem">注文番号と生年月日が一致する注文が見つかりません。ご購入直後の場合は 15 分ほどお待ちください。</span>',
         invalid_input: 'Please enter your order number and date of birth.<br><span style="font-size:.8rem">注文番号と生年月日の両方を入力してください。</span>',
@@ -105,9 +107,9 @@
           '<label class="chk"><input type="checkbox" name="tob_unknown' + s + '"' + (v['tob_unknown' + s] ? ' checked' : '') + '> I don\'t know the time <small>/ 時刻不明</small></label>' +
           '<label>Place of birth <small>/ 出生地（市・国）</small></label><input type="text" name="place' + s + '" value="' + esc(v['place' + s]) + '" placeholder="City, Country" required>';
       }
-      function renderNeedsInfo(d) {
-        var v = d.fields || {};
-        var html = MSG.needs_info + '<form id="cf" novalidate>' + personBlock(false, v, d.product === 'compat' ? 'Person 1 <small>/ 1人目</small>' : '');
+      function renderNeedsInfo(d, typed) {
+        var v = typed || d.fields || {};
+        var html = MSG.needs_info + (d.place_unresolved && !typed ? '<p class="sub" style="color:#8a3a2a">' + MSG.place_hint + '</p>' : '') + '<form id="cf" novalidate>' + personBlock(false, v, d.product === 'compat' ? 'Person 1 <small>/ 1人目</small>' : '');
         if (d.product === 'compat') html += personBlock(true, v, 'Person 2 <small>/ 2人目</small>');
         html += '<label>Report language <small>/ 鑑定書の言語</small></label><select name="language">' + LANGS.map(function (l) { return '<option value="' + l[0] + '"' + (l[0] === v.language ? ' selected' : '') + '>' + l[1] + '</option>'; }).join('') + '</select>' +
           '<button type="submit">Submit and generate my report</button></form>';
@@ -117,7 +119,15 @@
           var cf = e.target, fields = {}, els = cf.elements;
           for (var i = 0; i < els.length; i++) { var el = els[i]; if (!el.name) continue; fields[el.name] = el.type === 'checkbox' ? el.checked : el.value; }
           cf.querySelector('button').disabled = true;
-          claim({ receipt: document.getElementById('receipt').value.replace(/\D/g, ''), dob: document.getElementById('dob').value, action: 'complete', fields: fields }, function () { renderNeedsInfo(d); });
+          claim({ receipt: document.getElementById('receipt').value.replace(/\D/g, ''), dob: document.getElementById('dob').value, action: 'complete', fields: fields }, function (err) {
+            renderNeedsInfo(d, fields);
+            var cf = document.getElementById('cf');
+            var p = document.createElement('p'); p.className = 'sub'; p.style.color = '#8a3a2a';
+            p.innerHTML = err.error === 'place_not_found' ? MSG.place_not_found.split('{place}').join(esc((err.places || [])[0] || '')) : MSG.missing_fields;
+            out.insertBefore(p, out.firstChild);
+            (err.missing || []).forEach(function (n) { var el = cf.elements[n]; if (el) { el.style.borderColor = '#8a3a2a'; } });
+            var first = cf.elements[(err.missing || [])[0]]; if (first) first.focus();
+          });
         });
       }
       function render(d, onError) {
@@ -125,7 +135,7 @@
         else if (d.ok && d.state === 'needs_info') { renderNeedsInfo(d); }
         else if (d.ok && d.state === 'awaiting_photos') { out.className = 'ok'; out.innerHTML = MSG.awaiting_photos.replace('{url}', d.upload); }
         else if (d.ok) { out.className = 'ok'; out.innerHTML = d.completed ? MSG.completed : (MSG[d.state] || MSG.preparing); }
-        else if (onError && d.error === 'missing_fields') { onError(); var p = document.createElement('p'); p.className = 'sub'; p.style.color = '#8a3a2a'; p.innerHTML = MSG.missing_fields; out.insertBefore(p, out.firstChild); }
+        else if (onError && (d.error === 'missing_fields' || d.error === 'place_not_found')) { onError(d); }
         else { out.className = 'err'; out.innerHTML = MSG[d.error] || MSG.server_error; }
       }
       function claim(payload, onError) {

@@ -36,16 +36,41 @@ async function lookupPlace(query, lang) {
   const lat = parseFloat(data[0].lat);
   const lon = parseFloat(data[0].lon);
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
-  return { lat, lon, displayName: String(data[0].display_name || query) };
+  const kind = String(data[0].addresstype || data[0].type || '');
+  return {
+    lat,
+    lon,
+    displayName: String(data[0].display_name || query),
+    // 国・州レベルのヒットは入力どおりでも概算扱い
+    broad: /^(country|state|region|province|county|prefecture)$/.test(kind)
+  };
 }
 
-// 見つからなければ先頭（詳細側）の語から順に落として、州・国レベルまで緩める。
+// 入力どおり → 各語を単独で（「日本、東京」のように国が先でも都市を拾う）→ 先頭の語から落として州・国レベルまで緩める。
 function buildCandidates(raw) {
-  const parts = raw.split(/[,、]/).map((s) => s.trim()).filter(Boolean);
-  const candidates = [raw];
-  for (let i = 1; i < parts.length; i++) candidates.push(parts.slice(i).join(', '));
-  if (parts.length > 1) candidates.push(parts[parts.length - 1]);
-  return candidates;
+  const cleaned = raw.replace(/[。．.!！?？]+$/g, '').trim();
+  const parts = cleaned.split(/[,、，/／;；\n]/).map((s) => s.trim()).filter(Boolean);
+  const exact = [cleaned];
+  const broad = [];
+  if (parts.length > 1) {
+    exact.push(parts.slice().reverse().join(', '));
+    if (parts.length === 2) exact.push(parts[0], parts[1]);
+    for (let i = 1; i < parts.length - 1; i++) broad.push(parts.slice(i).join(', '));
+    broad.push(parts[parts.length - 1]);
+  } else if (/\s/.test(cleaned)) {
+    const words = cleaned.split(/\s+/);
+    for (let i = 1; i < words.length; i++) broad.push(words.slice(i).join(' '));
+  }
+  const seen = new Set();
+  const out = [];
+  for (const [list, isBroad] of [[exact, false], [broad, true]]) {
+    for (const q of list) {
+      if (!q || seen.has(q)) continue;
+      seen.add(q);
+      out.push({ query: q, broad: isBroad });
+    }
+  }
+  return out;
 }
 
 // 戻り値: { lat, lon, precision: 'exact' | 'approximate', notice } / 特定できなければ null
@@ -54,16 +79,17 @@ async function geocodeBirthPlace(city, lang) {
   if (!raw) return null;
 
   const candidates = buildCandidates(raw);
-  for (let i = 0; i < candidates.length; i++) {
+  for (const { query, broad } of candidates) {
     try {
-      const hit = await lookupPlace(candidates[i], lang);
+      const hit = await lookupPlace(query, lang);
       if (!hit) continue;
       const notice = APPROX_NOTICE[lang] || APPROX_NOTICE.en;
+      const approx = broad || hit.broad;
       return {
         lat: hit.lat,
         lon: hit.lon,
-        precision: i === 0 ? 'exact' : 'approximate',
-        notice: i === 0 ? null : notice(hit.displayName)
+        precision: approx ? 'approximate' : 'exact',
+        notice: approx ? notice(hit.displayName) : null
       };
     } catch (err) {
       console.error('Geocoding lookup failed:', err && err.message);
