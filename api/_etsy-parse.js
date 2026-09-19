@@ -96,9 +96,9 @@ function parsePlace(text, consumed) {
     ? inline[inline.length - 1]
     : labelled
     ? labelled.replace(LABEL, '')
-    : lines.find((l) => (/[\p{L}]{3,}/u.test(l) || /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(l)) && !/^(report|language|idioma|bahasa|言語|اللغة|e-?mail|correo|メール)/i.test(l));
+    : lines.find((l) => /\p{L}/u.test(l) && !/^(report|language|idioma|bahasa|言語|اللغة|e-?mail|correo|メール)/i.test(l));
   if (!candidate) return null;
-  return candidate.replace(/\b(report\s+)?languages?\b.*$/i, '').replace(/\b(e-?mail|correo)\b.*$/i, '').replace(/[、。]+/g, ', ').replace(/[\s:,\-–—]+$/g, '').trim() || null;
+  return candidate.replace(/\b(report\s+)?languages?\b.*$/i, '').replace(/\b(e-?mail|correo)\b.*$/i, '').replace(/[、。]+/g, ', ').replace(/[\s:,.\-–—]+$/g, '').trim() || null;
 }
 
 // 戻り値: { dob, tob, tobUnknown, place, language, email, missing: [], notes: [] }
