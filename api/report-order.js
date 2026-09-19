@@ -43,7 +43,7 @@ function person(body, suffix) {
   const errors = [];
   if (!validDate(dob)) errors.push(`dob${suffix}`);
   if (!tobUnknown && !validTime(tob)) errors.push(`tob${suffix}`);
-  if (place.length < 2) errors.push(`place${suffix}`);
+  if (!place) errors.push(`place${suffix}`);
   return { dob, tob, tobUnknown, place, errors };
 }
 
