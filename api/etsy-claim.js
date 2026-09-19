@@ -6,6 +6,7 @@ const ledger = require('./_etsy-ledger');
 const storage = require('./_etsy-storage');
 const { parseDate } = require('./_etsy-parse');
 const { normalizeLang } = require('./_terms');
+const { geocodeBirthPlace } = require('./_geocode');
 
 const CLAIM_TTL_DAYS = 7;
 
@@ -75,7 +76,11 @@ function respond(res, receiptId, order) {
   const language = normalizeLang(order.language || 'en');
   const out = { ok: true, state, product, language };
   if (state === 'ready') out.url = storage.downloadUrl(receiptId, CLAIM_TTL_DAYS);
-  if (state === 'needs_info') { out.missing = missingFields(order); out.fields = fieldsOf(order); }
+  if (state === 'needs_info') {
+    out.missing = missingFields(order);
+    out.fields = fieldsOf(order);
+    out.place_unresolved = /^unknown_birthplace/.test(order.last_error || '');
+  }
   if (state === 'awaiting_photos') out.upload = storage.uploadUrl(receiptId, language);
   res.status(200).json(out);
 }
@@ -136,6 +141,17 @@ module.exports = async function handler(req, res) {
       const { update, errors } = completion({ ...body, fields: { ...(body.fields || {}), dob: body.fields?.dob || dob } }, order);
       if (errors.length) {
         res.status(400).json({ ok: false, error: 'missing_fields', missing: errors });
+        return;
+      }
+      // 出生地はこの場で地図検索し、見つからなければ即座に再入力を求める（cron 待ちで往復させない）
+      const unresolved = [];
+      const placeChecks = [['place', update.place]];
+      if (order.product === 'compat') placeChecks.push(['place_b', update.place_b]);
+      for (const [key, value] of placeChecks) {
+        if (!(await geocodeBirthPlace(value, update.language))) unresolved.push({ field: key, value });
+      }
+      if (unresolved.length) {
+        res.status(400).json({ ok: false, error: 'place_not_found', missing: unresolved.map((u) => u.field), places: unresolved.map((u) => u.value) });
         return;
       }
       const status = order.product === 'palm' && (!order.photo_right || !order.photo_left) ? ledger.STATUS.AWAITING_PHOTOS : ledger.STATUS.NEW;
