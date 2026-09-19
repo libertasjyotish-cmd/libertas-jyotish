@@ -45,16 +45,25 @@ function parseDate(text) {
   m = text.match(/\b([a-zA-Z]+)\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})\b/);
   if (m && MONTHS[m[1].toLowerCase()]) return { value: validDate(+m[3], MONTHS[m[1].toLowerCase()], +m[2]), match: m[0] };
 
-  m = text.match(/\b(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})\b/);
-  if (m) {
-    const a = +m[1];
-    const b = +m[2];
-    const y = +m[3];
-    if (a > 12 && b <= 12) return { value: validDate(y, b, a), match: m[0] };
-    if (b > 12 && a <= 12) return { value: validDate(y, a, b), match: m[0] };
-    return { ambiguous: true, match: m[0] };
-  }
+  // 年が末尾の数字表記（08/28/1969, 28.08.1969, 08281969）。月日の順が判別できなければ推測しない。
+  m = text.match(/\b(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})\b/) || text.match(/\b(\d{2})(\d{2})((?:19|20)\d{2})\b/);
+  if (m) return dayMonthOrMonthDay(+m[1], +m[2], +m[3], m[0]);
+
+  // 区切りなしの YYYYMMDD
+  m = text.match(/\b((?:19|20)\d{2})(\d{2})(\d{2})\b/);
+  if (m) return { value: validDate(+m[1], +m[2], +m[3]), match: m[0] };
+
+  // 2桁年（8/28/69）は世紀も月日順も曖昧なので確認に回す
+  m = text.match(/\b(\d{1,2})[-/.](\d{1,2})[-/.](\d{2})\b(?![:\d])/);
+  if (m) return { ambiguous: true, match: m[0] };
   return null;
+}
+
+function dayMonthOrMonthDay(a, b, y, match) {
+  if (a > 12 && b <= 12) return { value: validDate(y, b, a), match };
+  if (b > 12 && a <= 12) return { value: validDate(y, a, b), match };
+  if (a === b) return { value: validDate(y, a, b), match };
+  return { ambiguous: true, match };
 }
 
 // 戻り値: { value: 'HH:MM' } | { unknown: true } | { ambiguous: true } | null
