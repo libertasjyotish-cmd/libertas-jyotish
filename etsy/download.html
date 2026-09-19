@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get your report | Libertas Jyotish</title>
+  <meta name="description" content="Download your Libertas Jyotish report purchased on Etsy.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://www.libertas-jyotish.com/etsy/download">
+  <link rel="icon" type="image/png" href="/img/libertas-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Noto+Sans+JP:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --gold: #D4AF37; --gold-dark: #8B6B1B; --ink: #2C221E; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans JP', sans-serif; color: var(--ink); line-height: 1.8; min-height: 100vh; background: #0c1a1f; display: flex; flex-direction: column; }
+    .main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 50px 20px 60px;
+      background-image: linear-gradient(rgba(12,26,31,.45), rgba(12,26,31,.45)), url("/img/bg-jyotish.jpg"); background-size: cover; background-position: center; }
+    .card { width: 100%; max-width: 560px; border-radius: 14px; padding: 42px 32px 36px;
+      background-image: radial-gradient(circle at 50% 25%, rgba(255,253,245,.98) 0%, rgba(245,233,208,.95) 55%, rgba(220,200,162,.96) 100%);
+      border: 1px solid rgba(184,142,60,.65); outline: 1px solid rgba(212,175,55,.35); outline-offset: -7px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,.75), 0 0 20px rgba(212,175,55,.18), inset 0 0 35px rgba(139,90,43,.28); }
+    .logo { display: block; width: 72px; margin: 0 auto 10px; }
+    .kicker { font-family: 'Cinzel', serif; letter-spacing: .18em; font-size: .72rem; color: var(--gold-dark); text-align: center; margin-bottom: 8px; }
+    h1 { font-family: 'Cinzel', serif; font-size: 1.4rem; text-align: center; margin-bottom: 8px; }
+    .lead { font-size: .9rem; color: #5A4E48; text-align: center; margin-bottom: 22px; }
+    .lead small { display: block; font-size: .78rem; color: #7a6a58; margin-top: 4px; }
+    label { display: block; font-size: .82rem; font-weight: 600; margin: 14px 0 6px; }
+    label small { font-weight: 400; color: #7a6a58; }
+    input { width: 100%; padding: 12px 14px; background: rgba(255,252,245,.9); border: 1px solid rgba(139,107,27,.4); border-radius: 8px; font: inherit; font-size: 1rem; color: var(--ink); outline: none; }
+    input:focus { border-color: var(--gold-dark); }
+    .hint { font-size: .76rem; color: #7a6a58; margin-top: 4px; }
+    button { width: 100%; margin-top: 22px; padding: 15px; font: inherit; font-size: 1.05rem; font-weight: 600; color: #FFFDF9; border: 0; border-radius: 8px; cursor: pointer;
+      background: linear-gradient(135deg, #C59B27 0%, var(--gold-dark) 100%); box-shadow: 0 8px 20px rgba(0,0,0,.35); }
+    button[disabled] { opacity: .6; cursor: wait; }
+    #result { display: none; margin-top: 20px; padding: 14px 16px; border-radius: 8px; font-size: .9rem; }
+    #result.ok { display: block; background: rgba(212,175,55,.15); border: 1px solid rgba(139,107,27,.4); }
+    #result.err { display: block; background: rgba(180,60,40,.1); border: 1px solid rgba(180,60,40,.4); color: #8a3a2a; }
+    #result a.dl { display: inline-block; margin-top: 10px; padding: 12px 22px; background: var(--gold-dark); color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; }
+    .note { font-size: .78rem; color: #7a6a58; margin-top: 18px; }
+    .note a { color: var(--gold-dark); }
+    footer { background: rgba(8,18,22,.95); border-top: 1px solid rgba(139,107,27,.3); padding: 18px; text-align: center; font-size: .75rem; color: #8A9A9E; font-family: 'Cinzel', serif; }
+  </style>
+</head>
+<body>
+  <section class="main">
+    <div class="card">
+      <img class="logo" src="/img/libertas-logo.png" alt="Libertas Jyotish">
+      <p class="kicker">LIBERTAS JYOTISH · ETSY ORDERS</p>
+      <h1>Get your report</h1>
+      <p class="lead">Enter your Etsy order number and the date of birth you gave at checkout.
+        <small>Etsy でご購入の鑑定書はこちらから受け取れます。注文番号と、購入時に入力した生年月日を入力してください。</small></p>
+
+      <form id="f" novalidate>
+        <label for="receipt">Etsy order number <small>/ 注文番号</small></label>
+        <input id="receipt" inputmode="numeric" autocomplete="off" placeholder="e.g. 3456789012" required>
+        <p class="hint">Found in your Etsy purchase email ("Order #…") or under Etsy → Purchases and reviews.</p>
+
+        <label for="dob">Date of birth <small>/ 生年月日</small></label>
+        <input id="dob" type="date" required>
+        <p class="hint">For couple readings, the first person's date of birth.</p>
+
+        <button id="btn" type="submit">Get my report</button>
+      </form>
+
+      <div id="result" role="status"></div>
+
+      <p class="note">Reports are calculated individually and are normally ready within 24 hours of purchase. If yours is not ready yet, please come back a little later. Questions: message LibertasJyotish on Etsy or <a href="/en/contact">contact us</a>.</p>
+    </div>
+  </section>
+  <footer>&copy; Libertas Jyotish All Rights Reserved.</footer>
+
+  <script>
+    (function () {
+      var f = document.getElementById('f'), btn = document.getElementById('btn'), out = document.getElementById('result');
+      var q = new URLSearchParams(location.search);
+      if (q.get('order')) document.getElementById('receipt').value = q.get('order').replace(/\D/g, '');
+      var MSG = {
+        ready: 'Your report is ready.<br><a class="dl" href="{url}">Download PDF</a><br><span style="font-size:.78rem;color:#7a6a58">The link is valid for 7 days. Please save the file.<br>ダウンロードリンクは 7 日間有効です。ファイルを保存してください。</span>',
+        preparing: 'Your order is confirmed and your report is being calculated. It is normally ready within 24 hours — please come back a little later.<br><span style="font-size:.8rem">注文は受け付けられており、鑑定書を作成中です。通常 24 時間以内に完成しますので、しばらく後にもう一度お試しください。</span>',
+        awaiting_photos: 'We are waiting for your palm photos. Please use the upload link we sent you, or message us on Etsy.',
+        needs_info: 'We could not read part of your birth data. Please check your Etsy Messages — we have sent you a question there.',
+        error: 'Something went wrong while preparing your report. Please message us on Etsy and we will fix it right away.',
+        not_found: 'No order matched that number and date of birth. Please check both and try again. If you just purchased, allow up to 15 minutes for the order to appear.<br><span style="font-size:.8rem">注文番号と生年月日が一致する注文が見つかりません。ご購入直後の場合は 15 分ほどお待ちください。</span>',
+        invalid_input: 'Please enter your order number and date of birth.',
+        server_error: 'Temporary error. Please try again in a minute.'
+      };
+      f.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var receipt = document.getElementById('receipt').value.replace(/\D/g, '');
+        var dob = document.getElementById('dob').value;
+        if (!receipt || !dob) { out.className = 'err'; out.innerHTML = MSG.invalid_input; return; }
+        btn.disabled = true; out.className = ''; out.style.display = 'none';
+        fetch('/api/etsy-claim', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ receipt: receipt, dob: dob }) })
+          .then(function (r) { return r.json().catch(function () { return { ok: false, error: 'server_error' }; }); })
+          .then(function (d) {
+            if (d.ok && d.state === 'ready') { out.className = 'ok'; out.innerHTML = MSG.ready.replace('{url}', d.url); }
+            else if (d.ok) { out.className = 'ok'; out.innerHTML = MSG[d.state] || MSG.preparing; }
+            else { out.className = 'err'; out.innerHTML = MSG[d.error] || MSG.server_error; }
+          })
+          .catch(function () { out.className = 'err'; out.innerHTML = MSG.server_error; })
+          .then(function () { btn.disabled = false; });
+      });
+    })();
+  </script>
+</body>
+</html>
