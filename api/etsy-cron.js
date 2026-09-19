@@ -2,7 +2,9 @@
 // Vercel は CRON_SECRET を Authorization: Bearer で付けて呼ぶ。手動実行は ?key=<CRON_SECRET> でも可。
 // ?retry=<receipt_id> を付けると、その注文を new に戻して（章・PDF は保持）再処理する。
 // ?regen=<receipt_id> は章を消して（天体データ・写真は保持）文面から作り直し、再納品する。&vision=1 を足すと手相の解析もやり直す。&astro=1 は天体データも作り直す（Prokerala 応答は Blob キャッシュから）。
+// ?reparse=<receipt_id> は保存済みのパーソナライズ文を現行パーサで読み直し、揃えば new に戻す（needs_info の復旧用）。
 const { runCycle } = require('./_etsy-fulfill');
+const { parsePersonalization } = require('./_etsy-parse');
 const ledger = require('./_etsy-ledger');
 
 const MAX_DURATION_S = 60;
@@ -20,6 +22,19 @@ module.exports = async function handler(req, res) {
   try {
     const retry = req.query && req.query.retry;
     if (retry && await ledger.findOrder(retry)) await ledger.upsertOrder(retry, { status: ledger.STATUS.NEW, attempts: 0, last_error: '' });
+    const reparse = req.query && req.query.reparse;
+    if (reparse) {
+      const order = await ledger.findOrder(reparse);
+      if (order && order.personalization) {
+        const parsed = parsePersonalization(order.personalization);
+        if (!parsed.missing.length) {
+          await ledger.upsertOrder(reparse, {
+            dob: parsed.dob, tob: parsed.tob, tob_unknown: parsed.tobUnknown ? 'true' : 'false', place: parsed.place, language: parsed.language,
+            status: ledger.STATUS.NEW, attempts: 0, last_error: ''
+          });
+        }
+      }
+    }
     const regen = req.query && req.query.regen;
     if (regen && await ledger.findOrder(regen)) {
       const cleared = Object.fromEntries(ledger.REPORT_FIELDS.filter((f) => f !== 'astro').map((f) => [f, '']));
