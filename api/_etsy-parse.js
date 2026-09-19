@@ -36,7 +36,7 @@ function validDate(y, m, d) {
 
 // 戻り値: { value: 'YYYY-MM-DD' } | { ambiguous: true } | null
 function parseDate(text) {
-  let m = text.match(/\b(\d{4})[-/.年]\s*(\d{1,2})[-/.月]\s*(\d{1,2})日?\b/);
+  let m = text.match(/\b(\d{4})[-/.年]\s*(\d{1,2})[-/.月]\s*(\d{1,2})(?:日|\b)/);
   if (m) return { value: validDate(+m[1], +m[2], +m[3]), match: m[0] };
 
   m = text.match(/\b(\d{1,2})(?:st|nd|rd|th)?\s+(?:de\s+)?([a-zA-Zçã]+)\s+(?:de\s+)?(\d{4})\b/);
@@ -61,7 +61,7 @@ function parseDate(text) {
 function parseTime(text) {
   const unknown = text.match(UNKNOWN_TIME);
   if (unknown) return { unknown: true, match: unknown[0] };
-  const m = text.match(/\b(\d{1,2})[:h時]\s*(\d{2})\s*(a\.?m\.?|p\.?m\.?)?/i)
+  const m = text.match(/\b(\d{1,2})[:h時]\s*(\d{2})\s*(?:分\s*)?(a\.?m\.?|p\.?m\.?)?/i)
     || text.match(/\b(\d{1,2})\s*(a\.?m\.?|p\.?m\.?)\b/i);
   if (!m) return null;
   let hour = +m[1];
@@ -87,7 +87,7 @@ function parseLanguage(text) {
 function parsePlace(text, consumed) {
   let rest = text;
   for (const c of consumed) rest = rest.replace(c, ' ');
-  const lines = rest.split(/[\n;|]+|\(\d\)|\d\)|\d\./).map((s) => s.replace(/^[\s:,\-–—]+|[\s:,\-–—]+$/g, '')).filter(Boolean);
+  const lines = rest.split(/[\n;|；]+|\(\d\)|\d\)|\d\./).map((s) => s.replace(/^[\s:,、。：\-–—]+|[\s:,、。：\-–—]+$/g, '')).filter(Boolean);
   // 「Place: …」のようにラベル＋区切りがある行を優先し、無ければ最初の文字列行を採る
   const LABEL = /^(place|city|town|birthplace|born in|lugar|ciudad|cidade|local|tempat|kota|出生地|مكان|مدينة)(\s+(of\s+birth|de\s+nacimiento|de\s+nascimento|lahir|الميلاد))?\s*[:：\-–]\s*/i;
   const inline = rest.match(new RegExp(`(?:^|[\\s,.;])${LABEL.source.slice(1)}([^\\n;|]+)`, 'i'));
@@ -96,9 +96,9 @@ function parsePlace(text, consumed) {
     ? inline[inline.length - 1]
     : labelled
     ? labelled.replace(LABEL, '')
-    : lines.find((l) => /[\p{L}]{3,}/u.test(l) && !/^(report|language|idioma|bahasa|言語|اللغة|e-?mail|correo|メール)/i.test(l));
+    : lines.find((l) => (/[\p{L}]{3,}/u.test(l) || /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]{2,}/u.test(l)) && !/^(report|language|idioma|bahasa|言語|اللغة|e-?mail|correo|メール)/i.test(l));
   if (!candidate) return null;
-  return candidate.replace(/\b(report\s+)?languages?\b.*$/i, '').replace(/\b(e-?mail|correo)\b.*$/i, '').replace(/[\s:,\-–—]+$/g, '').trim() || null;
+  return candidate.replace(/\b(report\s+)?languages?\b.*$/i, '').replace(/\b(e-?mail|correo)\b.*$/i, '').replace(/[、。]+/g, ', ').replace(/[\s:,\-–—]+$/g, '').trim() || null;
 }
 
 // 戻り値: { dob, tob, tobUnknown, place, language, email, missing: [], notes: [] }
