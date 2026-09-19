@@ -37,6 +37,12 @@
     #result { display: none; margin-top: 20px; padding: 14px 16px; border-radius: 8px; font-size: .9rem; }
     #result.ok { display: block; background: rgba(212,175,55,.15); border: 1px solid rgba(139,107,27,.4); }
     #result.err { display: block; background: rgba(180,60,40,.1); border: 1px solid rgba(180,60,40,.4); color: #8a3a2a; }
+    #result label { margin-top: 12px; }
+    #result select, #result input[type=text], #result input[type=time], #result input[type=date] { width: 100%; padding: 10px 12px; background: rgba(255,252,245,.9); border: 1px solid rgba(139,107,27,.4); border-radius: 8px; font: inherit; font-size: 1rem; color: var(--ink); }
+    #result .chk { display: flex; align-items: center; gap: 8px; font-size: .82rem; font-weight: 400; margin-top: 6px; }
+    #result .chk input { width: auto; }
+    #result button { margin-top: 16px; padding: 12px; font-size: .95rem; }
+    #result .sub { font-size: .8rem; color: #7a6a58; }
     #result a.dl { display: inline-block; margin-top: 10px; padding: 12px 22px; background: var(--gold-dark); color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; }
     .note { font-size: .78rem; color: #7a6a58; margin-top: 18px; }
     .note a { color: var(--gold-dark); }
@@ -79,29 +85,64 @@
       var MSG = {
         ready: 'Your report is ready.<br><a class="dl" href="{url}">Download PDF</a><br><span style="font-size:.78rem;color:#7a6a58">The link is valid for 7 days. Please save the file.<br>ダウンロードリンクは 7 日間有効です。ファイルを保存してください。</span>',
         preparing: 'Your order is confirmed and your report is being calculated. It is normally ready within 24 hours — please come back a little later.<br><span style="font-size:.8rem">注文は受け付けられており、鑑定書を作成中です。通常 24 時間以内に完成しますので、しばらく後にもう一度お試しください。</span>',
-        awaiting_photos: 'We are waiting for your palm photos. Please use the upload link we sent you, or message us on Etsy.',
-        needs_info: 'We could not read part of your birth data. Please check your Etsy Messages — we have sent you a question there.',
+        awaiting_photos: 'Your birth data is confirmed. We are now waiting for your palm photos — please upload them here:<br><a class="dl" href="{url}">Upload palm photos</a><br><span class="sub">出生データは確認済みです。手のひらの写真をこちらからアップロードしてください。</span>',
+        needs_info: 'We could not read part of the birth data you typed at checkout. Please fill in the missing items below and your report will be generated automatically.<br><span class="sub">購入時に入力された出生データの一部が読み取れませんでした。下の項目を入力すると、鑑定書が自動で作成されます。</span>',
+        completed: 'Thank you — your data is complete and your report is now being calculated. It is normally ready within 24 hours; come back to this page with your order number and date of birth to download it.<br><span class="sub">ありがとうございます。データが揃い、鑑定書の作成を開始しました。通常 24 時間以内に完成します。注文番号と生年月日でこのページから受け取れます。</span>',
+        missing_fields: 'Please fill in all the required items.<br><span class="sub">必要な項目をすべて入力してください。</span>',
         error: 'Something went wrong while preparing your report. Please message us on Etsy and we will fix it right away.',
         not_found: 'No order matched that number and date of birth. Please check both and try again. If you just purchased, allow up to 15 minutes for the order to appear.<br><span style="font-size:.8rem">注文番号と生年月日が一致する注文が見つかりません。ご購入直後の場合は 15 分ほどお待ちください。</span>',
         invalid_input: 'Please enter your order number and date of birth.<br><span style="font-size:.8rem">注文番号と生年月日の両方を入力してください。</span>',
         checking: 'Checking your order&hellip;',
         server_error: 'Temporary error. Please try again in a minute.'
       };
+      var LANGS = [['en', 'English'], ['ja', '日本語'], ['es', 'Español'], ['pt', 'Português'], ['ar', 'العربية'], ['id', 'Bahasa Indonesia']];
+      function esc(s) { return String(s || '').replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+      function personBlock(sfx, v, title) {
+        var s = sfx ? '_b' : '';
+        return (title ? '<p style="margin-top:14px;font-weight:600">' + title + '</p>' : '') +
+          '<label>Date of birth <small>/ 生年月日</small></label><input type="date" name="dob' + s + '" value="' + esc(v['dob' + s]) + '" required>' +
+          '<label>Time of birth <small>/ 出生時刻</small></label><input type="time" name="tob' + s + '" value="' + esc(v['tob_unknown' + s] ? '' : v['tob' + s]) + '">' +
+          '<label class="chk"><input type="checkbox" name="tob_unknown' + s + '"' + (v['tob_unknown' + s] ? ' checked' : '') + '> I don\'t know the time <small>/ 時刻不明</small></label>' +
+          '<label>Place of birth <small>/ 出生地（市・国）</small></label><input type="text" name="place' + s + '" value="' + esc(v['place' + s]) + '" placeholder="City, Country" required>';
+      }
+      function renderNeedsInfo(d) {
+        var v = d.fields || {};
+        var html = MSG.needs_info + '<form id="cf" novalidate>' + personBlock(false, v, d.product === 'compat' ? 'Person 1 <small>/ 1人目</small>' : '');
+        if (d.product === 'compat') html += personBlock(true, v, 'Person 2 <small>/ 2人目</small>');
+        html += '<label>Report language <small>/ 鑑定書の言語</small></label><select name="language">' + LANGS.map(function (l) { return '<option value="' + l[0] + '"' + (l[0] === v.language ? ' selected' : '') + '>' + l[1] + '</option>'; }).join('') + '</select>' +
+          '<button type="submit">Submit and generate my report</button></form>';
+        out.className = 'ok'; out.innerHTML = html;
+        document.getElementById('cf').addEventListener('submit', function (e) {
+          e.preventDefault();
+          var cf = e.target, fields = {}, els = cf.elements;
+          for (var i = 0; i < els.length; i++) { var el = els[i]; if (!el.name) continue; fields[el.name] = el.type === 'checkbox' ? el.checked : el.value; }
+          cf.querySelector('button').disabled = true;
+          claim({ receipt: document.getElementById('receipt').value.replace(/\D/g, ''), dob: document.getElementById('dob').value, action: 'complete', fields: fields }, function () { renderNeedsInfo(d); });
+        });
+      }
+      function render(d, onError) {
+        if (d.ok && d.state === 'ready') { out.className = 'ok'; out.innerHTML = MSG.ready.replace('{url}', d.url); }
+        else if (d.ok && d.state === 'needs_info') { renderNeedsInfo(d); }
+        else if (d.ok && d.state === 'awaiting_photos') { out.className = 'ok'; out.innerHTML = MSG.awaiting_photos.replace('{url}', d.upload); }
+        else if (d.ok) { out.className = 'ok'; out.innerHTML = d.completed ? MSG.completed : (MSG[d.state] || MSG.preparing); }
+        else if (onError && d.error === 'missing_fields') { onError(); var p = document.createElement('p'); p.className = 'sub'; p.style.color = '#8a3a2a'; p.innerHTML = MSG.missing_fields; out.insertBefore(p, out.firstChild); }
+        else { out.className = 'err'; out.innerHTML = MSG[d.error] || MSG.server_error; }
+      }
+      function claim(payload, onError) {
+        btn.disabled = true;
+        return fetch('/api/etsy-claim', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+          .then(function (r) { return r.json().catch(function () { return { ok: false, error: 'server_error' }; }); })
+          .then(function (d) { if (payload.action === 'complete' && d.ok && d.state === 'preparing') d.completed = true; render(d, onError); })
+          .catch(function () { out.className = 'err'; out.innerHTML = MSG.server_error; })
+          .then(function () { btn.disabled = false; out.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
+      }
       f.addEventListener('submit', function (e) {
         e.preventDefault();
         var receipt = document.getElementById('receipt').value.replace(/\D/g, '');
         var dob = document.getElementById('dob').value;
         if (!receipt || !dob) { out.className = 'err'; out.innerHTML = MSG.invalid_input; out.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); return; }
-        btn.disabled = true; out.className = 'ok'; out.innerHTML = MSG.checking; out.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-        fetch('/api/etsy-claim', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ receipt: receipt, dob: dob }) })
-          .then(function (r) { return r.json().catch(function () { return { ok: false, error: 'server_error' }; }); })
-          .then(function (d) {
-            if (d.ok && d.state === 'ready') { out.className = 'ok'; out.innerHTML = MSG.ready.replace('{url}', d.url); }
-            else if (d.ok) { out.className = 'ok'; out.innerHTML = MSG[d.state] || MSG.preparing; }
-            else { out.className = 'err'; out.innerHTML = MSG[d.error] || MSG.server_error; }
-          })
-          .catch(function () { out.className = 'err'; out.innerHTML = MSG.server_error; })
-          .then(function () { btn.disabled = false; out.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
+        out.className = 'ok'; out.innerHTML = MSG.checking; out.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        claim({ receipt: receipt, dob: dob });
       });
     })();
   </script>
