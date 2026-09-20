@@ -7,7 +7,7 @@ const API_BASE = 'https://komoju.com/api/v1';
 // 日本向けに申請した決済手段。TEST 環境では全手段が有効なので、ここで本番と同じ並びに絞る。
 const PAYMENT_TYPES = {
   pdf: ['credit_card', 'konbini', 'paypay'],
-  premium: ['credit_card'], // 定期課金はカードのみ
+  premium: ['credit_card', 'paypay'], // 定期課金に使えるのはホストページで長期トークン化できる手段（カード・PayPay）
   compat: ['credit_card', 'konbini', 'paypay'],
   yearly: ['credit_card', 'konbini', 'paypay'],
   career: ['credit_card', 'konbini', 'paypay'],
