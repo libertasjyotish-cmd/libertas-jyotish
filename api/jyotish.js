@@ -631,6 +631,7 @@ function extractPlanets(prokeralaData) {
 
 const SIGN_ORDER_JA = ['牡羊座', '牡牛座', '双子座', '蟹座', '獅子座', '乙女座', '天秤座', '蠍座', '射手座', '山羊座', '水瓶座', '魚座'];
 const VARA_LORDS_JA = ['太陽', '月', '火星', '水星', '木星', '金星', '土星'];
+const WEEKDAYS_JA = ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'];
 const TITHI_NAMES = ['プラティパダ', 'ドヴィティーヤ', 'トリティーヤ', 'チャトゥルティー', 'パンチャミー', 'シャシュティー', 'サプタミー', 'アシュタミー', 'ナヴァミー', 'ダシャミー', 'エーカーダシー', 'ドヴァーダシー', 'トラヨーダシー', 'チャトゥルダシー'];
 
 function signIndex(sign) {
@@ -660,8 +661,10 @@ function dailyFactors(natal, transit, todayJst) {
   const conjunct = natal.filter(p => p.name !== 'Ascendant' && p.sign && signIndex(p.sign) === signIndex(tMoon.sign)).map(p => p.name);
   const opposite = natal.filter(p => p.name !== 'Ascendant' && p.sign && signIndex(p.sign) === (signIndex(tMoon.sign) + 6) % 12).map(p => p.name);
 
-  const jstDate = new Date(`${todayJst}T00:00:00+09:00`);
-  const varaLord = VARA_LORDS_JA[jstDate.getUTCDay()];
+  // todayJst は JST の暦日。UTC 正午に固定して曜日を取れば日付境界のズレが出ない
+  const dow = new Date(`${todayJst}T12:00:00Z`).getUTCDay();
+  const weekday = WEEKDAYS_JA[dow];
+  const varaLord = VARA_LORDS_JA[dow];
 
   let tithi = null;
   if (typeof tMoon.longitude === 'number' && typeof tSun.longitude === 'number') {
@@ -683,7 +686,7 @@ function dailyFactors(natal, transit, todayJst) {
   const slow = transit.filter(p => ['Saturn', 'Jupiter', 'Rahu', 'Ketu'].includes(p.name) && p.sign).map(p => `${p.name}: ${toJapaneseSign(p.sign)}${nAsc.sign ? `（第${houseFrom(nAsc.sign, p.sign)}ハウス）` : ''}${p.is_retrograde ? ' 逆行' : ''}`);
   const fast = transit.filter(p => ['Sun', 'Mercury', 'Venus', 'Mars'].includes(p.name) && p.sign).map(p => `${p.name}: ${toJapaneseSign(p.sign)}${nAsc.sign ? `（第${houseFrom(nAsc.sign, p.sign)}ハウス）` : ''}${p.is_retrograde ? ' 逆行' : ''}`);
 
-  return { houseFromLagna, houseFromMoon, conjunct, opposite, varaLord, tithi, moonMove, slow, fast };
+  return { houseFromLagna, houseFromMoon, conjunct, opposite, weekday, varaLord, tithi, moonMove, slow, fast };
 }
 
 // 前回の鑑定で扱ったテーマ（冒頭）を渡し、同じ言い当てを繰り返させない。
@@ -743,11 +746,11 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
   const daily = dailyFactors(planetList, transitPlanets, todayJst);
 
   const dailyBlock = daily ? `
-  【本日 ${todayJst} 固有の要素（鑑定の軸。必ずここから今日の悩みテーマを選ぶ）】
+  【本日 ${todayJst}（${daily.weekday}）固有の要素（鑑定の軸。必ずここから今日の悩みテーマを選ぶ）】
   - トランジットの月: ${signFor(transitMoon.sign, lang)}${daily.houseFromLagna ? ` ＝ ラグナから第${daily.houseFromLagna}ハウス` : ''}${daily.houseFromMoon ? `、出生の月から第${daily.houseFromMoon}ハウス（チャンドラ・ラグナ）` : ''}
   - 今日の月のナクシャトラ: ${nakshatraFor(transitMoon.nakshatra, lang) || '不明'}
   - 月が重なる出生天体: ${daily.conjunct.length ? daily.conjunct.join('・') : 'なし'} ／ 月と対向する出生天体: ${daily.opposite.length ? daily.opposite.join('・') : 'なし'}
-  - 曜日の支配星（ヴァーラ）: ${daily.varaLord}${daily.tithi ? `\n  - ティティ: ${daily.tithi}` : ''}${daily.moonMove ? `\n  - 月の次の移動: 約${daily.moonMove.remainingDays}日後に ${signFor(daily.moonMove.nextSign, lang)}${daily.moonMove.nextHouseFromLagna ? `（第${daily.moonMove.nextHouseFromLagna}ハウス）` : ''} へ` : ''}
+  - 曜日: ${daily.weekday}（曜日は必ずこの表記に従い、自分で計算し直さない） ／ 曜日の支配星（ヴァーラ）: ${daily.varaLord}${daily.tithi ? `\n  - ティティ: ${daily.tithi}` : ''}${daily.moonMove ? `\n  - 月の次の移動: 約${daily.moonMove.remainingDays}日後に ${signFor(daily.moonMove.nextSign, lang)}${daily.moonMove.nextHouseFromLagna ? `（第${daily.moonMove.nextHouseFromLagna}ハウス）` : ''} へ` : ''}
   - 速い天体: ${daily.fast.join('、') || '不明'}
   - 遅い天体（背景として1文まで）: ${daily.slow.join('、') || '不明'}
 
