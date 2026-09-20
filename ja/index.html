@@ -559,7 +559,8 @@ city: birthPlace,
 dob: birthDate,
 tob: timeVal,
 status: 'free',
-language: 'ja'
+language: 'ja',
+tz: Intl.DateTimeFormat().resolvedOptions().timeZone
 };
 
 sessionStorage.removeItem('lj_diagnosis_result');

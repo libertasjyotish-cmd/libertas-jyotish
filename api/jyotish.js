@@ -7,6 +7,7 @@ const { issueSession } = require('./_auth');
 const { createTerms } = require('./_terms');
 const { nakshatraFromLongitude } = require('./_astrology');
 const { geocodeBirthPlace } = require('./_geocode');
+const { DEFAULT_ZONE, isValidZone, zoneForCoordinates, localDateTimeToIso, nowIsoIn, todayIn } = require('./_tz');
 
 // 天体計算または鑑定文の生成に失敗したときは、根拠のない文面を返さず再試行を促す。
 function sendReadingUnavailable(res, reason, detail, geminiMeta) {
@@ -121,7 +122,9 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { action, email, address, datetime, city, dob, tob, status, language, code, token } = req.body;
+  const { action, email, address, datetime, city, dob, tob, status, language, code, token, tz } = req.body;
+  // 「本日」は閲覧者の現地日付で決める（ブラウザのタイムゾーンを受け取る）
+  const viewerZone = isValidZone(tz) ? tz : DEFAULT_ZONE;
 
   // AUTH_SECRET はメール認証にのみ必要。診断系は未設定でも動作させる。
   if ((action === 'send_code' || action === 'verify_code') && !AUTH_SECRET) {
@@ -292,9 +295,10 @@ module.exports = async function handler(req, res) {
         return res.status(400).json({ error: 'Missing or corrupt birth date or birth place data.' });
       }
 
-      // 同じ日に何度開いても鑑定内容が変わらないよう、その日の初回生成分を再利用する（JSTの日付が変われば作り直す）。
+      // 同じ日に何度開いても鑑定内容が変わらないよう、その日の初回生成分を再利用する（閲覧者の現地日付が変われば作り直す）。
       const birthKey = makeBirthKey(finalDob, finalTob, finalCity, finalLang);
-      const sameDayReading = reusableReading(sheetsProfile, { status: finalStatus, birthKey });
+      const todayLocal = todayIn(viewerZone);
+      const sameDayReading = reusableReading(sheetsProfile, { status: finalStatus, birthKey, today: todayLocal });
       const readingCache = lastReadingCacheReason;
       if (sameDayReading) {
         sameDayReading.profile_source = profileSource;
@@ -343,11 +347,12 @@ module.exports = async function handler(req, res) {
             const tokenData = await tokenRes.json();
             const accessToken = tokenData.access_token;
 
-            const isoDatetime = `${finalDob}T${finalTob.length === 5 ? finalTob + ':00' : finalTob}+09:00`;
+            // 出生時刻は出生地の現地時刻として扱う
+            const isoDatetime = localDateTimeToIso(finalDob, finalTob, zoneForCoordinates(lat, lon));
             const positionUrl = `https://api.prokerala.com/v2/astrology/planet-position?datetime=${encodeURIComponent(isoDatetime)}&coordinates=${lat},${lon}&ayanamsa=1`;
             // 出生図（natal）だけでは毎日同じ鑑定になるため、当日のトランジット天体も併せて取得する。
             // 2本は独立しているので直列にせず同時に投げる（応答時間を約半分にする）。
-            const transitUrl = `https://api.prokerala.com/v2/astrology/planet-position?datetime=${encodeURIComponent(toJstIsoString(new Date()))}&coordinates=${lat},${lon}&ayanamsa=1`;
+            const transitUrl = `https://api.prokerala.com/v2/astrology/planet-position?datetime=${encodeURIComponent(nowIsoIn(viewerZone))}&coordinates=${lat},${lon}&ayanamsa=1`;
             const authHeaders = { headers: { 'Authorization': `Bearer ${accessToken}` } };
             const [positionRes, transitRes] = await Promise.all([
               fetchWithTimeout(positionUrl, authHeaders, 15000),
@@ -394,8 +399,8 @@ module.exports = async function handler(req, res) {
                 // 有料は出力量が多く1回の生成が長い。基本鑑定とプレミアム詳細を別プロンプトに割って
                 // 同時に生成することで、実行時間を最長のセクション1本分に抑える。
                 const [base, premium] = await Promise.all([
-                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'base', previous), 40000, startedAt + FUNCTION_BUDGET_MS),
-                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'premium', previous), 40000, startedAt + FUNCTION_BUDGET_MS)
+                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'base', previous, todayLocal), 40000, startedAt + FUNCTION_BUDGET_MS),
+                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'premium', previous, todayLocal), 40000, startedAt + FUNCTION_BUDGET_MS)
                 ]);
 
                 const baseViolations = base.json ? findViolations(JSON.stringify(base.json), finalLang, { allowDates: true }) : [];
@@ -414,7 +419,7 @@ module.exports = async function handler(req, res) {
                   fallbackReason = base.reason || 'gemini_error';
                 }
               } else {
-                const result = await generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, false, finalLang, 'all', previous), 45000, startedAt + FUNCTION_BUDGET_MS);
+                const result = await generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, false, finalLang, 'all', previous, todayLocal), 45000, startedAt + FUNCTION_BUDGET_MS);
                 const violations = result.json ? findViolations(JSON.stringify(result.json), finalLang, { allowDates: true }) : [];
                 if (violations.length) {
                   console.warn('Daily reading contains banned expressions:', violations.join(', '));
@@ -466,8 +471,9 @@ module.exports = async function handler(req, res) {
         cleanJsonResult.reading_cache = readingCache;
         // 再利用判定用の鍵。Sheets の書式変換の影響を受けないよう、鑑定結果自体に埋め込む。
         cleanJsonResult.birth_key = birthKey;
-        cleanJsonResult.generated_at = toJstIsoString(new Date());
-        cleanJsonResult.reading_date = cleanJsonResult.generated_at.slice(0, 10);
+        cleanJsonResult.generated_at = nowIsoIn(viewerZone);
+        cleanJsonResult.reading_date = todayLocal;
+        cleanJsonResult.reading_tz = viewerZone;
         // どの外部APIで時間を使ったかを応答からも切り分けられるようにする（秒）
         const tGemini = elapsed();
         cleanJsonResult.timings = {
@@ -527,12 +533,6 @@ function extractProkeralaMessage(text) {
     // JSON でなければ本文の先頭を使う
   }
   return String(text || '').replace(/<[^>]*>/g, ' ').trim().slice(0, 200) || null;
-}
-
-// JSTのISO8601文字列（+09:00）を返す
-function toJstIsoString(date) {
-  const jst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
-  return `${jst.toISOString().slice(0, 19)}+09:00`;
 }
 
 // Prokerala は星座名を英語で返すため、表示用に日本語へ変換する
@@ -630,8 +630,6 @@ function extractPlanets(prokeralaData) {
 }
 
 const SIGN_ORDER_JA = ['牡羊座', '牡牛座', '双子座', '蟹座', '獅子座', '乙女座', '天秤座', '蠍座', '射手座', '山羊座', '水瓶座', '魚座'];
-const VARA_LORDS_JA = ['太陽', '月', '火星', '水星', '木星', '金星', '土星'];
-const WEEKDAYS_JA = ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'];
 const TITHI_NAMES = ['プラティパダ', 'ドヴィティーヤ', 'トリティーヤ', 'チャトゥルティー', 'パンチャミー', 'シャシュティー', 'サプタミー', 'アシュタミー', 'ナヴァミー', 'ダシャミー', 'エーカーダシー', 'ドヴァーダシー', 'トラヨーダシー', 'チャトゥルダシー'];
 
 function signIndex(sign) {
@@ -647,8 +645,8 @@ function houseFrom(fromSign, toSign) {
 }
 
 // その日にしか成り立たない要素をコード側で確定させ、鑑定の軸として渡す。
-// （月の在住ハウス・重なる出生天体・曜日・ティティ・月の移動タイミング）
-function dailyFactors(natal, transit, todayJst) {
+// （月の在住ハウス・重なる出生天体・ティティ・月の移動タイミング）
+function dailyFactors(natal, transit) {
   if (!transit.length) return null;
   const tMoon = transit.find(p => p.name === 'Moon');
   if (!tMoon || !tMoon.sign) return null;
@@ -660,11 +658,6 @@ function dailyFactors(natal, transit, todayJst) {
   const houseFromMoon = nMoon.sign ? houseFrom(nMoon.sign, tMoon.sign) : null;
   const conjunct = natal.filter(p => p.name !== 'Ascendant' && p.sign && signIndex(p.sign) === signIndex(tMoon.sign)).map(p => p.name);
   const opposite = natal.filter(p => p.name !== 'Ascendant' && p.sign && signIndex(p.sign) === (signIndex(tMoon.sign) + 6) % 12).map(p => p.name);
-
-  // todayJst は JST の暦日。UTC 正午に固定して曜日を取れば日付境界のズレが出ない
-  const dow = new Date(`${todayJst}T12:00:00Z`).getUTCDay();
-  const weekday = WEEKDAYS_JA[dow];
-  const varaLord = VARA_LORDS_JA[dow];
 
   let tithi = null;
   if (typeof tMoon.longitude === 'number' && typeof tSun.longitude === 'number') {
@@ -686,7 +679,7 @@ function dailyFactors(natal, transit, todayJst) {
   const slow = transit.filter(p => ['Saturn', 'Jupiter', 'Rahu', 'Ketu'].includes(p.name) && p.sign).map(p => `${p.name}: ${toJapaneseSign(p.sign)}${nAsc.sign ? `（第${houseFrom(nAsc.sign, p.sign)}ハウス）` : ''}${p.is_retrograde ? ' 逆行' : ''}`);
   const fast = transit.filter(p => ['Sun', 'Mercury', 'Venus', 'Mars'].includes(p.name) && p.sign).map(p => `${p.name}: ${toJapaneseSign(p.sign)}${nAsc.sign ? `（第${houseFrom(nAsc.sign, p.sign)}ハウス）` : ''}${p.is_retrograde ? ' 逆行' : ''}`);
 
-  return { houseFromLagna, houseFromMoon, conjunct, opposite, weekday, varaLord, tithi, moonMove, slow, fast };
+  return { houseFromLagna, houseFromMoon, conjunct, opposite, tithi, moonMove, slow, fast };
 }
 
 // 前回の鑑定で扱ったテーマ（冒頭）を渡し、同じ言い当てを繰り返させない。
@@ -721,7 +714,7 @@ const READING_STYLE = `
 `;
 
 // section: 'all'（既定）/ 'base'（プレミアム詳細以外）/ 'premium'（プレミアム詳細のみ）
-function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section = 'all', previous = null) {
+function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section = 'all', previous = null, today = null) {
   const planetList = extractPlanets(prokeralaData);
   const ascRaw = prokeralaData.data?.ascendant || planetList.find(p => p.name === 'Ascendant') || {};
   const outputLanguage = OUTPUT_LANGUAGE[lang] || OUTPUT_LANGUAGE.ja;
@@ -741,22 +734,22 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
   const sunSign = signFor(sunData.sign, lang);
 
   const transitPlanets = extractPlanets(transitData);
-  const todayJst = toJstIsoString(new Date()).slice(0, 10);
+  const todayJst = today || todayIn(DEFAULT_ZONE);
   const transitMoon = transitPlanets.find(p => p.name === 'Moon') || {};
-  const daily = dailyFactors(planetList, transitPlanets, todayJst);
+  const daily = dailyFactors(planetList, transitPlanets);
 
   const dailyBlock = daily ? `
-  【本日 ${todayJst}（${daily.weekday}）固有の要素（鑑定の軸。必ずここから今日の悩みテーマを選ぶ）】
+  【本日 ${todayJst} 固有の要素（鑑定の軸。必ずここから今日の悩みテーマを選ぶ）】
   - トランジットの月: ${signFor(transitMoon.sign, lang)}${daily.houseFromLagna ? ` ＝ ラグナから第${daily.houseFromLagna}ハウス` : ''}${daily.houseFromMoon ? `、出生の月から第${daily.houseFromMoon}ハウス（チャンドラ・ラグナ）` : ''}
   - 今日の月のナクシャトラ: ${nakshatraFor(transitMoon.nakshatra, lang) || '不明'}
   - 月が重なる出生天体: ${daily.conjunct.length ? daily.conjunct.join('・') : 'なし'} ／ 月と対向する出生天体: ${daily.opposite.length ? daily.opposite.join('・') : 'なし'}
-  - 曜日: ${daily.weekday}（曜日は必ずこの表記に従い、自分で計算し直さない） ／ 曜日の支配星（ヴァーラ）: ${daily.varaLord}${daily.tithi ? `\n  - ティティ: ${daily.tithi}` : ''}${daily.moonMove ? `\n  - 月の次の移動: 約${daily.moonMove.remainingDays}日後に ${signFor(daily.moonMove.nextSign, lang)}${daily.moonMove.nextHouseFromLagna ? `（第${daily.moonMove.nextHouseFromLagna}ハウス）` : ''} へ` : ''}
+  - 曜日・曜日の支配星には言及しない（相談者の地域により曜日が異なるため）${daily.tithi ? `\n  - ティティ: ${daily.tithi}` : ''}${daily.moonMove ? `\n  - 月の次の移動: 約${daily.moonMove.remainingDays}日後に ${signFor(daily.moonMove.nextSign, lang)}${daily.moonMove.nextHouseFromLagna ? `（第${daily.moonMove.nextHouseFromLagna}ハウス）` : ''} へ` : ''}
   - 速い天体: ${daily.fast.join('、') || '不明'}
   - 遅い天体（背景として1文まで）: ${daily.slow.join('、') || '不明'}
 
   【日替わりの規則】
   - 「本日の運勢」の悩みテーマは、トランジットの月が在住するハウス（ラグナから第${daily.houseFromLagna || '?'}ハウス）が示す生活領域と、月が重なる出生天体から選ぶ。土星・木星・ラーフ・ケートゥやダシャーは背景説明に留め、テーマの主役にしない。
-  - 今日の月のナクシャトラと曜日の支配星の性質を、今日の心の状態と「今日ひとつの行動」に必ず反映させる。月が同じハウスに留まる日でも、ナクシャトラと曜日が変わるので言い当ての場面・行動は変える。${previous ? `
+  - 今日の月のナクシャトラとティティの性質を、今日の心の状態と「今日ひとつの行動」に必ず反映させる。月が同じハウスに留まる日でも、ナクシャトラとティティが変わるので言い当ての場面・行動は変える。${previous ? `
   - 前回（${previous.date}）の鑑定の冒頭:「${previous.head}」。今日は同じ状況描写・同じ行動を繰り返さないこと。月のハウスが変わっていれば生活領域も変える。` : ''}
   ` : (previous ? `
   【前回の鑑定】${previous.date}:「${previous.head}」。今日は同じ状況描写・同じ行動を繰り返さないこと。
@@ -909,7 +902,7 @@ function reusableReading(profile, ctx) {
   if (!profile) { lastReadingCacheReason = 'no_profile'; return null; }
   if (!last) { lastReadingCacheReason = 'no_last_reading'; return null; }
   if (last.is_fallback) { lastReadingCacheReason = 'fallback'; return null; }
-  if (last.reading_date !== toJstIsoString(new Date()).slice(0, 10)) { lastReadingCacheReason = 'other_day'; return null; }
+  if (last.reading_date !== ctx.today) { lastReadingCacheReason = 'other_day'; return null; }
   if (String(last.status || 'free') !== ctx.status) { lastReadingCacheReason = 'status_changed'; return null; }
   // 有料でプレミアム詳細が欠けた部分失敗は当日分として固定せず、次回開いたときに作り直す
   if (ctx.status === 'paid' && !last.premium_reading) { lastReadingCacheReason = 'partial'; return null; }
