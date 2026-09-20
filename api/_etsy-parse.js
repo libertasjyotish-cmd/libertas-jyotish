@@ -19,6 +19,9 @@ const LANGUAGE_HINTS = [
   ['en', /english|inglés|ingles|inglês/gi]
 ];
 
+// 案内文の略号（EN / ES / PT / ID / JA / AR）。大文字の独立トークンのみ受け付ける（"es" 等の一般語との衝突回避）
+const LANGUAGE_CODE = /(?<![A-Za-z])(EN|ES|PT|ID|JA|AR)(?![A-Za-z])/;
+
 const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/;
 
 const UNKNOWN_TIME = /(?<![\p{L}])(unknown|don'?t know|not sure|no idea|n\/a|desconocid[oa]|não sei|nao sei|tidak tahu|(?:出生)?(?:時間|時刻)?(?:は)?(?:不明|わからない|分からない|わかりません|分かりません)|غير معروف|لا أعرف)(?![\p{L}])/iu;
@@ -89,7 +92,16 @@ function parseLanguage(text) {
   for (const [lang, re] of LANGUAGE_HINTS) {
     if (text.match(re)) return lang;
   }
-  return null;
+  const code = text.match(LANGUAGE_CODE);
+  return code ? code[1].toLowerCase() : null;
+}
+
+function languageMatches(text, language) {
+  const hint = LANGUAGE_HINTS.find(([lang]) => lang === language);
+  const words = text.match(hint[1]);
+  if (words) return words;
+  const code = text.match(LANGUAGE_CODE);
+  return code ? [code[0]] : [];
 }
 
 // 出生地は「日付・時刻・言語を除いた残り」から、番号ラベル付きの行を優先して取る
@@ -105,9 +117,9 @@ function parsePlace(text, consumed) {
     ? inline[inline.length - 1]
     : labelled
     ? labelled.replace(LABEL, '')
-    : lines.find((l) => /\p{L}/u.test(l) && !/^(report|language|idioma|bahasa|言語|اللغة|e-?mail|correo|メール)/i.test(l));
+    : lines.find((l) => /\p{L}/u.test(l) && !/^(report|lang(uage)?s?|idioma|bahasa|言語|اللغة|e-?mail|correo|メール)\b/i.test(l));
   if (!candidate) return null;
-  return candidate.replace(/\b(report\s+)?languages?\b.*$/i, '').replace(/\b(e-?mail|correo)\b.*$/i, '').replace(/[、。]+/g, ', ').replace(/[\s:,.\-–—]+$/g, '').trim() || null;
+  return candidate.replace(/\b(report\s+)?lang(uage)?s?\b.*$/i, '').replace(/\b(e-?mail|correo)\b.*$/i, '').replace(/[、。]+/g, ', ').replace(/[\s:,.\-–—]+$/g, '').trim() || null;
 }
 
 // 戻り値: { dob, tob, tobUnknown, place, language, email, missing: [], notes: [] }
@@ -154,8 +166,7 @@ function parsePersonalization(raw) {
   const language = parseLanguage(text);
   if (language) {
     out.language = language;
-    const hint = LANGUAGE_HINTS.find(([lang]) => lang === language);
-    consumed.push(...text.match(hint[1]));
+    consumed.push(...languageMatches(text, language));
   }
 
   out.place = parsePlace(text, consumed);
@@ -199,7 +210,11 @@ function stripLabels(lines) {
 
 // 戻り値: { a, b, relation, language, email, missing: ['a.dob', 'b.place', ...], notes }
 function parseCompatPersonalization(raw) {
-  const text = String(raw || '').replace(/\r/g, '').trim();
+  // 1 行に「A: … B: … Relation: … Lang: …」と書かれた入力は、ラベルの前で改行して行単位の解析に揃える
+  const text = String(raw || '').replace(/\r/g, '').trim()
+    .replace(/[.,;。、]?\s+((?:person|partner|pessoa|persona|orang|人物)?\s*(?:b|2|partner|相手|second)\s*[:：])/gi, '\n$1')
+    .replace(/[.,;。、]?\s+((?:relationship|relation|type|relación|relação|hubungan|関係|العلاقة)\s*[:：])/gi, '\n$1')
+    .replace(/[.,;。、]?\s+((?:report\s+)?(?:lang(?:uage)?s?|idioma|bahasa|言語|اللغة)\s*[:：])/gi, '\n$1');
   const lines = text.split('\n');
 
   // 2 人目の開始行: 「B」ラベルの行、無ければ 2 つ目の日付を含む行
