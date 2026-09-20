@@ -1126,7 +1126,8 @@ city: userAddress,
 dob: userDob,
 tob: userTob,
 datetime: currentJstISO,
-language: '{{lang}}'
+language: '{{lang}}',
+tz: Intl.DateTimeFormat().resolvedOptions().timeZone
 })
 });
 

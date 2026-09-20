@@ -7,6 +7,7 @@ const {
   NATURAL_FRIENDS, NATURAL_ENEMIES, YOGA_JA, SADE_SATI_PHASE_JA
 } = require('./_dictionaries');
 const { createTerms } = require('./_terms');
+const { zoneForCoordinates, localDateTimeToIso } = require('./_tz');
 
 const API_BASE = 'https://api.prokerala.com';
 
@@ -510,8 +511,7 @@ function buildBoosters(planets, dasha, terms) {
 async function fetchReportData({ dob, tob, lat, lon, lang }, { withRaw = false } = {}) {
   const terms = createTerms(lang);
   const token = await getAccessToken();
-  const time = tob && tob.length === 5 ? `${tob}:00` : (tob || '12:00:00');
-  const datetime = `${dob}T${time}+09:00`;
+  const datetime = localDateTimeToIso(dob, tob, zoneForCoordinates(lat, lon));
   const coordinates = `${lat},${lon}`;
   const base = { datetime, coordinates, ayanamsa: 1 };
 
@@ -658,9 +658,8 @@ function detectTurningPoints({ monthsOut, keyShifts, dashaChanges }) {
 async function fetchYearlyData({ dob, tob, lat, lon, lang }) {
   const terms = createTerms(lang);
   const token = await getAccessToken();
-  const time = tob && tob.length === 5 ? `${tob}:00` : (tob || '12:00:00');
   const coordinates = `${lat},${lon}`;
-  const base = { datetime: `${dob}T${time}+09:00`, coordinates, ayanamsa: 1 };
+  const base = { datetime: localDateTimeToIso(dob, tob, zoneForCoordinates(lat, lon)), coordinates, ayanamsa: 1 };
   const months = monthStartsFrom(new Date(), 12);
 
   const [planetPosition, kundli, sadeSati, ...monthly] = await Promise.all([
@@ -946,7 +945,7 @@ function normalizeMatching(matching, terms) {
 async function fetchCompatData({ a, b, lang, relation = 'general' }) {
   const terms = createTerms(lang);
   const token = await getAccessToken();
-  const dt = (p) => `${p.dob}T${p.tob && p.tob.length === 5 ? `${p.tob}:00` : (p.tob || '12:00:00')}+09:00`;
+  const dt = (p) => localDateTimeToIso(p.dob, p.tob, zoneForCoordinates(p.lat, p.lon));
   const baseOf = (p) => ({ datetime: dt(p), coordinates: `${p.lat},${p.lon}`, ayanamsa: 1 });
 
   const months = monthStartsFrom(new Date(), 12);

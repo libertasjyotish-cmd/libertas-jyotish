@@ -16,6 +16,7 @@
     "@sparticuz/chromium": "^149.0.0",
     "google-auth-library": "^9.14.0",
     "google-spreadsheet": "^4.1.4",
-    "puppeteer-core": "^25.9.0"
+    "puppeteer-core": "^25.9.0",
+    "tz-lookup": "^6.1.25"
   }
 }
