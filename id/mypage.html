@@ -294,12 +294,12 @@ window.LJ_I18N = {
     navLabel: 'Menu situs'
   },
   price: {
-    premium: '{price} / bulan (termasuk pajak)',
-    pdf: '{price} sekali bayar (termasuk pajak)',
-    premiumApprox: 'Sekitar {price} / bulan (termasuk pajak) — jumlah akhir ditampilkan saat checkout',
-    pdfApprox: 'Sekitar {price} sekali bayar (termasuk pajak) — jumlah akhir ditampilkan saat checkout',
+    premium: '{price} / bulan (USD; pajak lokal dapat ditambahkan saat checkout)',
+    pdf: '{price} sekali bayar (USD; pajak lokal dapat ditambahkan saat checkout)',
+    premiumApprox: 'Sekitar {price} / bulan — ditagih dalam USD, jumlah akhir ditampilkan saat checkout',
+    pdfApprox: 'Sekitar {price} sekali bayar — ditagih dalam USD, jumlah akhir ditampilkan saat checkout',
     checkoutOnly: 'Jumlah dalam mata uang lokal Anda ditampilkan saat checkout',
-    unavailable: 'Paket Premium bulanan belum dijual — pembayaran online sedang disiapkan. Laporan PDF sudah tersedia.'
+    unavailable: 'Pembayaran online sementara tidak tersedia. Silakan coba lagi nanti.'
   },
   playError: 'Pembelian Google Play tidak dapat diselesaikan. Silakan coba lagi.',
   playManage: 'Langganan yang dibeli di aplikasi dikelola (batalkan, metode pembayaran) di Google Play → Langganan. Buka sekarang?',
@@ -835,8 +835,8 @@ fetchUserDataAndRender(savedEmail);
 // Gumroad 決済ページ呼び出し。未認証なら先にメール認証を求める。
 document.getElementById('btn-upgrade-premium')?.addEventListener('click', () => {
   if (!window.LJCheckout.available('premium')) { alert(window.LJCheckout.unavailableMessage()); return; }
-  if (window.LJCheckoutGuard.verifiedEmail()) {
-    window.LJCheckoutGuard.start('premium', 'id');
+  if (window.LJCheckoutGuard.verifiedEmail() || !window.LJCheckout.requiresVerifiedEmail()) {
+    window.LJCheckoutGuard.start('premium', 'id', savedEmail);
     return;
   }
   requestReauth('checkout:premium', savedEmail);
@@ -1058,6 +1058,8 @@ localStorage.removeItem('lj_session');
 localStorage.removeItem(window.LJCheckoutGuard.verifiedKey);
 localStorage.removeItem('lj_user_email');
 localStorage.removeItem('email');
+// 前の利用者の無料鑑定結果・出生データも残さない
+['lj_user_input_backup', 'dob', 'tob', 'city', 'lj_user_birthdate', 'lj_user_birthplace'].forEach(k => localStorage.removeItem(k));
 setLoggedOutState();
 }
 

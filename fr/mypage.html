@@ -294,12 +294,12 @@ window.LJ_I18N = {
     navLabel: 'Menu du site'
   },
   price: {
-    premium: '{price} / mois (TTC)',
-    pdf: '{price} paiement unique (TTC)',
-    premiumApprox: 'Environ {price} / mois (TTC) — le montant final sera affiché lors du paiement',
-    pdfApprox: 'Environ {price} en paiement unique (TTC) — le montant final sera affiché lors du paiement',
+    premium: '{price} / mois (USD ; taxes locales éventuellement ajoutées au paiement)',
+    pdf: '{price} paiement unique (USD ; taxes locales éventuellement ajoutées au paiement)',
+    premiumApprox: 'Environ {price} / mois — facturé en USD, montant final affiché lors du paiement',
+    pdfApprox: 'Environ {price} en paiement unique — facturé en USD, montant final affiché lors du paiement',
     checkoutOnly: 'Le montant dans votre devise locale sera affiché lors du paiement',
-    unavailable: 'L\'abonnement Premium mensuel n\'est pas encore en vente — le paiement en ligne est en cours de préparation. Le rapport PDF est disponible dès maintenant.'
+    unavailable: 'Le paiement en ligne est temporairement indisponible. Veuillez réessayer plus tard.'
   },
   playError: 'L\'achat sur Google Play n\'a pas pu aboutir. Veuillez réessayer.',
   playManage: 'Les abonnements souscrits dans l\'application sont gérés (annulation, mode de paiement) dans Google Play → Abonnements. L\'ouvrir maintenant ?',
@@ -835,8 +835,8 @@ fetchUserDataAndRender(savedEmail);
 // Gumroad 決済ページ呼び出し。未認証なら先にメール認証を求める。
 document.getElementById('btn-upgrade-premium')?.addEventListener('click', () => {
   if (!window.LJCheckout.available('premium')) { alert(window.LJCheckout.unavailableMessage()); return; }
-  if (window.LJCheckoutGuard.verifiedEmail()) {
-    window.LJCheckoutGuard.start('premium', 'fr');
+  if (window.LJCheckoutGuard.verifiedEmail() || !window.LJCheckout.requiresVerifiedEmail()) {
+    window.LJCheckoutGuard.start('premium', 'fr', savedEmail);
     return;
   }
   requestReauth('checkout:premium', savedEmail);
@@ -1058,6 +1058,8 @@ localStorage.removeItem('lj_session');
 localStorage.removeItem(window.LJCheckoutGuard.verifiedKey);
 localStorage.removeItem('lj_user_email');
 localStorage.removeItem('email');
+// 前の利用者の無料鑑定結果・出生データも残さない
+['lj_user_input_backup', 'dob', 'tob', 'city', 'lj_user_birthdate', 'lj_user_birthplace'].forEach(k => localStorage.removeItem(k));
 setLoggedOutState();
 }
 

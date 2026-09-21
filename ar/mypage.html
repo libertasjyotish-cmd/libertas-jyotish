@@ -294,12 +294,12 @@ window.LJ_I18N = {
     navLabel: 'قائمة الموقع'
   },
   price: {
-    premium: '{price} شهريًا (شامل الضرائب)',
-    pdf: '{price} دفعة واحدة (شامل الضرائب)',
-    premiumApprox: 'نحو {price} شهريًا (شامل الضرائب) — يظهر المبلغ النهائي عند الدفع',
-    pdfApprox: 'نحو {price} دفعة واحدة (شامل الضرائب) — يظهر المبلغ النهائي عند الدفع',
+    premium: '{price} شهريًا (بالدولار الأمريكي؛ قد تُضاف الضرائب المحلية عند الدفع)',
+    pdf: '{price} دفعة واحدة (بالدولار الأمريكي؛ قد تُضاف الضرائب المحلية عند الدفع)',
+    premiumApprox: 'نحو {price} شهريًا — يُحاسَب بالدولار الأمريكي، ويظهر المبلغ النهائي عند الدفع',
+    pdfApprox: 'نحو {price} دفعة واحدة — يُحاسَب بالدولار الأمريكي، ويظهر المبلغ النهائي عند الدفع',
     checkoutOnly: 'يظهر المبلغ بعملتك المحلية عند الدفع',
-    unavailable: 'خطة بريميوم الشهرية غير متاحة للبيع بعد — الدفع عبر الموقع قيد التجهيز. تقرير PDF متاح الآن.'
+    unavailable: 'الدفع عبر الإنترنت غير متاح مؤقتًا. يرجى المحاولة لاحقًا.'
   },
   playError: 'تعذّر إتمام عملية الشراء عبر Google Play. يرجى المحاولة مرة أخرى.',
   playManage: 'تُدار الاشتراكات المشتراة داخل التطبيق (الإلغاء وطريقة الدفع) من Google Play ← الاشتراكات. هل تريد الفتح الآن؟',
@@ -835,8 +835,8 @@ fetchUserDataAndRender(savedEmail);
 // Gumroad 決済ページ呼び出し。未認証なら先にメール認証を求める。
 document.getElementById('btn-upgrade-premium')?.addEventListener('click', () => {
   if (!window.LJCheckout.available('premium')) { alert(window.LJCheckout.unavailableMessage()); return; }
-  if (window.LJCheckoutGuard.verifiedEmail()) {
-    window.LJCheckoutGuard.start('premium', 'ar');
+  if (window.LJCheckoutGuard.verifiedEmail() || !window.LJCheckout.requiresVerifiedEmail()) {
+    window.LJCheckoutGuard.start('premium', 'ar', savedEmail);
     return;
   }
   requestReauth('checkout:premium', savedEmail);
@@ -1058,6 +1058,8 @@ localStorage.removeItem('lj_session');
 localStorage.removeItem(window.LJCheckoutGuard.verifiedKey);
 localStorage.removeItem('lj_user_email');
 localStorage.removeItem('email');
+// 前の利用者の無料鑑定結果・出生データも残さない
+['lj_user_input_backup', 'dob', 'tob', 'city', 'lj_user_birthdate', 'lj_user_birthplace'].forEach(k => localStorage.removeItem(k));
 setLoggedOutState();
 }
 

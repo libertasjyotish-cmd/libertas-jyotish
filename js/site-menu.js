@@ -22,9 +22,10 @@
   const LINKS = [
     { href: home, label: t.top },
     { href: home + '#form-area', label: t.free },
-    { href: home + '/pdf-purchase', label: t.report },
-    { href: home + '/calendar', label: t.calendar, note: t.calendarNote }
+    { href: home + '/pdf-purchase', label: t.report }
   ];
+  // 年間運勢カレンダーは準備中（日本語のみ案内し、他言語では出さない）
+  if (lang === 'ja') LINKS.push({ href: home + '/calendar', label: t.calendar, note: t.calendarNote });
   if (guide) {
     LINKS.push(
       { divider: true, label: guide.groupLabel },

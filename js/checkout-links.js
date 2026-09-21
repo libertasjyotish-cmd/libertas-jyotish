@@ -8,9 +8,11 @@
       premium: 'https://libertajyoti.gumroad.com/l/plan-t2',
       pdf: 'https://libertajyoti.gumroad.com/l/report-t2'
     },
-    labels: { premium: '月額 550円（米ドル決済）', pdf: '買い切り 5,980円（米ドル決済）' },
-    // 取得前・失敗時は月額を開かない（サブスクは KOMOJU 経由のみ販売するため fail-closed）。
-    available: { premium: false, pdf: true },
+    labels: { premium: '月額 US$3.99（米ドル決済）', pdf: '買い切り US$39（米ドル決済）' },
+    // 取得前・失敗時は国が分からない（日本かもしれない）ので購入を開かない（fail-closed）。
+    available: { premium: false, pdf: false },
+    currency: 'USD',
+    amounts: { premium: 3.99, pdf: 39 },
     approx: null
   };
   var CACHE_KEY = 'lj_checkout_links';
@@ -48,8 +50,10 @@
       var i18n = window.LJ_I18N;
       return (i18n && i18n.price && i18n.price.unavailable) || '現在サイト内決済の準備中です。公開までお待ちください。';
     },
-    // product は 'premium' か 'pdf'
-    provider: function () { return resolved.provider || 'gumroad'; },
+    // 'komoju' | 'gumroad' | null（販売停止中）
+    provider: function () { return resolved.provider || null; },
+    // 購入前にメール認証が要るか。KOMOJU（日本）は会員紐づけのため必須、Gumroad は決済側がメールを取るので不要。
+    requiresVerifiedEmail: function () { return resolved.provider === 'komoju'; },
     linkFor: function (product) {
       return resolved.links[product] || FALLBACK.links[product];
     },
@@ -77,23 +81,30 @@
 
       var price = i18n.price || {};
       var approx = resolved.approx;
-      if (!approx || !approx[product]) return price.checkoutOnly || '';
-
-      var formatted;
-      try {
-        formatted = new Intl.NumberFormat(lang, {
-          style: 'currency',
-          currency: approx.currency,
-          maximumFractionDigits: approx[product] < 10 ? 2 : 0
-        }).format(approx[product]);
-      } catch (e) {
-        formatted = approx[product] + ' ' + approx.currency;
+      // 現地通貨の概算があればそれを、無ければ決済通貨（USD/JPY）の確定額を出す。
+      if (approx && approx[product]) {
+        return (price[product + 'Approx'] || '{price}').replace('{price}', formatMoney(lang, approx[product], approx.currency));
       }
-      return (price[product + 'Approx'] || '{price}').replace('{price}', formatted);
+      var amounts = resolved.amounts || FALLBACK.amounts;
+      var currency = resolved.currency || FALLBACK.currency;
+      if (!amounts || !amounts[product]) return price.checkoutOnly || '';
+      return (price[product] || '{price}').replace('{price}', formatMoney(lang, amounts[product], currency));
     },
     // 動的に差し込んだ要素にも価格ラベルを反映させる
     paint: function () { paintLabels(); }
   };
+
+  function formatMoney(lang, value, currency) {
+    try {
+      return new Intl.NumberFormat(lang, {
+        style: 'currency',
+        currency: currency,
+        maximumFractionDigits: value < 10 ? 2 : 0
+      }).format(value);
+    } catch (e) {
+      return value + ' ' + currency;
+    }
+  }
 
   // data-price-label="premium" などの要素に価格ラベルを流し込む（解決後に上書きする）。
   function paintLabels() {
