@@ -188,12 +188,12 @@ window.LJ_I18N = {
     navLabel: 'Site menu'
   },
   price: {
-    premium: '{price} / month (tax incl.)',
-    pdf: '{price} one-off (tax incl.)',
-    premiumApprox: 'About {price} / month (tax incl.) — final amount shown at checkout',
-    pdfApprox: 'About {price} one-off (tax incl.) — final amount shown at checkout',
+    premium: '{price} / month (USD; local taxes may be added at checkout)',
+    pdf: '{price} one-off (USD; local taxes may be added at checkout)',
+    premiumApprox: 'About {price} / month — billed in USD, final amount shown at checkout',
+    pdfApprox: 'About {price} one-off — billed in USD, final amount shown at checkout',
     checkoutOnly: 'The amount in your local currency is shown at checkout',
-    unavailable: 'The monthly Premium plan is not on sale yet — online payment is being prepared. The PDF report is available now.'
+    unavailable: 'Online payment is temporarily unavailable. Please try again later.'
   },
   playError: 'The Google Play purchase could not be completed. Please try again.',
   playManage: 'Subscriptions bought in the app are managed (cancel, payment method) in Google Play → Subscriptions. Open it now?',
@@ -291,6 +291,11 @@ window.LJ_I18N = {
         if (window.LJCheckout.provider() === 'komoju') {
           document.getElementById('btn-proceed-checkout').textContent = '💳 Continue to payment';
         }
+        if (!window.LJCheckout.available('pdf')) {
+          const btn = document.getElementById('btn-proceed-checkout');
+          btn.disabled = true;
+          btn.textContent = window.LJCheckout.unavailableMessage();
+        }
       });
       // 本人確認済みのアドレスは会員の紐づけキーなので、ここで変更させない
       const verifiedEmail = window.LJCheckoutGuard.verifiedEmail();
@@ -300,8 +305,11 @@ window.LJ_I18N = {
         emailField.readOnly = true;
       }
       const savedEmail = localStorage.getItem('lj_user_email') || '';
-      const savedBirthdate = localStorage.getItem('lj_user_birthdate') || '';
-      const savedBirthplace = localStorage.getItem('lj_user_birthplace') || '';
+      // 無料鑑定で入力した出生データ（dob/tob/city）があればそれも引き継ぐ
+      const freeDob = localStorage.getItem('dob') || '';
+      const freeTob = localStorage.getItem('tob') || '';
+      const savedBirthdate = localStorage.getItem('lj_user_birthdate') || (freeDob ? freeDob + 'T' + (freeTob || '12:00') : '');
+      const savedBirthplace = localStorage.getItem('lj_user_birthplace') || localStorage.getItem('city') || '';
 
       if (savedEmail && !verifiedEmail) document.getElementById('user-email').value = savedEmail;
       if (savedBirthdate) document.getElementById('user-birthdate').value = savedBirthdate;
@@ -326,8 +334,9 @@ window.LJ_I18N = {
         if (timePart) localStorage.setItem('tob', timePart.slice(0, 5));
         localStorage.setItem('city', birthplace);
 
-        // 未確認のアドレスのまま決済させると購入と会員が紐づかないため、先にメール認証へ回す
-        if (!window.LJCheckoutGuard.verifiedEmail()) {
+        if (!window.LJCheckout.available('pdf')) { alert(window.LJCheckout.unavailableMessage()); return; }
+        // KOMOJU は購入と会員をメールで紐づけるため、未確認なら先にメール認証へ回す（Gumroad は不要）
+        if (window.LJCheckout.requiresVerifiedEmail() && !window.LJCheckoutGuard.verifiedEmail()) {
           alert('We need to verify your email before checkout. Please enter the verification code on My Page.');
           window.location.href = '/en/mypage?next=checkout&product=pdf&hint=' + encodeURIComponent(email);
           return;
