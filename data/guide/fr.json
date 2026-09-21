@@ -1,0 +1,272 @@
+{
+  "note": "Written for people searching compound queries around Vedic / Indian astrology (Jyotish). Avoid deterministic predictions and anything that reads as medical, legal or financial advice.",
+  "published": true,
+  "linked": true,
+  "ui": {
+    "crumbHome": "Accueil",
+    "crumbHub": "Guides",
+    "breadcrumbLabel": "Fil d'Ariane",
+    "footerLegal": "Mentions légales",
+    "footerTerms": "Conditions d'utilisation",
+    "footerPrivacy": "Politique de confidentialité",
+    "footerRefund": "Politique de remboursement",
+    "ctaTitle": "Vérifiez cela avec votre propre thème",
+    "ctaBody": "Entrez vos date, heure et lieu de naissance et nous calculerons gratuitement votre signe lunaire, votre Nakshatra, votre ascendant et votre Dasha actuel, accompagnés d'une analyse écrite.",
+    "ctaButton": "Commencez votre analyse gratuite",
+    "relatedHeading": "Plus de guides",
+    "disclaimer": "Cet article présente des concepts généraux de l'astrologie védique. Il ne garantit pas les événements futurs et ne remplace en aucun cas un avis médical, juridique ou financier.",
+    "footerContact": "Contact"
+  },
+  "index": {
+    "title": "Guides d'astrologie védique | Libertas Jyotish",
+    "description": "Guides sur l'astrologie védique (indienne) : les bases du Jyotish, ce que révèle une analyse gratuite, le mariage et la compatibilité, la carrière et la richesse, comment lire votre thème, les périodes Dasha et les 27 Nakshatras.",
+    "h1": "Guides d'astrologie védique",
+    "lead": "Des articles en langage clair sur le fonctionnement de l'astrologie védique (Jyotish), rédigés pour les lecteurs qui la découvrent pour la première fois. Commencez par le sujet qui vous intéresse le plus.",
+    "more": "Tous les guides",
+    "menuLabel": "Tous les guides",
+    "introSlug": "indian-astrology"
+  },
+  "articles": [
+    {
+      "slug": "indian-astrology",
+      "title": "Qu'est-ce que l'astrologie védique ? Différences avec l'astrologie occidentale et pourquoi on la dit précise",
+      "description": "Les bases de l'astrologie védique (indienne), également appelée Jyotish : en quoi elle diffère de l'astrologie occidentale, pourquoi votre signe peut se décaler, et comment les périodes Dasha décrivent le déroulement du temps. Comprend pourquoi on la dit précise, et ses limites.",
+      "h1": "Qu'est-ce que l'astrologie védique ?",
+      "menuLabel": "Qu'est-ce que l'astrologie védique ?",
+      "lead": "L'astrologie védique, appelée Jyotish (\"la science de la lumière\") en sanskrit, est une méthode de lecture du ciel transmise en Inde depuis plus de trois mille ans. Elle est également connue sous le nom d'astrologie indienne. À partir de l'état du ciel au moment de la naissance, elle lit la nature d'une personne et le flux des différentes périodes de sa vie.",
+      "sections": [
+        {
+          "heading": "La plus grande différence avec l'astrologie occidentale : votre signe peut se décaler",
+          "body": "Lorsque les gens cherchent leur signe en astrologie védique, beaucoup découvrent qu'il précède d'un signe celui qu'ils connaissent. L'astrologie occidentale utilise le zodiaque tropical, ancré sur l'équinoxe de printemps ; l'astrologie védique utilise le zodiaque sidéral, ancré sur les positions réelles des étoiles. L'écart entre les deux est actuellement d'environ 24 degrés. Une personne qui a toujours été Bélier peut facilement s'avérer être Poissons en astrologie védique. Aucun des deux systèmes n'est faux ; ils prennent simplement un point de référence différent. L'astrologie védique utilise l'endroit où les planètes se trouvent réellement dans le ciel en ce moment."
+        },
+        {
+          "heading": "La Lune a plus d'importance que le Soleil",
+          "body": "L'astrologie occidentale place le signe du Soleil en premier. L'astrologie védique accorde plus de poids à la Lune. Si le Soleil est le visage que vous montrez à la société, la Lune représente la façon dont votre esprit fonctionne : ce qui vous apaise et ce qui vous épuise. L'astrologie védique divise également la trajectoire de la Lune en 27 Nakshatras (demeures lunaires), de sorte que deux personnes nées sous le même signe peuvent recevoir des lectures très différentes. Beaucoup de gens disent que la description védique de leur caractère sonne plus vrai que la description occidentale, et ce niveau de détail plus fin en est en grande partie la raison."
+        },
+        {
+          "heading": "Dasha : un système pour lire le \"quand\"",
+          "body": "Une caractéristique distinctive de l'astrologie védique est le Dasha, un système de périodes planétaires. À partir de la position de la Lune à la naissance, la vie est divisée en périodes gouvernées par chaque planète : une période de Jupiter, une période de Saturne, une période de Rahu, et ainsi de suite, chacune durant des années. Des sentiments tels que \"tout ce que je fais semble stagner en ce moment\" ou \"mon environnement a changé d'un seul coup\" sont lus à travers la qualité de la période actuelle. Pouvoir travailler avec le flux d'une vie, et pas seulement avec le caractère, est la principale différence pratique avec l'astrologie occidentale."
+        },
+        {
+          "heading": "L'astrologie védique est-elle précise ?",
+          "body": "On la dit précise en grande partie parce qu'elle utilise l'heure de naissance et travaille avec une grande quantité d'informations, ce qui rend ses descriptions concrètes. Non seulement le signe, mais aussi l'ascendant (Lagna), la demeure lunaire, le placement de chaque planète et la chronologie. Plus la combinaison est fine, plus la résolution de la lecture est élevée. Cela dit, les positions des planètes ne fixent pas les événements futurs. Le même placement se manifeste différemment selon les circonstances et les propres choix de la personne. Ce que l'astrologie védique offre, c'est un ensemble d'indices : les tendances que vous portez, et quel genre de vent souffle dans la période actuelle. La traiter comme une garantie de résultats conduit à de mauvaises décisions."
+        },
+        {
+          "heading": "Ce dont vous avez besoin pour une lecture",
+          "body": "Trois choses : votre date de naissance, votre heure de naissance et votre lieu de naissance. L'heure de naissance est particulièrement importante car elle détermine l'ascendant et les maisons (les divisions des domaines de la vie), et une différence de quelques minutes peut changer ce qui est lu. Elle est souvent enregistrée sur un acte de naissance ou un dossier d'hôpital, alors vérifiez-la si vous le pouvez. Si elle est vraiment inconnue, une approche consiste à faire le calcul pour 12h00 (midi) et à se concentrer sur les parties qui ne dépendent pas de l'heure : le signe de la Lune, le Nakshatra et les grandes lignes du Dasha."
+        }
+      ]
+    },
+    {
+      "slug": "free-reading",
+      "title": "Ce qu'une lecture gratuite d'astrologie védique peut vous montrer | Comment fonctionne le calcul automatisé et ses limites",
+      "description": "Ce que vous apprenez réellement d'une lecture gratuite d'astrologie védique : ce qui est calculé à partir de votre date, heure et lieu de naissance, ce que couvre la partie gratuite, et ce qui se trouve au-delà.",
+      "h1": "Ce qu'une lecture gratuite d'astrologie védique peut vous montrer",
+      "lead": "Recherchez « astrologie védique gratuite » et les services que vous trouverez différeront beaucoup. Certains ne dessinent qu'un thème, d'autres s'arrêtent à une brève description de votre signe, d'autres encore expliquent les choses par des phrases complètes. Nous vous présentons ici ce qu'une lecture gratuite, calculée automatiquement à partir de vos données de naissance, peut réellement vous dire.",
+      "sections": [
+        {
+          "heading": "Ce qui est calculé, c'est le ciel au moment de votre naissance",
+          "body": "Lorsque vous entrez votre date, heure et lieu de naissance, les positions des planètes telles qu'elles sont vues à ce moment et à cet endroit sont calculées. Le lieu de naissance est converti en latitude et longitude, et le fuseau horaire est corrigé. Cela donne votre signe de la Lune et votre Nakshatra (demeure lunaire), votre signe du Soleil, votre ascendant (Lagna), le placement de chaque planète et les limites de vos périodes de Dasha. Cette partie relève de l'astronomie et non de l'opinion d'un astrologue, de sorte que n'importe quel service produira les mêmes valeurs. La lecture consiste à mettre ces positions fixes en mots selon les interprétations classiques."
+        },
+        {
+          "heading": "Ce que couvre la partie gratuite",
+          "body": "Dans la plupart des cas, la partie gratuite couvre votre nature telle qu'elle est vue à partir du signe de la Lune et du Nakshatra, la façon dont les autres vous perçoivent telle qu'elle est vue à partir de l'ascendant, et la tendance générale pour aujourd'hui et à court terme. C'est suffisant pour apprendre vos schémas de base et pour découvrir quel est votre signe en astrologie védique. La lecture gratuite sur ce site couvre cette étendue et peut être lue tous les jours."
+        },
+        {
+          "heading": "Ce que la partie gratuite ne couvre pas",
+          "body": "Les questions de « quand », telles que le moment du mariage ou d'un changement de carrière, nécessitent de comparer les Dasha avec les transits (le mouvement actuel des planètes), ce qui demande plus de volume et plus de discernement. Creuser un domaine spécifique de la vie, tel que le travail approprié, la richesse ou la compatibilité, implique d'examiner les placements en maisons et les thèmes divisionnels (D9, D10 et autres). Cela va au-delà d'une lecture gratuite et est normalement traité dans le contenu payant pour les membres ou dans un rapport complet sur la vie entière."
+        },
+        {
+          "heading": "Choses à garder à l'esprit",
+          "body": "Si l'heure de naissance est inexacte, l'ascendant et les maisons se décalent et la prémisse de la lecture change, confirmez donc l'heure avant de commencer. De plus, veuillez considérer le résultat comme un support de lecture pour la compréhension de soi. Il ne fige pas les événements futurs et ne remplace pas les décisions médicales, juridiques ou financières. Il est le plus utile lorsque vous le lisez tout en vérifiant si les tendances décrites vous correspondent réellement."
+        }
+      ]
+    },
+    {
+      "slug": "marriage",
+      "title": "Le moment du mariage et la compatibilité en astrologie védique | Lecture de la 7ème maison, du D9 et des Dasha",
+      "description": "Comment l'astrologie védique (Jyotish) lit le mariage : la 7ème maison, Vénus et Jupiter, le thème divisionnel Navamsha (D9), le moment par les Dasha et les transits, et comment la compatibilité entre deux personnes est évaluée.",
+      "h1": "Le moment du mariage et la compatibilité en astrologie védique",
+      "lead": "L'astrologie védique a traditionnellement été utilisée pour examiner le mariage, et en Inde, les thèmes sont encore comparés lorsqu'une union est proposée. Nous expliquons ici à partir de quels facteurs le mariage est lu et comment le moment est calculé, en décortiquant les termes techniques au fur et à mesure.",
+      "sections": [
+        {
+          "heading": "Le mariage est lu à partir de la 7ème maison",
+          "body": "Le thème natal est divisé en douze maisons, chacune responsable d'un domaine de la vie. Le mariage et le conjoint sont indiqués par la 7ème maison. Quel signe s'y trouve, où son maître est placé, et quelles planètes l'occupent : à partir de ces éléments, nous lisons ce que vous recherchez chez un partenaire et comment vous avez tendance à construire une relation. Dans l'approche classique, Jupiter dans le thème d'une femme et Vénus dans le thème d'un homme sont également utilisés comme indicateurs du conjoint."
+        },
+        {
+          "heading": "D9 (Navamsha) : le deuxième thème",
+          "body": "L'astrologie védique possède des thèmes divisionnels, qui subdivisent davantage le thème natal. Celui qui est toujours consulté pour le mariage est le D9, le Navamsha, un deuxième thème créé en divisant chaque signe du thème natal en neuf parties. La nature de surface apparaît dans le thème natal ; l'essence qui émerge au sein de la vie conjugale est censée apparaître dans le D9, et les deux sont lus ensemble. Une planète qui est banale dans le thème natal peut devenir forte dans le D9, ce qui est interprété comme le mariage changeant la direction de la vie d'une personne."
+        },
+        {
+          "heading": "Le moment est lu à partir des Dasha et des transits",
+          "body": "\"Quand vais-je me marier ?\" est évalué en superposant les Dasha (périodes planétaires) avec le mouvement actuel des planètes (transits). Êtes-vous dans la période d'une planète liée à la 7ème maison, à son maître, à Vénus ou à Jupiter ? Jupiter ou Saturne traversent-ils réellement la 7ème maison à ce moment-là ? Lorsque ces deux éléments coïncident, les questions de partenariat ont tendance à évoluer. Autrement dit, se précipiter lorsque les conditions ne sont pas réunies a tendance à être épuisant. Notez que cela indique des périodes de plus forte probabilité ; cela ne détermine pas si ou quand un mariage aura lieu."
+        },
+        {
+          "heading": "Comment la compatibilité entre deux personnes est lue",
+          "body": "La méthode longtemps utilisée en Inde est l'Ashtakoota, qui compare les demeures lunaires (Nakshatras) des deux personnes sur huit points et donne un score sur 36, 18 ou plus étant généralement pris comme référence. Le score n'est cependant que le point d'entrée. En pratique, on accorde plus d'importance à la superposition des deux thèmes pour voir dans quels domaines de votre vie tombent les planètes de l'autre personne (les 7ème, 2ème, 8ème maisons, etc.). Des relations avec des scores bas durent ; des relations avec des scores élevés ne parviennent pas à s'accorder. La compatibilité est plus utile non pas comme un verdict \"compatibles ou non\", mais comme une carte indiquant où vous vous soutenez mutuellement et où des frictions sont probables."
+        },
+        {
+          "heading": "Sur ce site",
+          "body": "La lecture gratuite actuelle couvre votre propre vision du mariage et la façon dont vous avez tendance à vous lier à un partenaire, telles qu'elles apparaissent dans votre thème natal. Une lecture de compatibilité qui compare deux thèmes est en préparation et sera ajoutée au menu. L'analyse détaillée des Dasha derrière le moment du mariage est couverte dans le rapport complet sur la vie."
+        }
+      ]
+    },
+    {
+      "slug": "career",
+      "title": "Carrière, changements d'emploi et richesse en astrologie védique | Lecture des 10e et 2e maisons",
+      "description": "Comment l'astrologie védique (Jyotish) lit le travail et l'argent : la 10e maison pour le travail approprié, les 2e et 11e maisons pour les revenus, le thème divisionnel D10, et comment les Dasha montrent les périodes favorables à un changement de carrière.",
+      "h1": "Carrière, changements d'emploi et richesse en astrologie védique",
+      "lead": "L'astrologie védique ne traite pas seulement du caractère, mais aussi de « quel domaine fait ressortir vos forces » et de « quand un changement est susceptible d'aller dans le sens du courant ». Le travail et l'argent sont gérés par des maisons différentes, et chacun se lit à un endroit différent.",
+      "sections": [
+        {
+          "heading": "Le travail approprié se lit à partir de la 10e maison",
+          "body": "La 10e maison montre la profession et le statut social. Quel signe s'y trouve, où son maître est placé, et quelles planètes l'influencent : cela esquisse le type de travail qui vous convient. Si Mercure est fortement impliqué, un travail avec les mots et l'information ; Mars, un environnement qui exige décision et action ; Saturne, un travail construit lentement au fil du temps. La nature de la planète se reflète sur le domaine. Le thème divisionnel D10 (Dashamsha) va plus loin, montrant quelle position au sein d'une profession vous convient : sur le terrain, de coordination ou indépendant."
+        },
+        {
+          "heading": "Les revenus se lisent à partir des 2e et 11e maisons",
+          "body": "Le travail approprié et la richesse ne sont pas la même chose. La 2e maison montre les économies et les actifs qui restent avec vous ; la 11e montre les revenus et les personnes qui les apportent. Une 10e maison forte avec une 2e faible s'interprète comme le fait d'être valorisé mais d'avoir du mal à conserver l'argent, et l'inverse se produit également. L'implication de Jupiter indique la croissance ; celle de Saturne, quelque chose de plus lent mais stable. Ce qui est montré n'est pas un montant, mais le schéma de la façon dont l'argent rentre et dont il reste."
+        },
+        {
+          "heading": "Les périodes favorables pour un changement de carrière",
+          "body": "Pour les décisions de carrière, là encore, on utilise les Dasha. Entrer dans la période d'une planète liée à la 10e maison ou à son maître rend l'environnement de travail plus susceptible de bouger. Le transit de Saturne est également considéré comme un tournant : lorsque Saturne touche la 10e maison ou l'ascendant, la nature de vos responsabilités a tendance à changer ou votre façon de travailler est réévaluée. À l'inverse, faire un grand changement lorsqu'il n'y a aucun signe de changement peut, selon la vision traditionnelle, rapporter peu par rapport à l'effort fourni."
+        },
+        {
+          "heading": "Choses à garder à l'esprit",
+          "body": "Le thème natal montre des tendances ; il ne nomme pas une profession. Le même placement produit d'innombrables emplois différents selon l'époque et l'environnement. Il ne garantit pas non plus de revenus ou de résultats d'investissement, traitez donc ce qui est écrit comme un élément parmi d'autres. Les décisions concernant un changement d'emploi ou l'engagement de fonds doivent être prises après avoir vérifié les conditions du monde réel."
+        },
+        {
+          "heading": "Sur ce site",
+          "body": "La lecture gratuite couvre vos qualités de base et le flux actuel. Le travail approprié basé sur la 10e maison, la 2e maison et le D10, ainsi que le timing basé sur les Dasha, sont abordés dans le rapport complet sur la vie entière."
+        }
+      ]
+    },
+    {
+      "slug": "horoscope",
+      "title": "Comment lire un thème astral védique | Ascendant, maisons et bases du D9",
+      "description": "Comment lire un thème astrologique védique (indien) : les styles de thèmes d'Inde du Nord et du Sud, l'ascendant (Lagna) et le calcul des maisons, la force planétaire et le rôle du thème divisionnel D9, dans l'ordre de lecture.",
+      "h1": "Comment lire un thème astral védique",
+      "lead": "Un thème védique est dessiné sous forme de carré, contrairement à la roue circulaire de l'astrologie occidentale. Au début, cela ressemble à un fouillis de symboles, mais une fois que vous connaissez l'ordre dans lequel le lire, vous pouvez dégager les tendances de votre propre thème.",
+      "sections": [
+        {
+          "heading": "Il existe deux styles de thèmes",
+          "body": "Le style d'Inde du Nord est une figure de losanges entrelacés dans laquelle les positions des maisons sont fixes et les numéros des signes y sont inscrits. Le style d'Inde du Sud est un cadre de douze cases dans lequel les positions des signes sont fixes et les maisons se déplacent. Les deux montrent le même contenu ; la différence relève de la convention régionale. Si vous débutez, le style d'Inde du Sud, avec sa disposition immuable des cases, est généralement plus facile à suivre."
+        },
+        {
+          "heading": "Commencez par le Lagna (ascendant)",
+          "body": "La lecture commence par le signe qui se levait à l'horizon est au moment de la naissance : le Lagna, ou ascendant. Il devient la 1ère maison, et la 2ème, 3ème et ainsi de suite sont comptées dans le sens inverse des aiguilles d'une montre à partir de là. Le Lagna montre la constitution, la première impression et l'attitude d'une personne face à la vie, et c'est le point de référence qui fixe la position de chaque maison. L'ascendant passe au signe suivant environ toutes les deux heures, donc une heure de naissance inexacte décale l'ensemble du thème. C'est pourquoi il est important de confirmer l'heure."
+        },
+        {
+          "heading": "Les domaines couverts par les douze maisons",
+          "body": "La 1ère maison représente le soi ; la 2ème, les biens et la parole ; la 3ème, l'initiative et les frères et sœurs ; la 4ème, le foyer et les fondations émotionnelles ; la 5ème, la créativité et les enfants ; la 6ème, les difficultés au travail et la santé ; la 7ème, le mariage et les relations ; la 8ème, la transformation et l'héritage ; la 9ème, la fortune et l'apprentissage ; la 10ème, la profession et le statut social ; la 11ème, les revenus et les réseaux ; la 12ème, la perte, le lâcher-prise et l'introspection. Les planètes situées dans les différentes maisons montrent où l'énergie vitale a tendance à se concentrer."
+        },
+        {
+          "heading": "Évaluer la force et la condition des planètes",
+          "body": "L'expression d'une planète change avec le signe qu'elle occupe. Dans son propre signe ou son signe d'exaltation, elle montre facilement ses qualités ; dans le signe opposé, elle fonctionne à travers la difficulté. Traditionnellement, les planètes sont également regroupées entre celles qui ont tendance à agir favorablement, comme Jupiter et Vénus, et celles qui agissent comme des épreuves, comme Saturne, Mars, Rahu et Ketu. Les planètes d'épreuve ne sont cependant pas mauvaises ; plus elles agissent fortement, plus le domaine dans lequel vous êtes formé est clair."
+        },
+        {
+          "heading": "Superposer les thèmes divisionnels et le timing",
+          "body": "Après avoir lu le thème natal, utilisez les thèmes divisionnels (D9, D10 et autres) pour approfondir des domaines spécifiques, et enfin superposez les Dasha (périodes planétaires) pour voir dans quelle période vous vous trouvez actuellement. Ces trois étapes constituent la méthode de base pour analyser un thème védique. Passer de la vue d'ensemble au domaine spécifique puis au timing évite que l'interprétation ne se fragmente."
+        },
+        {
+          "heading": "Obtenir votre propre thème",
+          "body": "Avec votre date, heure et lieu de naissance, le thème est calculé automatiquement. La lecture gratuite sur ce site calcule votre signe lunaire, votre Nakshatra et votre ascendant et les explique en phrases complètes. Plutôt que de tracer les symboles vous-même, le moyen le plus rapide de commencer est de lire comment vos propres placements sont interprétés."
+        }
+      ]
+    },
+    {
+      "slug": "dasha",
+      "title": "Qu'est-ce qu'un Dasha en astrologie védique ? Comment il est calculé et ce que signifie chaque période planétaire",
+      "description": "Le Vimshottari Dasha, le système de chronologie de l'astrologie védique (Jyotish) : comment le cycle de 120 ans est calculé à partir du Nakshatra de la Lune, le caractère de chaque période planétaire comme Jupiter, Saturne et Rahu, et comment lire les Mahadasha et Antardasha.",
+      "h1": "Lire les Dasha (périodes planétaires)",
+      "lead": "L'astrologie védique possède un système appelé Dasha qui divise la vie en périodes planétaires et permet de lire quel type de vent souffle dans la période actuelle. C'est une façon de lire le temps qui est distincte des transits occidentaux et unique à l'astrologie védique. Nous abordons ici la version la plus utilisée, le Vimshottari Dasha, et expliquons comment il est calculé et à quoi ressemble chaque période planétaire.",
+      "sections": [
+        {
+          "heading": "Ce qu'est un Dasha",
+          "body": "Dasha signifie \"état\" ou \"période\" en sanskrit, et fait référence à un système qui divise une vie en périodes gouvernées par des planètes. Il en existe de nombreuses sortes, mais la norme est le Vimshottari Dasha, dans lequel neuf planètes se relaient comme acteur principal dans une vie, totalisant 120 ans. Le temps alloué à chaque planète est fixe : Ketu 7 ans, Vénus 20, Soleil 6, Lune 10, Mars 7, Rahu 18, Jupiter 16, Saturne 19, Mercure 17."
+        },
+        {
+          "heading": "Le calcul commence à partir du Nakshatra de la Lune à la naissance",
+          "body": "La période planétaire par laquelle commence une vie est déterminée par le Nakshatra (demeure lunaire) que la Lune occupait au moment de la naissance. Chacun des 27 Nakshatras est attribué à l'une des neuf planètes : une Lune en Ashwini commence dans la période de Ketu, une Lune en Rohini dans la période de la Lune. La distance parcourue par la Lune à travers ce Nakshatra détermine combien d'années il reste à la première période. Une heure de naissance décalée de quelques heures déplace la position de la Lune, et avec elle les dates auxquelles les Dashas changent. C'est l'une des raisons pour lesquelles une heure de naissance précise est importante."
+        },
+        {
+          "heading": "Mahadasha et Antardasha",
+          "body": "Les grandes périodes s'étendant de plusieurs années à vingt ans sont appelées Mahadasha (périodes majeures). Chacune est ensuite divisée en neuf sous-périodes appelées Antardasha. Dans une période de Saturne de 19 ans, par exemple, les sous-périodes s'enchaînent tour à tour : Saturne/Saturne, Saturne/Mercure, Saturne/Ketu, et ainsi de suite. En pratique, la période majeure donne la qualité générale de l'époque et la sous-période donne la couleur spécifique de cette année ou de ces quelques années. Elles sont généralement écrites majeure/sous-période, comme dans \"Saturne/Jupiter\"."
+        },
+        {
+          "heading": "Le caractère de chaque période planétaire",
+          "body": "La période de Jupiter tend à apporter l'apprentissage, l'expansion et des connexions avec des soutiens, et est souvent évoquée en lien avec le mariage et les enfants. La période de Saturne est un temps de responsabilité et d'endurance dans lequel les efforts s'accumulent mais où un changement soudain est peu probable. La période de Rahu intensifie les changements brusques d'environnement et l'implication avec des lieux étrangers ou de nouvelles technologies ; l'ascension et la confusion se côtoient. La période de Ketu en est une d'introspection et de lâcher-prise, où les anciens attachements s'estompent. Vénus représente les relations, l'art et le confort ; le Soleil, l'affirmation de soi et le statut social ; la Lune, l'émotion et le foyer ; Mars, l'action et la compétition ; Mercure, la connaissance, le travail et la négociation. Ce ne sont là que des généralités. La même période de Jupiter se présente de manière complètement différente selon la maison que Jupiter occupe dans votre thème et sa condition."
+        },
+        {
+          "heading": "Les bases de la lecture d'un Dasha",
+          "body": "Pour lire un Dasha, vérifiez d'abord où se situe la planète gouvernante dans le thème natal, quelles maisons elle gouverne, et si elle est forte ou faible. Le Dasha est comme un minuteur qui montre quand les placements du thème natal deviennent actifs ; la période en elle-même n'est ni bonne ni mauvaise. Ensuite, attendez-vous à ce que les thèmes des maisons que cette planète gouverne (le mariage pour la 7e, le travail pour la 10e) passent au premier plan pendant cette période. Enfin, la superposition des transits actuels de Jupiter et de Saturne permet d'affiner la chronologie. La procédure pour déterminer le moment du mariage et celui de la carrière est également couverte dans les guides respectifs."
+        },
+        {
+          "heading": "Choses à garder à l'esprit",
+          "body": "Le Dasha montre la qualité d'une période ; il ne fige pas les événements. Dans la même période de Saturne, une personne s'installe et gagne en force tandis qu'une autre se sent bloquée. L'année environnant le passage d'une période majeure à la suivante est généralement lue comme une transition dans laquelle l'influence des deux planètes se mélange. Un tableau des Dasha peut être calculé automatiquement à partir de votre date, heure et lieu de naissance. La lecture gratuite sur ce site vous donne votre période majeure et votre sous-période actuelles ; le rapport complet à vie couvre la séquence complète des Dasha pour votre vie et une lecture de chaque période."
+        }
+      ]
+    },
+    {
+      "slug": "nakshatra",
+      "title": "Que sont les Nakshatras ? Les 27 demeures lunaires et comment trouver le vôtre (Astrologie védique)",
+      "description": "Les 27 Nakshatras (demeures lunaires) de l'astrologie védique (Jyotish) : en quoi ils diffèrent des 12 signes, leur lien avec le caractère et les Dasha, une liste complète avec la planète maîtresse, le signe et les mots-clés, et comment trouver gratuitement votre propre Nakshatra lunaire.",
+      "h1": "Que sont les Nakshatras ? Les 27 demeures lunaires",
+      "lead": "Les Nakshatras sont les \"demeures de la Lune\" : la trajectoire de la Lune divisée en 27 parties. En astrologie védique, la demeure que la Lune occupait à la naissance est l'indice central pour lire les tendances intérieures d'une personne. C'est pourquoi deux personnes nées sous le même signe peuvent donner des impressions si différentes, et c'est également le point de départ pour calculer les Dasha (périodes planétaires).",
+      "sections": [
+        {
+          "heading": "En quoi ils diffèrent des 12 signes",
+          "body": "Les 12 signes divisent l'écliptique en segments de 30 degrés ; les Nakshatras divisent ce même écliptique en 27 segments de 13 degrés 20 minutes. Chaque signe contient donc deux à trois demeures. Si le signe est la scène sur laquelle se joue une vie, la demeure est plus proche du rôle qui y est interprété, exprimant un tempérament plus fin et des réactions habituelles. Chaque Nakshatra porte le nom d'une étoile ou d'un groupe d'étoiles réel, et chacun possède une divinité, un symbole et une planète maîtresse fixés par la tradition."
+        },
+        {
+          "heading": "Ce que montre le Nakshatra de la Lune",
+          "body": "Ce que l'astrologie védique pondère le plus est la demeure que la Lune occupait au moment de la naissance. La Lune est considérée comme montrant comment l'esprit se meut : ce qui l'apaise, ce qui l'agite, quand il s'épuise. La demeure distingue ces tendances intérieures. Il n'est pas rare que quelqu'un qui trouvait la description occidentale du signe solaire un peu mince dise que la description de la demeure lunaire a finalement fait écho en lui. Les lectures se réfèrent également aux demeures occupées par les autres planètes et l'ascendant, mais connaître la demeure de votre Lune est la porte d'entrée."
+        },
+        {
+          "heading": "Les Nakshatras et les Dasha",
+          "body": "Chacune des 27 demeures est attribuée à l'une des neuf planètes, et le maître de la demeure de votre Lune à la naissance devient votre premier Dasha (période planétaire). Ainsi, le Nakshatra ne décrit pas seulement le caractère ; il est le point de départ pour calculer le déroulement des périodes d'une vie. La façon de lire cette chronologie est abordée dans le guide des Dasha."
+        },
+        {
+          "heading": "Les 27 Nakshatras (planète maîtresse, signe, mots-clés)",
+          "body": "Ci-dessous se trouvent les 27 demeures dans l'ordre de l'écliptique. Les mots-clés résument les qualités traditionnellement attribuées à chacune et ne constituent qu'un point de départ.",
+          "items": [
+            "Ashwini (Ketu / Bélier) — commencements, guérison",
+            "Bharani (Vénus / Bélier) — maintien, endurance",
+            "Krittika (Soleil / Bélier–Taureau) — trancher, purification",
+            "Rohini (Lune / Taureau) — soin, abondance",
+            "Mrigashira (Mars / Taureau–Gémeaux) — recherche, sensibilité",
+            "Ardra (Rahu / Gémeaux) — tempête, transformation",
+            "Punarvasu (Jupiter / Gémeaux–Cancer) — renouveau, retour",
+            "Pushya (Saturne / Cancer) — nourriture, confiance",
+            "Ashlesha (Mercure / Cancer) — enlacement, perspicacité",
+            "Magha (Ketu / Lion) — lignée, autorité",
+            "Purva Phalguni (Vénus / Lion) — repos, plaisir",
+            "Uttara Phalguni (Soleil / Lion–Vierge) — contrats, coopération",
+            "Hasta (Lune / Vierge) — travail manuel, dextérité",
+            "Chitra (Mars / Vierge–Balance) — éclat, construction",
+            "Swati (Rahu / Balance) — indépendance, flexibilité",
+            "Vishakha (Jupiter / Balance–Scorpion) — but, ambition",
+            "Anuradha (Saturne / Scorpion) — dévotion, amitié",
+            "Jyeshtha (Mercure / Scorpion) — ancienneté, responsabilité",
+            "Mula (Ketu / Sagittaire) — racines, questionnement",
+            "Purva Ashadha (Vénus / Sagittaire) — victoire, optimisme",
+            "Uttara Ashadha (Soleil / Sagittaire–Capricorne) — persévérance, accomplissement",
+            "Shravana (Lune / Capricorne) — écoute, apprentissage",
+            "Dhanishta (Mars / Capricorne–Verseau) — richesse, rythme",
+            "Shatabhisha (Rahu / Verseau) — guérison, secrets",
+            "Purva Bhadrapada (Jupiter / Verseau–Poissons) — intensité, dualité",
+            "Uttara Bhadrapada (Saturne / Poissons) — profondeur, stabilité",
+            "Revati (Mercure / Poissons) — orientation, achèvement"
+          ]
+        },
+        {
+          "heading": "Comment trouver votre Nakshatra",
+          "body": "La Lune traverse un signe en environ deux jours et demi et passe à un nouveau Nakshatra à peu près une fois par jour. La date de naissance seule donne donc une réponse approximative, mais les personnes nées près de la limite peuvent se retrouver dans la demeure voisine si l'on ne dispose pas de l'heure et du lieu de naissance. Saisissez ces trois informations et la demeure de la Lune sera calculée automatiquement. L'analyse gratuite sur ce site calcule votre signe lunaire, votre Nakshatra et votre ascendant et explique ce qu'ils signifient en phrases complètes."
+        },
+        {
+          "heading": "Choses à garder à l'esprit",
+          "body": "La description d'une demeure lunaire est l'une des 27 généralités. Dans une lecture réelle, la position de la Lune au sein de la demeure, les planètes partageant sa maison et sa relation avec l'ascendant sont lues ensemble, de sorte que la même demeure peut donner une impression très différente. Les affirmations catégoriques telles que \"cette demeure est inadaptée au mariage\", même lorsqu'elles apparaissent dans des textes traditionnels, ne devraient pas être appliquées directement aux décisions modernes. La façon la plus utile de les prendre est comme un vocabulaire pour comprendre vos propres tendances."
+        }
+      ]
+    }
+  ]
+}
