@@ -1060,7 +1060,9 @@ localStorage.removeItem('lj_user_email');
 localStorage.removeItem('email');
 // 前の利用者の無料鑑定結果・出生データも残さない
 ['lj_user_input_backup', 'dob', 'tob', 'city', 'lj_user_birthdate', 'lj_user_birthplace'].forEach(k => localStorage.removeItem(k));
+['lj_diagnosis_result', 'lj_user_input', 'lj_auth_token'].forEach(k => sessionStorage.removeItem(k));
 setLoggedOutState();
+window.location.reload();
 }
 
 function getJstIsoString() {
