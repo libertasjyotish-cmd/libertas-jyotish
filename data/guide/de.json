@@ -1,0 +1,272 @@
+{
+  "note": "Written for people searching compound queries around Vedic / Indian astrology (Jyotish). Avoid deterministic predictions and anything that reads as medical, legal or financial advice.",
+  "published": true,
+  "linked": true,
+  "ui": {
+    "crumbHome": "Startseite",
+    "crumbHub": "Ratgeber",
+    "breadcrumbLabel": "Navigationspfad",
+    "footerLegal": "Impressum",
+    "footerTerms": "Nutzungsbedingungen",
+    "footerPrivacy": "Datenschutzerklärung",
+    "footerRefund": "Rückerstattungsrichtlinie",
+    "ctaTitle": "Vergleichen Sie es mit Ihrem eigenen Horoskop",
+    "ctaBody": "Geben Sie Ihr Geburtsdatum, Ihre Geburtszeit und Ihren Geburtsort ein, und wir berechnen kostenlos Ihr Mondzeichen, Nakshatra, Ihren Aszendenten und Ihr aktuelles Dasha, inklusive einer schriftlichen Deutung.",
+    "ctaButton": "Starten Sie Ihre kostenlose Deutung",
+    "relatedHeading": "Weitere Ratgeber",
+    "disclaimer": "Dieser Artikel stellt allgemeine Konzepte der vedischen Astrologie vor. Er garantiert keine zukünftigen Ereignisse und ist kein Ersatz für medizinische, rechtliche oder finanzielle Beratung.",
+    "footerContact": "Kontakt"
+  },
+  "index": {
+    "title": "Ratgeber zur vedischen Astrologie | Libertas Jyotish",
+    "description": "Ratgeber zur vedischen (indischen) Astrologie: die Grundlagen von Jyotish, was eine kostenlose Deutung zeigt, Ehe und Kompatibilität, Karriere und Wohlstand, wie Sie Ihr Horoskop lesen, Dasha-Perioden und die 27 Nakshatras.",
+    "h1": "Ratgeber zur vedischen Astrologie",
+    "lead": "Leicht verständliche Artikel darüber, wie die vedische Astrologie (Jyotish) funktioniert, geschrieben für Leser, die sich zum ersten Mal damit befassen. Beginnen Sie mit dem Thema, das Ihnen am wichtigsten ist.",
+    "more": "Alle Ratgeber",
+    "menuLabel": "Alle Ratgeber",
+    "introSlug": "indian-astrology"
+  },
+  "articles": [
+    {
+      "slug": "indian-astrology",
+      "title": "Was ist vedische Astrologie? Unterschiede zur westlichen Astrologie und warum sie als präzise gilt",
+      "description": "Die Grundlagen der vedischen (indischen) Astrologie, auch Jyotish genannt: wie sie sich von der westlichen Astrologie unterscheidet, warum sich Ihr Sternzeichen verschieben kann und wie Dasha-Perioden das Timing beschreiben. Beinhaltet, warum sie als präzise gilt, und ihre Grenzen.",
+      "h1": "Was ist vedische Astrologie?",
+      "menuLabel": "Was ist vedische Astrologie?",
+      "lead": "Die vedische Astrologie, auf Sanskrit Jyotish („die Wissenschaft des Lichts“) genannt, ist eine Art, den Himmel zu lesen, die in Indien seit mehr als dreitausend Jahren überliefert wird. Sie ist auch als indische Astrologie bekannt. Aus dem Zustand des Himmels im Moment der Geburt liest sie die Natur eines Menschen und den Verlauf der verschiedenen Phasen seines Lebens.",
+      "sections": [
+        {
+          "heading": "Der größte Unterschied zur westlichen Astrologie: Ihr Sternzeichen kann sich verschieben",
+          "body": "Wenn Menschen ihr Sternzeichen in der vedischen Astrologie nachschlagen, stellen viele fest, dass es ein Zeichen vor dem liegt, das sie kennen. Die westliche Astrologie verwendet den tropischen Tierkreis, der an der Tagundnachtgleiche im Frühling verankert ist; die vedische Astrologie verwendet den siderischen Tierkreis, der an den tatsächlichen Positionen der Sterne verankert ist. Die Lücke zwischen beiden beträgt derzeit etwa 24 Grad. Jemand, der schon immer ein Widder war, kann sich in der vedischen Astrologie leicht als Fische herausstellen. Keines der Systeme ist falsch; sie nehmen lediglich einen anderen Bezugspunkt. Die vedische Astrologie nutzt die Position, an der sich die Planeten gerade tatsächlich am Himmel befinden."
+        },
+        {
+          "heading": "Der Mond ist wichtiger als die Sonne",
+          "body": "In der westlichen Astrologie steht das Sonnenzeichen an erster Stelle. Die vedische Astrologie misst dem Mond mehr Gewicht bei. Wenn die Sonne das Gesicht ist, das Sie der Gesellschaft zeigen, dann ist der Mond die Art und Weise, wie sich Ihr Geist bewegt: was Sie beruhigt und was Sie zermürbt. Die vedische Astrologie unterteilt die Bahn des Mondes zudem in 27 Nakshatras (Mondhäuser), sodass zwei Personen, die im selben Zeichen geboren wurden, sehr unterschiedliche Lesungen erhalten können. Viele Menschen sagen, dass die vedische Beschreibung ihres Charakters wahrer klingt als die westliche, und diese feinere Abstufung ist ein großer Teil des Grundes dafür."
+        },
+        {
+          "heading": "Dasha: ein System, um das „Wann“ zu lesen",
+          "body": "Ein besonderes Merkmal der vedischen Astrologie ist das Dasha, ein System planetarer Perioden. Ausgehend von der Position des Mondes bei der Geburt wird das Leben in Perioden unterteilt, die von jedem Planeten beherrscht werden: eine Jupiter-Periode, eine Saturn-Periode, eine Rahu-Periode und so weiter, die jeweils Jahre dauern. Gefühle wie „alles, was ich tue, scheint gerade ins Stocken zu geraten“ oder „mein Umfeld hat sich auf einen Schlag verändert“ werden durch die Qualität der aktuellen Periode gelesen. Die Fähigkeit, mit dem Fluss eines Lebens zu arbeiten und nicht nur mit dem Charakter, ist der wichtigste praktische Unterschied zur westlichen Astrologie."
+        },
+        {
+          "heading": "Ist die vedische Astrologie präzise?",
+          "body": "Sie wird vor allem deshalb als präzise bezeichnet, weil sie die Geburtszeit nutzt und mit sehr vielen Informationen arbeitet, was ihre Beschreibungen konkret macht. Nicht nur das Zeichen, sondern auch der Aszendent (Lagna), das Mondhaus, die Platzierung jedes Planeten und das Timing. Je feiner die Kombination, desto höher die Auflösung der Lesung. Dennoch legen die Positionen der Planeten keine zukünftigen Ereignisse fest. Dieselbe Platzierung zeigt sich je nach den Umständen und den eigenen Entscheidungen der Person unterschiedlich. Was die vedische Astrologie bietet, ist eine Reihe von Hinweisen: die Tendenzen, die Sie in sich tragen, und welcher Wind in der aktuellen Periode weht. Sie als Garantie für Ergebnisse zu behandeln, führt zu schlechten Entscheidungen."
+        },
+        {
+          "heading": "Was Sie für eine Lesung benötigen",
+          "body": "Drei Dinge: Ihr Geburtsdatum, Ihre Geburtszeit und Ihren Geburtsort. Die Geburtszeit ist besonders wichtig, da sie den Aszendenten und die Häuser (die Unterteilungen der Lebensbereiche) bestimmt, und ein Unterschied von wenigen Minuten kann das Gelesene verändern. Sie ist oft auf einer Geburtsurkunde oder in Krankenhausakten vermerkt, also überprüfen Sie diese, wenn Sie können. Wenn sie wirklich unbekannt ist, besteht ein Ansatz darin, für 12:00 Uhr mittags zu rechnen und sich auf die Teile zu konzentrieren, die nicht von der Zeit abhängen: das Mondzeichen, das Nakshatra und die groben Umrisse des Dasha."
+        }
+      ]
+    },
+    {
+      "slug": "free-reading",
+      "title": "Was Ihnen ein kostenloses Reading der vedischen Astrologie zeigen kann | Wie die automatische Berechnung funktioniert und ihre Grenzen",
+      "description": "Was Sie tatsächlich aus einem kostenlosen Reading der vedischen Astrologie lernen: was aus Ihrem Geburtsdatum, Ihrer Geburtszeit und Ihrem Geburtsort berechnet wird, was der kostenlose Teil abdeckt und was darüber hinausgeht.",
+      "h1": "Was Ihnen ein kostenloses Reading der vedischen Astrologie zeigen kann",
+      "lead": "Wenn Sie nach „kostenlose vedische Astrologie“ suchen, werden Sie feststellen, dass sich die angebotenen Dienste stark unterscheiden. Einige erstellen nur ein Chart, andere belassen es bei einer kurzen Beschreibung Ihres Zeichens, wieder andere erklären die Dinge in vollständigen Sätzen. Hier legen wir dar, was Ihnen ein kostenloses Reading, das automatisch aus Ihren Geburtsdaten berechnet wird, tatsächlich sagen kann.",
+      "sections": [
+        {
+          "heading": "Berechnet wird der Himmel zum Zeitpunkt Ihrer Geburt",
+          "body": "Wenn Sie Ihr Geburtsdatum, Ihre Geburtszeit und Ihren Geburtsort eingeben, werden die Positionen der Planeten, wie sie von diesem Moment und diesem Ort aus gesehen wurden, berechnet. Der Geburtsort wird in Breiten- und Längengrade umgewandelt und die Zeitzone wird korrigiert. Dies ergibt Ihr Mondzeichen und Nakshatra (Mondhaus), Ihr Sonnenzeichen, Ihren Aszendenten (Lagna), die Platzierung jedes Planeten und die Grenzen Ihrer Dasha-Perioden. Dieser Teil ist Astronomie, nicht die Meinung eines Astrologen, sodass jeder Dienst die gleichen Werte liefert. Das Reading fasst diese festen Positionen gemäß den klassischen Interpretationen in Worte."
+        },
+        {
+          "heading": "Was der kostenlose Teil abdeckt",
+          "body": "In den meisten Fällen deckt der kostenlose Teil Ihre Natur ab, wie sie aus dem Mondzeichen und Nakshatra ersichtlich ist, wie andere Sie wahrnehmen, wie es aus dem Aszendenten hervorgeht, sowie die allgemeine Tendenz für heute und die nahe Zukunft. Das reicht aus, um Ihre Grundmuster kennenzulernen und herauszufinden, was Ihr Zeichen in der vedischen Astrologie ist. Das kostenlose Reading auf dieser Website deckt diesen Bereich ab und kann jeden Tag gelesen werden."
+        },
+        {
+          "heading": "Was der kostenlose Teil nicht abdeckt",
+          "body": "Fragen nach dem „Wann“, wie etwa der Zeitpunkt einer Heirat oder eines beruflichen Wechsels, erfordern einen Vergleich des Dasha mit den Transiten (der aktuellen Bewegung der Planeten), was mehr Umfang und mehr Urteilsvermögen erfordert. Sich in einen bestimmten Lebensbereich zu vertiefen, wie etwa passende Arbeit, Wohlstand oder Kompatibilität, bedeutet, sich die Platzierungen in den Häusern und die Unterteilungshoroskope (D9, D10 und andere) anzusehen. Dies geht über ein kostenloses Reading hinaus und wird normalerweise in kostenpflichtigen Mitgliederinhalten oder in einem vollständigen lebenslangen Bericht behandelt."
+        },
+        {
+          "heading": "Dinge, die Sie beachten sollten",
+          "body": "Wenn die Geburtszeit ungenau ist, verschieben sich der Aszendent und die Häuser, und die Prämisse des Readings ändert sich. Bestätigen Sie daher die Zeit, bevor Sie beginnen. Bitte betrachten Sie das Ergebnis zudem als Lektüre zum Selbstverständnis. Es legt keine zukünftigen Ereignisse fest und ist kein Ersatz für medizinische, rechtliche oder finanzielle Entscheidungen. Es ist am nützlichsten, wenn Sie es lesen und dabei überprüfen, ob die beschriebenen Tendenzen tatsächlich auf Sie zutreffen."
+        }
+      ]
+    },
+    {
+      "slug": "marriage",
+      "title": "Zeitpunkt der Heirat und Kompatibilität in der vedischen Astrologie | Deutung des 7. Hauses, D9 und Dasha",
+      "description": "Wie die vedische Astrologie (Jyotish) die Ehe deutet: das 7. Haus, Venus und Jupiter, das Navamsha (D9) Unterhoroskop, das Timing durch Dasha und Transite, und wie die Kompatibilität zwischen zwei Personen beurteilt wird.",
+      "h1": "Zeitpunkt der Heirat und Kompatibilität in der vedischen Astrologie",
+      "lead": "Die vedische Astrologie wird traditionell zur Betrachtung der Ehe herangezogen, und in Indien werden auch heute noch Horoskope verglichen, wenn eine Verbindung vorgeschlagen wird. Hier erklären wir, aus welchen Faktoren die Ehe abgelesen wird und wie der Zeitpunkt ermittelt wird, wobei wir die Fachbegriffe Schritt für Schritt erläutern.",
+      "sections": [
+        {
+          "heading": "Die Ehe wird aus dem 7. Haus abgelesen",
+          "body": "Das Geburtshoroskop ist in zwölf Häuser unterteilt, von denen jedes für einen Lebensbereich zuständig ist. Die Ehe und der Ehepartner werden durch das 7. Haus angezeigt. Welches Tierkreiszeichen dorthin fällt, wo sein Herrscher platziert ist und welche Planeten es besetzen: Daraus lesen wir ab, was Sie bei einem Partner suchen und wie Sie dazu neigen, eine Beziehung aufzubauen. Im klassischen Ansatz werden auch Jupiter im Horoskop einer Frau und Venus im Horoskop eines Mannes als Indikatoren für den Ehepartner verwendet."
+        },
+        {
+          "heading": "D9 (Navamsha): das zweite Horoskop",
+          "body": "Die vedische Astrologie verfügt über Unterhoroskope, die das Geburtshoroskop weiter unterteilen. Dasjenige, das für die Ehe immer herangezogen wird, ist D9, das Navamsha, ein zweites Horoskop, das erstellt wird, indem jedes Zeichen des Geburtshoroskops in neun Teile unterteilt wird. Die oberflächliche Natur zeigt sich im Geburtshoroskop; die Essenz, die innerhalb des Ehelebens zum Vorschein kommt, soll sich in D9 zeigen, und beide werden zusammen gedeutet. Ein Planet, der im Geburtshoroskop unauffällig ist, kann in D9 stark werden, was so gedeutet wird, dass die Ehe die Lebensrichtung einer Person verändert."
+        },
+        {
+          "heading": "Das Timing wird aus Dasha und Transiten abgelesen",
+          "body": "„Wann werde ich heiraten?“ wird beurteilt, indem das Dasha (die planetaren Perioden) mit der aktuellen Bewegung der Planeten (Transite) überlagert wird. Befinden Sie sich in der Periode eines Planeten, der mit dem 7. Haus, seinem Herrscher, Venus oder Jupiter verbunden ist? Durchläuft Jupiter oder Saturn zu dieser Zeit tatsächlich das 7. Haus? Wenn diese beiden Faktoren zusammenfallen, neigen Partnerschaftsangelegenheiten dazu, sich zu bewegen. Anders ausgedrückt: Etwas zu überstürzen, wenn die Bedingungen nicht gegeben sind, ist oft kräftezehrend. Bitte beachten Sie, dass dies auf Zeiträume mit höherer Wahrscheinlichkeit hinweist; es legt nicht endgültig fest, ob oder wann eine Heirat stattfinden wird."
+        },
+        {
+          "heading": "Wie die Kompatibilität zwischen zwei Personen abgelesen wird",
+          "body": "Die in Indien seit langem angewandte Methode ist Ashtakoota, bei der die Mondhäuser (Nakshatras) der beiden Personen in acht Punkten verglichen werden und eine Punktzahl von maximal 36 vergeben wird, wobei 18 oder mehr im Allgemeinen als Richtwert gelten. Die Punktzahl ist jedoch nur der Einstiegspunkt. In der Praxis wird mehr Wert darauf gelegt, die beiden Horoskope übereinanderzulegen und zu sehen, in welche Ihrer Bereiche die Planeten der anderen Person fallen (das 7., 2., 8. Haus und so weiter). Beziehungen mit niedrigen Punktzahlen können von Dauer sein; Beziehungen mit hohen Punktzahlen können unharmonisch verlaufen. Kompatibilität ist am nützlichsten, nicht als Urteil über „geeignet oder nicht“, sondern als Landkarte, die zeigt, wo Sie sich gegenseitig unterstützen und wo Reibungen wahrscheinlich sind."
+        },
+        {
+          "heading": "Auf dieser Website",
+          "body": "Die aktuelle kostenlose Deutung behandelt Ihre eigene Sicht auf die Ehe und wie Sie dazu neigen, sich auf einen Partner einzulassen, wie es aus Ihrem Geburtshoroskop ersichtlich ist. Eine Kompatibilitätsdeutung, die zwei Horoskope vergleicht, ist in Vorbereitung und wird dem Menü hinzugefügt. Die detaillierte Dasha-Analyse hinter dem Zeitpunkt der Heirat wird im vollständigen Lebensbericht behandelt."
+        }
+      ]
+    },
+    {
+      "slug": "career",
+      "title": "Karriere, Jobwechsel und Wohlstand in der vedischen Astrologie | Die Deutung des 10. und 2. Hauses",
+      "description": "Wie die vedische Astrologie (Jyotish) Arbeit und Geld deutet: das 10. Haus für die passende Arbeit, das 2. und 11. Haus für das Einkommen, das D10-Unterhoroskop und wie das Dasha günstige Phasen für einen Karrierewechsel aufzeigt.",
+      "h1": "Karriere, Jobwechsel und Wohlstand in der vedischen Astrologie",
+      "lead": "Die vedische Astrologie befasst sich nicht nur mit dem Charakter, sondern auch damit, \"welcher Bereich Ihre Stärken zur Geltung bringt\" und \"wann eine Veränderung wahrscheinlich mit dem Strom fließt\". Arbeit und Geld werden von verschiedenen Häusern behandelt, und jedes wird an einer anderen Stelle gedeutet.",
+      "sections": [
+        {
+          "heading": "Die passende Arbeit wird aus dem 10. Haus gedeutet",
+          "body": "Das 10. Haus zeigt Beruf und gesellschaftliches Ansehen. Welches Zeichen dorthin fällt, wo sein Herrscher platziert ist und welche Planeten es beeinflussen: Dies skizziert die Art von Arbeit, die zu Ihnen passt. Wenn Merkur stark involviert ist, bietet sich die Arbeit mit Worten und Informationen an; bei Mars ein Umfeld, das Entscheidungen und Handeln erfordert; bei Saturn eine Arbeit, die im Laufe der Zeit langsam aufgebaut wird. Die Natur des Planeten überträgt sich auf das Berufsfeld. Das D10 (Dashamsha) Unterhoroskop geht noch weiter und zeigt, welche Position innerhalb eines Berufs zu Ihnen passt: praktisch ausführend, koordinierend oder unabhängig."
+        },
+        {
+          "heading": "Das Einkommen wird aus dem 2. und 11. Haus gedeutet",
+          "body": "Passende Arbeit und Wohlstand sind nicht dasselbe. Das 2. Haus zeigt Ersparnisse und Vermögenswerte, die bei Ihnen bleiben; das 11. Haus zeigt das Einkommen und die Menschen, die es bringen. Ein starkes 10. Haus mit einem schwachen 2. Haus lässt sich so deuten, dass man zwar geschätzt wird, es aber schwerfällt, Geld zu behalten, und auch das Gegenteil kommt vor. Eine Beteiligung von Jupiter deutet auf Wachstum hin; die von Saturn auf etwas Langsameres, aber Stabiles. Was gezeigt wird, ist kein konkreter Betrag, sondern das Muster, wie Geld hereinkommt und wie es bleibt."
+        },
+        {
+          "heading": "Günstige Phasen für einen Karrierewechsel",
+          "body": "Für Karriereentscheidungen wird wiederum das Dasha herangezogen. Wenn Sie in die Phase eines Planeten eintreten, der mit dem 10. Haus oder dessen Herrscher verbunden ist, wird eine Veränderung im Arbeitsumfeld wahrscheinlicher. Der Transit von Saturn wird ebenfalls als Wendepunkt betrachtet: Wenn Saturn das 10. Haus oder den Aszendenten berührt, neigt die Art Ihrer Verantwortlichkeiten dazu, sich zu ändern, oder Ihre Arbeitsweise wird auf den Prüfstand gestellt. Umgekehrt kann ein großer Schritt, wenn es keine Anzeichen für eine Veränderung gibt, nach traditioneller Auffassung nur wenig Ertrag für die Mühe bringen."
+        },
+        {
+          "heading": "Dinge, die Sie beachten sollten",
+          "body": "Das Geburtshoroskop zeigt Tendenzen; es benennt keinen konkreten Beruf. Dieselbe Platzierung bringt je nach Epoche und Umfeld unzählige verschiedene Berufe hervor. Es garantiert auch keine Einkommens- oder Anlageergebnisse, betrachten Sie das Geschriebene also bitte als einen von vielen Faktoren. Entscheidungen über einen Jobwechsel oder finanzielle Verpflichtungen sollten erst nach Prüfung der realen Gegebenheiten getroffen werden."
+        },
+        {
+          "heading": "Auf dieser Website",
+          "body": "Die kostenlose Analyse deckt Ihre grundlegenden Eigenschaften und den aktuellen Fluss ab. Die passende Arbeit basierend auf dem 10. Haus, dem 2. Haus und dem D10 sowie das Timing basierend auf dem Dasha werden im vollständigen Lebensbericht behandelt."
+        }
+      ]
+    },
+    {
+      "slug": "horoscope",
+      "title": "Wie man ein vedisches Horoskop liest | Aszendent, Häuser und D9-Grundlagen",
+      "description": "Wie man ein vedisches (indisches) Horoskop liest: Nord- und südindische Horoskopstile, der Aszendent (Lagna) und wie Häuser gezählt werden, planetare Stärke und die Rolle des D9-Unterhoroskops, in der Reihenfolge der Deutung.",
+      "h1": "Wie man ein vedisches Horoskop liest",
+      "lead": "Ein vedisches Horoskop wird als Quadrat gezeichnet, im Gegensatz zum kreisförmigen Rad der westlichen Astrologie. Zuerst sieht es wie ein Gewirr von Symbolen aus, aber sobald Sie die Reihenfolge kennen, in der es gelesen wird, können Sie Tendenzen aus Ihrem eigenen Horoskop herauslesen.",
+      "sections": [
+        {
+          "heading": "Es gibt zwei Horoskopstile",
+          "body": "Der nordindische Stil ist eine Figur aus ineinandergreifenden Rauten, in der die Häuserpositionen fest sind und die Zeichennummern hineingeschrieben werden. Der südindische Stil ist ein Rahmen aus zwölf Kästchen, in dem die Zeichenpositionen fest sind und die Häuser sich bewegen. Beide zeigen denselben Inhalt; der Unterschied ist eine regionale Konvention. Wenn Sie neu in der Materie sind, ist der südindische Stil mit seinem unveränderlichen Layout der Kästchen in der Regel leichter zu verstehen."
+        },
+        {
+          "heading": "Beginnen Sie mit dem Lagna (Aszendent)",
+          "body": "Die Deutung beginnt mit dem Zeichen, das im Moment der Geburt am östlichen Horizont aufstieg: dem Lagna oder Aszendenten. Es wird zum 1. Haus, und das 2., 3. und so weiter werden von dort aus gegen den Uhrzeigersinn gezählt. Das Lagna zeigt die Konstitution, den ersten Eindruck und die eigene Einstellung zum Leben, und es ist der Referenzpunkt, der die Position jedes Hauses festlegt. Der Aszendent wechselt etwa alle zwei Stunden in das nächste Zeichen, sodass eine ungenaue Geburtszeit das gesamte Horoskop verschiebt. Deshalb ist die Bestätigung der Uhrzeit wichtig."
+        },
+        {
+          "heading": "Die Bereiche, die die zwölf Häuser abdecken",
+          "body": "Das 1. Haus ist das Selbst; das 2., Vermögen und Sprache; das 3., Initiative und Geschwister; das 4., Zuhause und emotionale Grundlage; das 5., Kreativität und Kinder; das 6., Schwierigkeiten bei der Arbeit und Gesundheit; das 7., Ehe und Beziehungen; das 8., Transformation und Erbschaft; das 9., Glück und Lernen; das 10., Beruf und gesellschaftliches Ansehen; das 11., Einkommen und Netzwerke; das 12., Verlust, Loslassen und Introspektion. Welche Planeten in welchen Häusern sitzen, zeigt, wo sich die Lebensenergie tendenziell sammelt."
+        },
+        {
+          "heading": "Beurteilung der Stärke und des Zustands der Planeten",
+          "body": "Der Ausdruck eines Planeten ändert sich mit dem Zeichen, das er besetzt. In seinem eigenen Zeichen oder seinem Erhöhungszeichen zeigt er seine Qualitäten leicht; im entgegengesetzten Zeichen wirkt er durch Schwierigkeiten. Traditionell werden Planeten auch in solche eingeteilt, die tendenziell günstig wirken, wie Jupiter und Venus, und solche, die als Prüfungen wirken, wie Saturn, Mars, Rahu und Ketu. Die Planeten der Prüfung sind jedoch nicht schlecht; je stärker sie wirken, desto klarer ist der Bereich, in dem Sie geschult werden."
+        },
+        {
+          "heading": "Die Unterhoroskope und das Timing überlagern",
+          "body": "Nachdem Sie das Geburtshoroskop gelesen haben, nutzen Sie die Unterhoroskope (D9, D10 und andere), um tiefer in spezifische Bereiche einzutauchen, und überlagern Sie schließlich das Dasha (planetare Perioden), um zu sehen, in welcher Periode Sie sich jetzt befinden. Diese drei Phasen sind die grundlegende Art und Weise, ein vedisches Horoskop durchzuarbeiten. Vom Gesamtbild über den Bereich bis hin zum Timing zu gehen, verhindert, dass die Deutung fragmentiert wird."
+        },
+        {
+          "heading": "Ihr eigenes Horoskop erstellen",
+          "body": "Mit Ihrem Geburtsdatum, Ihrer Geburtszeit und Ihrem Geburtsort wird das Horoskop automatisch berechnet. Die kostenlose Deutung auf dieser Website berechnet Ihr Mondzeichen, Ihr Nakshatra und Ihren Aszendenten und erklärt diese in vollständigen Sätzen. Anstatt die Symbole selbst nachzuverfolgen, ist der schnellste Einstieg, zu lesen, wie Ihre eigenen Platzierungen gedeutet werden."
+        }
+      ]
+    },
+    {
+      "slug": "dasha",
+      "title": "Was ist ein Dasha in der vedischen Astrologie? Wie es berechnet wird und was jede Planetenperiode bedeutet",
+      "description": "Vimshottari Dasha, das zeitliche System der vedischen Astrologie (Jyotish): Wie der 120-jährige Zyklus aus dem Nakshatra des Mondes berechnet wird, der Charakter jeder Planetenperiode wie Jupiter, Saturn und Rahu, und wie man Mahadasha und Antardasha liest.",
+      "h1": "Das Lesen des Dasha (Planetenperioden)",
+      "lead": "Die vedische Astrologie verfügt über ein System namens Dasha, welches das Leben in Planetenperioden unterteilt und aufzeigt, welcher Wind in der aktuellen Phase weht. Es ist eine Methode der Zeitdeutung, die sich von den westlichen Transiten unterscheidet und einzigartig in der vedischen Astrologie ist. Hier behandeln wir die am weitesten verbreitete Version, das Vimshottari Dasha, und erklären, wie es berechnet wird und wie jede Planetenperiode beschaffen ist.",
+      "sections": [
+        {
+          "heading": "Was ein Dasha ist",
+          "body": "Dasha bedeutet auf Sanskrit „Zustand“ oder „Periode“ und bezieht sich auf ein System, das ein Leben in von Planeten beherrschte Perioden unterteilt. Es gibt viele Arten, aber der Standard ist das Vimshottari Dasha, bei dem neun Planeten abwechselnd die Hauptrolle im Leben übernehmen, was sich auf insgesamt 120 Jahre summiert. Die zugewiesene Zeit jedes Planeten ist festgelegt: Ketu 7 Jahre, Venus 20, Sonne 6, Mond 10, Mars 7, Rahu 18, Jupiter 16, Saturn 19, Merkur 17."
+        },
+        {
+          "heading": "Die Berechnung beginnt mit dem Nakshatra des Mondes bei der Geburt",
+          "body": "Mit der Periode welches Planeten ein Leben beginnt, wird durch das Nakshatra (Mondhaus) bestimmt, in dem sich der Mond im Moment der Geburt befand. Jedes der 27 Nakshatras ist einem der neun Planeten zugeordnet: Ein Mond in Ashwini beginnt in der Ketu-Periode, ein Mond in Rohini in der Mond-Periode. Wie weit der Mond dieses Nakshatra bereits durchlaufen hat, bestimmt, wie viele Jahre der ersten Periode noch verbleiben. Eine Geburtszeit, die um wenige Stunden abweicht, verschiebt die Position des Mondes und damit die Daten, an denen die Dashas wechseln. Dies ist ein Grund, warum eine genaue Geburtszeit von Bedeutung ist."
+        },
+        {
+          "heading": "Mahadasha und Antardasha",
+          "body": "Die großen Perioden, die mehrere Jahre bis zu zwei Jahrzehnte andauern, werden Mahadasha (Hauptperioden) genannt. Jede von ihnen wird weiter in neun Unterperioden unterteilt, die Antardasha genannt werden. Innerhalb einer 19-jährigen Saturn-Periode verlaufen die Unterperioden beispielsweise der Reihe nach als Saturn/Saturn, Saturn/Merkur, Saturn/Ketu und so weiter. In der Praxis gibt die Hauptperiode die grundlegende Qualität der Zeit vor, während die Unterperiode die spezifische Färbung des jeweiligen Jahres oder der wenigen Jahre bestimmt. Sie werden üblicherweise als Haupt-/Unterperiode geschrieben, wie zum Beispiel „Saturn/Jupiter“."
+        },
+        {
+          "heading": "Der Charakter jeder Planetenperiode",
+          "body": "Die Jupiter-Periode neigt dazu, Lernen, Wachstum und Verbindungen zu Unterstützern mit sich zu bringen, und wird oft im Zusammenhang mit Ehe und Kindern erwähnt. Die Saturn-Periode ist eine Zeit der Verantwortung und Ausdauer, in der sich Anstrengungen summieren, plötzliche Veränderungen jedoch unwahrscheinlich sind. Die Rahu-Periode intensiviert abrupte Umgebungswechsel und die Beschäftigung mit fremden Orten oder neuen Technologien; Aufstieg und Verwirrung liegen hier oft nah beieinander. Die Ketu-Periode ist eine Zeit der Introspektion und des Loslassens, in der alte Bindungen verblassen. Venus steht für Beziehungen, Kunst und Annehmlichkeiten; die Sonne für Selbstbehauptung und gesellschaftliches Ansehen; der Mond für Emotionen und das Zuhause; Mars für Tatkraft und Wettbewerb; Merkur für Wissen, Arbeit und Verhandlungen. Dies sind jedoch nur Verallgemeinerungen. Dieselbe Jupiter-Periode kann völlig unterschiedlich aussehen, je nachdem, welches Haus Jupiter in Ihrem Horoskop besetzt und in welchem Zustand er sich befindet."
+        },
+        {
+          "heading": "Die Grundlagen der Dasha-Deutung",
+          "body": "Um ein Dasha zu deuten, prüfen Sie zunächst, wo der herrschende Planet im Geburtshoroskop steht, welche Häuser er beherrscht und ob er stark oder schwach ist. Das Dasha ist wie ein Zeitmesser, der anzeigt, wann die Konstellationen im Geburtshoroskop aktiv werden; die Periode selbst ist weder gut noch schlecht. Gehen Sie als Nächstes davon aus, dass die Themen der Häuser, die dieser Planet regiert (Ehe für das 7. Haus, Arbeit für das 10. Haus), während dieser Periode in den Vordergrund treten könnten. Schließlich lässt sich der zeitliche Rahmen durch die Einbeziehung der aktuellen Transite von Jupiter und Saturn weiter eingrenzen. Die Vorgehensweise zur zeitlichen Bestimmung von Ehe und Karriere wird ebenfalls in den entsprechenden Leitfäden behandelt."
+        },
+        {
+          "heading": "Dinge, die man beachten sollte",
+          "body": "Das Dasha zeigt die Qualität einer Periode an; es legt keine Ereignisse deterministisch fest. In derselben Saturn-Periode kann sich eine Person etablieren und Stärke aufbauen, während sich eine andere festgefahren fühlt. Das Jahr rund um den Wechsel von einer Hauptperiode zur nächsten wird üblicherweise als Übergangsphase gedeutet, in der sich der Einfluss beider Planeten vermischt. Eine Dasha-Tabelle kann automatisch anhand Ihres Geburtsdatums, Ihrer Geburtszeit und Ihres Geburtsortes berechnet werden. Die kostenlose Analyse auf dieser Website zeigt Ihre aktuelle Haupt- und Unterperiode; der vollständige Lebensbericht umfasst die komplette Dasha-Sequenz für Ihr Leben sowie eine Deutung jeder einzelnen Periode."
+        }
+      ]
+    },
+    {
+      "slug": "nakshatra",
+      "title": "Was sind Nakshatras? Die 27 Mondhäuser und wie Sie Ihr eigenes finden (Vedische Astrologie)",
+      "description": "Die 27 Nakshatras (Mondhäuser) der vedischen Astrologie (Jyotish): Wie sie sich von den 12 Tierkreiszeichen unterscheiden, ihre Verbindung zu Charakter und Dasha, eine vollständige Liste mit Herrscherplanet, Zeichen und Schlüsselwörtern sowie wie Sie Ihr eigenes Mond-Nakshatra kostenlos finden.",
+      "h1": "Was sind Nakshatras? Die 27 Mondhäuser",
+      "lead": "Nakshatras sind die „Häuser des Mondes“: die in 27 Teile unterteilte Bahn des Mondes. In der vedischen Astrologie ist das Mondhaus, in dem sich der Mond bei der Geburt befand, der zentrale Hinweis, um die inneren Tendenzen einer Person zu lesen. Das ist der Grund, warum zwei Menschen, die im selben Zeichen geboren sind, so unterschiedliche Eindrücke hinterlassen können, und es ist auch der Ausgangspunkt für die Berechnung der Dasha (planetare Perioden).",
+      "sections": [
+        {
+          "heading": "Wie sie sich von den 12 Tierkreiszeichen unterscheiden",
+          "body": "Die 12 Tierkreiszeichen unterteilen die Ekliptik in Segmente von 30 Grad; die Nakshatras unterteilen dieselbe Ekliptik in 27 Segmente von 13 Grad und 20 Minuten. Jedes Zeichen enthält daher zwei bis drei Mondhäuser. Wenn das Zeichen die Bühne ist, auf der sich ein Leben abspielt, dann kommt das Mondhaus eher der Rolle gleich, die darauf gespielt wird, und drückt ein feineres Temperament sowie gewohnheitsmäßige Reaktionen aus. Jedes Nakshatra ist nach einem tatsächlichen Stern oder einer Sterngruppe benannt, und jedes hat eine Gottheit, ein Symbol und einen Herrscherplaneten, die durch die Tradition festgelegt sind."
+        },
+        {
+          "heading": "Was das Mond-Nakshatra zeigt",
+          "body": "Was die vedische Astrologie am stärksten gewichtet, ist das Mondhaus, das der Mond im Moment der Geburt einnahm. Der Mond wird herangezogen, um zu zeigen, wie sich der Geist bewegt: was ihn beruhigt, was ihn aufwühlt, wann er erschöpft ist. Das Mondhaus differenziert diese inneren Tendenzen. Es ist nicht ungewöhnlich, dass jemand, der die westliche Beschreibung des Sonnenzeichens als etwas dürftig empfand, sagt, dass die Beschreibung des Mondhauses endlich Klick gemacht hat. Deutungen beziehen sich auch auf die Mondhäuser, die von den anderen Planeten und dem Aszendenten besetzt sind, aber das Wissen um Ihr Mond-Nakshatra ist der Einstieg."
+        },
+        {
+          "heading": "Nakshatras und die Dasha",
+          "body": "Jedes der 27 Mondhäuser ist einem der neun Planeten zugeordnet, und der Herrscher Ihres Mondhauses bei der Geburt wird zu Ihrer ersten Dasha (planetare Periode). Das Nakshatra beschreibt also nicht nur den Charakter; es ist der Ausgangspunkt für die Berechnung des Verlaufs der Lebensperioden. Wie man das Timing liest, wird im Dasha-Leitfaden behandelt."
+        },
+        {
+          "heading": "Die 27 Nakshatras (Herrscherplanet, Zeichen, Schlüsselwörter)",
+          "body": "Nachfolgend finden Sie die 27 Mondhäuser in der Reihenfolge der Ekliptik. Die Schlüsselwörter fassen die Eigenschaften zusammen, die jedem traditionell zugeschrieben werden, und sind lediglich ein Ausgangspunkt.",
+          "items": [
+            "Ashwini (Ketu / Widder) — Anfänge, Heilung",
+            "Bharani (Venus / Widder) — Halten, Ausdauer",
+            "Krittika (Sonne / Widder–Stier) — Durchdringen, Reinigung",
+            "Rohini (Mond / Stier) — Fürsorge, Fülle",
+            "Mrigashira (Mars / Stier–Zwillinge) — Suchen, Sensibilität",
+            "Ardra (Rahu / Zwillinge) — Sturm, Transformation",
+            "Punarvasu (Jupiter / Zwillinge–Krebs) — Erneuerung, Rückkehr",
+            "Pushya (Saturn / Krebs) — Nahrung, Vertrauen",
+            "Ashlesha (Merkur / Krebs) — Umschlingen, Einsicht",
+            "Magha (Ketu / Löwe) — Abstammung, Autorität",
+            "Purva Phalguni (Venus / Löwe) — Ruhe, Genuss",
+            "Uttara Phalguni (Sonne / Löwe–Jungfrau) — Verträge, Kooperation",
+            "Hasta (Mond / Jungfrau) — Handwerk, Geschicklichkeit",
+            "Chitra (Mars / Jungfrau–Waage) — Brillanz, Konstruktion",
+            "Swati (Rahu / Waage) — Unabhängigkeit, Flexibilität",
+            "Vishakha (Jupiter / Waage–Skorpion) — Zielstrebigkeit, Ehrgeiz",
+            "Anuradha (Saturn / Skorpion) — Hingabe, Freundschaft",
+            "Jyeshtha (Merkur / Skorpion) — Dienstalter, Verantwortung",
+            "Mula (Ketu / Schütze) — Wurzeln, Erforschung",
+            "Purva Ashadha (Venus / Schütze) — Sieg, Optimismus",
+            "Uttara Ashadha (Sonne / Schütze–Steinbock) — Beharrlichkeit, Leistung",
+            "Shravana (Mond / Steinbock) — Zuhören, Lernen",
+            "Dhanishta (Mars / Steinbock–Wassermann) — Reichtum, Rhythmus",
+            "Shatabhisha (Rahu / Wassermann) — Heilung, Geheimnisse",
+            "Purva Bhadrapada (Jupiter / Wassermann–Fische) — Intensität, Dualität",
+            "Uttara Bhadrapada (Saturn / Fische) — Tiefe, Stabilität",
+            "Revati (Merkur / Fische) — Führung, Vollendung"
+          ]
+        },
+        {
+          "heading": "Wie Sie Ihr Nakshatra finden",
+          "body": "Der Mond durchläuft ein Zeichen in etwa zweieinhalb Tagen und wechselt ungefähr einmal am Tag in ein neues Nakshatra. Das Geburtsdatum allein liefert also nur eine grobe Antwort, aber Menschen, die nahe der Grenze geboren sind, könnten ohne Geburtszeit und -ort im benachbarten Mondhaus landen. Geben Sie alle drei Daten ein, und das Mondhaus wird automatisch berechnet. Die kostenlose Deutung auf dieser Website berechnet Ihr Mondzeichen, Nakshatra und Ihren Aszendenten und erklärt in vollständigen Sätzen, was diese bedeuten."
+        },
+        {
+          "heading": "Dinge, die Sie beachten sollten",
+          "body": "Eine Beschreibung eines Mondhauses ist eine von 27 Verallgemeinerungen. In einer tatsächlichen Deutung werden die Position des Mondes innerhalb des Mondhauses, die Planeten, die sein Haus teilen, und seine Beziehung zum Aszendenten zusammen gelesen, sodass dasselbe Mondhaus einen ganz anderen Eindruck vermitteln kann. Kategorische Aussagen wie „dieses Mondhaus ist für die Ehe ungeeignet“, selbst wenn sie in traditionellen Texten vorkommen, sollten nicht direkt auf moderne Entscheidungen angewendet werden. Der nützlichste Weg, sie aufzufassen, ist als Vokabular zum Verständnis Ihrer eigenen Tendenzen."
+        }
+      ]
+    }
+  ]
+}
