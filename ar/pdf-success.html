@@ -168,7 +168,7 @@ window.LJ_I18N = {
       const email = localStorage.getItem('lj_user_email');
       const session = localStorage.getItem('lj_session');
       if (new URLSearchParams(location.search).get('pending') === '1') {
-        note.textContent = 'يتم معالجة الدفع. يرجى الانتظار قليلًا (تُطبَّق مدفوعات المتاجر بعد التأكيد).';
+        note.textContent = 'جاري معالجة دفعتك. يرجى الانتظار لحظة.';
       } else if (!email || !session) {
         note.innerHTML = 'لقراءة تقريرك، سجّل الدخول بالبريد الذي استخدمته عند الشراء. ادخل من <a href=\"/ar/mypage\">صفحة عضويتك</a>.';
       }

@@ -168,7 +168,7 @@ window.LJ_I18N = {
       const email = localStorage.getItem('lj_user_email');
       const session = localStorage.getItem('lj_session');
       if (new URLSearchParams(location.search).get('pending') === '1') {
-        note.textContent = 'Ihre Zahlung wird verarbeitet. Bitte warten Sie einen Moment (Zahlungen im Convenience Store werden nach Bestätigung angewendet).';
+        note.textContent = 'Ihre Zahlung wird verarbeitet. Bitte warten Sie einen Moment.';
       } else if (!email || !session) {
         note.innerHTML = 'Um Ihren Report zu lesen, melden Sie sich bitte mit der E-Mail-Adresse an, die Sie beim Kauf verwendet haben. Melden Sie sich über Ihre <a href=\"/de/mypage\">Mitgliederseite</a> an.';
       }

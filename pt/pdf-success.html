@@ -168,7 +168,7 @@ window.LJ_I18N = {
       const email = localStorage.getItem('lj_user_email');
       const session = localStorage.getItem('lj_session');
       if (new URLSearchParams(location.search).get('pending') === '1') {
-        note.textContent = 'Seu pagamento está sendo processado. Aguarde um momento (pagamentos em loja são aplicados após a confirmação).';
+        note.textContent = 'Seu pagamento está sendo processado. Por favor, aguarde um momento.';
       } else if (!email || !session) {
         note.innerHTML = 'Para ler o seu relatório, entre com o e-mail usado na compra. Entre pela sua <a href=\"/pt/mypage\">página de membro</a>.';
       }
