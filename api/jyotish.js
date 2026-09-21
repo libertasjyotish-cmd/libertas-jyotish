@@ -74,6 +74,26 @@ const AUTH_MAIL = {
     noreply: 'أُرسلت هذه الرسالة تلقائيًا، ولا تُتابَع الردود على هذا العنوان.',
     sendError: 'خطأ في إرسال البريد'
   },
+  fr: {
+    dir: 'ltr',
+    subject: '[Libertas Jyotish] Votre code de vérification',
+    heading: 'Vérification Libertas Jyotish',
+    thanks: 'Merci d\'utiliser Libertas Jyotish.',
+    lead: 'Voici votre code de vérification pour accéder à votre espace membre et associer cet appareil.',
+    expiry: 'Ce code est valable 10 minutes. S\'il a expiré, demandez-en un nouveau.',
+    noreply: 'Ce message a été envoyé automatiquement. Les réponses à cette adresse ne sont pas lues.',
+    sendError: 'Erreur d\'envoi de l\'e-mail'
+  },
+  de: {
+    dir: 'ltr',
+    subject: '[Libertas Jyotish] Ihr Bestätigungscode',
+    heading: 'Libertas Jyotish – Bestätigung',
+    thanks: 'Vielen Dank, dass Sie Libertas Jyotish nutzen.',
+    lead: 'Dies ist Ihr Bestätigungscode, um sich in Ihrem Mitgliederbereich anzumelden und dieses Gerät zu verknüpfen.',
+    expiry: 'Der Code ist 10 Minuten gültig. Ist er abgelaufen, fordern Sie bitte einen neuen an.',
+    noreply: 'Diese Nachricht wurde automatisch versendet. Antworten an diese Adresse werden nicht gelesen.',
+    sendError: 'Fehler beim E-Mail-Versand'
+  },
   id: {
     dir: 'ltr',
     subject: '[Libertas Jyotish] Kode verifikasi Anda',
@@ -557,7 +577,7 @@ function toJapaneseSign(sign) {
 
 // Gemini に指示する出力言語。ページの言語コードから引く。
 const OUTPUT_LANGUAGE = {
-  ja: 'Japanese', en: 'English', es: 'Spanish', pt: 'Portuguese', ar: 'Arabic', id: 'Indonesian'
+  ja: 'Japanese', en: 'English', es: 'Spanish', pt: 'Portuguese', ar: 'Arabic', id: 'Indonesian', fr: 'French', de: 'German'
 };
 
 // Prokerala のサンスクリット表記をいったん日本語（内部キー）に寄せ、表示言語の語彙に変換する。

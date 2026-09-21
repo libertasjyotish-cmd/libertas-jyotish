@@ -16,11 +16,13 @@ const LANGUAGE_HINTS = [
   ['pt', /português|portugues|portuguese/gi],
   ['ar', /العربية|عربي|arabic/gi],
   ['id', /bahasa(\s+indonesia)?|indonesian/gi],
+  ['fr', /fran[cç]ais|french|französisch|franc[eé]s|francês/gi],
+  ['de', /deutsch|german|allemand|alem[aá]n|alemão/gi],
   ['en', /english|inglés|ingles|inglês/gi]
 ];
 
 // 案内文の略号（EN / ES / PT / ID / JA / AR）。大文字の独立トークンのみ受け付ける（"es" 等の一般語との衝突回避）
-const LANGUAGE_CODE = /(?<![A-Za-z])(EN|ES|PT|ID|JA|AR)(?![A-Za-z])/;
+const LANGUAGE_CODE = /(?<![A-Za-z])(EN|ES|PT|ID|JA|AR|FR|DE)(?![A-Za-z])/;
 
 const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/;
 
