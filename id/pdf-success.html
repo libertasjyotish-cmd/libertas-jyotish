@@ -168,7 +168,7 @@ window.LJ_I18N = {
       const email = localStorage.getItem('lj_user_email');
       const session = localStorage.getItem('lj_session');
       if (new URLSearchParams(location.search).get('pending') === '1') {
-        note.textContent = 'Pembayaran sedang diproses. Mohon tunggu sebentar (pembayaran di minimarket diterapkan setelah dikonfirmasi).';
+        note.textContent = 'Pembayaran Anda sedang diproses. Mohon tunggu sebentar.';
       } else if (!email || !session) {
         note.innerHTML = 'Untuk membaca laporan Anda, masuklah dengan email yang digunakan saat pembelian. Masuk lewat <a href=\"/id/mypage\">halaman anggota</a> Anda.';
       }

@@ -168,7 +168,7 @@ window.LJ_I18N = {
       const email = localStorage.getItem('lj_user_email');
       const session = localStorage.getItem('lj_session');
       if (new URLSearchParams(location.search).get('pending') === '1') {
-        note.textContent = 'Votre paiement est en cours de traitement. Veuillez patienter un instant (les paiements en supérette sont appliqués une fois confirmés).';
+        note.textContent = 'Votre paiement est en cours de traitement. Veuillez patienter un instant.';
       } else if (!email || !session) {
         note.innerHTML = 'Pour lire votre rapport, veuillez vous connecter avec l\'adresse e-mail utilisée lors de l\'achat. Connectez-vous depuis votre <a href=\"/fr/mypage\">page membre</a>.';
       }
