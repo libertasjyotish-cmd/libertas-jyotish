@@ -12,6 +12,8 @@ const ACK = {
   es: { subject: '[Libertas Jyotish] Hemos recibido tu mensaje', body: 'Gracias por contactarnos. Responderemos en un plazo de 2 días hábiles. Este es un mensaje automático.', label: 'Tu mensaje' },
   pt: { subject: '[Libertas Jyotish] Recebemos sua mensagem', body: 'Obrigado pelo contato. Responderemos em até 2 dias úteis. Esta é uma confirmação automática.', label: 'Sua mensagem' },
   ar: { subject: '[Libertas Jyotish] تم استلام رسالتك', body: 'شكرًا لتواصلك معنا. سنرد خلال يومي عمل. هذه رسالة تأكيد آلية.', label: 'رسالتك' },
+  fr: { subject: '[Libertas Jyotish] Nous avons bien reçu votre message', body: 'Merci de nous avoir contactés. Nous vous répondrons sous 2 jours ouvrés. Ceci est une confirmation automatique.', label: 'Votre message' },
+  de: { subject: '[Libertas Jyotish] Wir haben Ihre Nachricht erhalten', body: 'Vielen Dank für Ihre Nachricht. Wir antworten innerhalb von 2 Werktagen. Dies ist eine automatische Bestätigung.', label: 'Ihre Nachricht' },
   id: { subject: '[Libertas Jyotish] Pesan Anda telah kami terima', body: 'Terima kasih telah menghubungi kami. Kami akan membalas dalam 2 hari kerja. Ini adalah konfirmasi otomatis.', label: 'Pesan Anda' }
 };
 

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Libertas Jyotish | Kostenlose vedische Astrologie-Analyse (Mondzeichen, Lagna, Dasha)</title>
+<meta name="description" content="Libertas Jyotish berechnet Ihr Mondzeichen (Rashi), Lagna (Aszendent) und Ihre Dasha-Perioden aus Ihrem Geburtsdatum, Ihrer Geburtszeit und Ihrem Geburtsort mithilfe der siderischen vedischen Astrologie. Kostenloses Reading sowie ein optionaler, lebenslanger vollständiger Bericht.">
+<!-- SNS共有カード（OGP / Twitter） -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Libertas Jyotish">
+<meta property="og:locale" content="de_DE">
+<meta property="og:title" content="Libertas Jyotish | Kostenlose vedische Astrologie-Analyse (Mondzeichen, Lagna, Dasha)">
+<meta property="og:description" content="Libertas Jyotish berechnet Ihr Mondzeichen (Rashi), Lagna (Aszendent) und Ihre Dasha-Perioden aus Ihrem Geburtsdatum, Ihrer Geburtszeit und Ihrem Geburtsort mithilfe der siderischen vedischen Astrologie. Kostenloses Reading sowie ein optionaler, lebenslanger vollständiger Bericht.">
+<meta property="og:url" content="https://www.libertas-jyotish.com/de">
+<meta property="og:image" content="https://www.libertas-jyotish.com/img/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
+<link rel="canonical" href="https://www.libertas-jyotish.com/de">
+<link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja">
+<link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en">
+<link rel="alternate" hreflang="es" href="https://www.libertas-jyotish.com/es">
+<link rel="alternate" hreflang="pt" href="https://www.libertas-jyotish.com/pt">
+<link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar">
+<link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id">
+<link rel="alternate" hreflang="fr" href="https://www.libertas-jyotish.com/fr">
+<link rel="alternate" hreflang="de" href="https://www.libertas-jyotish.com/de">
+<link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.libertas-jyotish.com/#org","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com/","logo":"https://www.libertas-jyotish.com/img/libertas-logo.png"},{"@type":"WebSite","@id":"https://www.libertas-jyotish.com/#website","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com/","publisher":{"@id":"https://www.libertas-jyotish.com/#org"},"inLanguage":"de"},{"@type":"WebPage","url":"https://www.libertas-jyotish.com/de","name":"Libertas Jyotish | Kostenlose vedische Astrologie-Analyse (Mondzeichen, Lagna, Dasha)","description":"Libertas Jyotish berechnet Ihr Mondzeichen (Rashi), Lagna (Aszendent) und Ihre Dasha-Perioden aus Ihrem Geburtsdatum, Ihrer Geburtszeit und Ihrem Geburtsort mithilfe der siderischen vedischen Astrologie. Kostenloses Reading sowie ein optionaler, lebenslanger vollständiger Bericht.","inLanguage":"de","isPartOf":{"@id":"https://www.libertas-jyotish.com/#website"}}]}</script>
+<!-- PWA & Theme Settings -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0c1a1f">
+<link rel="icon" type="image/png" href="/img/libertas-logo.png">
+<link rel="apple-touch-icon" href="/img/libertas-logo.png">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+
+
+<style>
+:root {
+--color-gold-light: #FDE047;
+--color-gold-main: #D4AF37;
+--color-gold-dark: #8B6B1B;
+--color-text-dark: #2C221E;
+--font-en: 'Cinzel', serif;
+--font-ja: 'Noto Serif', serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+font-family: var(--font-ja);
+color: var(--color-text-dark);
+line-height: 1.8;
+min-height: 100vh;
+overflow-x: hidden;
+background-color: #0c1a1f;
+display: flex; flex-direction: column;
+}
+
+.site-header {
+position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+background: rgba(12, 26, 31, 0.92);
+backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+border-bottom: 1px solid rgba(139, 107, 27, 0.3);
+padding: 12px 20px;
+display: flex; justify-content: space-between; align-items: center;
+}
+
+.header-logo {
+display: flex; align-items: center; gap: 10px;
+text-decoration: none; color: var(--color-gold-main);
+font-family: var(--font-en); font-weight: 600; font-size: 1.05rem;
+}
+.header-logo img { width: 32px; height: 32px; }
+
+.header-nav { display: flex; gap: 18px; align-items: center; }
+.header-nav a { color: #E2D9CE; text-decoration: none; font-size: 0.82rem; transition: color 0.3s; }
+.header-nav a:hover { color: var(--color-gold-main); }
+
+.nav-btn-member {
+border: 1px solid var(--color-gold-main);
+color: var(--color-gold-main) !important;
+padding: 4px 12px; border-radius: 4px;
+background: rgba(212, 175, 55, 0.1);
+}
+
+.hero-section {
+position: relative; flex: 1;
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+padding: 100px 20px 60px;
+background-image: linear-gradient(rgba(12, 26, 31, 0.45), rgba(12, 26, 31, 0.45)), url("/img/bg-jyotish.jpg");background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed;
+}
+
+/* 羊皮紙カード質感 */
+.hero-container {
+position: relative; z-index: 2; width: 100%; max-width: 680px;
+background-image:
+radial-gradient(circle at 50% 25%, rgba(255, 253, 245, 0.98) 0%, rgba(245, 233, 208, 0.95) 55%, rgba(220, 200, 162, 0.96) 100%),
+linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.05) 100%);
+background-blend-mode: overlay, normal;
+backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+border-radius: 14px;
+border: 1px solid rgba(184, 142, 60, 0.65);
+outline: 1px solid rgba(212, 175, 55, 0.35); outline-offset: -7px;
+box-shadow:
+0 25px 50px -12px rgba(0, 0, 0, 0.75),
+0 0 20px rgba(212, 175, 55, 0.18),
+inset 0 0 35px rgba(139, 90, 43, 0.28),
+inset 0 2px 4px rgba(255, 255, 255, 0.8);
+padding:45px 35px 40px; text-align: center; margin-bottom: 40px;
+}
+
+.logo-wrapper { margin-bottom: 12px; }
+.logo-img { width: 95px; height: auto; filter: drop-shadow(0px 3px 6px rgba(139, 107, 27, 0.35)); }
+
+.badge {
+display: inline-block; font-family: var(--font-en); font-size: 0.8rem; letter-spacing: 0.25em;
+color: var(--color-gold-dark); border: 1px solid rgba(139, 107, 27, 0.4); background: rgba(212, 175, 55, 0.12);
+padding: 4px 16px; border-radius: 50px; margin-bottom: 16px; text-transform: uppercase;
+box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.main-title { font-size: 1.85rem; font-weight: 600; color: var(--color-text-dark); letter-spacing: 0.05em; line-height: 1.5; margin-bottom: 10px; }
+.main-description { font-size: 0.92rem; color: #5A4E48; margin-bottom: 30px; }
+
+.form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 25px; text-align: left; }
+.form-group { display: flex; flex-direction: column; }
+.form-group.full-width { grid-column: span 2; }
+
+label { font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px; }
+.label-note { font-size: 0.72rem; font-weight: normal; color: #7a6a58; margin-left: 4px; }
+
+input[type="text"], input[type="email"], input[type="date"], input[type="time"] {
+width: 100%; padding: 11px 14px;
+background-color: rgba(255, 252, 245, 0.85);
+border: 1px solid rgba(139, 107, 27, 0.4); border-radius: 8px;
+font-family: inherit; font-size: 0.9rem; color: var(--color-text-dark); outline: none; transition: all 0.3s ease;
+box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.12);
+}
+input[type="text"]:focus, input[type="email"]:focus, input[type="date"]:focus, input[type="time"]:focus {
+border-color: var(--color-gold-dark);
+box-shadow: inset 0 2px 4px rgba(112, 76, 32, 0.15), 0 0 8px rgba(212, 175, 55, 0.3);
+background-color: #FFFDF9;
+}
+
+.submit-btn {
+width: 100%; padding: 15px 28px; font-size: 1.05rem; font-weight: 600; font-family: var(--font-ja); color: #FFFDF9;
+background: linear-gradient(135deg, #C59B27 0%, var(--color-gold-dark) 100%); border: none; border-radius: 8px; cursor: pointer;
+box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.2s;
+}
+.submit-btn:hover { transform: translateY(-1px); }
+
+/* 有料会員登録枠（Gumroad導線） */
+.paid-member-box {
+margin-top: 30px; padding: 22px 18px;
+background: linear-gradient(135deg, rgba(253, 246, 226, 0.55) 0%, rgba(243, 230, 196, 0.45) 100%);
+border: 1px solid rgba(139, 107, 27, 0.4);
+border-radius: 10px; text-align: center;
+}
+.paid-member-box.bottom-box {
+margin-top: 35px;
+background: linear-gradient(135deg, rgba(253, 247, 229, 0.6) 0%, rgba(242, 228, 192, 0.5) 100%);
+border: 1px solid rgba(139, 107, 27, 0.5);
+}
+.paid-member-title { font-size: 1rem; font-weight: 700; color: var(--color-gold-dark); margin-bottom: 6px; }
+.paid-member-desc { font-size: 0.82rem; color: #5A4E48; margin-bottom: 14px; line-height: 1.6; }
+.paid-member-price { font-size: 0.95rem; font-weight: 700; color: var(--color-gold-dark); margin-bottom: 12px; line-height: 1.5; }
+.paid-member-price:empty { display: none; }
+.paid-member-btn {
+display: inline-block; width: 100%; max-width: 380px; padding: 13px 20px;
+background: linear-gradient(135deg, #8B6B1B 0%, #5C450E 100%);
+color: #FFFDF9; text-decoration: none; font-weight: 600; font-size: 0.92rem;
+border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.2s; cursor: pointer; border: none;
+}
+.paid-member-btn:hover { background: linear-gradient(135deg, #A37E20 0%, #6E5311 100%); transform: translateY(-1px); }
+
+.member-portal-box {
+margin-top: 20px; padding-top: 18px;
+border-top: 1px dashed rgba(139, 107, 27, 0.35); text-align: center;
+}
+.member-portal-title { font-size: 0.88rem; font-weight: 600; color: var(--color-gold-dark); margin-bottom: 8px; }
+.member-links { display: flex; justify-content: center; gap: 15px; font-size: 0.8rem; }
+.member-links a { color: var(--color-gold-dark); text-decoration: underline; font-weight: 600; }
+
+/* サイト詳細・説明セクション */
+.about-section {
+width: 100%; max-width: 680px;
+background-image: radial-gradient(circle at 50% 30%, rgba(255, 253, 248, 0.97) 0%, rgba(243, 234, 214, 0.95) 100%);
+border-radius: 14px; border: 1px solid rgba(184, 142, 60, 0.5); outline: 1px solid rgba(212, 175, 55, 0.3); outline-offset: -6px;
+box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 0 25px rgba(139, 90, 43, 0.2);
+padding: 40px 35px; margin-bottom: 30px; color: var(--color-text-dark);
+}
+.about-header { text-align: center; border-bottom: 1px solid rgba(139, 107, 27, 0.3); padding-bottom: 18px; margin-bottom: 25px; }
+.about-header-sub { font-family: var(--font-en); font-size: 0.82rem; letter-spacing: 0.2em; color: var(--color-gold-dark); text-transform: uppercase; margin-bottom: 6px; }
+.about-title { font-size: 1.35rem; font-weight: 700; color: var(--color-gold-dark); line-height: 1.4; }
+
+.about-lead {
+font-size: 0.95rem; font-weight: 600; color: #3D322C; line-height: 1.8; margin-bottom: 20px;
+text-align: center; background: rgba(212, 175, 55, 0.08); padding: 15px 18px; border-radius: 8px;
+border: 1px solid rgba(139, 107, 27, 0.2);
+}
+
+.about-content p { font-size: 0.88rem; line-height: 1.9; margin-bottom: 16px; color: #4a3e36; text-align: justify; }
+
+.about-h3 {
+font-size: 1.05rem; font-weight: 700; color: var(--color-gold-dark);
+margin: 28px 0 12px; padding-left: 12px; border-left: 3px solid var(--color-gold-dark);
+line-height: 1.5;
+}
+
+.about-card {
+background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(139, 107, 27, 0.25);
+border-radius: 8px; padding: 16px; margin-bottom: 16px; font-size: 0.88rem;
+}
+.about-card-title { font-weight: 700; color: #3D322C; margin-bottom: 6px; }
+
+/* 長い説明文を章ごとのブロックに区切り、交互の背景色で読みやすくする */
+.about-block {
+background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(139, 107, 27, 0.18);
+border-radius: 10px; padding: 6px 18px 2px; margin-bottom: 20px;
+}
+.about-block.alt { background: rgba(212, 175, 55, 0.09); }
+.guide-links ul { list-style: none; padding: 0 0 12px; margin: 0; }
+.guide-links li { padding: 7px 0; border-bottom: 1px solid rgba(139, 107, 27, 0.18); font-size: 0.9rem; }
+.guide-links li:last-child { border-bottom: none; }
+.guide-links a { color: var(--color-gold-dark); text-decoration: none; }
+.guide-links a:hover { text-decoration: underline; }
+.guide-links-more { text-align: right; font-size: 0.85rem; }
+.about-block .about-h3 { margin-top: 18px; }
+.about-cta {
+text-align: center; margin-top: 30px; padding: 18px 16px;
+font-weight: 700; color: var(--color-gold-dark); font-size: 1.02rem; line-height: 1.8;
+background: rgba(212, 175, 55, 0.12); border: 1px solid rgba(139, 107, 27, 0.3); border-radius: 10px;
+}
+
+/* トップのリード文（キャッチ＋解説）を囲って視線を止める */
+.lead-block {
+text-align: left; margin: 0 0 24px; padding: 18px 18px 14px;
+background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(139, 107, 27, 0.28);
+border-radius: 10px;
+}
+.lead-catch {
+font-size: 1.02rem; font-weight: 700; color: var(--color-gold-dark);
+line-height: 1.6; margin-bottom: 10px; text-align: center;
+}
+.lead-body { font-size: 0.87rem; line-height: 1.9; color: #4a3e36; text-align: justify; }
+.lead-cta { font-weight: 600; color: #3D322C; }
+
+.site-footer {
+width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3);
+padding: 24px 20px; text-align: center; position: relative; z-index: 10;
+}
+.footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 12px; flex-wrap: wrap; }
+.footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
+.lang-switch { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+.lang-link {
+display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+color: #E2D9CE; font-size: 0.78rem; letter-spacing: 0.06em;
+border: 1px solid rgba(139, 107, 27, 0.35); border-radius: 50px; padding: 4px 12px;
+transition: color 0.3s, border-color 0.3s;
+}
+.lang-link:hover { color: var(--color-gold-main); border-color: var(--color-gold-main); }
+.lang-link.is-current { color: var(--color-gold-main); border-color: var(--color-gold-main); background: rgba(212, 175, 55, 0.12); }
+.lang-globe { width: 20px; height: 20px; display: block; opacity: 0.85; }
+.lang-link:hover .lang-globe, .lang-link.is-current .lang-globe { opacity: 1; }
+.copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); }
+
+@media (max-width: 640px) {
+.form-grid { grid-template-columns: 1fr; }
+.form-group.full-width { grid-column: span 1; }
+.about-section { padding: 28px 20px; }
+}
+</style>
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/parchment.css">
+<link rel="stylesheet" href="/css/rtl.css">
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'de',
+  menu: {
+    top: 'Startseite',
+    free: 'Kostenlose Analyse',
+    about: 'Über Libertas Jyotish',
+    report: 'Lebensbericht (einmalig)',
+    calendar: 'Jährlicher Glückskalender',
+    calendarNote: 'bald verfügbar',
+    mypage: 'Mitgliederbereich',
+    legal: 'Impressum und AGB',
+    contact: 'Kontaktieren Sie uns',
+    toggleLabel: 'Menü',
+    navLabel: 'Seitenmenü'
+  },
+  price: {
+    premium: '{price} / Monat (inkl. MwSt.)',
+    pdf: '{price} einmalig (inkl. MwSt.)',
+    premiumApprox: 'Etwa {price} / Monat (inkl. MwSt.) — der endgültige Betrag wird an der Kasse angezeigt',
+    pdfApprox: 'Etwa {price} einmalig (inkl. MwSt.) — der endgültige Betrag wird an der Kasse angezeigt',
+    checkoutOnly: 'Der Betrag in Ihrer Landeswährung wird an der Kasse angezeigt',
+    unavailable: 'Der monatliche Premium-Plan ist noch nicht im Angebot — die Online-Zahlung wird derzeit vorbereitet. Der PDF-Bericht ist ab sofort verfügbar.'
+  },
+  playError: 'Der Kauf über Google Play konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.',
+  playManage: 'In der App gekaufte Abonnements werden in Google Play → Abonnements verwaltet (Kündigung, Zahlungsmethode). Jetzt öffnen?'
+};
+</script>
+<script defer src="/js/site-menu.js"></script>
+<script src="/js/checkout-links.js"></script>
+<script src="/js/play-billing.js"></script>
+<script src="/js/checkout-guard.js"></script>
+</head>
+<body>
+
+<header class="site-header" data-site-header></header>
+
+<section class="hero-section">
+<!-- 上部：診断フォーム ＆ 有料会員入口（1箇所目） -->
+<div class="hero-container" id="form-area">
+<div class="logo-wrapper"><img src="/img/libertas-logo.png" alt="Logo" class="logo-img"></div>
+
+<span class="badge">Libertas Jyotish</span>
+<h1 class="main-title">Libertas Jyotish<br><span style="font-size: 1.15rem; line-height: 1.7; display: block; margin-top: 8px;">Jyotish, die seit der Antike überlieferte Weisheit, liest das in den Sternen geschriebene Schicksal und befreit Ihr wahres Ich</span></h1>
+<p class="main-description">Ein umfassender persönlicher Analyse-Service, der den Bauplan Ihrer Seele (Ihr Kundali) nach der siderischen Methode des alten Indiens berechnet und interpretiert.</p>
+
+<div class="lead-block">
+<p class="lead-catch">Ihre verborgenen Instinkte könnten zu einem anderen Sternzeichen gehören.</p>
+<p class="lead-body">Wussten Sie, dass die westliche Astrologie immer noch an den Positionen der Sterne von vor 2.000 Jahren festhält? Aufgrund der Neigung der Erdachse (Präzession) sind die Kalenderzeichen um etwa 24 Grad vom tatsächlichen Himmel abgewichen. Die vedische Astrologie liest die tatsächlichen Positionen der Sterne, die Sie heute Nacht durch ein Teleskop sehen würden. Die Entdeckung Ihres wahren Zeichens rückt Ihr Unbewusstes, Ihre Instinkte, Talente und Ihr Schicksal – und jedes Gefühl, dass etwas nie ganz gepasst hat – in den Fokus.</p>
+</div>
+
+<p class="main-description lead-cta">Geben Sie Ihre Geburtsdaten ein und lassen Sie uns Ihr astronomisch genaues, wahres Sternzeichen berechnen.</p>
+
+<form id="jyotish-form"><div class="form-grid">
+<div class="form-group full-width">
+<label for="user-email">E-Mail-Adresse <span class="label-note">(wird verwendet, um Ihre Analyse zu speichern und mit Ihrer Mitgliederseite zu verknüpfen)</span></label>
+<input type="email" id="user-email" placeholder="example@gmail.com" required>
+</div>
+
+<div class="form-group">
+<label for="birth-date">Geburtsdatum</label>
+<input type="date" id="birth-date" required>
+</div>
+<div class="form-group">
+<label for="birth-time">Geburtszeit <span class="label-note">(falls unbekannt, 12:00 eingeben)</span></label>
+<input type="time" id="birth-time">
+</div>
+<div class="form-group full-width">
+<label for="birth-place">Geburtsort (Stadt, Region)</label>
+<input type="text" id="birth-place" placeholder="z. B. London, Vereinigtes Königreich" required>
+</div>
+</div>
+
+<button type="submit" class="submit-btn" id="btn-submit">
+<span>Den Bauplan meines Schicksals enthüllen</span>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</button></form>
+
+<!-- 有料プレミアム会員登録枠（上部・1箇所目） -->
+<div class="paid-member-box">
+<div class="paid-member-title">🌟 Über den Premium-Plan</div>
+<p class="paid-member-desc">Schalten Sie alle Funktionen der vollständigen Analyse frei: detaillierte Dasha-Zeitprognosen, ein präzises Horoskop, empfohlene Heilmittel und mehr.</p>
+<p class="paid-member-price" data-price-label="premium"></p>
+<p class="paid-member-desc" style="font-size:0.78rem;">Bitte ändern Sie die E-Mail-Adresse auf der Kassenseite nicht. Sie ist der Schlüssel, mit dem wir Ihren Kauf mit Ihrem Konto verknüpfen.</p>
+<button type="button" class="paid-member-btn btn-upgrade-premium">Premium beitreten (Anmeldung und Zahlung)</button>
+</div>
+
+<div class="member-portal-box">
+<div class="member-portal-title">🔑 Haben Sie bereits eine Analyse erhalten oder sind Sie Premium-Mitglied?</div>
+<div class="member-links">
+<a href="/de/mypage">Login zur Mitgliederseite</a>
+</div>
+</div>
+</div>
+
+<!-- 中部：サイト詳細・説明セクション -->
+<div class="about-section" id="about">
+<div class="about-header">
+<div class="about-header-sub">LIBERTAS JYOTISH</div>
+<h2 class="about-title">Damit Sie Ihr eigenes Leben frei gestalten können, anstatt an das Schicksal gebunden zu sein.</h2>
+</div>
+
+<div class="about-content">
+<div class="about-lead">
+Ihr eigener kosmischer Bauplan, enthüllt mit höchster astronomischer Präzision
+</div>
+
+<p>Hat das Sonnenzeichen der westlichen Astrologie jemals alles über Ihr kompliziertes Leben erklärt?<br>
+Wenn gewöhnliche Horoskope Sie immer vage unzufrieden zurückgelassen haben, gibt es dafür einen klaren Grund: Sie spiegeln nicht die tatsächlichen Positionen der Planeten am heutigen Nachthimmel wider.</p>
+
+<p><strong>LIBERTAS JYOTISH</strong>ist ein Analyse-Service, der die astrologische Weisheit, die aus den Veden, den heiligen Texten des alten Indiens, stammt, mit den präzisen Berechnungen der modernen Astronomie verbindet. Wie der Name Libertas (Freiheit) andeutet, existiert er nicht, um Sie an Fatalismus zu binden, sondern um Ihnen zu helfen, durch echtes Wissen über die Sterne die Souveränität über Ihr eigenes Leben zurückzugewinnen.</p>
+
+<div class="about-block">
+<h3 class="about-h3">1. Der entscheidende Unterschied zur westlichen Astrologie: die siderische Methode, ausgerichtet auf den realen Weltraum</h3>
+<p>Der größte Unterschied zwischen der westlichen Astrologie und der vedischen Astrologie (Jyotish) liegt darin, wie die Ekliptik – die Bahn der Sterne – berechnet wird.</p>
+
+<div class="about-card">
+<div class="about-card-title">■ Westliche Astrologie (tropische Methode)</div>
+<p style="margin-bottom:0;">Berechnet ab dem Frühlingsäquinoktium von vor etwa 2.000 Jahren, fixiert auf den Zyklus der Jahreszeiten.</p>
+</div>
+
+<div class="about-card">
+<div class="about-card-title">■ Vedische Astrologie (siderische Methode)</div>
+<p style="margin-bottom:0;">Korrigiert die durch die Neigung der Erdachse verursachte Abweichung (Präzession) bis auf die kleinste Einheit und berechnet anhand der tatsächlichen Positionen der Planeten am heutigen Nachthimmel.</p>
+</div>
+
+</div>
+
+<div class="about-block alt">
+<h3 class="about-h3">2. Drei spezialisierte Deutungssysteme hinter der Präzision</h3>
+
+<div class="about-card">
+<div class="about-card-title">① Die 27 Mondhäuser, die Nakshatras</div>
+<p style="margin-bottom:0;">Die 27 Mondhäuser, die die Bahn des Mondes unterteilen. Feiner als die zwölf Tierkreiszeichen offenbaren sie innere Tendenzen, die sich selbst innerhalb eines Zeichens unterscheiden, und markieren den Ausgangspunkt Ihres Dasha.</p>
+</div>
+
+<div class="about-card">
+<div class="about-card-title">② Vimshottari Dasha, die präzise Zeitlinie Ihres Lebens</div>
+<p style="margin-bottom:0;">Das eigene Timing-System der vedischen Astrologie: Ausgehend vom Nakshatra des Mondes bei der Geburt unterteilt es das Leben in planetare Perioden und zeigt, wann es Zeit zum Handeln ist.</p>
+</div>
+
+<div class="about-card">
+<div class="about-card-title">③ Lagna, welches das Gefäß Ihrer Seele definiert</div>
+<p style="margin-bottom:0;">Aus Ihrer Geburtszeit und den Koordinaten Ihres Geburtsortes berechnen wir das Zeichen, das in diesem Moment am östlichen Horizont aufsteigt. Dies wird zum ersten Haus, von dem aus die zwölf Häuser und neun Planeten gelesen werden.</p>
+</div>
+
+</div>
+
+<div class="about-block">
+<h3 class="about-h3">3. Berechnungsgenauigkeit und Heilmittel</h3>
+<p>Unsere Berechnungs-Engine basiert auf der astronomischen Standardbibliothek (Swiss Ephemeris-konform) und korrigiert historische Zeitzonenänderungen, Sommerzeit und die Koordinaten Ihres Geburtsortes. Wir liefern nur das, was aus den Platzierungen in Ihrem eigenen Horoskop gelesen wird — niemals recycelte Texte.</p>
+<p>Wir beziehen auch vedische Heilmittel (Upaya) ein — Mantras, Farben und ayurvedische Anpassungen an Ihre Konstitution —, um planetaren Druck zu lindern, sodass das Reading Ihnen konkrete nächste Schritte statt nur Worte bietet.</p>
+
+</div>
+
+
+
+<div class="about-cta">
+Sind Sie bereit, Ihre wahre Position zwischen den Sternen zu entschlüsseln?<br>
+Geben Sie Ihre Geburtsdaten ein und erhalten Sie den authentischen Wegweiser, den LIBERTAS JYOTISH nur für Sie offenbart.
+</div>
+
+<!-- 有料プレミアム会員登録枠（下部・2箇所目） -->
+<div class="paid-member-box bottom-box">
+<div class="paid-member-title">🌟 Werden Sie Premium-Mitglied und schalten Sie das vollständige Reading frei</div>
+<p class="paid-member-desc">Vielen Dank, dass Sie bis hierhin gelesen haben. Erhalten Sie jetzt Ihr präzises Horoskop, Ihre Dasha-Timing-Prognose und persönliche Heilmittel.</p>
+<p class="paid-member-price" data-price-label="premium"></p>
+<p class="paid-member-desc" style="font-size:0.78rem;">Bitte ändern Sie die E-Mail-Adresse auf der Kassenseite nicht. Sie ist der Schlüssel, mit dem wir Ihren Kauf mit Ihrem Konto verknüpfen.</p>
+<button type="button" class="paid-member-btn btn-upgrade-premium">Premium beitreten (Anmeldung und Zahlung)</button>
+</div>
+</div>
+</div>
+</section>
+
+<footer class="site-footer">
+<div class="footer-links"><a href="/de/legal">Impressum</a>
+<a href="/de/legal#terms">Nutzungsbedingungen</a>
+<a href="/de/legal#privacy">Datenschutzerklärung</a>
+<a href="/de/legal#refund">Rückerstattungsrichtlinien</a>
+<a href="/de/contact">Kontakt</a></div>
+<nav class="lang-switch" aria-label="Language">
+<a class="lang-link" href="/ja" hreflang="ja" lang="ja" title="日本語" aria-label="日本語"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">日本語</span></a>
+<a class="lang-link" href="/en" hreflang="en" lang="en" title="English" aria-label="English"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">English</span></a>
+<a class="lang-link" href="/es" hreflang="es" lang="es" title="Español" aria-label="Español"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">Español</span></a>
+<a class="lang-link" href="/pt" hreflang="pt" lang="pt" title="Português" aria-label="Português"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">Português</span></a>
+<a class="lang-link" href="/ar" hreflang="ar" lang="ar" title="العربية" aria-label="العربية"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">العربية</span></a>
+<a class="lang-link" href="/id" hreflang="id" lang="id" title="Bahasa Indonesia" aria-label="Bahasa Indonesia"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">Indonesia</span></a>
+<a class="lang-link" href="/fr" hreflang="fr" lang="fr" title="Français" aria-label="Français"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">Français</span></a>
+<a class="lang-link is-current" href="/de" hreflang="de" lang="de" title="Deutsch" aria-label="Deutsch"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">Deutsch</span></a>
+</nav>
+<p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+</footer>
+
+<script>
+    // ★重要：アプリのメジャーアップデート時にブラウザの古い・壊れたキャッシュを安全に強制破棄するバージョンロック
+    const LJ_APP_VERSION = 'v12'
+    const currentVersion = localStorage.getItem('lj_app_version');
+    if (currentVersion !== LJ_APP_VERSION) {
+      const email = localStorage.getItem('lj_user_email') || localStorage.getItem('email');
+      localStorage.clear();
+      sessionStorage.clear();
+      if (email) localStorage.setItem('lj_user_email', email);
+      localStorage.setItem('lj_app_version', LJ_APP_VERSION);
+      location.reload();
+    }
+
+    if ('serviceWorker' in navigator) {
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        refreshing = true;
+        window.location.reload();
+      });
+    }
+
+// Gumroad 決済リンク直接遷移。本人確認が済んでいない場合はマイページの認証へ回す。
+function openCheckout() {
+  const hint = document.getElementById('user-email')?.value.trim() ||
+               localStorage.getItem('lj_user_email') || '';
+  window.LJCheckoutGuard.start('premium', 'de', hint);
+}
+
+document.querySelectorAll('.btn-upgrade-premium').forEach(btn => {
+  btn.addEventListener('click', openCheckout);
+});
+
+const form = document.getElementById('jyotish-form');
+form.addEventListener('submit', async (e) => {
+e.preventDefault();
+
+const email = document.getElementById('user-email').value.trim();
+const birthDate = document.getElementById('birth-date').value;
+const timeVal = document.getElementById('birth-time').value || "12:00";
+const birthPlace = document.getElementById('birth-place').value;
+
+const isoDatetime = `${birthDate}T${timeVal.length === 5 ? timeVal + ':00' : timeVal}+09:00`;
+
+localStorage.setItem('lj_user_email', email);
+localStorage.setItem('city', birthPlace);
+localStorage.setItem('dob', birthDate);
+localStorage.setItem('tob', timeVal);
+
+// jyotish_userキャッシュオブジェクトの事前構築
+const userData = {
+  email: email,
+  dob: birthDate,
+  tob: timeVal,
+  city: birthPlace,
+  language: 'de',
+  status: 'free',
+  lastResult: null
+};
+localStorage.setItem('jyotish_user', JSON.stringify(userData));
+
+const payload = {
+action: 'diagnosis',
+email: email,
+address: birthPlace,
+datetime: isoDatetime,
+city: birthPlace,
+dob: birthDate,
+tob: timeVal,
+status: 'free',
+language: 'de',
+tz: Intl.DateTimeFormat().resolvedOptions().timeZone
+};
+
+sessionStorage.removeItem('lj_diagnosis_result');
+sessionStorage.setItem('lj_user_input', JSON.stringify(payload));
+// ★超堅牢化：キャッシュクリアで道連れに消去されないよう、localStorageにも「絶対バックアップ」を二重保存！
+localStorage.setItem('lj_user_input_backup', JSON.stringify(payload));
+
+window.location.href = '/de/result';
+});
+
+if ('serviceWorker' in navigator) {
+window.addEventListener('load', () => {
+navigator.serviceWorker.register('/sw.js').catch(err => console.log(err));
+});
+}
+</script>
+</body>
+</html>

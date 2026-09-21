@@ -3,7 +3,7 @@
 (function () {
   // 公開済みの言語ディレクトリのみを列挙する。
   // 新しい言語を公開したらここに追加すれば自動判定に載る。
-  var AVAILABLE_LANGS = ['ja', 'en', 'es', 'pt', 'ar', 'id'];
+  var AVAILABLE_LANGS = ['ja', 'en', 'es', 'pt', 'ar', 'id', 'fr', 'de'];
   // どの判定でも決まらなかった場合の受け皿。
   var OTHER_LANG = 'en';
   // 国が取れたときの行き先。ここに無い国は OTHER_LANG。
@@ -16,7 +16,9 @@
     CR: 'es', PA: 'es', UY: 'es', GQ: 'es',
     SA: 'ar', AE: 'ar', EG: 'ar', DZ: 'ar', MA: 'ar', IQ: 'ar', SD: 'ar', SY: 'ar',
     YE: 'ar', TN: 'ar', JO: 'ar', LY: 'ar', LB: 'ar', PS: 'ar', OM: 'ar', KW: 'ar',
-    MR: 'ar', QA: 'ar', BH: 'ar', DJ: 'ar', SO: 'ar', KM: 'ar'
+    MR: 'ar', QA: 'ar', BH: 'ar', DJ: 'ar', SO: 'ar', KM: 'ar',
+    FR: 'fr', MC: 'fr', SN: 'fr', CI: 'fr', CM: 'fr', ML: 'fr', BF: 'fr', NE: 'fr', TG: 'fr', BJ: 'fr', GA: 'fr', CG: 'fr', CD: 'fr', MG: 'fr', HT: 'fr', GN: 'fr',
+    DE: 'de', AT: 'de', LI: 'de'
   };
 
   // /pdf-success → /pdf-success、/ → 空文字。cleanUrls のため拡張子は除去する。

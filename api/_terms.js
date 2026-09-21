@@ -10,7 +10,9 @@ const OUTPUT_LANGUAGE = {
   es: 'Spanish (español)',
   pt: 'Portuguese (português)',
   ar: 'Arabic (العربية)',
-  id: 'Indonesian (Bahasa Indonesia)'
+  id: 'Indonesian (Bahasa Indonesia)',
+  fr: 'French (français)',
+  de: 'German (Deutsch)'
 };
 
 const REASON_JA = {
@@ -26,7 +28,7 @@ const REASON_JA = {
 };
 
 
-const SUPPORTED_LANGS = ['ja', 'en', 'es', 'pt', 'ar', 'id'];
+const SUPPORTED_LANGS = ['ja', 'en', 'es', 'pt', 'ar', 'id', 'fr', 'de'];
 
 // 語彙ファイルが無い言語は英語で表示する（require を静的に並べ、欠けていても落とさない）
 function load(require_) {
@@ -42,7 +44,9 @@ const VOCAB = {
   es: load(() => require('./_texts/terms/es')),
   pt: load(() => require('./_texts/terms/pt')),
   ar: load(() => require('./_texts/terms/ar')),
-  id: load(() => require('./_texts/terms/id'))
+  id: load(() => require('./_texts/terms/id')),
+  fr: load(() => require('./_texts/terms/fr')),
+  de: load(() => require('./_texts/terms/de'))
 };
 
 // 対応外の値は日本語に倒す（言語は表示・生成にのみ影響し、計算値は変えない）

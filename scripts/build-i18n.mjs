@@ -49,7 +49,9 @@ const LANG_SWITCH = [
   { lang: 'es', label: 'Español', title: 'Español' },
   { lang: 'pt', label: 'Português', title: 'Português' },
   { lang: 'ar', label: 'العربية', title: 'العربية' },
-  { lang: 'id', label: 'Indonesia', title: 'Bahasa Indonesia' }
+  { lang: 'id', label: 'Indonesia', title: 'Bahasa Indonesia' },
+  { lang: 'fr', label: 'Français', title: 'Français' },
+  { lang: 'de', label: 'Deutsch', title: 'Deutsch' }
 ];
 
 // index.html は言語ディレクトリ自体（/ja）を指す。

@@ -3,7 +3,7 @@ const FROM = process.env.ETSY_MAIL_FROM || 'Libertas Jyotish <info@libertas-jyot
 const OWNER = process.env.ETSY_OWNER_EMAIL || 'info@libertas-jyotish.com';
 const { LINK_TTL_DAYS } = require('./_etsy-storage');
 
-const LANGUAGE_NAMES = { en: 'English', ja: '日本語 (Japanese)', es: 'Español', pt: 'Português', ar: 'العربية (Arabic)', id: 'Bahasa Indonesia' };
+const LANGUAGE_NAMES = { en: 'English', ja: '日本語 (Japanese)', es: 'Español', pt: 'Português', ar: 'العربية (Arabic)', id: 'Bahasa Indonesia', fr: 'Français', de: 'Deutsch' };
 
 function esc(v) {
   return String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
