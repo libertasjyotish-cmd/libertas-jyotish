@@ -215,7 +215,7 @@ module.exports = async function handler(req, res) {
         }
       } catch (mailErr) {
         console.error("Mail send error:", mailErr);
-        return res.status(400).json({ error: `${mailText.sendError}: ${mailErr.message}` });
+        return res.status(400).json({ error: mailText.sendError });
       }
 
       return res.status(200).json({ status: 'success', token: securityToken });
