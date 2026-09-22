@@ -1055,5 +1055,8 @@ module.exports = {
   toJapaneseSign,
   toJapaneseNakshatra,
   nakshatraFromLongitude,
-  SIGN_ORDER
+  getAccessToken,
+  callEndpoint,
+  SIGN_ORDER,
+  NAKSHATRA_ORDER
 };
