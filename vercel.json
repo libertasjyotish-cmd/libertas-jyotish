@@ -12,10 +12,12 @@
     "api/etsy-cron.js": { "maxDuration": 60 },
     "api/komoju-return.js": { "maxDuration": 30 },
     "api/report-order.js": { "maxDuration": 30 },
-    "api/komoju-webhook.js": { "maxDuration": 30 }
+    "api/komoju-webhook.js": { "maxDuration": 30 },
+    "api/health.js": { "maxDuration": 60 }
   },
   "crons": [
     { "path": "/api/etsy-cron", "schedule": "*/10 * * * *" },
-    { "path": "/api/komoju-cron", "schedule": "15 3 * * *" }
+    { "path": "/api/komoju-cron", "schedule": "15 3 * * *" },
+    { "path": "/api/health?alert=1", "schedule": "30 3 * * *" }
   ]
 }
