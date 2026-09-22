@@ -30,6 +30,7 @@
 .today-sky__note { margin: 12px 0 0; font-size: 0.8rem; line-height: 1.6; color: #f3e9d2; }
 .today-sky__note strong { color: #e8c766; }
 .today-sky__meta { margin: 8px 0 0; font-size: 0.66rem; color: rgba(243, 233, 210, 0.5); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+.today-sky__basis { margin: 4px 0 0; font-size: 0.66rem; line-height: 1.5; color: rgba(243, 233, 210, 0.5); }
 .today-sky__loading { font-size: 0.82rem; color: rgba(243, 233, 210, 0.7); text-align: center; padding: 30px 0; }
 [dir="rtl"] .today-sky { text-align: right; }
 [dir="rtl"] .today-sky__title { letter-spacing: 0; font-family: inherit; }

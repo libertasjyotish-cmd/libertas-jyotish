@@ -99,7 +99,8 @@ ${lit}
   </div>
 </div>
 <p class="today-sky__note"><strong>${esc(d.moonNote.good)}</strong><br>${esc(d.moonNote.sensitive)}</p>
-<p class="today-sky__meta"><span>${esc(d.text.updated.replace('{time}', time))}</span><span>${esc(d.text.source)}</span></p>`;
+<p class="today-sky__meta"><span>${esc(d.text.updated.replace('{time}', time))}</span><span>${esc(d.text.source)}</span></p>
+<p class="today-sky__basis">${esc(d.text.basis || '')}</p>`;
     root.hidden = false;
   }
 

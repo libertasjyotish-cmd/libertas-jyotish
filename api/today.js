@@ -16,6 +16,36 @@ const MOON_GOOD = [0, 2, 5, 6, 9, 10];
 const MOON_SENSITIVE = [3, 7, 11];
 
 const norm = (x) => ((x % 360) + 360) % 360;
+const IST_OFFSET_MS = 5.5 * 3600 * 1000;
+const UJJAIN_LAT = 23.1765;
+const UJJAIN_LON = 75.7885;
+
+// ヴェーダの曜日（ヴァーラ）は深夜ではなくウッジャインの日の出で切り替わる。
+// NOAA 近似式で当日の日の出（UTC）を求め、その前なら前日のヴァーラとする。
+function ujjainSunriseUtc(dateIst) {
+  const y = dateIst.getUTCFullYear();
+  const start = Date.UTC(y, 0, 0);
+  const doy = Math.floor((Date.UTC(y, dateIst.getUTCMonth(), dateIst.getUTCDate()) - start) / 86400000);
+  const rad = Math.PI / 180;
+  const gamma = (2 * Math.PI / 365) * (doy - 1 + (6 - UJJAIN_LON / 15) / 24);
+  const eqTime = 229.18 * (0.000075 + 0.001868 * Math.cos(gamma) - 0.032077 * Math.sin(gamma)
+    - 0.014615 * Math.cos(2 * gamma) - 0.040849 * Math.sin(2 * gamma));
+  const decl = 0.006918 - 0.399912 * Math.cos(gamma) + 0.070257 * Math.sin(gamma)
+    - 0.006758 * Math.cos(2 * gamma) + 0.000907 * Math.sin(2 * gamma)
+    - 0.002697 * Math.cos(3 * gamma) + 0.00148 * Math.sin(3 * gamma);
+  const lat = UJJAIN_LAT * rad;
+  const ha = Math.acos(Math.cos(90.833 * rad) / (Math.cos(lat) * Math.cos(decl)) - Math.tan(lat) * Math.tan(decl)) / rad;
+  const minutesUtc = 720 - 4 * (UJJAIN_LON + ha) - eqTime;
+  return Date.UTC(y, dateIst.getUTCMonth(), dateIst.getUTCDate()) + minutesUtc * 60000;
+}
+
+function varaWeekday(at) {
+  const ist = new Date(at.getTime() + IST_OFFSET_MS);
+  const sunrise = ujjainSunriseUtc(ist);
+  const day = ist.getUTCDay();
+  return at.getTime() < sunrise ? (day + 6) % 7 : day;
+}
+
 let cache = { key: '', data: null };
 
 function roundedHourIso() {
@@ -58,8 +88,8 @@ function buildPayload(pos, at, lang) {
   const nakIndex = Math.floor(moon / (360 / 27));
   const nakJa = NAKSHATRA_ORDER[nakIndex];
   const moonSign = Math.floor(moon / 30);
-  const weekday = at.getUTCDay(); // ウッジャイン基準の曜日は UTC+5:30 で判定
-  const localDay = new Date(at.getTime() + 5.5 * 3600 * 1000).getUTCDay();
+  const weekday = at.getUTCDay();
+  const localDay = varaWeekday(at);
 
   const planets = PLANETS.map((name) => {
     const lon = pos[name].longitude;
@@ -84,7 +114,7 @@ function buildPayload(pos, at, lang) {
     at: at.toISOString(),
     text: {
       title: t.title, subtitle: t.subtitle, moon: t.moon, tithi: t.tithi, nakshatra: t.nakshatra, deity: t.deity,
-      symbol: t.symbol, vara: t.vara, chart: t.chart, retro: t.retro, entered: t.entered, updated: t.updated, source: t.source
+      symbol: t.symbol, vara: t.vara, chart: t.chart, retro: t.retro, entered: t.entered, updated: t.updated, source: t.source, basis: t.basis
     },
     moonPhase: {
       elongation: Math.round(elong * 10) / 10,
