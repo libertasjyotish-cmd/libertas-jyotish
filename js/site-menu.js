@@ -2,6 +2,17 @@
 // <header class="site-header" data-site-header></header> があれば中身を差し込む。
 // メニュー項目の追加はこの LINKS だけを編集すれば全ページに反映される。
 // 文言は各ページが埋め込む window.LJ_I18N（locales/<lang>.json 由来）から取る。
+// Vercel Web Analytics（Cookie 不使用の匿名集計）。全ページが読むこのファイルから読み込む。
+(function () {
+  const host = window.location.hostname;
+  if (host === 'localhost' || host === '127.0.0.1') return;
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  const s = document.createElement('script');
+  s.defer = true;
+  s.src = '/_vercel/insights/script.js';
+  document.head.appendChild(s);
+})();
+
 (function () {
   const FALLBACK = {
     lang: 'ja',
