@@ -655,6 +655,11 @@ savedEmail = localStorage.getItem('lj_user_email') || localStorage.getItem('emai
 if (savedEmail) {
 setLoggedInState(savedEmail);
 
+// 前回有料と確認済みなら、鑑定の再生成（数十秒）を待たずにロック表示を外しておく
+if (cachedUser && cachedUser.status === 'paid') {
+unlockPaidContent();
+}
+
 // ★出生データ（生年月日・出生地）がLocalStorageに実在するか厳密に死活チェック
 let hasBirthData = false;
 let localDob = '';
