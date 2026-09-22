@@ -267,9 +267,11 @@ background-size: cover; background-position: center center; background-repeat: n
 }
 </style>
 <link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/today-sky.css">
 <link rel="stylesheet" href="/css/rtl.css">
 {{>i18n-globals}}
 <script defer src="/js/site-menu.js"></script>
+<script defer src="/js/today-sky.js"></script>
 <script src="/js/checkout-links.js"></script>
 <script src="/js/play-billing.js"></script>
 <script src="/js/checkout-guard.js"></script>
@@ -363,6 +365,9 @@ data-width="320">
 <button type="submit" class="btn-action" style="width: 100%; padding: 13px; font-size: 0.95rem; font-weight: 600; text-align: center; border-radius: 8px; background: var(--color-gold-dark); color: #FFFDF9; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">{{t.mypage.text19}}</button>
 </form>
 </div>
+
+<!-- 今日の空（全員共通・日替わり） -->
+<div id="today-sky" class="today-sky" hidden></div>
 
 <!-- 本日の月星座運勢 -->
 <div class="card-box">

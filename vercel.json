@@ -13,7 +13,8 @@
     "api/komoju-return.js": { "maxDuration": 30 },
     "api/report-order.js": { "maxDuration": 30 },
     "api/komoju-webhook.js": { "maxDuration": 30 },
-    "api/health.js": { "maxDuration": 60 }
+    "api/health.js": { "maxDuration": 60 },
+    "api/today.js": { "maxDuration": 30 }
   },
   "crons": [
     { "path": "/api/etsy-cron", "schedule": "*/10 * * * *" },
