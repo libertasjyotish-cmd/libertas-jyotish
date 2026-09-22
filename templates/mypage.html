@@ -704,7 +704,8 @@ console.log("Cached diagnostic data restored immediately.");
 renderUserData(cachedUser.lastResult);
 } else {
 const savedResult = sessionStorage.getItem('lj_diagnosis_result');
-if (savedResult) {
+// トップの無料鑑定結果は無料版の文面なので、有料会員には先行表示しない（ロック表示に戻ってしまう）
+if (savedResult && !(cachedUser && cachedUser.status === 'paid')) {
 try {
 const parsed = JSON.parse(savedResult);
 if (isTodaysReading(parsed)) renderUserData(parsed);
