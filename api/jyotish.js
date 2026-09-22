@@ -506,7 +506,7 @@ module.exports = async function handler(req, res) {
 
         // Sheetsへの保存処理（落ちても気にせず継続）。マイページの fetch_profile も保存して当日分を固定する。
         // 残り時間が乏しいときに保存を待つと応答ごと打ち切られるため、その場合は待たずに返す。
-        if (finalEmail) {
+        if (finalEmail && profileSource !== 'sheet_error') {
           const save = saveProfileToSheets(finalEmail, finalStatus, finalDob, finalTob, finalCity, cleanJsonResult, finalLang)
             .catch((sheetSaveErr) => console.error("Google Sheets save error, skipped:", sheetSaveErr));
           if (elapsed() < FUNCTION_BUDGET_MS) await save;
@@ -1002,7 +1002,7 @@ async function saveProfileToSheets(email, status, dob, tob, city, readingData, l
     };
 
     if (existingRow) {
-      existingRow.set('status', rowPayload.status);
+      // 課金状態は決済 Webhook のみが書く。鑑定保存で既存行の status は触らない。
       existingRow.set('dob', rowPayload.dob);
       existingRow.set('tob', rowPayload.tob);
       existingRow.set('city', rowPayload.city);
