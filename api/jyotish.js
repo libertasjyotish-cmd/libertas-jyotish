@@ -694,7 +694,8 @@ function dailyFactors(natal, transit) {
   if (typeof tMoon.degree === 'number') {
     const remainingDays = (30 - tMoon.degree) / 13.2;
     const nextIdx = (signIndex(tMoon.sign) + 1) % 12;
-    moonMove = { remainingDays: Math.round(remainingDays * 10) / 10, nextSign: SIGN_ORDER_JA[nextIdx], nextHouseFromLagna: nAsc.sign ? houseFrom(nAsc.sign, SIGN_ORDER_JA[nextIdx]) : null };
+    const elapsedDays = tMoon.degree / 13.2;
+    moonMove = { remainingDays: Math.round(remainingDays * 10) / 10, elapsedDays: Math.round(elapsedDays * 10) / 10, nextSign: SIGN_ORDER_JA[nextIdx], nextHouseFromLagna: nAsc.sign ? houseFrom(nAsc.sign, SIGN_ORDER_JA[nextIdx]) : null };
   }
 
   const slow = transit.filter(p => ['Saturn', 'Jupiter', 'Rahu', 'Ketu'].includes(p.name) && p.sign).map(p => `${p.name}: ${toJapaneseSign(p.sign)}${nAsc.sign ? `（第${houseFrom(nAsc.sign, p.sign)}ハウス）` : ''}${p.is_retrograde ? ' 逆行' : ''}`);
@@ -744,6 +745,19 @@ function weekFactors(natal, transit, todayStr) {
     days.push({ date, sign, fromMoon, fromLagna, kind });
   }
   return days;
+}
+
+// 月が今のハウスに入った日と抜ける日（M/D）。滞在中は毎日同じ日付になるので、鑑定文の「この流れは○日まで」が日々ぶれない。
+function moonStay(moonMove, todayStr) {
+  if (!moonMove || !todayStr) return null;
+  const base = new Date(`${todayStr}T12:00:00Z`);
+  if (Number.isNaN(base.getTime())) return null;
+  const md = (offsetDays) => { const d = new Date(base.getTime() + offsetDays * 86400000); return `${d.getUTCMonth() + 1}/${d.getUTCDate()}`; };
+  const start = md(-Math.floor(moonMove.elapsedDays));
+  const end = md(Math.floor(moonMove.remainingDays));
+  const total = Math.floor(moonMove.elapsedDays) + Math.floor(moonMove.remainingDays) + 1;
+  const dayNo = Math.floor(moonMove.elapsedDays) + 1;
+  return { start, end, dayNo, total, lastDay: moonMove.remainingDays < 1 };
 }
 
 function themeDomainFor(prokeralaData, transitData) {
@@ -814,13 +828,14 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
   const week = weekFactors(planetList, transitPlanets, todayJst);
   const todayDomain = daily && daily.houseFromLagna ? HOUSE_DOMAIN[daily.houseFromLagna] : null;
   const sameDomain = !!(previous && previous.domain && todayDomain && previous.domain === todayDomain);
+  const stay = daily ? moonStay(daily.moonMove, todayJst) : null;
 
   const dailyBlock = daily ? `
   【本日 ${todayJst} 固有の要素（鑑定の軸。必ずここから今日の悩みテーマを選ぶ）】
   - トランジットの月: ${signFor(transitMoon.sign, lang)}${daily.houseFromLagna ? ` ＝ ラグナから第${daily.houseFromLagna}ハウス` : ''}${daily.houseFromMoon ? `、出生の月から第${daily.houseFromMoon}ハウス（チャンドラ・ラグナ）` : ''}
   - 今日の月のナクシャトラ: ${nakshatraFor(transitMoon.nakshatra, lang) || '不明'}
   - 月が重なる出生天体: ${daily.conjunct.length ? daily.conjunct.join('・') : 'なし'} ／ 月と対向する出生天体: ${daily.opposite.length ? daily.opposite.join('・') : 'なし'}
-  - 曜日・曜日の支配星には言及しない（相談者の地域により曜日が異なるため）${daily.tithi ? `\n  - ティティ: ${daily.tithi}` : ''}${daily.moonMove && daily.moonMove.remainingDays < 1 ? `\n  - 今日のうちに月が ${signFor(daily.moonMove.nextSign, lang)}${daily.moonMove.nextHouseFromLagna ? `（第${daily.moonMove.nextHouseFromLagna}ハウス）` : ''} へ移る（今日だけ「切り替わりの日」として1文で触れてよい）` : `\n  - 月の移動予告は書かない（「〇日後に変わる」「まもなく次の段階へ」等の予告文を禁止。今日の状態だけを書く）`}
+  - 曜日・曜日の支配星には言及しない（相談者の地域により曜日が異なるため）${daily.tithi ? `\n  - ティティ: ${daily.tithi}` : ''}${stay ? `\n  - 今の領域の流れ: ${stay.start}〜${stay.end}（${stay.total}日間の ${stay.dayNo}日目${stay.lastDay ? '・最終日' : ''}）。次は ${stay.end} を過ぎると月が ${signFor(daily.moonMove.nextSign, lang)}${daily.moonMove.nextHouseFromLagna ? `（第${daily.moonMove.nextHouseFromLagna}ハウス: ${HOUSE_DOMAIN[daily.moonMove.nextHouseFromLagna]}）` : ''} へ移る。\n  - 流れの期間は必ずこの日付で書く（「約2.5日後」「数日後に変わる」のような相対表現・曖昧な予告は禁止）。書き方の例: ${stay.dayNo === 1 ? `「このテーマは今日 ${stay.start} から ${stay.end} までの流れ」` : stay.lastDay ? `「${stay.start} から続いたこの流れは今日 ${stay.end} で一区切り。明日からは○○の領域へ」` : `「${stay.start} から続くこの流れは ${stay.end} まで。今日はその ${stay.dayNo}日目」`}。${previous && !sameDomain ? '今日は前回と領域が変わった日なので、冒頭で「前回までの流れが区切りを迎え、今日から新しい領域に入った」と繋げる。' : ''}` : `\n  - 月の移動予告は書かない（「〇日後に変わる」等の予告文を禁止。今日の状態だけを書く）`}
   - 速い天体: ${daily.fast.join('、') || '不明'}
   - 遅い天体（背景として1文まで）: ${daily.slow.join('、') || '不明'}
 
