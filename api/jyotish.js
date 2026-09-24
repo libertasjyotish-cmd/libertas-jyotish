@@ -494,6 +494,7 @@ module.exports = async function handler(req, res) {
         cleanJsonResult.generated_at = nowIsoIn(viewerZone);
         cleanJsonResult.reading_date = todayLocal;
         cleanJsonResult.reading_tz = viewerZone;
+        if (!cleanJsonResult.theme_domain) cleanJsonResult.theme_domain = themeDomainFor(prokeralaData, transitData);
         // どの外部APIで時間を使ったかを応答からも切り分けられるようにする（秒）
         const tGemini = elapsed();
         cleanJsonResult.timings = {
@@ -702,12 +703,65 @@ function dailyFactors(natal, transit) {
   return { houseFromLagna, houseFromMoon, conjunct, opposite, tithi, moonMove, slow, fast };
 }
 
-// 前回の鑑定で扱ったテーマ（冒頭）を渡し、同じ言い当てを繰り返させない。
+// 前回の鑑定で扱ったテーマ（冒頭）と当日の一手を渡し、同じ言い当てを繰り返さず、話を前に進めさせる。
 function previousReadingSummary(last) {
   if (!last || !last.reading_date) return null;
   const text = last.free_reading && last.free_reading.horoscope;
   if (!text) return null;
-  return { date: last.reading_date, head: String(text).slice(0, 120) };
+  const detail = last.premium_reading && last.premium_reading.detailed_horoscope;
+  const m = detail ? String(detail).match(/【今日・今週の一手】\s*([\s\S]{0,200})/) : null;
+  return { date: last.reading_date, head: String(text).slice(0, 120), action: m ? m[1].replace(/\s+/g, ' ').trim() : null, domain: last.theme_domain || null };
+}
+
+// ラグナから見たハウスが示す生活領域。今日の月のハウスから悩みテーマの領域をコード側で確定させる。
+const HOUSE_DOMAIN = {
+  1: '自分自身・体調・自分の決め方', 2: 'お金・食・家計・言葉の選び方', 3: '兄弟・友人とのやりとり・短い移動・自分から動く勇気',
+  4: '家庭・住まい・母・心の休息', 5: '子ども・創作・学び・恋の喜び', 6: '仕事の課題・健康習慣・競争・借金の整理',
+  7: 'パートナー・対等な契約・人との向き合い', 8: '隠していたもの・終わらせ方・他人のお金・深い変化', 9: '師・信念・遠方・長い学び・父',
+  10: 'キャリアの方向・評価・上司・公の顔', 11: '実入り・仲間・願いの叶い方・広い交友', 12: '休息・手放し・ひとりの時間・出費・遠い場所'
+};
+
+// 今週 7 日分の月の位置（平均移動 13.2°/日で外挿）から、出生の月に対するチャンドラ・バラで
+// 注意日・追い風日をコード側で確定する。日ごとに同じ計算なので、前日の鑑定と日付が食い違わない。
+const CHANDRA_GOOD = [1, 3, 6, 7, 10, 11];
+const CHANDRA_SENSITIVE = [4, 8, 12];
+function weekFactors(natal, transit, todayStr) {
+  const tMoon = transit.find(p => p.name === 'Moon');
+  const nMoon = natal.find(p => p.name === 'Moon') || {};
+  const nAsc = natal.find(p => p.name === 'Ascendant') || {};
+  if (!tMoon || typeof tMoon.longitude !== 'number' || !nMoon.sign || !todayStr) return null;
+  const base = new Date(`${todayStr}T12:00:00Z`);
+  if (Number.isNaN(base.getTime())) return null;
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const lon = ((tMoon.longitude + 13.2 * i) % 360 + 360) % 360;
+    const sign = SIGN_ORDER_JA[Math.floor(lon / 30)];
+    const fromMoon = houseFrom(nMoon.sign, sign);
+    const fromLagna = nAsc.sign ? houseFrom(nAsc.sign, sign) : null;
+    const d = new Date(base.getTime() + i * 86400000);
+    const date = `${d.getUTCMonth() + 1}/${d.getUTCDate()}`;
+    const kind = CHANDRA_GOOD.includes(fromMoon) ? 'good' : (CHANDRA_SENSITIVE.includes(fromMoon) ? 'caution' : 'neutral');
+    days.push({ date, sign, fromMoon, fromLagna, kind });
+  }
+  return days;
+}
+
+function themeDomainFor(prokeralaData, transitData) {
+  if (!prokeralaData || !transitData) return null;
+  const d = dailyFactors(extractPlanets(prokeralaData), extractPlanets(transitData));
+  return d && d.houseFromLagna ? HOUSE_DOMAIN[d.houseFromLagna] : null;
+}
+
+function weekBlock(days, lang) {
+  if (!days) return '';
+  const label = (k) => (k === 'good' ? '追い風日' : k === 'caution' ? '注意日' : '平常');
+  const lines = days.map(d => `    - ${d.date}: 月は${signFor(d.sign, lang)}（出生の月から第${d.fromMoon}${d.fromLagna ? `、ラグナから第${d.fromLagna}` : ''}ハウス）→ ${label(d.kind)}${d.fromLagna ? `　領域: ${HOUSE_DOMAIN[d.fromLagna]}` : ''}`);
+  return `
+  【今週の日別チャンドラ・バラ（コードで確定済み。【注意日と追い風日】と【今日・今週の一手】の日付は必ずこの表から選び、表にない日付・表と逆の評価を書かない）】
+${lines.join('\n')}
+  - 注意日は「注意日」の日から、追い風日は「追い風日」の日から選ぶ。その日の領域に合った「何を避け何を進めるか」を書く。
+  - 日付は「9/24（木）」のような曜日を付けず「9/24」と数字のみで書く。
+`;
 }
 
 // 詳細運勢は2つの見出しで構成し、見出しの前で必ず改行させる（画面側は white-space: pre-line で表示）。
@@ -757,21 +811,26 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
   const todayJst = today || todayIn(DEFAULT_ZONE);
   const transitMoon = transitPlanets.find(p => p.name === 'Moon') || {};
   const daily = dailyFactors(planetList, transitPlanets);
+  const week = weekFactors(planetList, transitPlanets, todayJst);
+  const todayDomain = daily && daily.houseFromLagna ? HOUSE_DOMAIN[daily.houseFromLagna] : null;
+  const sameDomain = !!(previous && previous.domain && todayDomain && previous.domain === todayDomain);
 
   const dailyBlock = daily ? `
   【本日 ${todayJst} 固有の要素（鑑定の軸。必ずここから今日の悩みテーマを選ぶ）】
   - トランジットの月: ${signFor(transitMoon.sign, lang)}${daily.houseFromLagna ? ` ＝ ラグナから第${daily.houseFromLagna}ハウス` : ''}${daily.houseFromMoon ? `、出生の月から第${daily.houseFromMoon}ハウス（チャンドラ・ラグナ）` : ''}
   - 今日の月のナクシャトラ: ${nakshatraFor(transitMoon.nakshatra, lang) || '不明'}
   - 月が重なる出生天体: ${daily.conjunct.length ? daily.conjunct.join('・') : 'なし'} ／ 月と対向する出生天体: ${daily.opposite.length ? daily.opposite.join('・') : 'なし'}
-  - 曜日・曜日の支配星には言及しない（相談者の地域により曜日が異なるため）${daily.tithi ? `\n  - ティティ: ${daily.tithi}` : ''}${daily.moonMove ? `\n  - 月の次の移動: 約${daily.moonMove.remainingDays}日後に ${signFor(daily.moonMove.nextSign, lang)}${daily.moonMove.nextHouseFromLagna ? `（第${daily.moonMove.nextHouseFromLagna}ハウス）` : ''} へ` : ''}
+  - 曜日・曜日の支配星には言及しない（相談者の地域により曜日が異なるため）${daily.tithi ? `\n  - ティティ: ${daily.tithi}` : ''}${daily.moonMove && daily.moonMove.remainingDays < 1 ? `\n  - 今日のうちに月が ${signFor(daily.moonMove.nextSign, lang)}${daily.moonMove.nextHouseFromLagna ? `（第${daily.moonMove.nextHouseFromLagna}ハウス）` : ''} へ移る（今日だけ「切り替わりの日」として1文で触れてよい）` : `\n  - 月の移動予告は書かない（「〇日後に変わる」「まもなく次の段階へ」等の予告文を禁止。今日の状態だけを書く）`}
   - 速い天体: ${daily.fast.join('、') || '不明'}
   - 遅い天体（背景として1文まで）: ${daily.slow.join('、') || '不明'}
 
   【日替わりの規則】
-  - 「本日の運勢」の悩みテーマは、トランジットの月が在住するハウス（ラグナから第${daily.houseFromLagna || '?'}ハウス）が示す生活領域と、月が重なる出生天体から選ぶ。土星・木星・ラーフ・ケートゥやダシャーは背景説明に留め、テーマの主役にしない。
+  - 「本日の運勢」の悩みテーマの領域は「${todayDomain || '不明'}」（トランジットの月がラグナから第${daily.houseFromLagna || '?'}ハウス）。必ずこの領域の場面で書き、この領域が仕事でない日に仕事の課題を主題にしない。月が重なる出生天体があればその天体の性質を場面に混ぜる。土星・木星・ラーフ・ケートゥやダシャーは背景説明に留め、テーマの主役にしない。
   - 今日の月のナクシャトラとティティの性質を、今日の心の状態と「今日ひとつの行動」に必ず反映させる。月が同じハウスに留まる日でも、ナクシャトラとティティが変わるので言い当ての場面・行動は変える。${previous ? `
-  - 前回（${previous.date}）の鑑定の冒頭:「${previous.head}」。今日は同じ状況描写・同じ行動を繰り返さないこと。月のハウスが変わっていれば生活領域も変える。` : ''}
-  ` : (previous ? `
+  - 前回（${previous.date}）の鑑定の冒頭:「${previous.head}」${previous.action ? `／前回の一手:「${previous.action}」` : ''}。${sameDomain
+    ? '今日も同じ領域なので、前回の続きとして書く。前回の一手は「もう踏み出した」前提で、その結果として今日見えてくる反応と、次の段階（一歩進んだ行動）を書く。同じ課題の描写を繰り返さない。'
+    : '今日は領域が変わったので、前回のテーマは1文で「一段落」として触れるだけにし、新しい領域の場面で書く。同じ状況描写・同じ行動を繰り返さない。'}` : ''}
+  ${weekBlock(week, lang)}  ` : (previous ? `
   【前回の鑑定】${previous.date}:「${previous.head}」。今日は同じ状況描写・同じ行動を繰り返さないこと。
   ` : '');
 
