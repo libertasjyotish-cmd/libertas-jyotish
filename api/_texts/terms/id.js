@@ -271,7 +271,16 @@ const CHAPTER_TITLE = {
   palm_ch7: 'Bab 7 — Ikatan, pekerjaan dan keputusan',
   palm_ch8: 'Bab 8 — 12 bulan ke depan',
   palm_ch9: 'Bab 9 — Tangan berubah (latihan pengamatan)',
-  palm_ch10: 'Lampiran — Petunjuk saat waktu lahir tidak pasti'
+  palm_ch10: 'Lampiran — Petunjuk saat waktu lahir tidak pasti',
+  karma_summary: 'Cetak biru jiwa Anda sekilas',
+  karma_ch1: 'Bab 1 — Siapa Anda dilahirkan untuk menjadi (Lagna dan Atmakaraka)',
+  karma_ch2: 'Bab 2 — Karma yang Anda bawa sejak lahir (Ketu)',
+  karma_ch3: 'Bab 3 — Tugas dan ujian hidup ini (Rahu dan Saturnus)',
+  karma_ch4: 'Bab 4 — Kapan ujian datang, dan apa maknanya (Sade Sati dan Dasha)',
+  karma_ch5: 'Bab 5 — Arah panggilan Anda (rumah Dharma dan Karma)',
+  karma_ch6: 'Bab 6 — Yang hanya bisa Anda lakukan (Karakamsha dan trikona)',
+  karma_ch7: 'Bab 7 — Saat-saat Anda merasa hidup (Bulan, rumah ke-5, Nakshatra)',
+  karma_ch8: 'Bab 8 — Yang harus Anda penuhi di hidup ini (rangkuman)'
 };
 
 const REASON = {

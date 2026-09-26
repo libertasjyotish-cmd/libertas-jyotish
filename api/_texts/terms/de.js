@@ -271,7 +271,16 @@ const CHAPTER_TITLE = {
   palm_ch7: 'Kapitel 7 — Bindungen, Arbeit und Entscheidungen',
   palm_ch8: 'Kapitel 8 — Die nächsten 12 Monate',
   palm_ch9: 'Kapitel 9 — Hände verändern sich (eine Praxis der Beobachtung)',
-  palm_ch10: 'Anhang — Hinweise, wenn die Geburtszeit ungewiss ist'
+  palm_ch10: 'Anhang — Hinweise, wenn die Geburtszeit ungewiss ist',
+  karma_summary: 'Der Bauplan Ihrer Seele auf einen Blick',
+  karma_ch1: 'Kapitel 1 — Wer Sie zu sein geboren wurden (Lagna und Atmakaraka)',
+  karma_ch2: 'Kapitel 2 — Das Karma, mit dem Sie geboren wurden (Ketu)',
+  karma_ch3: 'Kapitel 3 — Die Aufgaben und Prüfungen dieses Lebens (Rahu und Saturn)',
+  karma_ch4: 'Kapitel 4 — Wann die Prüfungen kommen und was sie bedeuten (Sade Sati und Dasha)',
+  karma_ch5: 'Kapitel 5 — Die Richtung Ihrer Berufung (die Häuser von Dharma und Karma)',
+  karma_ch6: 'Kapitel 6 — Was nur Sie tun können (Karakamsha und die Trigone)',
+  karma_ch7: 'Kapitel 7 — Die Momente, in denen Sie sich lebendig fühlen (Mond, 5. Haus, Nakshatra)',
+  karma_ch8: 'Kapitel 8 — Was Sie hier erfüllen sollen (Zusammenfassung)'
 };
 
 const REASON = {

@@ -252,14 +252,16 @@ ${chapter.schema}`;
 
 // 章を並列生成する。1章が失敗しても他章は返し、未生成の章は次回リクエストで補完する。
 // options.chapters / options.product で年間運勢・相性など別商品の章定義を差し込める
-async function generateChapters(astro, ids, apiKey, models, { lang, timeoutMs = 40000, chapters: defs = CHAPTERS, product = 'natal', voice = null } = {}) {
+// options.extraViolations: 商品固有の禁止表現チェック (text, lang) => string[]（既存の findViolations に加えて適用）
+async function generateChapters(astro, ids, apiKey, models, { lang, timeoutMs = 40000, chapters: defs = CHAPTERS, product = 'natal', voice = null, extraViolations = null } = {}) {
   const terms = createTerms(lang);
   const targets = defs.filter((c) => ids.includes(c.id));
   const results = await Promise.all(targets.map(async (chapter) => {
     const result = await generateWithGemini(apiKey, models, buildPrompt(chapter, astro, terms, product, voice), timeoutMs);
     if (!result.json) return { id: chapter.id, ok: false, reason: result.reason };
 
-    const violations = findViolations(JSON.stringify(result.json), terms.lang);
+    const text = JSON.stringify(result.json);
+    const violations = [...findViolations(text, terms.lang), ...(extraViolations ? extraViolations(text, terms.lang) : [])];
     if (violations.length) {
       console.warn(`Chapter ${chapter.id} contains banned expressions: ${violations.join(', ')}`);
       return { id: chapter.id, ok: false, reason: 'banned_expression' };

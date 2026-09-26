@@ -617,6 +617,27 @@
     "pdf-report.prodPalmPhoto": "Suas mãos (linhas e marcas lidas)",
     "pdf-report.prodPalmPhotoNote": "Os números indicam a posição aproximada de cada linha ou marca lida na foto; o ângulo e a luz podem deslocá-los ligeiramente. As fotos são apagadas 30 dias após a entrega.",
     "pdf-report.prodPalmNote": "* mão dominante. Esta tabela lista os traços que uma IA leu mecanicamente das suas fotos; as interpretações segundo as correspondências tradicionais de Hasta Samudrika estão nos capítulos. As fotos originais são excluídas 30 dias após a entrega e nunca são usadas para identificação ou biometria. Não serve para avaliar a saúde.",
-    "legal.phoneRow": ""
+    "legal.phoneRow": "",
+    "pdf-report.prodKarma": "Karma e Dharma — O chamado desta vida",
+    "pdf-report.prodKarmaEvidence": "Apêndice — Tabela de evidências (posições usadas neste relatório)",
+    "pdf-report.prodKarmaCharts": "Os dois mapas — Rasi (D1) e Navamsa (D9)",
+    "pdf-report.prodKarmaKarakas": "Chara Karakas",
+    "pdf-report.prodKarmaAK": "Atmakaraka (o planeta que carrega o propósito da alma)",
+    "pdf-report.prodKarmaAmK": "Amatyakaraka (o planeta que sustenta o chamado)",
+    "pdf-report.prodKarmaKamsha": "Karakamsha (o signo do Atmakaraka em D9)",
+    "pdf-report.prodKarmaNodes": "O eixo Rahu / Ketu",
+    "pdf-report.prodKarmaDispositor": "Regente do signo",
+    "pdf-report.prodKarmaConjunct": "Em conjunção",
+    "pdf-report.prodKarmaHouses": "Casas do Dharma e do Karma",
+    "pdf-report.prodKarmaSaturn": "Saturno",
+    "pdf-report.prodKarmaAspects": "Casas aspectadas",
+    "pdf-report.prodKarmaSadeSati": "Sade Sati",
+    "pdf-report.prodKarmaDasha": "Períodos maiores (Mahadasha)",
+    "pdf-report.prodKarmaTerms": "Como este relatório usa suas palavras",
+    "pdf-report.prodKarmaDefKarma": "Karma — o desenho com que você nasceu e os padrões e tarefas que tendem a se repetir. Não se refere a fatos de uma vida passada.",
+    "pdf-report.prodKarmaDefDharma": "Dharma — a direção em que sua força flui com mais naturalidade e serve aos outros.",
+    "pdf-report.prodKarmaDefCalling": "Chamado — o papel que vale a pena assumir nesta vida; lido como convite, não como obrigação nem destino fixo.",
+    "pdf-report.prodKarmaDefTrial": "Prova — a área que está sendo treinada e o seu significado. Não é castigo nem retribuição.",
+    "pdf-report.prodKarmaNote": "Este relatório é uma interpretação das posições do mapa natal para o autoconhecimento. Não declara um destino nem prevê fatos específicos."
   }
 }

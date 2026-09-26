@@ -617,6 +617,27 @@
     "pdf-report.prodPalmPhoto": "Tangan Anda (garis dan tanda yang terbaca)",
     "pdf-report.prodPalmPhotoNote": "Angka menunjukkan posisi perkiraan setiap garis atau tanda yang terbaca dari foto; sudut dan pencahayaan dapat sedikit menggesernya. Foto dihapus 30 hari setelah pengiriman.",
     "pdf-report.prodPalmNote": "* tangan dominan. Tabel ini memuat ciri yang dibaca AI secara mekanis dari foto Anda; penafsiran berdasarkan padanan tradisional Hasta Samudrika ada di bab-bab. Foto asli dihapus 30 hari setelah pengiriman dan tidak pernah dipakai untuk identifikasi atau biometrik. Bukan untuk menilai kesehatan.",
-    "legal.phoneRow": ""
+    "legal.phoneRow": "",
+    "pdf-report.prodKarma": "Karma dan Dharma — Panggilan Hidup Ini",
+    "pdf-report.prodKarmaEvidence": "Lampiran — Tabel bukti (posisi yang digunakan dalam laporan ini)",
+    "pdf-report.prodKarmaCharts": "Dua bagan — Rasi (D1) dan Navamsa (D9)",
+    "pdf-report.prodKarmaKarakas": "Chara Karaka",
+    "pdf-report.prodKarmaAK": "Atmakaraka (planet pembawa tujuan jiwa)",
+    "pdf-report.prodKarmaAmK": "Amatyakaraka (planet penopang panggilan)",
+    "pdf-report.prodKarmaKamsha": "Karakamsha (zodiak Atmakaraka di D9)",
+    "pdf-report.prodKarmaNodes": "Sumbu Rahu / Ketu",
+    "pdf-report.prodKarmaDispositor": "Penguasa zodiak",
+    "pdf-report.prodKarmaConjunct": "Berkonjungsi",
+    "pdf-report.prodKarmaHouses": "Rumah Dharma dan Karma",
+    "pdf-report.prodKarmaSaturn": "Saturnus",
+    "pdf-report.prodKarmaAspects": "Rumah yang diaspek",
+    "pdf-report.prodKarmaSadeSati": "Sade Sati",
+    "pdf-report.prodKarmaDasha": "Periode besar (Mahadasha)",
+    "pdf-report.prodKarmaTerms": "Makna kata dalam laporan ini",
+    "pdf-report.prodKarmaDefKarma": "Karma — rancangan yang Anda bawa sejak lahir, serta pola dan tugas yang cenderung berulang. Bukan peristiwa kehidupan lampau.",
+    "pdf-report.prodKarmaDefDharma": "Dharma — arah di mana kekuatan Anda mengalir paling alami dan bermanfaat bagi sekitar.",
+    "pdf-report.prodKarmaDefCalling": "Panggilan — peran yang layak diambil dalam hidup ini; dibaca sebagai undangan, bukan kewajiban atau takdir yang pasti.",
+    "pdf-report.prodKarmaDefTrial": "Ujian — wilayah yang sedang ditempa, dan maknanya. Bukan hukuman atau balasan.",
+    "pdf-report.prodKarmaNote": "Laporan ini adalah penafsiran posisi bagan kelahiran untuk pemahaman diri. Tidak menyatakan takdir maupun meramalkan peristiwa tertentu."
   }
 }

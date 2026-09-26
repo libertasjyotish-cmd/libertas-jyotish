@@ -252,7 +252,7 @@
     function render(data) {
       const a = data.astro || {};
       const c = data.chapters || {};
-      if (a.product === 'yearly' || a.product === 'compat' || a.product === 'career' || a.product === 'palm') {
+      if (a.product === 'yearly' || a.product === 'compat' || a.product === 'career' || a.product === 'palm' || a.product === 'karma') {
         bookEl.innerHTML = renderProduct(a, c, data);
         return;
       }
@@ -542,10 +542,11 @@
       const sub = a.product === 'yearly' ? 'Ramalan Tahun Depan (12 bulan ke depan)'
         : a.product === 'career' ? 'Laporan Karier, Panggilan & Keuangan (Panggilan Hidup Anda)'
         : a.product === 'palm' ? 'Kar-Kundali: Laporan Veda Telapak Tangan & Peta Kelahiran'
+        : a.product === 'karma' ? 'Karma dan Dharma — Panggilan Hidup Ini'
         : 'Laporan Kecocokan';
       const owner = a.product === 'yearly'
         ? `${esc(a.period?.start || '')} — ${esc(a.period?.end || '')}<br>${personLine(a)}`
-        : a.product === 'career' || a.product === 'palm' ? personLine(a)
+        : a.product === 'career' || a.product === 'palm' || a.product === 'karma' ? personLine(a)
         : `<strong>A</strong> ${personLine(a.personA)}<br><br><strong>B</strong> ${personLine(a.personB)}`;
       return `<section class="page cover">
         <div><img class="logo" src="/img/libertas-logo.png" alt="Libertas Jyotish"></div>
@@ -647,6 +648,44 @@
         <p class="disclaimer">Angka menunjukkan posisi perkiraan setiap garis atau tanda yang terbaca dari foto; sudut dan pencahayaan dapat sedikit menggesernya. Foto dihapus 30 hari setelah pengiriman.</p>`);
     }
 
+    // カルマとダルマ: 出生図と D9 を並べた「二つの図」ページ
+    function karmaChartsPage(a) {
+      const box = (svg, caption) => (svg ? `<figure class="chart-box">${svg}<figcaption>${esc(caption)}</figcaption></figure>` : '');
+      const charts = a.charts || {};
+      return page(`<h2 class="chapter-title">Dua bagan — Rasi (D1) dan Navamsa (D9)</h2>
+        <div class="chart-grid">${box(charts.d1, 'D1 Rashi (kehidupan secara keseluruhan)')}${box(charts.d9, 'D9 Navamsha (kematangan, pasangan)')}</div>
+        <p class="disclaimer">Peta mengikuti gaya India Utara. Angka pada setiap bagian adalah nomor rumah, dan simbolnya adalah planet yang menempatinya.</p>`);
+    }
+
+    // カルマとダルマ: 付章 根拠表（コードで確定した配置のみ。解釈は含まない）
+    function karmaDataPage(a) {
+      const dash = (v) => (v == null || v === '' ? '—' : esc(v));
+      const placeRow = (label, p) => (p ? `<tr><td>${label}</td><td>${dash(p.name || p.planet)}</td><td>${dash(p.sign)}</td><td>${p.house == null ? '—' : esc(p.house)}</td><td>${dash(p.nakshatra)}</td><td>${dash(p.dignity)}${p.retrograde ? ' Retrograd' : ''}</td></tr>` : '');
+      const head = `<thead><tr><th></th><th>Planet</th><th>Zodiak</th><th>Rumah</th><th>Nakshatra</th><th>Martabat</th></tr></thead>`;
+      const k = a.karakamsha;
+      const karakas = `<h3>Chara Karaka</h3><table>${head}<tbody>
+        ${placeRow('Atmakaraka (planet pembawa tujuan jiwa)', a.atmakaraka)}${placeRow('Amatyakaraka (planet penopang panggilan)', a.amatyakaraka)}</tbody></table>
+        ${k ? `<div class="fact">Karakamsha (zodiak Atmakaraka di D9): <strong>${esc(k.sign)}</strong>${k.houseInRasi ? ` (${esc(k.houseInRasi)})` : ''}${k.planetsWithAkInNavamsa?.length ? `<span class="reason">Berkonjungsi: ${esc(k.planetsWithAkInNavamsa.join(', '))}</span>` : ''}</div>` : ''}`;
+      const nodeRow = (p) => (p ? `${placeRow(p.planet, p)}<tr><td></td><td colspan="5">Penguasa zodiak: ${p.dispositor ? `${esc(p.dispositor.planet)} → ${esc(p.dispositor.sign)} (${esc(p.dispositor.house)})` : '—'}${p.conjunct?.length ? ` · Berkonjungsi: ${esc(p.conjunct.join(', '))}` : ''}</td></tr>` : '');
+      const nodes = `<h3>Sumbu Rahu / Ketu</h3><table>${head}<tbody>${nodeRow(a.nodes?.rahu)}${nodeRow(a.nodes?.ketu)}</tbody></table>`;
+      const houseRows = [a.lagnaLord, ...[5, 9, 10, 12].map((h) => a.houses?.[h])].filter(Boolean).map((h) => `<tr><td>${esc(h.house)}</td><td>${esc(h.label)}</td><td>${dash(h.sign)}</td>
+        <td>${dash(h.lord)}${h.lordPlacedIn ? ` → ${esc(h.lordPlacedIn.label)}${h.lordPlacedIn.dignity ? ` (${esc(h.lordPlacedIn.dignity)})` : ''}` : ''}</td>
+        <td>${(h.occupants || []).map((o) => `${esc(o.planet)}${o.retrograde ? 'Retrograd' : ''}`).join(', ') || '—'}</td></tr>`).join('');
+      const houses = `<h3>Rumah Dharma dan Karma</h3><table><thead><tr><th>Rumah</th><th>Tema</th><th>Zodiak</th><th>Penguasa (→ berada di)</th><th>Planet di rumah</th></tr></thead><tbody>${houseRows}</tbody></table>`;
+      const s = a.saturn;
+      const saturn = s ? `<h3>Saturnus</h3><table>${head}<tbody>${placeRow(s.planet, s)}</tbody></table>
+        <div class="fact">Rumah yang diaspek: <strong>${esc((s.aspectsHouses || []).join(', '))}</strong>${s.conjunct?.length ? `<span class="reason">Berkonjungsi: ${esc(s.conjunct.join(', '))}</span>` : ''}</div>` : '';
+      const ss = a.sadeSati;
+      const sade = ss?.transits?.length ? `<h3>Sade Sati</h3><table><thead><tr><th>Fase</th><th>Posisi Saturnus</th><th>Periode</th></tr></thead><tbody>
+        ${ss.transits.map((t) => `<tr><td>${esc(t.phase)}</td><td>${esc(t.sign)}</td><td>${esc(t.start)} 〜 ${esc(t.end)}</td></tr>`).join('')}</tbody></table>` : '';
+      const dasha = (a.dasha?.timeline || []).length ? `<h3>Periode besar (Mahadasha)</h3><table><tbody>${a.dasha.timeline.map((t) => `<tr><td>${t.isCurrent ? '<strong>' : ''}${esc(t.lordJa)}${t.isCurrent ? '</strong>' : ''}</td><td>${esc(t.start)} 〜 ${esc(t.end)}</td></tr>`).join('')}</tbody></table>` : '';
+      const terms = `<h3>Makna kata dalam laporan ini</h3><ul>
+        <li>Karma — rancangan yang Anda bawa sejak lahir, serta pola dan tugas yang cenderung berulang. Bukan peristiwa kehidupan lampau.</li><li>Dharma — arah di mana kekuatan Anda mengalir paling alami dan bermanfaat bagi sekitar.</li>
+        <li>Panggilan — peran yang layak diambil dalam hidup ini; dibaca sebagai undangan, bukan kewajiban atau takdir yang pasti.</li><li>Ujian — wilayah yang sedang ditempa, dan maknanya. Bukan hukuman atau balasan.</li></ul>`;
+      return page(`<h2 class="chapter-title">Lampiran — Tabel bukti (posisi yang digunakan dalam laporan ini)</h2>${karakas}${nodes}${houses}${saturn}${sade}${dasha}${terms}
+        <p class="disclaimer">Laporan ini adalah penafsiran posisi bagan kelahiran untuk pemahaman diri. Tidak menyatakan takdir maupun meramalkan peristiwa tertentu.</p>`);
+    }
+
     function renderProduct(a, c, data) {
       const chapters = PROD_ORDER.map((id) => c[id]).filter(Boolean);
       const html = [productCover(a)];
@@ -654,6 +693,7 @@
       for (const ch of chapters) html.push(genericPage(ch));
       if (a.product === 'career') { html.push(careerDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
       else if (a.product === 'palm') { html.push(palmPhotoPage(a)); html.push(palmDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
+      else if (a.product === 'karma') { html.push(karmaChartsPage(a)); html.push(karmaDataPage(a)); html.push(planetsPage(a)); }
       else html.push(a.product === 'yearly' ? yearlyDataPage(a) : compatDataPage(a));
       html.push(disclaimerPage(data));
       return html.join('');

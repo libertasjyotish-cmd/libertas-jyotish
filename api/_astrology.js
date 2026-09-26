@@ -830,6 +830,115 @@ function atmakarakaOf(planets) {
   return { key: top.key, name: top.name, sign: top.sign, house: top.house, degree: top.degree };
 }
 
+// --- カルマとダルマ（Karma & Dharma / karma） ---
+// 出生図一式に、ジャイミニ系の確定要素を足す: チャラ・カーラカ（AK/AmK）、カラカムシャ（AK の D9 サイン）、
+// ラーフ／ケートゥ軸、ダルマ・トリコーナ（1・5・9）とモークシャ・トリコーナ（4・8・12）、第9・10・12室の要約、土星のアスペクト。
+// トランジットは使わない（時期の詳細は yearly に譲る）。すべてコードで確定し、AI には意味づけだけを任せる。
+// ナヴァムシャ: 度数（サイン内）を 3°20′ で 9 分割し、活動宮は同じサイン、固定宮は 9 番目、双体宮は 5 番目から数える。
+function navamsaSignKey(signKey, degree) {
+  const idx = SIGN_ORDER.indexOf(signKey);
+  if (idx < 0 || typeof degree !== 'number') return null;
+  const part = Math.min(8, Math.floor(degree / (30 / 9)));
+  const startOffset = [0, 8, 4][idx % 3];
+  return SIGN_ORDER[(idx + startOffset + part) % 12];
+}
+
+function charaKarakas(planets) {
+  const ranked = planets
+    .filter((p) => KARAKA_PLANETS.includes(p.key) && typeof p.degree === 'number')
+    .sort((a, b) => b.degree - a.degree);
+  const pick = (p) => (p ? { key: p.key, name: p.name, sign: p.sign, signKey: p.signKey, house: p.house, degree: p.degree, nakshatra: p.nakshatra, retrograde: p.retrograde } : null);
+  return { atmakaraka: pick(ranked[0]), amatyakaraka: pick(ranked[1]) };
+}
+
+async function fetchKarmaData({ dob, tob, lat, lon, lang }) {
+  const terms = createTerms(lang);
+  const base = await fetchReportData({ dob, tob, lat, lon, lang });
+  const planets = base.planets;
+  const asc = planets.find((p) => p.key === 'Ascendant');
+  const moon = planets.find((p) => p.key === 'Moon');
+  const byKey = (k) => planets.find((p) => p.key === k) || null;
+  const planetName = (k) => terms.planet(k, PLANET_JA[k] || k);
+  const dignityOfKey = new Map((base.strength || []).map((s) => [s.key, s.dignity]));
+  const brief = (p) => (p ? { planet: p.name, planetKey: p.key, sign: p.sign, house: p.house, label: houseLabel(p.house, terms), nakshatra: p.nakshatra, dignity: dignityOfKey.get(p.key) || null, retrograde: p.retrograde } : null);
+  const occupantsOf = (house) => planets.filter((p) => p.key !== 'Ascendant' && p.house === house).map((p) => ({ planet: p.name, planetKey: p.key, dignity: dignityOfKey.get(p.key) || null, retrograde: p.retrograde }));
+
+  const houseSummary = (house) => {
+    const lord = asc ? lordOfHouse(asc.signKey, house) : null;
+    const lordPlanet = lord?.lordKey ? byKey(lord.lordKey) : null;
+    return {
+      house, label: houseLabel(house, terms),
+      sign: lord ? terms.sign(lord.signKey) : null,
+      lord: lord?.lordKey ? planetName(lord.lordKey) : null, lordKey: lord?.lordKey || null,
+      lordPlacedIn: lordPlanet ? { house: lordPlanet.house, label: houseLabel(lordPlanet.house, terms), sign: lordPlanet.sign, dignity: dignityOfKey.get(lordPlanet.key) || null, retrograde: lordPlanet.retrograde } : null,
+      occupants: occupantsOf(house)
+    };
+  };
+
+  // 節点: 在住ハウス・サイン・ナクシャトラ、サインの支配星（ディスポジター）の位置、同座惑星
+  const node = (key) => {
+    const p = byKey(key);
+    if (!p) return null;
+    const dispositorKey = SIGN_LORD[p.signKey] || null;
+    const dispositor = dispositorKey ? byKey(dispositorKey) : null;
+    return {
+      ...brief(p),
+      dispositor: dispositor ? { planet: dispositor.name, planetKey: dispositor.key, sign: dispositor.sign, house: dispositor.house, label: houseLabel(dispositor.house, terms), dignity: dignityOfKey.get(dispositor.key) || null } : null,
+      conjunct: planets.filter((q) => q.key !== 'Ascendant' && q.key !== key && q.house === p.house).map((q) => q.name)
+    };
+  };
+
+  const { atmakaraka, amatyakaraka } = charaKarakas(planets);
+  const navamsa = planets.filter((p) => p.key !== 'Ascendant').map((p) => ({ planet: p.name, planetKey: p.key, d9SignKey: navamsaSignKey(p.signKey, p.degree) }));
+  const kamshaKey = atmakaraka ? navamsaSignKey(atmakaraka.signKey, atmakaraka.degree) : null;
+  const karakamsha = kamshaKey ? {
+    sign: terms.sign(kamshaKey), signKey: kamshaKey,
+    lord: SIGN_LORD[kamshaKey] ? planetName(SIGN_LORD[kamshaKey]) : null,
+    houseInRasi: asc ? houseFrom(asc.signKey, kamshaKey) : null,
+    houseInRasiLabel: asc ? houseLabel(houseFrom(asc.signKey, kamshaKey), terms) : null,
+    planetsInRasiSign: planets.filter((p) => p.key !== 'Ascendant' && p.signKey === kamshaKey).map((p) => p.name),
+    planetsWithAkInNavamsa: navamsa.filter((n) => n.d9SignKey === kamshaKey && n.planetKey !== atmakaraka.key).map((n) => n.planet),
+    navamsaHousesFromKarakamsha: [1, 5, 9, 10].map((h) => {
+      const signKey = SIGN_ORDER[(SIGN_ORDER.indexOf(kamshaKey) + h - 1) % 12];
+      return { house: h, sign: terms.sign(signKey), lord: SIGN_LORD[signKey] ? planetName(SIGN_LORD[signKey]) : null, planets: navamsa.filter((n) => n.d9SignKey === signKey).map((n) => n.planet) };
+    })
+  } : null;
+
+  const saturn = byKey('Saturn');
+  const saturnOut = saturn ? {
+    ...brief(saturn),
+    rulesHouses: asc ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].filter((h) => lordOfHouse(asc.signKey, h)?.lordKey === 'Saturn') : [],
+    aspectsHouses: saturn.house ? [3, 7, 10].map((n) => ((saturn.house + n - 2) % 12) + 1) : [],
+    conjunct: planets.filter((q) => q.key !== 'Ascendant' && q.key !== 'Saturn' && q.house === saturn.house).map((q) => q.name)
+  } : null;
+
+  const trikona = (houses) => ({ houses: houses.map(houseSummary), occupants: houses.flatMap((h) => occupantsOf(h).map((o) => ({ ...o, house: h }))) });
+  const nakshatraKey = moon?.nakshatraKey || '';
+  const karakaRelation = atmakaraka && amatyakaraka ? {
+    sameHouse: atmakaraka.house === amatyakaraka.house,
+    amatyaHouseFromAtma: atmakaraka.house && amatyakaraka.house ? ((amatyakaraka.house - atmakaraka.house + 12) % 12) + 1 : null,
+    opposition: atmakaraka.house && amatyakaraka.house ? ((amatyakaraka.house - atmakaraka.house + 12) % 12) === 6 : false
+  } : null;
+
+  return {
+    ...base,
+    product: 'karma',
+    atmakaraka: atmakaraka ? { ...atmakaraka, dignity: dignityOfKey.get(atmakaraka.key) || null, label: houseLabel(atmakaraka.house, terms) } : null,
+    amatyakaraka: amatyakaraka ? { ...amatyakaraka, dignity: dignityOfKey.get(amatyakaraka.key) || null, label: houseLabel(amatyakaraka.house, terms) } : null,
+    karakaRelation,
+    karakamsha,
+    navamsa: navamsa.map((n) => ({ planet: n.planet, planetKey: n.planetKey, sign: n.d9SignKey ? terms.sign(n.d9SignKey) : null })),
+    nodes: { rahu: node('Rahu'), ketu: node('Ketu') },
+    saturn: saturnOut,
+    lagnaLord: asc ? houseSummary(1) : null,
+    dharmaTrikona: trikona([1, 5, 9]),
+    mokshaTrikona: trikona([4, 8, 12]),
+    houses: Object.fromEntries([4, 5, 6, 8, 9, 10, 12].map((h) => [h, houseSummary(h)])),
+    nakshatraDeity: NAKSHATRA_DEITY[nakshatraKey] || '',
+    dashaByLord: (base.dasha?.timeline || []).filter((t) => ['Rahu', 'Ketu', 'Saturn'].includes(t.lord)).map((t) => ({ lord: t.lordJa, start: t.start, end: t.end, isCurrent: t.isCurrent }))
+  };
+}
+
 async function fetchPalmData({ dob, tob, lat, lon, lang }) {
   const terms = createTerms(lang);
   const { raw, ...base } = await fetchReportData({ dob, tob, lat, lon, lang }, { withRaw: true });
@@ -1046,6 +1155,7 @@ module.exports = {
   fetchReportData,
   fetchYearlyData,
   fetchCareerData,
+  fetchKarmaData,
   fetchCompatData,
   fetchPalmData,
   setRateLimitDeadline,

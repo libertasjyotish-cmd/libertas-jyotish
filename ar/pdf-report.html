@@ -252,7 +252,7 @@
     function render(data) {
       const a = data.astro || {};
       const c = data.chapters || {};
-      if (a.product === 'yearly' || a.product === 'compat' || a.product === 'career' || a.product === 'palm') {
+      if (a.product === 'yearly' || a.product === 'compat' || a.product === 'career' || a.product === 'palm' || a.product === 'karma') {
         bookEl.innerHTML = renderProduct(a, c, data);
         return;
       }
@@ -542,10 +542,11 @@
       const sub = a.product === 'yearly' ? 'توقعات العام (الأشهر الاثنا عشر القادمة)'
         : a.product === 'career' ? 'تقرير المهنة والرسالة والمال (رسالتك في العمل)'
         : a.product === 'palm' ? 'كار-كوندالي: تقرير فيدي للكف وخريطة الميلاد'
+        : a.product === 'karma' ? 'الكارما والدارما — نداء هذه الحياة'
         : 'تقرير التوافق';
       const owner = a.product === 'yearly'
         ? `${esc(a.period?.start || '')} — ${esc(a.period?.end || '')}<br>${personLine(a)}`
-        : a.product === 'career' || a.product === 'palm' ? personLine(a)
+        : a.product === 'career' || a.product === 'palm' || a.product === 'karma' ? personLine(a)
         : `<strong>A</strong> ${personLine(a.personA)}<br><br><strong>B</strong> ${personLine(a.personB)}`;
       return `<section class="page cover">
         <div><img class="logo" src="/img/libertas-logo.png" alt="Libertas Jyotish"></div>
@@ -647,6 +648,44 @@
         <p class="disclaimer">تشير الأرقام إلى الموضع التقريبي لكل خط أو علامة قُرئت من الصورة؛ وقد تنحرف قليلاً بحسب الزاوية والإضاءة. تُحذف الصور بعد 30 يوماً من التسليم.</p>`);
     }
 
+    // カルマとダルマ: 出生図と D9 を並べた「二つの図」ページ
+    function karmaChartsPage(a) {
+      const box = (svg, caption) => (svg ? `<figure class="chart-box">${svg}<figcaption>${esc(caption)}</figcaption></figure>` : '');
+      const charts = a.charts || {};
+      return page(`<h2 class="chapter-title">الخريطتان — راسي (D1) ونافامسا (D9)</h2>
+        <div class="chart-grid">${box(charts.d1, 'D1 راشي (الحياة ككل)')}${box(charts.d9, 'D9 نافامشا (النضج والشريك)')}</div>
+        <p class="disclaimer">الخرائط على النمط الهندي الشمالي. الرقم في كل قسم هو رقم البيت، والرموز هي الكواكب الواقعة فيه.</p>`);
+    }
+
+    // カルマとダルマ: 付章 根拠表（コードで確定した配置のみ。解釈は含まない）
+    function karmaDataPage(a) {
+      const dash = (v) => (v == null || v === '' ? '—' : esc(v));
+      const placeRow = (label, p) => (p ? `<tr><td>${label}</td><td>${dash(p.name || p.planet)}</td><td>${dash(p.sign)}</td><td>${p.house == null ? '—' : esc(p.house)}</td><td>${dash(p.nakshatra)}</td><td>${dash(p.dignity)}${p.retrograde ? ' رجعي' : ''}</td></tr>` : '');
+      const head = `<thead><tr><th></th><th>الكوكب</th><th>البرج</th><th>البيت</th><th>الناكشاترا</th><th>المرتبة</th></tr></thead>`;
+      const k = a.karakamsha;
+      const karakas = `<h3>تشارا كاراكا</h3><table>${head}<tbody>
+        ${placeRow('أتماكاراكا (الكوكب الحامل لغاية الروح)', a.atmakaraka)}${placeRow('أماتياكاراكا (الكوكب الداعم للنداء)', a.amatyakaraka)}</tbody></table>
+        ${k ? `<div class="fact">كاراكامشا (برج الأتماكاراكا في D9): <strong>${esc(k.sign)}</strong>${k.houseInRasi ? ` (${esc(k.houseInRasi)})` : ''}${k.planetsWithAkInNavamsa?.length ? `<span class="reason">مقترن: ${esc(k.planetsWithAkInNavamsa.join(', '))}</span>` : ''}</div>` : ''}`;
+      const nodeRow = (p) => (p ? `${placeRow(p.planet, p)}<tr><td></td><td colspan="5">حاكم البرج: ${p.dispositor ? `${esc(p.dispositor.planet)} → ${esc(p.dispositor.sign)} (${esc(p.dispositor.house)})` : '—'}${p.conjunct?.length ? ` · مقترن: ${esc(p.conjunct.join(', '))}` : ''}</td></tr>` : '');
+      const nodes = `<h3>محور راهو / كيتو</h3><table>${head}<tbody>${nodeRow(a.nodes?.rahu)}${nodeRow(a.nodes?.ketu)}</tbody></table>`;
+      const houseRows = [a.lagnaLord, ...[5, 9, 10, 12].map((h) => a.houses?.[h])].filter(Boolean).map((h) => `<tr><td>${esc(h.house)}</td><td>${esc(h.label)}</td><td>${dash(h.sign)}</td>
+        <td>${dash(h.lord)}${h.lordPlacedIn ? ` → ${esc(h.lordPlacedIn.label)}${h.lordPlacedIn.dignity ? ` (${esc(h.lordPlacedIn.dignity)})` : ''}` : ''}</td>
+        <td>${(h.occupants || []).map((o) => `${esc(o.planet)}${o.retrograde ? 'رجعي' : ''}`).join(', ') || '—'}</td></tr>`).join('');
+      const houses = `<h3>بيوت الدارما والكارما</h3><table><thead><tr><th>البيت</th><th>المجال</th><th>البرج</th><th>الحاكم (← موضعه)</th><th>الكواكب في البيت</th></tr></thead><tbody>${houseRows}</tbody></table>`;
+      const s = a.saturn;
+      const saturn = s ? `<h3>زحل</h3><table>${head}<tbody>${placeRow(s.planet, s)}</tbody></table>
+        <div class="fact">البيوت المنظورة: <strong>${esc((s.aspectsHouses || []).join(', '))}</strong>${s.conjunct?.length ? `<span class="reason">مقترن: ${esc(s.conjunct.join(', '))}</span>` : ''}</div>` : '';
+      const ss = a.sadeSati;
+      const sade = ss?.transits?.length ? `<h3>سادي ساتي</h3><table><thead><tr><th>المرحلة</th><th>موضع زحل</th><th>الفترة</th></tr></thead><tbody>
+        ${ss.transits.map((t) => `<tr><td>${esc(t.phase)}</td><td>${esc(t.sign)}</td><td>${esc(t.start)} 〜 ${esc(t.end)}</td></tr>`).join('')}</tbody></table>` : '';
+      const dasha = (a.dasha?.timeline || []).length ? `<h3>الفترات الكبرى (ماهاداشا)</h3><table><tbody>${a.dasha.timeline.map((t) => `<tr><td>${t.isCurrent ? '<strong>' : ''}${esc(t.lordJa)}${t.isCurrent ? '</strong>' : ''}</td><td>${esc(t.start)} 〜 ${esc(t.end)}</td></tr>`).join('')}</tbody></table>` : '';
+      const terms = `<h3>معاني الكلمات في هذا التقرير</h3><ul>
+        <li>الكارما — التصميم الذي وُلدت به، والأنماط والمهام التي تميل إلى التكرار. لا تشير إلى أحداث حياة سابقة.</li><li>الدارما — الاتجاه الذي تتدفق فيه قوتك بأكثر الطرق طبيعية وتخدم من حولك.</li>
+        <li>النداء — الدور الذي يستحق أن تتولاه في هذه الحياة؛ يُقرأ كدعوة لا كواجب أو قدر محتوم.</li><li>الاختبار — المجال الذي يُصقَل، ومعناه. ليس عقابًا ولا جزاءً.</li></ul>`;
+      return page(`<h2 class="chapter-title">ملحق — جدول الأدلة (المواضع المستخدمة في هذا التقرير)</h2>${karakas}${nodes}${houses}${saturn}${sade}${dasha}${terms}
+        <p class="disclaimer">هذا التقرير تفسير لمواضع خريطة الميلاد بهدف فهم الذات. لا يقرر قدرًا ولا يتنبأ بأحداث محددة.</p>`);
+    }
+
     function renderProduct(a, c, data) {
       const chapters = PROD_ORDER.map((id) => c[id]).filter(Boolean);
       const html = [productCover(a)];
@@ -654,6 +693,7 @@
       for (const ch of chapters) html.push(genericPage(ch));
       if (a.product === 'career') { html.push(careerDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
       else if (a.product === 'palm') { html.push(palmPhotoPage(a)); html.push(palmDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
+      else if (a.product === 'karma') { html.push(karmaChartsPage(a)); html.push(karmaDataPage(a)); html.push(planetsPage(a)); }
       else html.push(a.product === 'yearly' ? yearlyDataPage(a) : compatDataPage(a));
       html.push(disclaimerPage(data));
       return html.join('');
