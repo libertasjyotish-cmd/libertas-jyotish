@@ -617,6 +617,27 @@
     "pdf-report.prodPalmPhoto": "يداك (الخطوط والعلامات المقروءة)",
     "pdf-report.prodPalmPhotoNote": "تشير الأرقام إلى الموضع التقريبي لكل خط أو علامة قُرئت من الصورة؛ وقد تنحرف قليلاً بحسب الزاوية والإضاءة. تُحذف الصور بعد 30 يوماً من التسليم.",
     "pdf-report.prodPalmNote": "* اليد المسيطرة. يسرد هذا الجدول السمات التي قرأها الذكاء الاصطناعي آليًا من صورك؛ أما التفسيرات وفق مطابقات هاستا سامودريكا التقليدية فهي في الفصول. تُحذف الصور الأصلية بعد 30 يومًا من التسليم ولا تُستخدم أبدًا للتعريف أو القياسات الحيوية. ليست لتقييم الصحة.",
-    "legal.phoneRow": ""
+    "legal.phoneRow": "",
+    "pdf-report.prodKarma": "الكارما والدارما — نداء هذه الحياة",
+    "pdf-report.prodKarmaEvidence": "ملحق — جدول الأدلة (المواضع المستخدمة في هذا التقرير)",
+    "pdf-report.prodKarmaCharts": "الخريطتان — راسي (D1) ونافامسا (D9)",
+    "pdf-report.prodKarmaKarakas": "تشارا كاراكا",
+    "pdf-report.prodKarmaAK": "أتماكاراكا (الكوكب الحامل لغاية الروح)",
+    "pdf-report.prodKarmaAmK": "أماتياكاراكا (الكوكب الداعم للنداء)",
+    "pdf-report.prodKarmaKamsha": "كاراكامشا (برج الأتماكاراكا في D9)",
+    "pdf-report.prodKarmaNodes": "محور راهو / كيتو",
+    "pdf-report.prodKarmaDispositor": "حاكم البرج",
+    "pdf-report.prodKarmaConjunct": "مقترن",
+    "pdf-report.prodKarmaHouses": "بيوت الدارما والكارما",
+    "pdf-report.prodKarmaSaturn": "زحل",
+    "pdf-report.prodKarmaAspects": "البيوت المنظورة",
+    "pdf-report.prodKarmaSadeSati": "سادي ساتي",
+    "pdf-report.prodKarmaDasha": "الفترات الكبرى (ماهاداشا)",
+    "pdf-report.prodKarmaTerms": "معاني الكلمات في هذا التقرير",
+    "pdf-report.prodKarmaDefKarma": "الكارما — التصميم الذي وُلدت به، والأنماط والمهام التي تميل إلى التكرار. لا تشير إلى أحداث حياة سابقة.",
+    "pdf-report.prodKarmaDefDharma": "الدارما — الاتجاه الذي تتدفق فيه قوتك بأكثر الطرق طبيعية وتخدم من حولك.",
+    "pdf-report.prodKarmaDefCalling": "النداء — الدور الذي يستحق أن تتولاه في هذه الحياة؛ يُقرأ كدعوة لا كواجب أو قدر محتوم.",
+    "pdf-report.prodKarmaDefTrial": "الاختبار — المجال الذي يُصقَل، ومعناه. ليس عقابًا ولا جزاءً.",
+    "pdf-report.prodKarmaNote": "هذا التقرير تفسير لمواضع خريطة الميلاد بهدف فهم الذات. لا يقرر قدرًا ولا يتنبأ بأحداث محددة."
   }
 }

@@ -252,7 +252,7 @@
     function render(data) {
       const a = data.astro || {};
       const c = data.chapters || {};
-      if (a.product === 'yearly' || a.product === 'compat' || a.product === 'career' || a.product === 'palm') {
+      if (a.product === 'yearly' || a.product === 'compat' || a.product === 'career' || a.product === 'palm' || a.product === 'karma') {
         bookEl.innerHTML = renderProduct(a, c, data);
         return;
       }
@@ -542,10 +542,11 @@
       const sub = a.product === 'yearly' ? 'Pronóstico del año (próximos 12 meses)'
         : a.product === 'career' ? 'Informe de carrera, vocación y dinero (tu vocación)'
         : a.product === 'palm' ? 'Kar-Kundali: Informe védico de palma y carta natal'
+        : a.product === 'karma' ? 'Karma y Dharma — La llamada de esta vida'
         : 'Informe de compatibilidad';
       const owner = a.product === 'yearly'
         ? `${esc(a.period?.start || '')} — ${esc(a.period?.end || '')}<br>${personLine(a)}`
-        : a.product === 'career' || a.product === 'palm' ? personLine(a)
+        : a.product === 'career' || a.product === 'palm' || a.product === 'karma' ? personLine(a)
         : `<strong>A</strong> ${personLine(a.personA)}<br><br><strong>B</strong> ${personLine(a.personB)}`;
       return `<section class="page cover">
         <div><img class="logo" src="/img/libertas-logo.png" alt="Libertas Jyotish"></div>
@@ -647,6 +648,44 @@
         <p class="disclaimer">Los números indican la posición aproximada de cada línea o marca leída en la foto; el ángulo y la luz pueden desplazarlos ligeramente. Las fotos se eliminan 30 días después de la entrega.</p>`);
     }
 
+    // カルマとダルマ: 出生図と D9 を並べた「二つの図」ページ
+    function karmaChartsPage(a) {
+      const box = (svg, caption) => (svg ? `<figure class="chart-box">${svg}<figcaption>${esc(caption)}</figcaption></figure>` : '');
+      const charts = a.charts || {};
+      return page(`<h2 class="chapter-title">Las dos cartas — Rasi (D1) y Navamsa (D9)</h2>
+        <div class="chart-grid">${box(charts.d1, 'D1 Rashi (la vida en conjunto)')}${box(charts.d9, 'D9 Navamsha (madurez, pareja)')}</div>
+        <p class="disclaimer">Las cartas siguen el estilo del norte de la India. El número de cada sección es el número de casa, y los símbolos son los planetas allí situados.</p>`);
+    }
+
+    // カルマとダルマ: 付章 根拠表（コードで確定した配置のみ。解釈は含まない）
+    function karmaDataPage(a) {
+      const dash = (v) => (v == null || v === '' ? '—' : esc(v));
+      const placeRow = (label, p) => (p ? `<tr><td>${label}</td><td>${dash(p.name || p.planet)}</td><td>${dash(p.sign)}</td><td>${p.house == null ? '—' : esc(p.house)}</td><td>${dash(p.nakshatra)}</td><td>${dash(p.dignity)}${p.retrograde ? ' Retrógrado' : ''}</td></tr>` : '');
+      const head = `<thead><tr><th></th><th>Planeta</th><th>Signo</th><th>Casa</th><th>Nakshatra</th><th>Dignidad</th></tr></thead>`;
+      const k = a.karakamsha;
+      const karakas = `<h3>Chara Karakas</h3><table>${head}<tbody>
+        ${placeRow('Atmakaraka (el planeta que porta el propósito del alma)', a.atmakaraka)}${placeRow('Amatyakaraka (el planeta que sostiene la llamada)', a.amatyakaraka)}</tbody></table>
+        ${k ? `<div class="fact">Karakamsha (el signo del Atmakaraka en D9): <strong>${esc(k.sign)}</strong>${k.houseInRasi ? ` (${esc(k.houseInRasi)})` : ''}${k.planetsWithAkInNavamsa?.length ? `<span class="reason">En conjunción: ${esc(k.planetsWithAkInNavamsa.join(', '))}</span>` : ''}</div>` : ''}`;
+      const nodeRow = (p) => (p ? `${placeRow(p.planet, p)}<tr><td></td><td colspan="5">Regente del signo: ${p.dispositor ? `${esc(p.dispositor.planet)} → ${esc(p.dispositor.sign)} (${esc(p.dispositor.house)})` : '—'}${p.conjunct?.length ? ` · En conjunción: ${esc(p.conjunct.join(', '))}` : ''}</td></tr>` : '');
+      const nodes = `<h3>El eje Rahu / Ketu</h3><table>${head}<tbody>${nodeRow(a.nodes?.rahu)}${nodeRow(a.nodes?.ketu)}</tbody></table>`;
+      const houseRows = [a.lagnaLord, ...[5, 9, 10, 12].map((h) => a.houses?.[h])].filter(Boolean).map((h) => `<tr><td>${esc(h.house)}</td><td>${esc(h.label)}</td><td>${dash(h.sign)}</td>
+        <td>${dash(h.lord)}${h.lordPlacedIn ? ` → ${esc(h.lordPlacedIn.label)}${h.lordPlacedIn.dignity ? ` (${esc(h.lordPlacedIn.dignity)})` : ''}` : ''}</td>
+        <td>${(h.occupants || []).map((o) => `${esc(o.planet)}${o.retrograde ? 'Retrógrado' : ''}`).join(', ') || '—'}</td></tr>`).join('');
+      const houses = `<h3>Casas del Dharma y del Karma</h3><table><thead><tr><th>Casa</th><th>Tema</th><th>Signo</th><th>Regente (→ ubicado en)</th><th>Planetas en la casa</th></tr></thead><tbody>${houseRows}</tbody></table>`;
+      const s = a.saturn;
+      const saturn = s ? `<h3>Saturno</h3><table>${head}<tbody>${placeRow(s.planet, s)}</tbody></table>
+        <div class="fact">Casas aspectadas: <strong>${esc((s.aspectsHouses || []).join(', '))}</strong>${s.conjunct?.length ? `<span class="reason">En conjunción: ${esc(s.conjunct.join(', '))}</span>` : ''}</div>` : '';
+      const ss = a.sadeSati;
+      const sade = ss?.transits?.length ? `<h3>Sade Sati</h3><table><thead><tr><th>Fase</th><th>Posición de Saturno</th><th>Periodo</th></tr></thead><tbody>
+        ${ss.transits.map((t) => `<tr><td>${esc(t.phase)}</td><td>${esc(t.sign)}</td><td>${esc(t.start)} 〜 ${esc(t.end)}</td></tr>`).join('')}</tbody></table>` : '';
+      const dasha = (a.dasha?.timeline || []).length ? `<h3>Periodos mayores (Mahadasha)</h3><table><tbody>${a.dasha.timeline.map((t) => `<tr><td>${t.isCurrent ? '<strong>' : ''}${esc(t.lordJa)}${t.isCurrent ? '</strong>' : ''}</td><td>${esc(t.start)} 〜 ${esc(t.end)}</td></tr>`).join('')}</tbody></table>` : '';
+      const terms = `<h3>Cómo usa sus palabras este informe</h3><ul>
+        <li>Karma — el diseño con el que naciste y los patrones y tareas que tienden a repetirse. No se refiere a hechos de una vida pasada.</li><li>Dharma — la dirección en la que tu fuerza fluye con más naturalidad y sirve a los demás.</li>
+        <li>Llamada — el papel que vale la pena asumir en esta vida; se lee como invitación, no como obligación ni destino fijo.</li><li>Prueba — el área que se está entrenando y su significado. No es castigo ni retribución.</li></ul>`;
+      return page(`<h2 class="chapter-title">Apéndice — Tabla de evidencias (posiciones usadas en este informe)</h2>${karakas}${nodes}${houses}${saturn}${sade}${dasha}${terms}
+        <p class="disclaimer">Este informe es una interpretación de las posiciones de la carta natal para el autoconocimiento. No declara un destino ni predice hechos concretos.</p>`);
+    }
+
     function renderProduct(a, c, data) {
       const chapters = PROD_ORDER.map((id) => c[id]).filter(Boolean);
       const html = [productCover(a)];
@@ -654,6 +693,7 @@
       for (const ch of chapters) html.push(genericPage(ch));
       if (a.product === 'career') { html.push(careerDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
       else if (a.product === 'palm') { html.push(palmPhotoPage(a)); html.push(palmDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
+      else if (a.product === 'karma') { html.push(karmaChartsPage(a)); html.push(karmaDataPage(a)); html.push(planetsPage(a)); }
       else html.push(a.product === 'yearly' ? yearlyDataPage(a) : compatDataPage(a));
       html.push(disclaimerPage(data));
       return html.join('');

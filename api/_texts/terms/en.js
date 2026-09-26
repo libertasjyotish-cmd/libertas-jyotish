@@ -272,7 +272,16 @@ const CHAPTER_TITLE = {
   palm_ch7: 'Chapter 7 — Bonds, work and decisions',
   palm_ch8: 'Chapter 8 — The next 12 months',
   palm_ch9: 'Chapter 9 — Hands change (a practice of observation)',
-  palm_ch10: 'Appendix — Clues when the birth time is uncertain'
+  palm_ch10: 'Appendix — Clues when the birth time is uncertain',
+  karma_summary: 'Your soul\'s blueprint at a glance',
+  karma_ch1: 'Chapter 1 — Who you were born to be (Lagna and Atmakaraka)',
+  karma_ch2: 'Chapter 2 — The karma you were born with (Ketu)',
+  karma_ch3: 'Chapter 3 — The tasks and trials of this lifetime (Rahu and Saturn)',
+  karma_ch4: 'Chapter 4 — When the trials come, and what they mean (Sade Sati and Dasha)',
+  karma_ch5: 'Chapter 5 — The direction of your calling (the houses of Dharma and Karma)',
+  karma_ch6: 'Chapter 6 — What only you can do (Karakamsha and the trines)',
+  karma_ch7: 'Chapter 7 — The moments you feel alive (Moon, 5th house, Nakshatra)',
+  karma_ch8: 'Chapter 8 — What you are here to fulfil (summary)'
 };
 
 const REASON = {

@@ -45,7 +45,8 @@ const PRODUCT_NAMES = {
   yearly: 'Vedic astrology year-ahead forecast',
   compat: 'Vedic astrology compatibility report',
   career: 'Vedic astrology career & wealth report',
-  palm: 'Kar-Kundali (Vedic palm & birth chart) report'
+  palm: 'Kar-Kundali (Vedic palm & birth chart) report',
+  karma: 'Karma & Dharma — The Calling of This Lifetime (Vedic astrology report)'
 };
 
 // 手相×出生図: 写真のアップロード案内。日本語注文（サイト直販）は日本語、それ以外は英語。

@@ -617,6 +617,27 @@
     "pdf-report.prodPalmPhoto": "Ihre Hände (gelesene Linien und Zeichen)",
     "pdf-report.prodPalmPhotoNote": "Die Zahlen markieren die ungefähre Position jeder Linie oder jedes Zeichens, das aus dem Foto gelesen wurde; Winkel und Beleuchtung können diese leicht verschieben. Fotos werden 30 Tage nach der Lieferung gelöscht.",
     "pdf-report.prodPalmNote": "* dominante Hand. Diese Tabelle listet die Merkmale auf, die eine KI maschinell aus Ihren Fotos ausgelesen hat; Interpretationen basierend auf traditionellen Hasta Samudrika-Entsprechungen finden Sie in den Kapiteln. Originalfotos werden 30 Tage nach der Lieferung gelöscht und niemals für Identifikations- oder Biometriezwecke verwendet. Nicht zur Beurteilung der Gesundheit bestimmt.",
-    "legal.phoneRow": ""
+    "legal.phoneRow": "",
+    "pdf-report.prodKarma": "Karma und Dharma — Die Berufung dieses Lebens",
+    "pdf-report.prodKarmaEvidence": "Anhang — Belegtabelle (in diesem Bericht verwendete Stellungen)",
+    "pdf-report.prodKarmaCharts": "Die zwei Horoskope — Rasi (D1) und Navamsa (D9)",
+    "pdf-report.prodKarmaKarakas": "Chara Karakas",
+    "pdf-report.prodKarmaAK": "Atmakaraka (der Planet, der den Zweck der Seele trägt)",
+    "pdf-report.prodKarmaAmK": "Amatyakaraka (der Planet, der die Berufung stützt)",
+    "pdf-report.prodKarmaKamsha": "Karakamsha (das Zeichen des Atmakaraka im D9)",
+    "pdf-report.prodKarmaNodes": "Die Rahu-/Ketu-Achse",
+    "pdf-report.prodKarmaDispositor": "Zeichenherrscher",
+    "pdf-report.prodKarmaConjunct": "In Konjunktion",
+    "pdf-report.prodKarmaHouses": "Häuser von Dharma und Karma",
+    "pdf-report.prodKarmaSaturn": "Saturn",
+    "pdf-report.prodKarmaAspects": "Aspektierte Häuser",
+    "pdf-report.prodKarmaSadeSati": "Sade Sati",
+    "pdf-report.prodKarmaDasha": "Große Perioden (Mahadasha)",
+    "pdf-report.prodKarmaTerms": "Wie dieser Bericht seine Worte versteht",
+    "pdf-report.prodKarmaDefKarma": "Karma — der Bauplan, mit dem Sie geboren wurden, und die Muster und Aufgaben, die sich zu wiederholen neigen. Es bezeichnet keine Ereignisse eines früheren Lebens.",
+    "pdf-report.prodKarmaDefDharma": "Dharma — die Richtung, in der Ihre Kraft am natürlichsten fließt und anderen dient.",
+    "pdf-report.prodKarmaDefCalling": "Berufung — die Rolle, die es sich in diesem Leben anzunehmen lohnt; als Einladung gelesen, nicht als Pflicht oder festes Schicksal.",
+    "pdf-report.prodKarmaDefTrial": "Prüfung — der Bereich, der geschult wird, und seine Bedeutung. Keine Strafe, keine Vergeltung.",
+    "pdf-report.prodKarmaNote": "Dieser Bericht ist eine Deutung der Stellungen im Geburtshoroskop zur Selbsterkenntnis. Er verkündet kein Schicksal und sagt keine konkreten Ereignisse voraus."
   }
 }

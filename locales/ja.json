@@ -617,6 +617,27 @@
     "pdf-report.prodPalmMarks": "見つかった印",
     "pdf-report.prodPalmPhoto": "あなたの手（読み取った線と印）",
     "pdf-report.prodPalmPhotoNote": "番号は写真から読み取った線・印の位置を示す目安です。写真の角度や光の具合で位置がずれることがあります。写真は鑑定書の納品から 30 日後に削除されます。",
-    "pdf-report.prodPalmNote": "* は利き手。この表は AI が写真から機械的に読み取った形の一覧で、伝統的手相学の対応表に基づく解釈は本文にあります。写真の原本は納品後 30 日で削除され、本人確認や生体認証には使用しません。健康状態の判断には用いないでください。"
+    "pdf-report.prodPalmNote": "* は利き手。この表は AI が写真から機械的に読み取った形の一覧で、伝統的手相学の対応表に基づく解釈は本文にあります。写真の原本は納品後 30 日で削除され、本人確認や生体認証には使用しません。健康状態の判断には用いないでください。",
+    "pdf-report.prodKarma": "カルマとダルマ ― 今世の天命",
+    "pdf-report.prodKarmaEvidence": "付章 根拠表（本書で用いた配置）",
+    "pdf-report.prodKarmaCharts": "二つの図 ― 出生図（D1）とナヴァムシャ（D9）",
+    "pdf-report.prodKarmaKarakas": "チャラ・カーラカ",
+    "pdf-report.prodKarmaAK": "アートマカーラカ（魂の目的を担う星）",
+    "pdf-report.prodKarmaAmK": "アマティヤカーラカ（使命を支える星）",
+    "pdf-report.prodKarmaKamsha": "カラカムシャ（アートマカーラカの D9 サイン）",
+    "pdf-report.prodKarmaNodes": "ラーフ／ケートゥ軸",
+    "pdf-report.prodKarmaDispositor": "サインの支配星",
+    "pdf-report.prodKarmaConjunct": "同座",
+    "pdf-report.prodKarmaHouses": "ダルマとカルマの家",
+    "pdf-report.prodKarmaSaturn": "土星",
+    "pdf-report.prodKarmaAspects": "アスペクトするハウス",
+    "pdf-report.prodKarmaSadeSati": "サデサティ",
+    "pdf-report.prodKarmaDasha": "大周期（マハーダシャー）",
+    "pdf-report.prodKarmaTerms": "本書の語の定義",
+    "pdf-report.prodKarmaDefKarma": "カルマ ― 生まれ持った設計と、繰り返しやすい癖・課題。前世の出来事を指すものではありません。",
+    "pdf-report.prodKarmaDefDharma": "ダルマ ― その人の力が最も自然に発揮され、周囲に役立つ方向。",
+    "pdf-report.prodKarmaDefCalling": "天命 ― 今生で引き受けるとよい役割。義務や運命の強制ではなく、招きとして読みます。",
+    "pdf-report.prodKarmaDefTrial": "試練 ― 鍛えられる領域と、その意味。罰や報いではありません。",
+    "pdf-report.prodKarmaNote": "本書は出生図の配置から読み解いた自己理解のための解釈であり、宿命や将来の出来事を断定するものではありません。"
   }
 }

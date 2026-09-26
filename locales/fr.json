@@ -617,6 +617,27 @@
     "pdf-report.prodPalmPhoto": "Vos mains (lignes et marques telles que lues)",
     "pdf-report.prodPalmPhotoNote": "Les numéros indiquent la position approximative de chaque ligne ou marque lue sur la photo ; l'angle et l'éclairage peuvent les décaler légèrement. Les photos sont supprimées 30 jours après la livraison.",
     "pdf-report.prodPalmNote": "* main dominante. Ce tableau liste les caractéristiques qu'une IA a lues mécaniquement à partir de vos photos ; les interprétations basées sur les correspondances traditionnelles du Hasta Samudrika se trouvent dans les chapitres. Les photos originales sont supprimées 30 jours après la livraison et ne sont jamais utilisées à des fins d'identification ou de biométrie. Ne convient pas pour évaluer l'état de santé.",
-    "legal.phoneRow": ""
+    "legal.phoneRow": "",
+    "pdf-report.prodKarma": "Karma et Dharma — L'appel de cette vie",
+    "pdf-report.prodKarmaEvidence": "Appendice — Tableau des fondements (positions utilisées dans ce rapport)",
+    "pdf-report.prodKarmaCharts": "Les deux cartes — Rasi (D1) et Navamsa (D9)",
+    "pdf-report.prodKarmaKarakas": "Chara Karakas",
+    "pdf-report.prodKarmaAK": "Atmakaraka (la planète qui porte le but de l'âme)",
+    "pdf-report.prodKarmaAmK": "Amatyakaraka (la planète qui soutient l'appel)",
+    "pdf-report.prodKarmaKamsha": "Karakamsha (le signe de l'Atmakaraka en D9)",
+    "pdf-report.prodKarmaNodes": "L'axe Rahu / Ketu",
+    "pdf-report.prodKarmaDispositor": "Maître du signe",
+    "pdf-report.prodKarmaConjunct": "En conjonction",
+    "pdf-report.prodKarmaHouses": "Maisons du Dharma et du Karma",
+    "pdf-report.prodKarmaSaturn": "Saturne",
+    "pdf-report.prodKarmaAspects": "Maisons aspectées",
+    "pdf-report.prodKarmaSadeSati": "Sade Sati",
+    "pdf-report.prodKarmaDasha": "Grandes périodes (Mahadasha)",
+    "pdf-report.prodKarmaTerms": "Le sens des mots dans ce rapport",
+    "pdf-report.prodKarmaDefKarma": "Karma — le dessin avec lequel vous êtes né, et les schémas et tâches qui tendent à se répéter. Il ne désigne pas des faits d'une vie antérieure.",
+    "pdf-report.prodKarmaDefDharma": "Dharma — la direction dans laquelle votre force s'exprime le plus naturellement et sert les autres.",
+    "pdf-report.prodKarmaDefCalling": "Appel — le rôle qu'il vaut la peine d'assumer dans cette vie ; lu comme une invitation, non comme une obligation ni un destin figé.",
+    "pdf-report.prodKarmaDefTrial": "Épreuve — le domaine qui se forge, et son sens. Ni punition ni rétribution.",
+    "pdf-report.prodKarmaNote": "Ce rapport est une interprétation des positions du thème natal à des fins de connaissance de soi. Il n'énonce pas un destin et ne prédit pas d'événements précis."
   }
 }

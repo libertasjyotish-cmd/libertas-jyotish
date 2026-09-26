@@ -617,6 +617,27 @@
     "pdf-report.prodPalmPhoto": "Your hands (lines and marks as read)",
     "pdf-report.prodPalmPhotoNote": "The numbers mark the approximate position of each line or mark read from the photo; angle and lighting may shift them slightly. Photos are deleted 30 days after delivery.",
     "pdf-report.prodPalmNote": "* dominant hand. This table lists the features an AI read mechanically from your photos; interpretations based on traditional Hasta Samudrika correspondences are in the chapters. Photo originals are deleted 30 days after delivery and are never used for identification or biometrics. Not for assessing health.",
-    "legal.phoneRow": ""
+    "legal.phoneRow": "",
+    "pdf-report.prodKarma": "Karma & Dharma — The Calling of This Lifetime",
+    "pdf-report.prodKarmaEvidence": "Appendix — Evidence table (placements used in this report)",
+    "pdf-report.prodKarmaCharts": "The two charts — Rasi (D1) and Navamsa (D9)",
+    "pdf-report.prodKarmaKarakas": "Chara Karakas",
+    "pdf-report.prodKarmaAK": "Atmakaraka (the planet carrying the soul's purpose)",
+    "pdf-report.prodKarmaAmK": "Amatyakaraka (the planet that supports the calling)",
+    "pdf-report.prodKarmaKamsha": "Karakamsha (the Atmakaraka's sign in D9)",
+    "pdf-report.prodKarmaNodes": "The Rahu / Ketu axis",
+    "pdf-report.prodKarmaDispositor": "Sign lord",
+    "pdf-report.prodKarmaConjunct": "Conjunct",
+    "pdf-report.prodKarmaHouses": "Houses of Dharma and Karma",
+    "pdf-report.prodKarmaSaturn": "Saturn",
+    "pdf-report.prodKarmaAspects": "Houses aspected",
+    "pdf-report.prodKarmaSadeSati": "Sade Sati",
+    "pdf-report.prodKarmaDasha": "Major periods (Mahadasha)",
+    "pdf-report.prodKarmaTerms": "How this report uses its words",
+    "pdf-report.prodKarmaDefKarma": "Karma — the design you were born with, and the patterns and tasks that tend to repeat. It does not refer to events of a past life.",
+    "pdf-report.prodKarmaDefDharma": "Dharma — the direction in which your strength flows most naturally and serves others.",
+    "pdf-report.prodKarmaDefCalling": "Calling — the role worth taking on in this lifetime; read as an invitation, not an obligation or a fixed fate.",
+    "pdf-report.prodKarmaDefTrial": "Trial — the area that is being trained, and what it means. Not punishment or retribution.",
+    "pdf-report.prodKarmaNote": "This report is an interpretation of birth-chart placements for self-understanding. It does not declare fate or predict specific events."
   }
 }

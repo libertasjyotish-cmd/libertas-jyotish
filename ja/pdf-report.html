@@ -252,7 +252,7 @@
     function render(data) {
       const a = data.astro || {};
       const c = data.chapters || {};
-      if (a.product === 'yearly' || a.product === 'compat' || a.product === 'career' || a.product === 'palm') {
+      if (a.product === 'yearly' || a.product === 'compat' || a.product === 'career' || a.product === 'palm' || a.product === 'karma') {
         bookEl.innerHTML = renderProduct(a, c, data);
         return;
       }
@@ -542,10 +542,11 @@
       const sub = a.product === 'yearly' ? '年間運勢鑑定書（今後 12 か月）'
         : a.product === 'career' ? '仕事・適職・金運 鑑定書（あなたの天職）'
         : a.product === 'palm' ? '手相×出生図 統合鑑定「カル・クンダリ」'
+        : a.product === 'karma' ? 'カルマとダルマ ― 今世の天命'
         : '相性鑑定書';
       const owner = a.product === 'yearly'
         ? `${esc(a.period?.start || '')} — ${esc(a.period?.end || '')}<br>${personLine(a)}`
-        : a.product === 'career' || a.product === 'palm' ? personLine(a)
+        : a.product === 'career' || a.product === 'palm' || a.product === 'karma' ? personLine(a)
         : `<strong>A</strong> ${personLine(a.personA)}<br><br><strong>B</strong> ${personLine(a.personB)}`;
       return `<section class="page cover">
         <div><img class="logo" src="/img/libertas-logo.png" alt="Libertas Jyotish"></div>
@@ -647,6 +648,44 @@
         <p class="disclaimer">番号は写真から読み取った線・印の位置を示す目安です。写真の角度や光の具合で位置がずれることがあります。写真は鑑定書の納品から 30 日後に削除されます。</p>`);
     }
 
+    // カルマとダルマ: 出生図と D9 を並べた「二つの図」ページ
+    function karmaChartsPage(a) {
+      const box = (svg, caption) => (svg ? `<figure class="chart-box">${svg}<figcaption>${esc(caption)}</figcaption></figure>` : '');
+      const charts = a.charts || {};
+      return page(`<h2 class="chapter-title">二つの図 ― 出生図（D1）とナヴァムシャ（D9）</h2>
+        <div class="chart-grid">${box(charts.d1, 'D1 ラーシ（人生全体）')}${box(charts.d9, 'D9 ナヴァムシャ（後半生・伴侶）')}</div>
+        <p class="disclaimer">チャートは北インド式です。中央の数字はハウス（部屋）の番号を、記号は在住する天体を表します。</p>`);
+    }
+
+    // カルマとダルマ: 付章 根拠表（コードで確定した配置のみ。解釈は含まない）
+    function karmaDataPage(a) {
+      const dash = (v) => (v == null || v === '' ? '—' : esc(v));
+      const placeRow = (label, p) => (p ? `<tr><td>${label}</td><td>${dash(p.name || p.planet)}</td><td>${dash(p.sign)}</td><td>${p.house == null ? '—' : esc(p.house)}</td><td>${dash(p.nakshatra)}</td><td>${dash(p.dignity)}${p.retrograde ? ' 逆行' : ''}</td></tr>` : '');
+      const head = `<thead><tr><th></th><th>天体</th><th>星座</th><th>ハウス</th><th>ナクシャトラ</th><th>品位</th></tr></thead>`;
+      const k = a.karakamsha;
+      const karakas = `<h3>チャラ・カーラカ</h3><table>${head}<tbody>
+        ${placeRow('アートマカーラカ（魂の目的を担う星）', a.atmakaraka)}${placeRow('アマティヤカーラカ（使命を支える星）', a.amatyakaraka)}</tbody></table>
+        ${k ? `<div class="fact">カラカムシャ（アートマカーラカの D9 サイン）: <strong>${esc(k.sign)}</strong>${k.houseInRasi ? ` (${esc(k.houseInRasi)})` : ''}${k.planetsWithAkInNavamsa?.length ? `<span class="reason">同座: ${esc(k.planetsWithAkInNavamsa.join(', '))}</span>` : ''}</div>` : ''}`;
+      const nodeRow = (p) => (p ? `${placeRow(p.planet, p)}<tr><td></td><td colspan="5">サインの支配星: ${p.dispositor ? `${esc(p.dispositor.planet)} → ${esc(p.dispositor.sign)} (${esc(p.dispositor.house)})` : '—'}${p.conjunct?.length ? ` · 同座: ${esc(p.conjunct.join(', '))}` : ''}</td></tr>` : '');
+      const nodes = `<h3>ラーフ／ケートゥ軸</h3><table>${head}<tbody>${nodeRow(a.nodes?.rahu)}${nodeRow(a.nodes?.ketu)}</tbody></table>`;
+      const houseRows = [a.lagnaLord, ...[5, 9, 10, 12].map((h) => a.houses?.[h])].filter(Boolean).map((h) => `<tr><td>${esc(h.house)}</td><td>${esc(h.label)}</td><td>${dash(h.sign)}</td>
+        <td>${dash(h.lord)}${h.lordPlacedIn ? ` → ${esc(h.lordPlacedIn.label)}${h.lordPlacedIn.dignity ? ` (${esc(h.lordPlacedIn.dignity)})` : ''}` : ''}</td>
+        <td>${(h.occupants || []).map((o) => `${esc(o.planet)}${o.retrograde ? '逆行' : ''}`).join(', ') || '—'}</td></tr>`).join('');
+      const houses = `<h3>ダルマとカルマの家</h3><table><thead><tr><th>ハウス</th><th>領域</th><th>星座</th><th>支配星（→ 在住ハウス）</th><th>在住惑星</th></tr></thead><tbody>${houseRows}</tbody></table>`;
+      const s = a.saturn;
+      const saturn = s ? `<h3>土星</h3><table>${head}<tbody>${placeRow(s.planet, s)}</tbody></table>
+        <div class="fact">アスペクトするハウス: <strong>${esc((s.aspectsHouses || []).join(', '))}</strong>${s.conjunct?.length ? `<span class="reason">同座: ${esc(s.conjunct.join(', '))}</span>` : ''}</div>` : '';
+      const ss = a.sadeSati;
+      const sade = ss?.transits?.length ? `<h3>サデサティ</h3><table><thead><tr><th>段階</th><th>土星の位置</th><th>期間</th></tr></thead><tbody>
+        ${ss.transits.map((t) => `<tr><td>${esc(t.phase)}</td><td>${esc(t.sign)}</td><td>${esc(t.start)} 〜 ${esc(t.end)}</td></tr>`).join('')}</tbody></table>` : '';
+      const dasha = (a.dasha?.timeline || []).length ? `<h3>大周期（マハーダシャー）</h3><table><tbody>${a.dasha.timeline.map((t) => `<tr><td>${t.isCurrent ? '<strong>' : ''}${esc(t.lordJa)}${t.isCurrent ? '</strong>' : ''}</td><td>${esc(t.start)} 〜 ${esc(t.end)}</td></tr>`).join('')}</tbody></table>` : '';
+      const terms = `<h3>本書の語の定義</h3><ul>
+        <li>カルマ ― 生まれ持った設計と、繰り返しやすい癖・課題。前世の出来事を指すものではありません。</li><li>ダルマ ― その人の力が最も自然に発揮され、周囲に役立つ方向。</li>
+        <li>天命 ― 今生で引き受けるとよい役割。義務や運命の強制ではなく、招きとして読みます。</li><li>試練 ― 鍛えられる領域と、その意味。罰や報いではありません。</li></ul>`;
+      return page(`<h2 class="chapter-title">付章 根拠表（本書で用いた配置）</h2>${karakas}${nodes}${houses}${saturn}${sade}${dasha}${terms}
+        <p class="disclaimer">本書は出生図の配置から読み解いた自己理解のための解釈であり、宿命や将来の出来事を断定するものではありません。</p>`);
+    }
+
     function renderProduct(a, c, data) {
       const chapters = PROD_ORDER.map((id) => c[id]).filter(Boolean);
       const html = [productCover(a)];
@@ -654,6 +693,7 @@
       for (const ch of chapters) html.push(genericPage(ch));
       if (a.product === 'career') { html.push(careerDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
       else if (a.product === 'palm') { html.push(palmPhotoPage(a)); html.push(palmDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
+      else if (a.product === 'karma') { html.push(karmaChartsPage(a)); html.push(karmaDataPage(a)); html.push(planetsPage(a)); }
       else html.push(a.product === 'yearly' ? yearlyDataPage(a) : compatDataPage(a));
       html.push(disclaimerPage(data));
       return html.join('');

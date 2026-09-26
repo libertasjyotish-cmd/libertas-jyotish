@@ -271,7 +271,16 @@ const CHAPTER_TITLE = {
   palm_ch7: 'Capítulo 7 — Vínculos, trabajo y decisiones',
   palm_ch8: 'Capítulo 8 — Los próximos 12 meses',
   palm_ch9: 'Capítulo 9 — Las manos cambian (una práctica de observación)',
-  palm_ch10: 'Apéndice — Pistas cuando la hora de nacimiento es incierta'
+  palm_ch10: 'Apéndice — Pistas cuando la hora de nacimiento es incierta',
+  karma_summary: 'El plano de tu alma de un vistazo',
+  karma_ch1: 'Capítulo 1 — Quién naciste para ser (Lagna y Atmakaraka)',
+  karma_ch2: 'Capítulo 2 — El karma con el que naciste (Ketu)',
+  karma_ch3: 'Capítulo 3 — Las tareas y pruebas de esta vida (Rahu y Saturno)',
+  karma_ch4: 'Capítulo 4 — Cuándo llegan las pruebas y qué significan (Sade Sati y Dasha)',
+  karma_ch5: 'Capítulo 5 — La dirección de tu llamada (las casas del Dharma y del Karma)',
+  karma_ch6: 'Capítulo 6 — Lo que solo tú puedes hacer (Karakamsha y los trígonos)',
+  karma_ch7: 'Capítulo 7 — Los momentos en que te sientes vivo (Luna, casa 5, Nakshatra)',
+  karma_ch8: 'Capítulo 8 — Lo que viniste a cumplir (síntesis)'
 };
 
 const REASON = {
