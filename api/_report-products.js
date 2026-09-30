@@ -40,7 +40,7 @@ const DECISIONS = [
   { key: 'work', label: '転職・独立（退職を告げる・新しい立場に就く・開業する）', houses: [10, 6, 1], support: ['Sun', 'Mars', 'Mercury'], solo: [1], contract: true, dasha: true },
   { key: 'move_home', label: '引っ越し（転居・住まいの契約）', houses: [4], support: ['Mars', 'Venus'], contract: true },
   { key: 'partnership', label: '結婚・同居・パートナーとの約束を交わす', houses: [7], support: ['Venus'], contract: true, saturnNeutral: true },
-  { key: 'end', label: '別れ・辞める・手放す（終わりを告げる）', houses: [12, 8], support: ['Mars'], ending: true, dasha: true },
+  { key: 'end', label: '別れ・手放す（縁や持ち物の終わりを告げる）', houses: [12, 8], support: ['Mars'], ending: true, dasha: true, jupiterWeak: true },
   { key: 'study', label: '学び直し・資格・遠方へ出る（申し込む・出発する）', houses: [9, 5], support: ['Mercury', 'Sun'] },
   { key: 'money', label: '大きな買い物・借入・資産の動き（契約・支払い）', houses: [2, 11], support: ['Venus', 'Mercury'], contract: true, rahuWary: true }
 ];
@@ -54,7 +54,7 @@ const scoreDecisions = (m, dashaChange) => {
     let score = 0;
     const why = [];
     const j = at('Jupiter');
-    if (j && d.houses.includes(j.houseFromMoon)) { score += 2; why.push(`木星が月から${j.houseFromMoon}室`); }
+    if (j && d.houses.includes(j.houseFromMoon)) { score += d.jupiterWeak ? 1 : 2; why.push(`木星が月から${j.houseFromMoon}室`); }
     else if (j && d.houses.some((h) => jupiterLights(j.houseFromMoon).includes(h))) { score += 1; why.push(`木星（月から${j.houseFromMoon}室）が${d.houses.find((h) => jupiterLights(j.houseFromMoon).includes(h))}室を照らす`); }
     for (const key of d.support) {
       const p = at(key);
@@ -79,53 +79,72 @@ const scoreDecisions = (m, dashaChange) => {
   }
   return out;
 };
-const decisionsForMonth = (m, dashaChange) => scoreDecisions(m, dashaChange).filter((x) => x.fit).map(({ decision, fit, why }) => ({ decision, fit, why }));
-
 const dashaChangeOf = (a, month) => (a?.dashaChanges || []).filter((c) => c.month === month).map((c) => `${c.level === 'maha' ? 'maha' : 'antar'}:${c.lord}`);
 
-// 1 年分の決断カレンダー: 行動の種類ごとに「実行する月」「避ける月」を列挙する。
-// 強く押す月が無い行動でも、読者が知りたいのは「では何月か」なので、得点が最も高い月（負でなく根拠のあるもの）を bestMonths として必ず答える。
-const decisionCalendar = (a) => DECISIONS.map((d) => {
-  const rows = (a?.months || []).map((m) => ({ month: m.month, hit: scoreDecisions(m, dashaChangeOf(a, m.month)).find((x) => x.decision === d.label) })).filter((r) => r.hit);
-  const fmt = (r) => `${r.month}（${r.hit.why}）`;
-  const actMonths = rows.filter((r) => r.hit.fit === '実行').map(fmt);
-  const avoidMonths = rows.filter((r) => r.hit.fit === '避ける').map(fmt);
-  let bestMonths = [];
-  if (!actMonths.length) {
-    const top = Math.max(...rows.map((r) => r.hit.score));
-    if (top >= 0) bestMonths = rows.filter((r) => r.hit.score === top && r.hit.why).slice(0, 3).map(fmt);
-  }
-  return { decision: d.label, actMonths, bestMonths, avoidMonths };
-});
+// 1 年分の決断カレンダー: 行動の種類ごとに「推す月」と「避ける月」を一つづつ。
+// 全月を列挙すると同じ話が 12 回繰り返されるので、最高点（根拠あり・0 以上）と最低点（負）の月だけを選ぶ。同点なら他の行動でまだ使っていない月を取り、6 行動が同じ月に固まらないようにする。
+const decisionCalendar = (a) => {
+  const used = new Set();
+  return DECISIONS.map((d) => {
+    const rows = (a?.months || []).map((m) => ({ month: m.month, hit: scoreDecisions(m, dashaChangeOf(a, m.month)).find((x) => x.decision === d.label) })).filter((r) => r.hit && r.hit.why);
+    const fmt = (r) => (r ? { month: r.month, why: r.hit.why, strong: r.hit.score >= 2 } : null);
+    const pos = rows.filter((r) => r.hit.score >= 0);
+    const top = Math.max(-1, ...pos.map((r) => r.hit.score));
+    const tied = pos.filter((r) => r.hit.score === top);
+    // 同点なら、他の行動が既に使った月から最も離れた月を取る（推し月が年の前半に固まらないように）
+    const idx = (mo) => (a?.months || []).findIndex((m) => m.month === mo);
+    const dist = (mo) => (used.size ? Math.min(...[...used].map((u) => Math.abs(idx(u) - idx(mo)))) : 0);
+    const best = tied.slice().sort((x, y) => dist(y.month) - dist(x.month))[0];
+    if (best) used.add(best.month);
+    const worst = rows.filter((r) => r.hit.score < 0 && r.month !== best?.month).sort((x, y) => x.hit.score - y.hit.score)[0];
+    return { decision: d.label, actMonth: fmt(best), avoidMonth: fmt(worst) };
+  });
+};
 
-const monthsCompact = (months, a) => months.map((m) => {
+// 月別に渡すのは、その月がカレンダーの「推す月」に選ばれた行動だけ（各行動は 1 年に 1 回しか現れない）。
+const decisionsForMonth = (calendar, month) => calendar.filter((c) => c.actMonth?.month === month).map((c) => ({ decision: c.decision, why: c.actMonth.why }));
+
+// その月で最も強い配置を一つ選ぶ（出生惑星と重なる通過惑星をゆっくりの星から優先。無ければ木星）。月別はこの一つだけを書かせる。
+const FOCUS_ORDER = ['Jupiter', 'Saturn', 'Rahu', 'Ketu', 'Mars', 'Venus', 'Mercury', 'Sun'];
+const focusOf = (planets) => {
+  const byKey = (k) => planets.find((p) => p.key === k);
+  const hit = FOCUS_ORDER.map(byKey).find((p) => p && p.overNatal.length);
+  return hit || byKey('Jupiter') || planets[0];
+};
+
+const monthsCompact = (months, a) => {
   const natal = (a?.planets || []).filter((p) => p.key !== 'Ascendant');
   const moonKey = a?.moon?.signKey || natal.find((p) => p.key === 'Moon')?.signKey;
-  const momentum = (a?.turningPoints?.monthlyMomentum || []).find((x) => x.month === m.month);
-  const dashaChange = dashaChangeOf(a, m.month);
-  return {
-    month: m.month,
-    momentum: momentum ? momentum.score : undefined,
-    dashaChange,
-    decisions: decisionsForMonth(m, dashaChange),
-    planets: m.planets.map((p) => ({
-      planet: p.name, brings: PLANET_BRINGS[p.key], sign: p.sign, house: p.houseFromMoon, area: p.houseFromMoonLabel, retrograde: p.retrograde,
+  const calendar = decisionCalendar(a);
+  return months.map((m) => {
+    const momentum = (a?.turningPoints?.monthlyMomentum || []).find((x) => x.month === m.month);
+    const planets = m.planets.map((p) => ({
+      key: p.key, planet: p.name, brings: PLANET_BRINGS[p.key], sign: p.sign, house: p.houseFromMoon, area: p.houseFromMoonLabel, retrograde: p.retrograde,
       overNatal: natal.filter((n) => n.signKey === p.signKey).map((n) => `${n.name}(出生でも月から${houseFromKeys(moonKey, n.signKey)}室)`),
       signLordNatal: (() => { const l = natal.find((n) => n.key === SIGN_LORD[p.signKey]); return l ? `${l.name}は出生で月から${houseFromKeys(moonKey, l.signKey)}室` : undefined; })()
-    }))
-  };
-});
+    }));
+    const f = focusOf(planets);
+    return {
+      month: m.month,
+      momentum: momentum ? momentum.score : undefined,
+      dashaChange: dashaChangeOf(a, m.month),
+      focus: { planet: f.planet, brings: f.brings, house: f.house, area: f.area, overNatal: f.overNatal, signLordNatal: f.signLordNatal, retrograde: f.retrograde },
+      decisions: decisionsForMonth(calendar, m.month),
+      planets: planets.map(({ key, ...rest }) => rest)
+    };
+  });
+};
 
 const MONTH_SCHEMA = `{
       "overview": "この 3 か月の流れを、この人の出生図（月のサイン・現在のダシャー）に結びつけて。冒頭でこの章が扱う 3 か月（YYYY 年 M 月〜M 月）を明記し、前の四半期から何が変わるかを一文で言う（250文字程度）",
-      "howToRead": "この章の月別ブロックの読み方を一文で。各月は『運の動き→星の根拠→この月に向く決断→一手→逃す行動→あなたへ』の順で、その月に何が入り・決まり・離れるか、どの決断に向くかに絞っていると伝える（100文字以内）",
+      "howToRead": "この章の月別ブロックの読み方を一文で。各月は『運の動き→星の根拠→この月に実行する行動→一手→逃す行動→あなたへ』の順で、その月に何が入り・決まり・離れるかに絞っていると伝える（100文字以内）",
       "months": [{
         "month": "確定データの YYYY-MM をそのまま",
-        "theme": "その月に動く運を一言で（20文字以内）。動く領域は確定データの area と brings から取る。生活態度の語は不可",
-        "scene": "その月にこの人の運がどう動くかを『あなたは〜』と言い切る（300文字程度）。必ず含めるのは三つ。(1) 入ってくるもの・決まるもの・離れていくもののうち、配置が示すもの (2) それが起きる生活の場所（area が示す領域そのまま） (3) それがこの人に特に強く起きる理由（natalChart・overNatal・signLordNatal を日常語に直して『あなたは生まれつき〜』）。惑星名・室の数字は使わない。場面は一つ。読者の職業・家族構成・相手の属性は書かない",
-        "why": "根拠（150文字程度）。ここだけで惑星名・月から何室（area）・逆行・出生惑星との重なり（overNatal、出生での室も）・ダシャー切替を名指しする",
-        "decision": "この月に実行する行動・避ける行動を、確定データ decisions のとおり言い切る（120文字以内）。fit が実行なら『この月に〜を実行する（告げる・契約する・移る）』、fit が避けるなら『この月には〜を実行しない。代わりに〜を用意する』と、実行月に向けて用意する具体物（書類・資金の額の目安・相手への打診・下見など、その行動に必要なもの）を一つ名指しする。『この月を待つ』『準備を整える』『慎重に』だけの文は不可。decisions が空なら『大きな実行の月ではなく、〜を進める月』の形で書く。decisions に無い行動を足さない",
-        "move": "その運を取りに行く一手（120文字程度）。いつ（上旬・中旬・下旬）・何を・どうするか。scene で言い切った『入る・決まる・離れる』と decision に直結する行動であること。生活態度の助言は禁止",
+        "theme": "focus の配置が動かす運を一言で（20文字以内）。領域は focus.area、中身は focus.brings から。生活態度の語は不可",
+        "scene": "この月は focus の配置一つだけを書く（他の惑星には触れない）。その配置でこの人の運がどう動くかを『あなたは〜』と言い切る（250〜300文字。200文字未満は不可）。含めるのは (1) focus.area の領域で、focus.brings が入ってくるのか・決まるのか・離れるのか (2) それがこの人に特に強く起きる理由（focus.overNatal・signLordNatal・natalChart を日常語に直して『あなたは生まれつき〜』）。惑星名・室の数字は使わない。場面は一つ。読者の職業・家族構成・相手の属性は書かない。前の月と同じ領域なら『前月から続いて』と一言でつなぎ、同じ文を繰り返さない",
+        "why": "根拠（100文字程度）。focus の惑星名・月から何室（area）・逆行・出生惑星との重なり（overNatal）・ダシャー切替を名指しする",
+        "decision": "確定データ decisions がある月だけ、その行動を『〜するなら、この月に実行する』と一文で（60文字以内）。decisions が空の月はこのキーを省略する（何も書かない）。用意するもの・避ける行動・手続きの話は書かない",
+        "move": "scene で言い切った運を取りに行く一手（100〜120文字）。いつ（上旬・中旬・下旬）・何を・どうするか。決断の手続き（退職・開業・解約・引き継ぎ・書類・契約）の話にしない。生活態度の助言は禁止。前月と同じ動詞・相手・手段なら書き直す",
         "avoid": "その月の運を取り逃がす行動一つと、逃すと何を失うか（80文字以内）",
         "push": "出生図の強みから背中を押す一言（80文字以内。惑星名は使わない）"
       }]
@@ -139,13 +158,13 @@ const YEARLY_VOICE = {
 2. 領域は【確定データ】の area（月から何室）と brings（惑星が持ち込むもの）の掛け合わせで決める。配置が示していない領域は書かない。同じ領域が続くなら続けてよい。変化の演出はしない。
 3. 惑星の意味は brings のとおり。土星は持続・積み上げ・長く残る形（引き締め・試練とは書かない）。
 4. 金運は配置が財の室（2 室・11 室）や金星・木星の恵みを示す月にだけ、入る・出る・残るの流れとして言い切る。禁止は投資の銘柄・売買時期・利回りの助言のみ。
-5. 決断カレンダーが答えるのは「心の中で決める月」ではなく「実行する月」——退職を告げる・新しい立場に就く・開業する・引っ越す・約束を交わす・別れを告げる・申し込む・契約や支払いをする月。「決める」と「動く」を書き分けず、常に「実行する」の意味で書く。向き不向きは【確定データ】の decisions・decisionCalendar のとおりで、そこに無い行動を足さず、ある行動を省かない。実行月は「〜するなら YYYY 年 M 月に実行する」と月を名指しで言い切る（actMonths、無ければ bestMonths を「強い後押しの月は無いが、実行するなら」で）。避ける月は「YYYY 年 M 月には〜を実行しない」の意味であり、「その月まで待つ」「その月を待つ」とは決して書かない（意味が逆になる）。避ける月・実行月でない期間については、実行月に向けて何を用意するかを具体物（書類・資金の額の目安・相手への打診・下見・申込の下調べなど）で一つ言う。「準備を整える」「慎重に」「様子を見る」で終わる文は、読者がどうすればよいか分からないので禁止。転職と独立は同じ行動（働き方を変える）として一つにまとめ、why に「自分の名前で始める後押し」がある月は独立・開業にも向くと添える。断定を避けるのは相手の気持ちと成否の保証だけ。
+5. 決断カレンダーが答えるのは「心の中で決める月」ではなく「実行する月」——退職を告げる・新しい立場に就く・開業する・引っ越す・約束を交わす・別れを告げる・申し込む・契約や支払いをする月。「決める」と「動く」を書き分けず、常に「実行する」の意味で書く。向き不向きは【確定データ】の decisions・decisionCalendar のとおりで、そこに無い行動を足さず、ある行動を省かない。行動ごとに推す月は actMonth の一つだけ・避ける月は avoidMonth の一つだけで、他の月を足さない（同じ話を何度も繰り返さない）。実行月は「〜するなら YYYY 年 M 月に実行する」と月を名指しで言い切る（actMonth.strong が false なら「強い後押しの月は無いが、実行するなら」）。避ける月は「YYYY 年 M 月には〜を実行しない」の意味であり、「その月まで待つ」「その月を待つ」とは決して書かない（意味が逆になる）。「準備を整える」「慎重に」「様子を見る」で終わる文は禁止。決断は月別では「この月に実行する行動」の一文だけで、月別の本文・一手・避けたいことは決断の手続き（退職・開業・解約・引き継ぎ・書類・契約）ではなく、その月の配置が示す運（何が入り・決まり・離れるか）を書く。読者が転職や別れを考えているとは仮定しない。転職と独立は同じ行動（働き方を変える）として一つにまとめ、why に「自分の名前で始める後押し」がある月は独立・開業にも向くと添える。断定を避けるのは相手の気持ちと成否の保証だけ。
 6. 12 か月で同じ型の一手を繰り返さない。前月と同じ相手・同じ手段・同じ動詞なら書き直す。
 7. 個人化は出生図からのみ。natalChart（出生惑星の月からの室・ナクシャトラ）・overNatal・signLordNatal を使い、毎月「あなたは生まれつき〜」の一文を必ず入れる（scene では日常語で、why では惑星名で）。誰にでも当たる一般論、複数の立場の列挙は禁止。
 8. 読者の職業・雇用・婚姻・子ども・年齢・健康状態を仮定しない。相手を上司・同僚・部下・家族・子どもと固定しない。
 9. 生活態度の助言（片づける・言葉に気をつける・体調を整える・見直す・意識する・心がける・慎重に・待つだけ）は禁止。
 10. 「でしょう」「可能性があります」を乱用しない。断定を避けるのは健康・寿命・医療・法律・投資・具体的な出来事の成否のみ。
-11. 【確定データ】にない惑星・月・配置を発明しない。内部名（momentum・overNatal・strength・score・decisions・fit・actMonths・bestMonths・avoidMonths）や数値を本文に出さない。根拠は惑星名・室・領域の言葉に言い換える。
+11. 【確定データ】にない惑星・月・配置を発明しない。内部名（momentum・overNatal・focus・strength・score・decisions・actMonth・avoidMonth）や数値を本文に出さない。根拠は惑星名・室・領域の言葉に言い換える。
 12. momentum が高い月は強く、低い月は静かに。overNatal に出生惑星がある月は、その惑星の領域が個人的に強く動く月として必ず取り上げる。
 13. 月の一覧は複数の章に出る（見取り図＝節目と今年の決断、第 1 章＝周期の切替、第 2 章＝大きな星のサイン移動、第 3〜6 章＝毎月の運と一手、第 8 章＝決断カレンダー、第 9 章＝追い風・慎重）。heading にはその一覧の内容を表す見出し（20 文字以内）、lead にはその一覧が他の章の月別と何が違うかを一文で書く。
 14. 語りは古い寺院の占星術師が一人に語りかけるように、品格とです・ます調を維持。命令形は使わない。文字数の目安は下限。要約で埋めず、読者が翌月から使える具体を書く。`,
@@ -155,13 +174,13 @@ This is not an almanac but a one-year reading addressed to one person. People bu
 2. The life area of each month follows the confirmed data: area (house from the Moon) combined with brings (what the planet carries). Never write an area the placements do not show. If the same area continues, let it continue; do not manufacture variety.
 3. Planet meanings follow brings. Saturn is endurance, accumulation and what becomes lasting (never "restriction" or "trial").
 4. Write money only in months where the placements point to the 2nd or 11th house or to Venus/Jupiter's gifts, and state it plainly as what comes in, goes out and stays. The only prohibition is advice on specific investments, timing of trades or returns.
-5. The decision calendar answers the month to ACT — hand in the resignation, take the new post, open the business, move, make the vow, say goodbye, enrol, sign or pay — not the month to make up one's mind. Never split "decide" from "act"; always write in the sense of carrying it out. Fitness follows the confirmed decisions and decisionCalendar exactly; add nothing, drop nothing. Say plainly "if you move home, do it in <month>" (actMonths, else bestMonths as "no strong push, but if you act, <month>"). An avoid month means "do not carry out X in <month>" — never write "wait until <month>", which reverses the meaning. For avoid months and the stretch before the act month, name one concrete thing to have ready (a document, a rough sum of money, a first conversation with the counterpart, a viewing, the enrolment details). Sentences that end in "prepare", "be careful" or "watch and see" leave the reader with nothing to do and are banned. Changing jobs and going independent are one action (changing how one works); where why says the push is for starting under one's own name, add that the month also suits going independent. Reserve caution only for other people's feelings and guarantees of outcome.
+5. The decision calendar answers the month to ACT — hand in the resignation, take the new post, open the business, move, make the vow, say goodbye, enrol, sign or pay — not the month to make up one's mind. Never split "decide" from "act"; always write in the sense of carrying it out. Fitness follows the confirmed decisions and decisionCalendar exactly; add nothing, drop nothing. Each action has exactly one actMonth and at most one avoidMonth; name only those, never other months (do not repeat the same story). Say plainly "if you move home, do it in <month>" (if actMonth.strong is false: "no strong push, but if you act, <month>"). An avoid month means "do not carry out X in <month>" — never write "wait until <month>", which reverses the meaning. Sentences that end in "prepare", "be careful" or "watch and see" are banned. In the monthly blocks the decision is a single sentence naming the action to carry out that month; scene, move and avoid describe the month's luck as shown by the placements (what comes in, gets settled, departs) — not the paperwork of resigning, opening a business, cancelling, handing over or signing. Do not assume the reader is contemplating a job change or a break-up. Changing jobs and going independent are one action (changing how one works); where why says the push is for starting under one's own name, add that the month also suits going independent. Reserve caution only for other people's feelings and guarantees of outcome.
 6. Never repeat the same type of move across months. If the counterpart, means and verb match the previous month, rewrite it.
 7. Individuality comes only from the birth chart. Using natalChart (natal planets by house from the Moon and nakshatra), overNatal and signLordNatal, every month contains one sentence "because you were born with ..." (everyday words in scene, planet names in why). Generic statements and scenes listing several walks of life are forbidden.
 8. Never assume the reader's occupation, employment, marriage, children, age or health. Do not fix the counterpart as boss, colleague, subordinate, family or child.
 9. Lifestyle advice is banned: tidy up, mind your words, look after your health, review, be aware, be careful, just wait.
 10. Do not hedge everything with "may" and "possibly". Reserve caution for health, lifespan, medical, legal, financial matters and the outcome of specific events.
-11. Never invent a planet, month or placement absent from the confirmed data. Never expose internal names or numbers (momentum, overNatal, strength, score, decisions, fit, actMonths, bestMonths, avoidMonths); translate evidence into planet, house and life-area words.
+11. Never invent a planet, month or placement absent from the confirmed data. Never expose internal names or numbers (momentum, overNatal, focus, strength, score, decisions, actMonth, avoidMonth); translate evidence into planet, house and life-area words.
 12. High-momentum months are written strongly, low-momentum months quietly. When overNatal lists a natal planet, that month stirs that planet's domain personally; say so.
 13. Month lists appear in several chapters (overview = turning points and this year's decisions, ch.1 = cycle changes, ch.2 = sign changes of slow planets, ch.3-6 = monthly luck and moves, ch.8 = decision calendar, ch.9 = tailwind/caution). In "heading" name the list (under 6 words); in "lead" say in one sentence how it differs from the other monthly lists.
 14. Speak as an old temple astrologer addressing one person, dignified and polite, no imperatives. Character counts are minimums; write specifics the reader can use next month.`
@@ -181,7 +200,7 @@ const YEARLY_CHAPTERS = [
       "catchphrase": "この 1 年のテーマを一文で（30文字以内）",
       "essence": "この 1 年の全体像（250文字程度。期間は確定データの年月のみ）",
       "themes": ["今年の主題（各30文字以内）", "", ""],
-      "decisions": { "heading": "見出し（今年やってよい決断・待つ決断。20文字以内）", "lead": "この一覧は今年の大きな決断の可否を先に答えるもので、月ごとの根拠は第 8 章で読むと伝える（80文字以内）", "items": [{ "kind": "決断の種類（decisionCalendar の decision をそのまま）", "text": "必ず『実行するなら YYYY 年 M 月』を先に書く。actMonths があればその月、無ければ bestMonths の月を『強い後押しではないが、実行するならこの月』の趣旨で。avoidMonths は『YYYY 年 M 月には実行しない』と書く。actMonths・bestMonths ともに無い場合だけ『今年は星が押しも止めもしない。自分の時計で実行していい』（100文字以内）" }] },
+      "decisions": { "heading": "見出し（今年やってよい決断・待つ決断。20文字以内）", "lead": "この一覧は今年の大きな決断の可否を先に答えるもので、月ごとの根拠は第 8 章で読むと伝える（80文字以内）", "items": [{ "kind": "決断の種類（decisionCalendar の decision をそのまま）", "text": "『実行するなら YYYY 年 M 月』（actMonth。strong が false なら『強い後押しではないが』を添える）と、avoidMonth があれば『YYYY 年 M 月には実行しない』の二文だけ（80文字以内）。actMonth が無い場合だけ『今年は星が押しも止めもしない。自分の時計で実行していい』" }] },
       "keyMonths": { "heading": "見出し（例: 節目になる月。20文字以内）", "lead": "この一覧が何を示すか。年を大きく動かす月だけを拾ったもので、毎月の詳細は第 3〜6 章で読む、と伝える（80文字以内）", "items": [{ "month": "確定データの YYYY-MM をそのまま", "text": "その月が節目になる理由（80文字以内）" }] },
       "structure": { "heading": "見出し（例: この鑑定書の読み進め方。20文字以内）", "text": "章の役割分担を読者に案内する：第 1 章は運気の周期（ダシャー）とその切替月、第 2 章は木星・土星・ラーフ・ケートゥの位置とサイン移動の月（年の背景）、第 3〜6 章は 12 か月を毎月の場面と一手で（ここが本体）、第 7 章は領域別に縦に読み直し、第 8 章は転職・引っ越しなどの行動を実行する月と実行しない月、第 9 章は追い風・慎重の月と今年の約束。同じ月が複数の章に出るのは角度が違うためだと短く断りを入れる（200文字程度）" },
       "stance": "この 1 年を過ごす基本姿勢（150文字程度）"
@@ -251,7 +270,7 @@ const YEARLY_CHAPTERS = [
   },
   {
     id: 'ch8',
-    title: '第8章 決断カレンダー（転職・独立・引っ越し・縁・手放し・学び・大きな買い物）',
+    title: '第8章 決断カレンダー（転職・独立・引っ越し・縁・別れ・学び・大きな買い物）',
     pick: (a) => ({
       period: a.period, currentDasha: a.dasha?.current, sadeSati: a.sadeSati,
       scale: a.turningPoints?.scale, turningEvents: a.turningPoints?.events,
@@ -260,8 +279,7 @@ const YEARLY_CHAPTERS = [
     }),
     schema: `{
       "verdict": "scale が major なら「動く年」、moderate なら「一部の領域で動く年」、preparation なら「次の転機に向けて仕込む年」と確定データのまま判定し、根拠の配置（惑星名・月から何室・切替のダシャー）を名指しする（250文字程度）",
-      "calendar": { "heading": "見出し（20文字以内）", "lead": "この一覧は行動の種類ごとに今年『実行する月』『実行しない月』を答えるもの（心の中で決める月ではなく、告げる・契約する・移る月）で、第 3〜6 章の月別とは軸が違うと伝える（80文字以内）", "items": [{ "kind": "decisionCalendar の decision をそのまま", "text": "三段で書く。(1) 実行するなら何月か: actMonths があれば『〜するなら YYYY 年 M 月に実行する』、無ければ bestMonths の月を『強い後押しの月は無いが、実行するなら YYYY 年 M 月』と、根拠（why の惑星名・室）を添えて言い切る。why に『自分の名前で始める後押し』がある月は独立・開業にも向くと添える (2) 実行しない月: avoidMonths を『YYYY 年 M 月には〜を実行しない（理由）』の形で。『その月まで待つ』とは書かない (3) 実行月までに用意するもの: この人の出生図（natalChart）の弱い所を補う具体物を一つ名指しする（書類・資金の額の目安・相手への最初の打診・下見・申込の下調べ、など）。『準備を整える』『慎重に』で終えない。actMonths・bestMonths・avoidMonths がすべて無い場合だけ『今年は星が押しも止めもしない』とし、(3) だけ書く（280文字程度）" }] },
-      "prepare": "実行月までに用意しておくもの（資金・関係・技能など。確定データの弱い領域と natalChart に基づき、行動の種類ごとに具体物で。200文字程度）",
+      "calendar": { "heading": "見出し（20文字以内）", "lead": "この一覧は行動の種類ごとに今年『実行する月』と『実行しない月』を一つずつ答えるもの（心の中で決める月ではなく、告げる・契約する・移る月）で、第 3〜6 章の月別とは軸が違うと伝える（80文字以内）", "items": [{ "kind": "decisionCalendar の decision をそのまま", "text": "二段で書く。(1) 実行するなら何月か: actMonth の月を『〜するなら YYYY 年 M 月に実行する』（strong が false なら『強い後押しの月は無いが、実行するなら』）と、根拠（why の惑星名・室）を添えて言い切る。why に『自分の名前で始める後押し』がある月は独立・開業にも向くと添える。他の月は挙げない (2) 実行しない月: avoidMonth があれば『YYYY 年 M 月には〜を実行しない（理由）』の一文。無ければこの段は書かない（『避ける月は無い』とも書かない）。『その月まで待つ』とは書かない。actMonth が無い場合だけ『今年は星が押しも止めもしない。自分の時計で実行していい』（150文字程度）" }] },
       "message": "決断を迫らず、しかし背中を押す締めの言葉（150文字程度）"
     }`
   },
