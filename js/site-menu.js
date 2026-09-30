@@ -20,6 +20,7 @@
       top: 'トップ', free: '無料診断', about: 'Libertas Jyotishとは',
       report: '生涯完全鑑定書（買い切り）',
       yearly: '年間運勢 鑑定書', compat: '相性 鑑定書', career: '仕事・金運 鑑定書', palm: 'カル・クンダリ（手相×出生図）',
+      karma: 'Karma & Dharma ― 今世の天命',
       calendar: '年間運勢カレンダー', calendarNote: '準備中',
       mypage: '会員マイページ', legal: '特定商取引法・利用規約', contact: 'お問い合わせ',
       toggleLabel: 'メニュー', navLabel: 'サイトメニュー'
@@ -38,16 +39,15 @@
     { href: home + '/pdf-purchase', label: t.report }
   ];
   // 個別鑑定書で販売中なのは年間運勢（日本＝KOMOJU、他言語＝Gumroad/Etsy）のみ。
-  // 日本語は他商品を「準備中」見出しの下にリンク無しで並べる。
-  LINKS.push({ href: home + '/yearly', label: t.calendar });
-  if (lang === 'ja') {
-    LINKS.push(
-      { divider: true, label: t.calendarNote },
-      { label: t.compat, soon: true },
-      { label: t.career, soon: true },
-      { label: t.palm, soon: true }
-    );
-  }
+  // 他商品は「準備中」見出しの下にリンク無しで並べる。
+  LINKS.push(
+    { href: home + '/yearly', label: t.calendar },
+    { divider: true, label: t.calendarNote },
+    { label: t.compat, soon: true },
+    { label: t.career, soon: true },
+    { label: t.palm, soon: true },
+    { label: t.karma, soon: true }
+  );
   if (guide) {
     LINKS.push(
       { divider: true, label: guide.groupLabel },
