@@ -51,7 +51,8 @@ const YEARLY_VOICE = {
 8. 【確定データ】にない惑星・月・配置を発明しない。文字数の目安は下限。要約や言い換えで埋めず、読者が翌月から使える具体を書く。
 9. データの内部名・数値を本文に出さない（momentum、overNatal、strength、score、スコア〇〇、数値〇〇 は禁止）。根拠は惑星名・室・領域の言葉に必ず言い換える。
 10. scene と push には惑星名・室の数字を書かない。そこは読者の生活の言葉だけで書き、星の話は why に集める。「〇〇な場面が増えていきます」のようなぼかしではなく、「昔の友人から急に連絡が来る」「請求書を見て手が止まる」「家の中の一角を片づけたくなる」「体の同じ場所が気になる」のような一場面を描く。
-11. 読者の立場を仮定しない。会社勤め・既婚・子どもあり・健康な現役世代を前提にした場面（上司・同僚・部下・昇進・残業・子どもの学校）ばかりにしない。働いていない人、独身の人、子どものいない人、家で介護や家事をする人、引退した人、学生にも「自分のことだ」と読める場面を選ぶ。10 室（仕事・社会）や 11 室（利得・人脈）でも、職場だけでなく「外での役割・人からの評価・頼まれごと・地域や趣味の集まり」に広げて描き、12 か月のうち職場の場面が続かないよう、家庭・住まい・体調・お金・学び・友人・パートナー・親・旅・内面など領域を月ごとに変える。`,
+11. 読者の立場を仮定しない。会社勤め・既婚・子どもあり・健康な現役世代を前提にした場面（上司・同僚・部下・昇進・残業・子どもの学校）ばかりにしない。働いていない人、独身の人、子どものいない人、家で介護や家事をする人、引退した人、学生にも「自分のことだ」と読める場面を選ぶ。10 室（仕事・社会）や 11 室（利得・人脈）でも、職場だけでなく「外での役割・人からの評価・頼まれごと・地域や趣味の集まり」に広げて描く。
+12. 各月の生活領域は、その月の【確定データ】の area（月から何室か）と overNatal が指すものに従う。4 室なら住まい・家族、7 室なら対人・パートナー、6 室なら体調、2・12 室ならお金、5・9 室なら学び・創作、というように、配置が指す領域をそのまま場面にする。配置が仕事（10 室・11 室）を指す月だけ仕事を書き、家庭・対人・お金・体を指す月をそれ以外の話に読み替えない。領域が続くなら続けてよく、変化を演出するために配置にない領域を持ち出さない。`,
   en: `[Voice]
 This is not an almanac but a one-year reading addressed to one person. Follow strictly:
 1. General explanation of a planet or house: at most one sentence per field. Spend the rest on what this year does to this person ("your year will ...").
@@ -64,7 +65,8 @@ This is not an almanac but a one-year reading addressed to one person. Follow st
 8. Never invent a planet, month or placement absent from the confirmed data. Character counts are minimums; never pad with summaries, write specifics the reader can use next month.
 9. Never expose internal field names or numbers (momentum, overNatal, strength, score, "a score of 85"). Always translate evidence into planet, house and life-area words.
 10. scene and push contain no planet names or house numbers: write them in the reader's everyday words only and keep the astrology in why. Not "situations will increase" but one moment: "an old friend messages you out of the blue", "you stop at an invoice you did not expect", "you feel the urge to clear one corner of your home", "the same spot in your body keeps asking for attention".
-11. Never assume the reader's station in life. Do not fill the year with workplace scenes (boss, coworkers, promotion, overtime, children's school). People who do not work, who are single, childless, retired, students, or who care for family at home must also read it as their own. Even for the 10th (work, society) and 11th (gains, network) houses, widen the scene to "your role outside the home, how people regard you, what you are asked to take on, a community or hobby circle", and vary the life area month by month (home, body, money, learning, friends, partner, parents, travel, inner life) so no run of months reads like an office diary.`
+11. Never assume the reader's station in life. Do not fill the year with workplace scenes (boss, coworkers, promotion, overtime, children's school). People who do not work, who are single, childless, retired, students, or who care for family at home must also read it as their own. Even for the 10th (work, society) and 11th (gains, network) houses, widen the scene to "your role outside the home, how people regard you, what you are asked to take on, a community or hobby circle".
+12. Each month's life area follows what the confirmed data says for that month (area = house from the Moon, and overNatal): 4th -> home and family, 7th -> partner and dealings, 6th -> body, 2nd/12th -> money, 5th/9th -> learning and creation. Write about work only in months where the placements point to the 10th or 11th, and never reinterpret a month about home, people, money or body as a work month. If the same area continues for several months, let it continue; do not invent an area absent from the placements to create variety.`
 };
 
 const YEARLY_CHAPTERS = [
