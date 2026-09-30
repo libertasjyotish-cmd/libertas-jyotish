@@ -38,16 +38,15 @@
     { href: home + '/pdf-purchase', label: t.report }
   ];
   // 個別鑑定書はサイト内決済（KOMOJU）が日本向けのみのため、日本語メニューだけに出す。
+  // 販売中は年間運勢カレンダー（年間運勢鑑定書）のみ。他は準備中（リンク無し）。
   if (lang === 'ja') {
     LINKS.push(
-      { href: home + '/reports?product=yearly', label: t.yearly },
-      { href: home + '/reports?product=compat', label: t.compat },
-      { href: home + '/reports?product=career', label: t.career },
-      { href: home + '/palm-chart', label: t.palm }
+      { href: home + '/reports?product=yearly', label: t.calendar },
+      { label: t.compat, note: t.calendarNote, soon: true },
+      { label: t.career, note: t.calendarNote, soon: true },
+      { label: t.palm, note: t.calendarNote, soon: true }
     );
   }
-  // 年間運勢カレンダーは準備中（日本語のみ案内し、他言語では出さない）
-  if (lang === 'ja') LINKS.push({ href: home + '/calendar', label: t.calendar, note: t.calendarNote });
   if (guide) {
     LINKS.push(
       { divider: true, label: guide.groupLabel },
@@ -114,8 +113,8 @@
         }
         continue;
       }
-      const a = document.createElement('a');
-      a.href = item.href;
+      const a = document.createElement(item.soon ? 'span' : 'a');
+      if (item.soon) a.className = 'lj-menu-soon'; else a.href = item.href;
       a.textContent = item.label;
       if (item.note) {
         const note = document.createElement('span');
@@ -123,6 +122,7 @@
         note.textContent = lang === 'ja' ? `（${item.note}）` : ` (${item.note})`;
         a.appendChild(note);
       }
+      if (item.soon) { menu.appendChild(a); continue; }
       const target = item.href.split('#')[0].split('?')[0];
       const query = item.href.indexOf('?') >= 0 ? item.href.slice(item.href.indexOf('?')) : '';
       if ((target === path && (!query || query === window.location.search)) || (target !== home && path.indexOf(target + '/') === 0)) a.classList.add('is-current');

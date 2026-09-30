@@ -39,6 +39,7 @@
 }
 .lj-menu a:hover { background: rgba(212, 175, 55, 0.14); color: #D4AF37; }
 .lj-menu a.is-current { color: #D4AF37; }
+.lj-menu .lj-menu-soon { display: block; padding: 10px 12px; color: #8A9A9E; font-size: 0.86rem; }
 .lj-menu .lj-menu-note { font-size: 0.7rem; color: #8A9A9E; margin-left: 6px; }
 .lj-menu-divider { height: 1px; margin: 6px 4px; background: rgba(139, 107, 27, 0.35); }
 .lj-menu-group { padding: 6px 12px 2px; font-size: 0.7rem; letter-spacing: 0.12em; color: #8A9A9E; }
