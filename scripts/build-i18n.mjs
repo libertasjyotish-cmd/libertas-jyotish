@@ -32,6 +32,7 @@ const BASE_LANG = 'ja';
 const SITE = 'https://www.libertas-jyotish.com';
 // sitemap.xml に載せる（＝検索結果に出したい）ページ。
 const SITEMAP_PAGES = ['index', 'pdf-purchase'];
+// {{pdfIntroJa}}: 生涯完全鑑定書（pdf-purchase）の商品説明ブロック。日本語のみ展開、他言語は空。
 // {{robotsSaleJa}}: 販売ページの robots。日本は KOMOJU、他言語は Gumroad で年間運勢を販売中のため全言語 index 可。
 const SALE_LANGS = new Set(['ja', 'en', 'es', 'pt', 'ar', 'id', 'fr', 'de']);
 function buildRobotsSaleJa(lang) {
@@ -213,6 +214,9 @@ function render(template, locale, base, context) {
       value = buildGuideLinks(locale.meta.lang);
     } else if (path === 'guideMenu') {
       value = buildGuideMenu(locale.meta.lang);
+    } else if (path === 'pdfIntroJa') {
+      // 生涯完全鑑定書の商品説明。まず日本語のみ（他言語は空）。
+      value = locale.meta.lang === 'ja' ? expandPartials('{{>pdf-intro-ja}}') : '';
     } else if (path === 'robotsSaleJa') {
       value = buildRobotsSaleJa(locale.meta.lang);
     } else if (path === 'canonical') {
