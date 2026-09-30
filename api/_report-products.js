@@ -91,7 +91,10 @@ const decisionCalendar = (a) => {
     const pos = rows.filter((r) => r.hit.score >= 0);
     const top = Math.max(-1, ...pos.map((r) => r.hit.score));
     const tied = pos.filter((r) => r.hit.score === top);
-    const best = tied.find((r) => !used.has(r.month)) || tied[0];
+    // 同点なら、他の行動が既に使った月から最も離れた月を取る（推し月が年の前半に固まらないように）
+    const idx = (mo) => (a?.months || []).findIndex((m) => m.month === mo);
+    const dist = (mo) => (used.size ? Math.min(...[...used].map((u) => Math.abs(idx(u) - idx(mo)))) : 0);
+    const best = tied.slice().sort((x, y) => dist(y.month) - dist(x.month))[0];
     if (best) used.add(best.month);
     const worst = rows.filter((r) => r.hit.score < 0 && r.month !== best?.month).sort((x, y) => x.hit.score - y.hit.score)[0];
     return { decision: d.label, actMonth: fmt(best), avoidMonth: fmt(worst) };
@@ -138,10 +141,10 @@ const MONTH_SCHEMA = `{
       "months": [{
         "month": "確定データの YYYY-MM をそのまま",
         "theme": "focus の配置が動かす運を一言で（20文字以内）。領域は focus.area、中身は focus.brings から。生活態度の語は不可",
-        "scene": "この月は focus の配置一つだけを書く（他の惑星には触れない）。その配置でこの人の運がどう動くかを『あなたは〜』と言い切る（250文字程度）。含めるのは (1) focus.area の領域で、focus.brings が入ってくるのか・決まるのか・離れるのか (2) それがこの人に特に強く起きる理由（focus.overNatal・signLordNatal・natalChart を日常語に直して『あなたは生まれつき〜』）。惑星名・室の数字は使わない。場面は一つ。読者の職業・家族構成・相手の属性は書かない。前の月と同じ領域なら『前月から続いて』と一言でつなぎ、同じ文を繰り返さない",
+        "scene": "この月は focus の配置一つだけを書く（他の惑星には触れない）。その配置でこの人の運がどう動くかを『あなたは〜』と言い切る（250〜300文字。200文字未満は不可）。含めるのは (1) focus.area の領域で、focus.brings が入ってくるのか・決まるのか・離れるのか (2) それがこの人に特に強く起きる理由（focus.overNatal・signLordNatal・natalChart を日常語に直して『あなたは生まれつき〜』）。惑星名・室の数字は使わない。場面は一つ。読者の職業・家族構成・相手の属性は書かない。前の月と同じ領域なら『前月から続いて』と一言でつなぎ、同じ文を繰り返さない",
         "why": "根拠（100文字程度）。focus の惑星名・月から何室（area）・逆行・出生惑星との重なり（overNatal）・ダシャー切替を名指しする",
         "decision": "確定データ decisions がある月だけ、その行動を『〜するなら、この月に実行する』と一文で（60文字以内）。decisions が空の月はこのキーを省略する（何も書かない）。用意するもの・避ける行動・手続きの話は書かない",
-        "move": "scene で言い切った運を取りに行く一手（100文字程度）。いつ（上旬・中旬・下旬）・何を・どうするか。決断の手続き（退職・開業・解約・引き継ぎ・書類・契約）の話にしない。生活態度の助言は禁止。前月と同じ動詞・相手・手段なら書き直す",
+        "move": "scene で言い切った運を取りに行く一手（100〜120文字）。いつ（上旬・中旬・下旬）・何を・どうするか。決断の手続き（退職・開業・解約・引き継ぎ・書類・契約）の話にしない。生活態度の助言は禁止。前月と同じ動詞・相手・手段なら書き直す",
         "avoid": "その月の運を取り逃がす行動一つと、逃すと何を失うか（80文字以内）",
         "push": "出生図の強みから背中を押す一言（80文字以内。惑星名は使わない）"
       }]
