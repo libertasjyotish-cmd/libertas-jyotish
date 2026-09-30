@@ -8,10 +8,62 @@ const RELATION_JA = {
   general: '種類を特定しない二人の関係'
 };
 
-const monthsCompact = (months) => months.map((m) => ({
-  month: m.month,
-  planets: m.planets.map((p) => ({ planet: p.name, sign: p.sign, house: p.houseFromMoon, area: p.houseFromMoonLabel, retrograde: p.retrograde }))
-}));
+// 月別データ: 月から見たハウスに加えて、出生図の惑星と同じサインに重なる通過惑星（natalHits）と、
+// 木星・土星の位置から機械的に出した「動きやすさ」（momentum）を渡し、月ごとの読みに固有の根拠を持たせる。
+const monthsCompact = (months, a) => months.map((m) => {
+  const natal = (a?.planets || []).filter((p) => p.key !== 'Ascendant');
+  const momentum = (a?.turningPoints?.monthlyMomentum || []).find((x) => x.month === m.month);
+  return {
+    month: m.month,
+    momentum: momentum ? momentum.score : undefined,
+    dashaChange: (a?.dashaChanges || []).filter((c) => c.month === m.month).map((c) => `${c.level === 'maha' ? 'maha' : 'antar'}:${c.lord}`),
+    planets: m.planets.map((p) => ({
+      planet: p.name, sign: p.sign, house: p.houseFromMoon, area: p.houseFromMoonLabel, retrograde: p.retrograde,
+      overNatal: natal.filter((n) => n.signKey === p.signKey).map((n) => n.name)
+    }))
+  };
+});
+
+const MONTH_SCHEMA = `{
+      "overview": "この 3 か月の流れを、この人の出生図（月のサイン・現在のダシャー）に結びつけて（250文字程度）",
+      "months": [{
+        "month": "確定データの YYYY-MM をそのまま",
+        "theme": "月のテーマ（20文字以内。抽象語でなく場面が浮かぶ言葉）",
+        "scene": "その月にこの人の身に起きやすい場面を、惑星名や室の数字を一切使わず日常の言葉だけで『あなたは〜』と言い当てる。誰から何を言われるか、どんな連絡・誘い・出費・迷い・体の感覚が来るか、そのときあなたが何を感じるかまで描く（300文字程度。overNatal に出生惑星がある領域は、その人にとって特に個人的に響く出来事として必ず入れる）",
+        "why": "根拠。ここだけで惑星名・月から何室（area）・逆行・出生惑星との重なり・ダシャー切替を名指しする（150文字程度）",
+        "move": "その月の具体的な一手。いつ（上旬・中旬・下旬）・誰に・何を・どう切り出すかまで、そのまま真似できる粒度で書く（120文字程度。『意識する』『心がける』『整える』は禁止）",
+        "avoid": "その月に避けたい具体的な行動一つと、その理由（80文字以内）",
+        "push": "背中を押す一言。この人が過去にやってきたはずのこと、持っている強みを引いて、読んだ人が『自分のことだ』と胸に響く言葉で（80文字以内。惑星名は使わない）"
+      }]
+    }`;
+
+// 年間運勢の語り口。一般的な暦の解説ではなく「この人のこの 1 年」を当てて背中を押す。
+const YEARLY_VOICE = {
+  ja: `【語り口】
+これは暦の解説ではなく、目の前の一人に向けた 1 年の鑑定書です。次を徹底してください。
+1. 惑星やハウスの一般説明は各項目 1 文以内。残りは「あなたのこの 1 年はこうなる」というこの人固有の読みに使う。
+2. すべての読みに根拠を名指しで添える（例:「10 月は木星が月から 7 室、あなたの出生の金星に重なる」）。根拠のない一般論は書かない。
+3. 月別は必ず【その月に起きやすい具体的な場面（あなたは〜）→根拠→具体的な一手（いつ・誰に・何を）→避けること→背中を押す一言】の順。「良い時期です」「慎重に」で終わらせず、場面と行動を書く。
+4. 「でしょう」「可能性があります」を乱用しない。空気・主題・向く行動は言い切る。断定を避けるのは健康・寿命・医療・法律・投資・具体的な出来事の成否だけ。
+5. 12 か月すべてを同じ調子で書かない。momentum が高い月は「ここで動く」と強く、低い月は「ここは仕込む」と静かに、月ごとの温度差を出す。overNatal に出生惑星があれば、その惑星の領域が個人的に強く動く月として必ず取り上げる。
+6. この人の出生図の強み（strength の上位、月のサイン、ダシャーの支配星）を毎章どこかで引き、「あなたには〇〇があるから」と結ぶ。読んだ人が「自分のことだ」と感じる当事者感を優先する。
+7. 語りは古い寺院の占星術師が一人に語りかけるように、しかし品格とです・ます調は維持（「〜しなさい」の命令形は使わず「〜してください」「〜していい」で）。
+8. 【確定データ】にない惑星・月・配置を発明しない。文字数の目安は下限。要約や言い換えで埋めず、読者が翌月から使える具体を書く。
+9. データの内部名・数値を本文に出さない（momentum、overNatal、strength、score、スコア〇〇、数値〇〇 は禁止）。根拠は惑星名・室・領域の言葉に必ず言い換える。
+10. scene と push には惑星名・室の数字を書かない。そこは読者の生活の言葉だけで書き、星の話は why に集める。「〇〇な場面が増えていきます」のようなぼかしではなく、「上司から〜と打診される」「昔の友人から急に連絡が来る」「請求書を見て手が止まる」のような一場面を描く。`,
+  en: `[Voice]
+This is not an almanac but a one-year reading addressed to one person. Follow strictly:
+1. General explanation of a planet or house: at most one sentence per field. Spend the rest on what this year does to this person ("your year will ...").
+2. Every reading names its evidence (e.g. "in October Jupiter sits in your 7th from the Moon, right over your natal Venus"). No unsupported generalities.
+3. Each month follows: the concrete scene likely to arise for this person ("you will ...") -> the evidence -> one concrete move (when, with whom, what) -> one thing to avoid -> one line of encouragement. Never end at "a good month" or "be careful"; write the scene and the action.
+4. Do not hedge everything with "may" and "possibly". State the mood, theme and fitting action plainly. Reserve caution for health, lifespan, medical, legal, financial matters and the outcome of specific events.
+5. Do not write all twelve months in the same tone. High-momentum months are "move now"; low-momentum months are "prepare quietly". When overNatal lists a natal planet, treat that month as one where that planet's domain is personally stirred, and say so.
+6. In every chapter lean on this person's strengths (top of strength, the Moon sign, the dasha lord): "because you have ...". Make the reader feel this is unmistakably about them.
+7. Speak as an old temple astrologer addressing one person, keeping a dignified, polite register.
+8. Never invent a planet, month or placement absent from the confirmed data. Character counts are minimums; never pad with summaries, write specifics the reader can use next month.
+9. Never expose internal field names or numbers (momentum, overNatal, strength, score, "a score of 85"). Always translate evidence into planet, house and life-area words.
+10. scene and push contain no planet names or house numbers: write them in the reader's everyday words only and keep the astrology in why. Not "situations will increase" but one moment: "your manager asks you to take over ...", "an old friend messages you out of the blue", "you stop at an invoice you did not expect".`
+};
 
 const YEARLY_CHAPTERS = [
   {
@@ -55,38 +107,26 @@ const YEARLY_CHAPTERS = [
   {
     id: 'ch3',
     title: '第3章 第1四半期（最初の 3 か月）',
-    pick: (a) => ({ months: monthsCompact(a.quarters[0].months), currentDasha: a.dasha?.current }),
-    schema: `{
-      "overview": "この 3 か月の流れ（200文字程度）",
-      "months": [{ "month": "確定データの YYYY-MM をそのまま", "theme": "月のテーマ（20文字以内）", "text": "その月の惑星配置（月から見たハウス）が生活のどの領域を動かすか（250文字程度）", "todo": "有効な行動ひとつ（40文字以内）" }]
-    }`
+    pick: (a) => ({ months: monthsCompact(a.quarters[0].months, a), moon: a.moon, currentDasha: a.dasha?.current, strength: a.strength?.slice(0, 3) }),
+    schema: MONTH_SCHEMA
   },
   {
     id: 'ch4',
     title: '第4章 第2四半期',
-    pick: (a) => ({ months: monthsCompact(a.quarters[1].months), currentDasha: a.dasha?.current }),
-    schema: `{
-      "overview": "この 3 か月の流れ（200文字程度）",
-      "months": [{ "month": "確定データの YYYY-MM をそのまま", "theme": "月のテーマ（20文字以内）", "text": "その月の惑星配置が生活のどの領域を動かすか（250文字程度）", "todo": "有効な行動ひとつ（40文字以内）" }]
-    }`
+    pick: (a) => ({ months: monthsCompact(a.quarters[1].months, a), moon: a.moon, currentDasha: a.dasha?.current, strength: a.strength?.slice(0, 3) }),
+    schema: MONTH_SCHEMA
   },
   {
     id: 'ch5',
     title: '第5章 第3四半期',
-    pick: (a) => ({ months: monthsCompact(a.quarters[2].months), currentDasha: a.dasha?.current }),
-    schema: `{
-      "overview": "この 3 か月の流れ（200文字程度）",
-      "months": [{ "month": "確定データの YYYY-MM をそのまま", "theme": "月のテーマ（20文字以内）", "text": "その月の惑星配置が生活のどの領域を動かすか（250文字程度）", "todo": "有効な行動ひとつ（40文字以内）" }]
-    }`
+    pick: (a) => ({ months: monthsCompact(a.quarters[2].months, a), moon: a.moon, currentDasha: a.dasha?.current, strength: a.strength?.slice(0, 3) }),
+    schema: MONTH_SCHEMA
   },
   {
     id: 'ch6',
     title: '第6章 第4四半期',
-    pick: (a) => ({ months: monthsCompact(a.quarters[3].months), currentDasha: a.dasha?.current }),
-    schema: `{
-      "overview": "この 3 か月の流れ（200文字程度）",
-      "months": [{ "month": "確定データの YYYY-MM をそのまま", "theme": "月のテーマ（20文字以内）", "text": "その月の惑星配置が生活のどの領域を動かすか（250文字程度）", "todo": "有効な行動ひとつ（40文字以内）" }]
-    }`
+    pick: (a) => ({ months: monthsCompact(a.quarters[3].months, a), moon: a.moon, currentDasha: a.dasha?.current, strength: a.strength?.slice(0, 3) }),
+    schema: MONTH_SCHEMA
   },
   {
     id: 'ch7',
@@ -126,8 +166,9 @@ const YEARLY_CHAPTERS = [
     schema: `{
       "bestMonths": [{ "month": "確定データの YYYY-MM をそのまま", "text": "追い風になる理由と使い方（100文字以内）" }],
       "careMonths": [{ "month": "確定データの YYYY-MM をそのまま", "text": "慎重に進めたい理由と整え方（100文字以内）" }],
-      "actions": ["今年の具体的な行動指針（各40文字以内）", "", ""],
-      "closing": "1 年の終わりに向けたメッセージ（200文字程度）"
+      "actions": ["今年の具体的な行動指針（各60文字以内。『いつ・何を』まで書く）", "", ""],
+      "oneThing": "今年これだけは、と一つに絞った約束（100文字程度。根拠の配置を添える）",
+      "closing": "1 年の終わりにこの人がどこに立っているか、その姿を描いて背中を押す（250文字程度）"
     }`
   }
 ];
@@ -376,4 +417,4 @@ const CAREER_CHAPTERS = [
   }
 ];
 
-module.exports = { YEARLY_CHAPTERS, COMPAT_CHAPTERS, CAREER_CHAPTERS, compatChapterIdsFor, RELATION_JA };
+module.exports = { YEARLY_CHAPTERS, YEARLY_VOICE, COMPAT_CHAPTERS, CAREER_CHAPTERS, compatChapterIdsFor, RELATION_JA };

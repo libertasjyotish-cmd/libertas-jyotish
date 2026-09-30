@@ -512,7 +512,9 @@
           const head = item.month || item.name || item.planet || item.label || item.mark || item.feature || item.step || '';
           const sub = item.phase || item.theme || item.title || item.kind || item.where || '';
           const used = new Set(['month', 'name', 'planet', 'label', 'mark', 'feature', 'step', 'phase', 'theme', 'title', 'kind', 'where', 'todo']);
-          const body = Object.entries(item).filter(([k, val]) => !used.has(k) && typeof val === 'string' && val).map(([, val]) => para(val)).join('');
+          const labeled = { why: '星の根拠', move: 'この月の一手', avoid: '避けたいこと', push: 'あなたへ' };
+          const body = Object.entries(item).filter(([k, val]) => !used.has(k) && typeof val === 'string' && val)
+            .map(([k, val]) => (labeled[k] ? `<p><strong>${labeled[k]}</strong>　${esc(val)}</p>` : para(val))).join('');
           const todo = item.todo ? `<ul><li>${esc(item.todo)}</li></ul>` : '';
           return `<div class="fact"><strong>${esc(head)}</strong>${sub ? `　${esc(sub)}` : ''}</div>${body}${todo}`;
         }).join('');

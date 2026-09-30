@@ -5,7 +5,7 @@
 const { fetchReportData, fetchYearlyData, fetchCompatData, fetchCareerData, fetchKarmaData, fetchPalmData, setRateLimitDeadline, useEndpointCache, settleEndpointCalls } = require('./_astrology');
 const { listGeminiModels } = require('./_gemini');
 const { CHAPTERS, CHAPTER_IDS, generateChapters } = require('./_report');
-const { YEARLY_CHAPTERS, COMPAT_CHAPTERS, CAREER_CHAPTERS, compatChapterIdsFor } = require('./_report-products');
+const { YEARLY_CHAPTERS, YEARLY_VOICE, COMPAT_CHAPTERS, CAREER_CHAPTERS, compatChapterIdsFor } = require('./_report-products');
 const { PALM_CHAPTERS, PALM_CHAPTER_IDS, PALM_VOICE, palmTermsFor } = require('./_report-palm');
 const { KARMA_CHAPTERS, KARMA_CHAPTER_IDS, KARMA_VOICE, findKarmaViolations } = require('./_report-karma');
 const { analyzePalm, palmUnreadable, fetchImage } = require('./_palm');
@@ -88,7 +88,7 @@ async function photoDataUrls(order, ctx) {
 }
 
 function chapterDefsFor(order) {
-  if (order.product === 'yearly') return { defs: YEARLY_CHAPTERS, ids: YEARLY_CHAPTERS.map((c) => c.id) };
+  if (order.product === 'yearly') return { defs: YEARLY_CHAPTERS, ids: YEARLY_CHAPTERS.map((c) => c.id), voice: YEARLY_VOICE };
   if (order.product === 'compat') return { defs: COMPAT_CHAPTERS, ids: compatChapterIdsFor(order.relation || 'general') };
   if (order.product === 'career') return { defs: CAREER_CHAPTERS, ids: CAREER_CHAPTERS.map((c) => c.id) };
   if (order.product === 'palm') return { defs: PALM_CHAPTERS, ids: PALM_CHAPTER_IDS, voice: PALM_VOICE };
