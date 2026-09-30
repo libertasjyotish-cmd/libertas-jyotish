@@ -29,9 +29,9 @@ const MONTH_SCHEMA = `{
       "months": [{
         "month": "確定データの YYYY-MM をそのまま",
         "theme": "月のテーマ（20文字以内。抽象語でなく場面が浮かぶ言葉）",
-        "scene": "その月にこの人の身に起きやすい場面を、惑星名や室の数字を一切使わず日常の言葉だけで『あなたは〜』と言い当てる。誰から何を言われるか、どんな連絡・誘い・出費・迷い・体の感覚が来るか、そのときあなたが何を感じるかまで描く（300文字程度。overNatal に出生惑星がある領域は、その人にとって特に個人的に響く出来事として必ず入れる）",
+        "scene": "その月にこの人の身に起きやすい場面を、惑星名や室の数字を一切使わず日常の言葉だけで『あなたは〜』と言い当てる。誰から何を言われるか、どんな連絡・誘い・出費・迷い・体の感覚が来るか、そのときあなたが何を感じるかまで描く。読者の職業・雇用・家族構成は不明なので、会社員・上司・同僚・子どもを前提にせず、その領域が動くときに『働いている人／家にいる時間が長い人／一人で暮らす人』のいずれの生活にも起きる形の場面を 2〜3 通り並べ、最後に共通する気持ちで結ぶ（300文字程度。overNatal に出生惑星がある領域は、その人にとって特に個人的に響く出来事として必ず入れる）",
         "why": "根拠。ここだけで惑星名・月から何室（area）・逆行・出生惑星との重なり・ダシャー切替を名指しする（150文字程度）",
-        "move": "その月の具体的な一手。いつ（上旬・中旬・下旬）・誰に・何を・どう切り出すかまで、そのまま真似できる粒度で書く（120文字程度。『意識する』『心がける』『整える』は禁止）",
+        "move": "その月の具体的な一手。いつ（上旬・中旬・下旬）・誰に・何を・どう切り出すかまで、そのまま真似できる粒度で書く。相手は『家族・友人・パートナー・仕事や取引の相手など、あなたにとって〇〇に当たる人』のように、職業を仮定せず読者が自分で当てはめられる書き方にする（120文字程度。『意識する』『心がける』『整える』は禁止）",
         "avoid": "その月に避けたい具体的な行動一つと、その理由（80文字以内）",
         "push": "背中を押す一言。この人が過去にやってきたはずのこと、持っている強みを引いて、読んだ人が『自分のことだ』と胸に響く言葉で（80文字以内。惑星名は使わない）"
       }]
@@ -50,19 +50,21 @@ const YEARLY_VOICE = {
 7. 語りは古い寺院の占星術師が一人に語りかけるように、しかし品格とです・ます調は維持（「〜しなさい」の命令形は使わず「〜してください」「〜していい」で）。
 8. 【確定データ】にない惑星・月・配置を発明しない。文字数の目安は下限。要約や言い換えで埋めず、読者が翌月から使える具体を書く。
 9. データの内部名・数値を本文に出さない（momentum、overNatal、strength、score、スコア〇〇、数値〇〇 は禁止）。根拠は惑星名・室・領域の言葉に必ず言い換える。
-10. scene と push には惑星名・室の数字を書かない。そこは読者の生活の言葉だけで書き、星の話は why に集める。「〇〇な場面が増えていきます」のようなぼかしではなく、「上司から〜と打診される」「昔の友人から急に連絡が来る」「請求書を見て手が止まる」のような一場面を描く。`,
+10. scene と push には惑星名・室の数字を書かない。そこは読者の生活の言葉だけで書き、星の話は why に集める。「〇〇な場面が増えていきます」のようなぼかしではなく、「昔の友人から急に連絡が来る」「請求書を見て手が止まる」「家の中の一角を片づけたくなる」「体の同じ場所が気になる」のような一場面を描く。
+11. 読者の立場を仮定しない。会社勤め・既婚・子どもあり・健康な現役世代を前提にした場面（上司・同僚・部下・昇進・残業・子どもの学校）ばかりにしない。働いていない人、独身の人、子どものいない人、家で介護や家事をする人、引退した人、学生にも「自分のことだ」と読める場面を選ぶ。10 室（仕事・社会）や 11 室（利得・人脈）でも、職場だけでなく「外での役割・人からの評価・頼まれごと・地域や趣味の集まり」に広げて描き、12 か月のうち職場の場面が続かないよう、家庭・住まい・体調・お金・学び・友人・パートナー・親・旅・内面など領域を月ごとに変える。`,
   en: `[Voice]
 This is not an almanac but a one-year reading addressed to one person. Follow strictly:
 1. General explanation of a planet or house: at most one sentence per field. Spend the rest on what this year does to this person ("your year will ...").
 2. Every reading names its evidence (e.g. "in October Jupiter sits in your 7th from the Moon, right over your natal Venus"). No unsupported generalities.
-3. Each month follows: the concrete scene likely to arise for this person ("you will ...") -> the evidence -> one concrete move (when, with whom, what) -> one thing to avoid -> one line of encouragement. Never end at "a good month" or "be careful"; write the scene and the action.
+3. Each month follows: the concrete scene likely to arise for this person ("you will ...") -> the evidence -> one concrete move (when, with whom, what) -> one thing to avoid -> one line of encouragement. Never end at "a good month" or "be careful"; write the scene and the action. The reader's occupation, employment and family are unknown: do not assume an office job, a boss, colleagues or children. Give the scene in two or three forms that fit different lives (someone who works, someone who spends most days at home, someone who lives alone) and close on the feeling they share; in move, name the other person as "the one who is your ... (family, friend, partner, a client or colleague)" so the reader can map it themselves.
 4. Do not hedge everything with "may" and "possibly". State the mood, theme and fitting action plainly. Reserve caution for health, lifespan, medical, legal, financial matters and the outcome of specific events.
 5. Do not write all twelve months in the same tone. High-momentum months are "move now"; low-momentum months are "prepare quietly". When overNatal lists a natal planet, treat that month as one where that planet's domain is personally stirred, and say so.
 6. In every chapter lean on this person's strengths (top of strength, the Moon sign, the dasha lord): "because you have ...". Make the reader feel this is unmistakably about them.
 7. Speak as an old temple astrologer addressing one person, keeping a dignified, polite register.
 8. Never invent a planet, month or placement absent from the confirmed data. Character counts are minimums; never pad with summaries, write specifics the reader can use next month.
 9. Never expose internal field names or numbers (momentum, overNatal, strength, score, "a score of 85"). Always translate evidence into planet, house and life-area words.
-10. scene and push contain no planet names or house numbers: write them in the reader's everyday words only and keep the astrology in why. Not "situations will increase" but one moment: "your manager asks you to take over ...", "an old friend messages you out of the blue", "you stop at an invoice you did not expect".`
+10. scene and push contain no planet names or house numbers: write them in the reader's everyday words only and keep the astrology in why. Not "situations will increase" but one moment: "an old friend messages you out of the blue", "you stop at an invoice you did not expect", "you feel the urge to clear one corner of your home", "the same spot in your body keeps asking for attention".
+11. Never assume the reader's station in life. Do not fill the year with workplace scenes (boss, coworkers, promotion, overtime, children's school). People who do not work, who are single, childless, retired, students, or who care for family at home must also read it as their own. Even for the 10th (work, society) and 11th (gains, network) houses, widen the scene to "your role outside the home, how people regard you, what you are asked to take on, a community or hobby circle", and vary the life area month by month (home, body, money, learning, friends, partner, parents, travel, inner life) so no run of months reads like an office diary.`
 };
 
 const YEARLY_CHAPTERS = [
@@ -136,7 +138,7 @@ const YEARLY_CHAPTERS = [
       months: a.months.map((m) => ({ month: m.month, jupiter: m.planets.find((p) => p.key === 'Jupiter')?.houseFromMoonLabel, saturn: m.planets.find((p) => p.key === 'Saturn')?.houseFromMoonLabel, venus: m.planets.find((p) => p.key === 'Venus')?.houseFromMoonLabel, mars: m.planets.find((p) => p.key === 'Mars')?.houseFromMoonLabel }))
     }),
     schema: `{
-      "work": "仕事・社会的な立場の 1 年の流れと、力を入れる時期（350文字程度。職種名は断定しない）",
+      "work": "仕事・社会的な立場（働いていない人なら外での役割・人からの評価・引き受けごと）の 1 年の流れと、力を入れる時期（350文字程度。職種名や雇用の形は断定しない）",
       "money": "収入と支出の流れ、整えるべき時期（300文字程度。投資助言は書かない）",
       "relationships": "人間関係・パートナーシップの流れ（300文字程度）",
       "wellbeing": "心身のリズムと休息を優先したい時期（250文字程度。医療的な表現は書かない）"
