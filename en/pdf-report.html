@@ -88,6 +88,7 @@
     p { font-size: 0.94rem; margin-bottom: 12px; text-align: justify; }
     ul { margin: 6px 0 12px 1.2em; font-size: 0.94rem; }
 
+    .lead-note { font-size: 0.9rem; color: var(--color-text-muted, #6b5f4e); margin: 0 0 12px; }
     .lead { font-size: 1.5rem; line-height: 1.7; color: var(--color-gold-dark); text-align: center; margin: 10px 0 26px; }
     .toc li { margin-bottom: 6px; }
 
@@ -519,7 +520,12 @@
           return `<div class="fact"><strong>${esc(head)}</strong>${sub ? `　${esc(sub)}` : ''}</div>${body}${todo}`;
         }).join('');
       }
-      if (typeof v === 'object') return Object.values(v).map(genericValue).join('');
+      if (typeof v === 'object') {
+        const { heading, lead, ...rest } = v;
+        const head = heading ? `<h3>${esc(heading)}</h3>` : '';
+        const intro = lead ? `<p class="lead-note">${esc(lead)}</p>` : '';
+        return head + intro + Object.values(rest).map(genericValue).join('');
+      }
       return para(String(v));
     }
 

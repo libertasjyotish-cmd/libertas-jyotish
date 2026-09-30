@@ -25,7 +25,8 @@ const monthsCompact = (months, a) => months.map((m) => {
 });
 
 const MONTH_SCHEMA = `{
-      "overview": "この 3 か月の流れを、この人の出生図（月のサイン・現在のダシャー）に結びつけて（250文字程度）",
+      "overview": "この 3 か月の流れを、この人の出生図（月のサイン・現在のダシャー）に結びつけて。冒頭でこの章が扱う 3 か月（YYYY 年 M 月〜M 月）を明記し、前の四半期から何が変わるかを一文で言う（250文字程度）",
+      "howToRead": "この章の月別ブロックの読み方を一文で：各月は『起きやすい場面→星の根拠→この月の一手→避けたいこと→あなたへ』の順で、見取り図の節目や第 8 章の決断の窓とは違い『その月の日常で何をするか』に絞っている、と伝える（100文字以内）",
       "months": [{
         "month": "確定データの YYYY-MM をそのまま",
         "theme": "月のテーマ（20文字以内。抽象語でなく場面が浮かぶ言葉）",
@@ -52,7 +53,8 @@ const YEARLY_VOICE = {
 9. データの内部名・数値を本文に出さない（momentum、overNatal、strength、score、スコア〇〇、数値〇〇 は禁止）。根拠は惑星名・室・領域の言葉に必ず言い換える。
 10. scene と push には惑星名・室の数字を書かない。そこは読者の生活の言葉だけで書き、星の話は why に集める。「〇〇な場面が増えていきます」のようなぼかしではなく、「昔の友人から急に連絡が来る」「請求書を見て手が止まる」「家の中の一角を片づけたくなる」「体の同じ場所が気になる」のような一場面を描く。
 11. 読者の立場を仮定しない。会社勤め・既婚・子どもあり・健康な現役世代を前提にした場面（上司・同僚・部下・昇進・残業・子どもの学校）ばかりにしない。働いていない人、独身の人、子どものいない人、家で介護や家事をする人、引退した人、学生にも「自分のことだ」と読める場面を選ぶ。10 室（仕事・社会）や 11 室（利得・人脈）でも、職場だけでなく「外での役割・人からの評価・頼まれごと・地域や趣味の集まり」に広げて描く。
-12. 各月の生活領域は、その月の【確定データ】の area（月から何室か）と overNatal が指すものに従う。4 室なら住まい・家族、7 室なら対人・パートナー、6 室なら体調、2・12 室ならお金、5・9 室なら学び・創作、というように、配置が指す領域をそのまま場面にする。配置が仕事（10 室・11 室）を指す月だけ仕事を書き、家庭・対人・お金・体を指す月をそれ以外の話に読み替えない。領域が続くなら続けてよく、変化を演出するために配置にない領域を持ち出さない。`,
+12. 各月の生活領域は、その月の【確定データ】の area（月から何室か）と overNatal が指すものに従う。4 室なら住まい・家族、7 室なら対人・パートナー、6 室なら体調、2・12 室ならお金、5・9 室なら学び・創作、というように、配置が指す領域をそのまま場面にする。配置が仕事（10 室・11 室）を指す月だけ仕事を書き、家庭・対人・お金・体を指す月をそれ以外の話に読み替えない。領域が続くなら続けてよく、変化を演出するために配置にない領域を持ち出さない。
+13. 月の一覧は複数の章に出る（見取り図＝節目、第 1 章＝周期の切替、第 2 章＝大きな星のサイン移動、第 3〜6 章＝毎月の場面と一手、第 8 章＝決断の窓、第 9 章＝追い風・慎重）。スキーマの heading にはその一覧の内容を表す見出し（出力言語で 20 文字以内）、lead にはその一覧が他の章の月別と何が違うかを一文で書き、同じ月が別の章に出ても「同じことの繰り返し」に見えないよう角度を明示する。`,
   en: `[Voice]
 This is not an almanac but a one-year reading addressed to one person. Follow strictly:
 1. General explanation of a planet or house: at most one sentence per field. Spend the rest on what this year does to this person ("your year will ...").
@@ -66,7 +68,8 @@ This is not an almanac but a one-year reading addressed to one person. Follow st
 9. Never expose internal field names or numbers (momentum, overNatal, strength, score, "a score of 85"). Always translate evidence into planet, house and life-area words.
 10. scene and push contain no planet names or house numbers: write them in the reader's everyday words only and keep the astrology in why. Not "situations will increase" but one moment: "an old friend messages you out of the blue", "you stop at an invoice you did not expect", "you feel the urge to clear one corner of your home", "the same spot in your body keeps asking for attention".
 11. Never assume the reader's station in life. Do not fill the year with workplace scenes (boss, coworkers, promotion, overtime, children's school). People who do not work, who are single, childless, retired, students, or who care for family at home must also read it as their own. Even for the 10th (work, society) and 11th (gains, network) houses, widen the scene to "your role outside the home, how people regard you, what you are asked to take on, a community or hobby circle".
-12. Each month's life area follows what the confirmed data says for that month (area = house from the Moon, and overNatal): 4th -> home and family, 7th -> partner and dealings, 6th -> body, 2nd/12th -> money, 5th/9th -> learning and creation. Write about work only in months where the placements point to the 10th or 11th, and never reinterpret a month about home, people, money or body as a work month. If the same area continues for several months, let it continue; do not invent an area absent from the placements to create variety.`
+12. Each month's life area follows what the confirmed data says for that month (area = house from the Moon, and overNatal): 4th -> home and family, 7th -> partner and dealings, 6th -> body, 2nd/12th -> money, 5th/9th -> learning and creation. Write about work only in months where the placements point to the 10th or 11th, and never reinterpret a month about home, people, money or body as a work month. If the same area continues for several months, let it continue; do not invent an area absent from the placements to create variety.
+13. Month lists appear in several chapters (overview = turning points, ch.1 = cycle changes, ch.2 = sign changes of the slow planets, ch.3-6 = each month's scenes and moves, ch.8 = decision windows, ch.9 = tailwind/caution months). Where the schema has "heading", write a short heading in the output language (under 6 words) naming what that list is; in "lead", say in one sentence how this list differs from the monthly detail elsewhere, so a month appearing in more than one chapter never reads as repetition.`
 };
 
 const YEARLY_CHAPTERS = [
@@ -81,7 +84,8 @@ const YEARLY_CHAPTERS = [
       "catchphrase": "この 1 年のテーマを一文で（30文字以内）",
       "essence": "この 1 年の全体像（250文字程度。期間は確定データの年月のみ）",
       "themes": ["今年の主題（各30文字以内）", "", ""],
-      "keyMonths": [{ "month": "確定データの YYYY-MM をそのまま", "text": "その月が節目になる理由（80文字以内）" }],
+      "keyMonths": { "heading": "見出し（例: 節目になる月。20文字以内）", "lead": "この一覧が何を示すか。年を大きく動かす月だけを拾ったもので、毎月の詳細は第 3〜6 章で読む、と伝える（80文字以内）", "items": [{ "month": "確定データの YYYY-MM をそのまま", "text": "その月が節目になる理由（80文字以内）" }] },
+      "structure": { "heading": "見出し（例: この鑑定書の読み進め方。20文字以内）", "text": "章の役割分担を読者に案内する：第 1 章は運気の周期（ダシャー）とその切替月、第 2 章は木星・土星・ラーフ・ケートゥの位置とサイン移動の月（年の背景）、第 3〜6 章は 12 か月を毎月の場面と一手で（ここが本体）、第 7 章は領域別に縦に読み直し、第 8 章は大きな決断に向く月、第 9 章は追い風・慎重の月と今年の約束。同じ月が複数の章に出るのは角度が違うためだと短く断りを入れる（200文字程度）" },
       "stance": "この 1 年を過ごす基本姿勢（150文字程度）"
     }`
   },
@@ -92,7 +96,7 @@ const YEARLY_CHAPTERS = [
     schema: `{
       "intro": "ダシャー（運気の周期）の考え方と、今年の周期の位置づけ（250文字程度）",
       "current": "現在の大周期・中周期が今年にもたらす主題（400文字程度）",
-      "changes": [{ "month": "確定データの YYYY-MM をそのまま", "text": "その切り替わりで変わる空気と準備（150文字程度）" }],
+      "changes": { "heading": "見出し（例: 周期が切り替わる月。20文字以内）", "lead": "この一覧はダシャー（運気の周期）の支配星が交代する月であって、毎月の星の移動とは別であること、切替がない年はその旨を伝える（80文字以内）", "items": [{ "month": "確定データの YYYY-MM をそのまま", "text": "その切り替わりで変わる空気と準備（150文字程度）" }] },
       "closing": "周期の流れを味方にする心構え（150文字程度）"
     }`
   },
@@ -105,7 +109,7 @@ const YEARLY_CHAPTERS = [
       "jupiter": "木星の位置（月から見たハウス）が広げてくれる領域（300文字程度）",
       "saturn": "土星の位置が鍛える領域と、サディサティの該当状況（300文字程度。該当が無ければその旨を短く）",
       "nodes": "ラーフ・ケートゥの軸が示す、追いかけるものと手放すもの（250文字程度）",
-      "shifts": [{ "month": "確定データの YYYY-MM をそのまま", "text": "そのサイン移動が生活のどこに効くか（150文字程度）" }]
+      "shifts": { "heading": "見出し（例: 大きな星がサインを移る月。20文字以内）", "lead": "この一覧は木星・土星・ラーフ・ケートゥがサインを跨ぐ月（年の背景が変わる節）であって、毎月の場面は第 3〜6 章で読むと伝える（80文字以内）", "items": [{ "month": "確定データの YYYY-MM をそのまま", "text": "そのサイン移動が生活のどこに効くか（150文字程度）" }] }
     }`
   },
   {
@@ -140,10 +144,11 @@ const YEARLY_CHAPTERS = [
       months: a.months.map((m) => ({ month: m.month, jupiter: m.planets.find((p) => p.key === 'Jupiter')?.houseFromMoonLabel, saturn: m.planets.find((p) => p.key === 'Saturn')?.houseFromMoonLabel, venus: m.planets.find((p) => p.key === 'Venus')?.houseFromMoonLabel, mars: m.planets.find((p) => p.key === 'Mars')?.houseFromMoonLabel }))
     }),
     schema: `{
-      "work": "仕事・社会的な立場（働いていない人なら外での役割・人からの評価・引き受けごと）の 1 年の流れと、力を入れる時期（350文字程度。職種名や雇用の形は断定しない）",
-      "money": "収入と支出の流れ、整えるべき時期（300文字程度。投資助言は書かない）",
-      "relationships": "人間関係・パートナーシップの流れ（300文字程度）",
-      "wellbeing": "心身のリズムと休息を優先したい時期（250文字程度。医療的な表現は書かない）"
+      "intro": "この章の役割：第 3〜6 章で月順に読んだ同じ 1 年を、今度は領域別に縦に読み直すと伝える（80文字以内）",
+      "work": { "heading": "見出し（例: 仕事・外での役割。20文字以内）", "text": "仕事・社会的な立場（働いていない人なら外での役割・人からの評価・引き受けごと）の 1 年の流れと、力を入れる時期（350文字程度。職種名や雇用の形は断定しない）" },
+      "money": { "heading": "見出し（例: お金。20文字以内）", "text": "収入と支出の流れ、整えるべき時期（300文字程度。投資助言は書かない）" },
+      "relationships": { "heading": "見出し（例: 人間関係・パートナー。20文字以内）", "text": "人間関係・パートナーシップの流れ（300文字程度）" },
+      "wellbeing": { "heading": "見出し（例: 心と体。20文字以内）", "text": "心身のリズムと休息を優先したい時期（250文字程度。医療的な表現は書かない）" }
     }`
   },
   {
@@ -157,7 +162,7 @@ const YEARLY_CHAPTERS = [
     schema: `{
       "verdict": "turningPoints.scale が major なら「動く年」、moderate なら「一部の領域で動く年」、preparation なら「次の転機に向けて仕込む年」と、確定データのまま正直に判定し、その根拠となる配置（惑星名・月から何室・切替のダシャー）を必ず名指しで書く（300文字程度）",
       "destiny": "その配置が人生の流れの中で何を意味するか。運命的な文脈で書くが、前世・具体的な出来事・成否は断定しない（250文字程度）",
-      "decisionWindows": [{ "month": "確定データの YYYY-MM をそのまま（turningPoints.events または monthlyMomentum の score が高い月のみ）", "kind": "転職・独立・移住・学び直し・関係の決断など、その配置に対応する決断の種類（30文字以内。断定ではなく「向く」）", "text": "なぜその月か（根拠の配置）と、踏み出す前に整えておくこと（180文字程度）" }],
+      "decisionWindows": { "heading": "見出し（例: 決断に向く月。20文字以内）", "lead": "この一覧は日常の一手（第 3〜6 章）ではなく、人生の方向を変える大きな決断に向く月だけを選んだものだと伝える（80文字以内）", "items": [{ "month": "確定データの YYYY-MM をそのまま（turningPoints.events または monthlyMomentum の score が高い月のみ）", "kind": "転職・独立・移住・学び直し・関係の決断など、その配置に対応する決断の種類（30文字以内。断定ではなく「向く」）", "text": "なぜその月か（根拠の配置）と、踏み出す前に整えておくこと（180文字程度）" }] },
       "prepare": "決断の前に整えるべきこと（資金・関係・スキル等、確定データの弱い領域に基づく。250文字程度）",
       "hold": "急がない方がよい月または領域と、その配置上の理由（150文字程度。無ければ「特に無い」と短く）",
       "message": "決断を迫らず、しかし背中を押す締めの言葉（150文字程度）"
@@ -168,8 +173,8 @@ const YEARLY_CHAPTERS = [
     title: '第9章 この 1 年を最大限に活かすために',
     pick: (a) => ({ keyShifts: a.keyShifts, dashaChanges: a.dashaChanges, strength: a.strength?.slice(0, 3), period: a.period }),
     schema: `{
-      "bestMonths": [{ "month": "確定データの YYYY-MM をそのまま", "text": "追い風になる理由と使い方（100文字以内）" }],
-      "careMonths": [{ "month": "確定データの YYYY-MM をそのまま", "text": "慎重に進めたい理由と整え方（100文字以内）" }],
+      "bestMonths": { "heading": "見出し（例: 追い風の月。20文字以内）", "lead": "この一覧は 1 年を通して最も動きやすい月を 2〜3 つに絞ったものだと伝える（60文字以内）", "items": [{ "month": "確定データの YYYY-MM をそのまま", "text": "追い風になる理由と使い方（100文字以内）" }] },
+      "careMonths": { "heading": "見出し（例: 慎重に進めたい月。20文字以内）", "lead": "この一覧は止まる月ではなく整える月だと伝える（60文字以内）", "items": [{ "month": "確定データの YYYY-MM をそのまま", "text": "慎重に進めたい理由と整え方（100文字以内）" }] },
       "actions": ["今年の具体的な行動指針（各60文字以内。『いつ・何を』まで書く）", "", ""],
       "oneThing": "今年これだけは、と一つに絞った約束（100文字程度。根拠の配置を添える）",
       "closing": "1 年の終わりにこの人がどこに立っているか、その姿を描いて背中を押す（250文字程度）"
