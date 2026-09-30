@@ -289,7 +289,7 @@ window.LJ_I18N = {
       window.LJCheckout.ready.then(() => {
         document.getElementById('price-label').textContent = pdfPriceLabel();
         if (window.LJCheckout.provider() === 'komoju') {
-          document.getElementById('btn-proceed-checkout').textContent = '💳 決済に進む（クレジットカード・コンビニ・PayPay）';
+          document.getElementById('btn-proceed-checkout').textContent = '💳 決済に進む（クレジットカード・コンビニ払い）';
         }
         if (!window.LJCheckout.available('pdf')) {
           const btn = document.getElementById('btn-proceed-checkout');
