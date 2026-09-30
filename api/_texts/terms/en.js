@@ -241,7 +241,7 @@ const CHAPTER_TITLE = {
   yearly_ch5: 'Chapter 5 — Third quarter',
   yearly_ch6: 'Chapter 6 — Fourth quarter',
   yearly_ch7: 'Chapter 7 — The year by theme: work, money, relationships, wellbeing',
-  yearly_ch8: 'Chapter 8 — A year to move, or a year to prepare? Timing your big decisions',
+  yearly_ch8: 'Chapter 8 — Decision calendar: work, independence, moving, relationships, endings, learning, money',
   yearly_ch9: 'Chapter 9 — Making the most of this year',
   compat_summary: 'Your relationship at a glance',
   compat_ch1: 'Chapter 1 — Two blueprints',

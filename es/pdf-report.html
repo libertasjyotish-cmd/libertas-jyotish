@@ -513,7 +513,7 @@
           const head = item.month || item.name || item.planet || item.label || item.mark || item.feature || item.step || '';
           const sub = item.phase || item.theme || item.title || item.kind || item.where || '';
           const used = new Set(['month', 'name', 'planet', 'label', 'mark', 'feature', 'step', 'phase', 'theme', 'title', 'kind', 'where', 'todo']);
-          const labeled = { why: 'Lo que dicen los astros', move: 'La jugada de este mes', avoid: 'Qué evitar', push: 'Unas palabras para ti' };
+          const labeled = { why: 'Lo que dicen los astros', decision: 'Decisiones de este mes', move: 'La jugada de este mes', avoid: 'Qué evitar', push: 'Unas palabras para ti' };
           const body = Object.entries(item).filter(([k, val]) => !used.has(k) && typeof val === 'string' && val)
             .map(([k, val]) => (labeled[k] ? `<p><strong>${labeled[k]}</strong>　${esc(val)}</p>` : para(val))).join('');
           const todo = item.todo ? `<ul><li>${esc(item.todo)}</li></ul>` : '';
