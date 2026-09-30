@@ -84,7 +84,9 @@ module.exports = async (req, res) => {
         if (payment.status === 'captured' && id) return redirect(res, uploadUrl(id, lang));
         return redirect(res, `/${lang}/palm-chart?ordered=pending`);
       }
-      return redirect(res, `/${lang}/reports?ordered=${payment.status === 'captured' ? 'paid' : 'pending'}`);
+      // 年間運勢は日本語のみ独立の商品ページ（/ja/yearly）にフォームがある。他は /reports。
+      const page = product === 'yearly' && lang === 'ja' ? 'yearly' : 'reports';
+      return redirect(res, `/${lang}/${page}?ordered=${payment.status === 'captured' ? 'paid' : 'pending'}`);
     }
 
     // pdf: カードは completed 時点で captured。コンビニ等は authorized（入金待ち）→ Webhook で captured。
