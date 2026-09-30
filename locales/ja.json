@@ -554,6 +554,8 @@
     "reports.errFields": "未入力または形式が正しくない項目があります。",
     "reports.errServer": "注文を受け付けられませんでした。時間をおいて再度お試しください。",
     "reports.errUnavailable": "現在この地域ではサイト内決済の準備中です。公開までお待ちください。",
+    "reports.etsyAlt": "同じ年間運勢鑑定書は Etsy でも購入できます。",
+    "reports.etsyLink": "Etsy で購入",
     "mypage.tplTeaserTitle": "🔒 続きは詳細レポートで",
     "mypage.tplTeaserCta": "今週の注意日・追い風日と3つの一手を見る →",
     "price.unavailable": "サイト内決済は準備中です。公開までお待ちください。",

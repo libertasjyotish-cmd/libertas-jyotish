@@ -554,6 +554,8 @@
     "reports.errFields": "Ada kolom yang kosong atau tidak valid.",
     "reports.errServer": "Pesanan tidak dapat diproses. Coba lagi nanti.",
     "reports.errUnavailable": "Pembayaran online belum tersedia di wilayah Anda. Silakan cek kembali nanti.",
+    "reports.etsyAlt": "Lebih suka Etsy? Laporan tahun depan yang sama juga dijual di sana.",
+    "reports.etsyLink": "Beli di Etsy",
     "mypage.tplTeaserTitle": "🔒 Lanjutannya di laporan rinci",
     "mypage.tplTeaserCta": "Lihat hari yang perlu diwaspadai, hari berangin buah, dan 3 langkah konkret →",
     "price.unavailable": "Pembayaran online sementara tidak tersedia. Silakan coba lagi nanti.",

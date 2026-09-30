@@ -1,14 +1,17 @@
 // Gumroad Ping / resource subscriptions: /api/gumroad-webhook?token=<GUMROAD_PING_TOKEN>
 // 月額会員（plan-*）の購入・解約・終了・再開と、完全鑑定書（report-*）の購入・返金を会員シートへ反映する。
+// 個別鑑定書（yearly-* など、サイトの /reports から Gumroad へ送った注文）は url_params.order_id で台帳の行を決済確定にする。
 // Gumroad の通知は署名されないため、URL に付けた秘密トークンで正当性を確認する。
 // Settings → Advanced の Ping URL（sale）と、API の resource_subscriptions
 // （refund / cancellation / subscription_ended / subscription_restarted / dispute）に同じURLを登録する。
 const crypto = require('crypto');
 const { setMemberStatus, setPdfPurchased, revokePdfPurchase, downgradeMember } = require('./_sheets');
+const ledger = require('./_etsy-ledger');
 
 // 商品スラッグで会員（サブスク）と完全鑑定書（買い切り）を見分ける。
 const MEMBERSHIP_SLUG = /plan-t[123]/i;
 const REPORT_SLUG = /report-t[123]/i;
+const WEB_REPORT_SLUG = /(compat|yearly|career|palm)-t[123]/i;
 
 function timingSafeEqualStr(a, b) {
   const bufA = Buffer.from(String(a), 'utf8');
@@ -36,9 +39,18 @@ function productKind(body) {
     .filter(Boolean)
     .join(' ');
   if (REPORT_SLUG.test(source)) return 'report';
+  if (WEB_REPORT_SLUG.test(source)) return 'web_report';
   if (MEMBERSHIP_SLUG.test(source)) return 'membership';
   // スラッグが判別できない場合、継続課金の情報があれば会員とみなす。
   return body.recurrence || body.subscription_id ? 'membership' : null;
+}
+
+// Ping は x-www-form-urlencoded。url_params はパーサ次第で入れ子（url_params.order_id）か
+// 平坦なキー（url_params[order_id]）のどちらかで届く。
+function webOrderId(body) {
+  const nested = body.url_params && typeof body.url_params === 'object' ? body.url_params.order_id : null;
+  const id = String(nested || body['url_params[order_id]'] || '').trim();
+  return ledger.isWebOrder(id) ? id : '';
 }
 
 // Gumroad は同じ通知を複数回送るため、どのイベントかは resource_name か固有フィールドで判定する。
@@ -92,6 +104,17 @@ module.exports = async function handler(req, res) {
         if (truthy(body.test)) return res.status(200).json({ received: true, ignored: 'test_purchase' });
         if (kind === 'report') {
           if (!(await setPdfPurchased(email))) return res.status(500).json({ error: 'Member sheet unavailable' });
+        } else if (kind === 'web_report') {
+          const orderId = webOrderId(body);
+          if (!orderId) {
+            console.error('Gumroad sale: web report without order_id');
+            return res.status(200).json({ received: true, skipped: 'no_order_id' });
+          }
+          const result = await ledger.confirmWebOrder(orderId);
+          if (result === 'not_found') {
+            console.error(`Gumroad sale: order ${orderId} not in ledger`);
+            return res.status(200).json({ received: true, skipped: 'order_not_found' });
+          }
         } else if (kind === 'membership') {
           if (!(await setMemberStatus(email, 'paid'))) return res.status(500).json({ error: 'Member sheet unavailable' });
         } else {
@@ -103,6 +126,9 @@ module.exports = async function handler(req, res) {
       case 'dispute': {
         if (kind === 'report') {
           if (!(await revokePdfPurchase(email))) return res.status(500).json({ error: 'Member sheet unavailable' });
+        } else if (kind === 'web_report') {
+          const orderId = webOrderId(body);
+          if (orderId) await ledger.refundWebOrder(orderId);
         } else {
           const result = await downgradeMember({ email });
           if (!result.updated && result.reason !== 'member_not_found') {

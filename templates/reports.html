@@ -238,6 +238,7 @@
         <div class="form-error" id="form-error"></div>
         <button id="btn-order" class="btn-purchase">{{t.reports.submit}}</button>
         <p style="font-size:0.78rem; color:#6A5E58; margin-top:12px;">{{t.reports.legalNote}}</p>
+        <p id="etsy-alt" style="display:none; font-size:0.82rem; color:#5A4E48; margin-top:14px;">{{t.reports.etsyAlt}} <a href="https://www.etsy.com/listing/4572470899/vedic-astrology-year-ahead-forecast-is" target="_blank" rel="noopener" style="color:#8B6B1B; text-decoration:underline;">{{t.reports.etsyLink}}</a></p>
       </div>
 
     </div>
@@ -283,6 +284,8 @@
       var allowed = ['yearly'];
       var product = params.get('product');
       if (allowed.indexOf(product) < 0) product = 'yearly';
+      // 海外は同じ年間運勢を Etsy でも販売（Gumroad の代替導線）。日本はサイト内決済のみ。
+      if (LANG !== 'ja') document.getElementById('etsy-alt').style.display = 'block';
 
       function select(p) {
         product = p;

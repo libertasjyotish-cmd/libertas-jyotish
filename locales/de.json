@@ -554,6 +554,8 @@
     "reports.errFields": "Einige Felder fehlen oder sind ungültig.",
     "reports.errServer": "Wir konnten Ihre Bestellung nicht entgegennehmen. Bitte versuchen Sie es später erneut.",
     "reports.errUnavailable": "Online-Zahlungen sind in Ihrer Region noch nicht verfügbar. Bitte schauen Sie bald wieder vorbei.",
+    "reports.etsyAlt": "Lieber Etsy? Derselbe Jahresbericht wird auch dort verkauft.",
+    "reports.etsyLink": "Auf Etsy kaufen",
     "mypage.tplTeaserTitle": "🔒 Fortsetzung im detaillierten Bericht",
     "mypage.tplTeaserCta": "Sehen Sie die wichtigen Tage dieser Woche, Tage mit Rückenwind und 3 konkrete Schritte →",
     "price.unavailable": "Die Online-Zahlung ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.",
