@@ -240,7 +240,7 @@ const CHAPTER_TITLE = {
   yearly_ch5: 'Bab 5 — Kuartal ketiga',
   yearly_ch6: 'Bab 6 — Kuartal keempat',
   yearly_ch7: 'Bab 7 — Tahun ini per tema: kerja, uang, relasi, kesejahteraan',
-  yearly_ch8: 'Bab 8 — Tahun untuk bergerak atau tahun untuk bersiap? Waktu keputusan besar',
+  yearly_ch8: 'Bab 8 — Kalender keputusan: kerja, mandiri, pindah rumah, hubungan, mengakhiri, belajar, uang',
   yearly_ch9: 'Bab 9 — Memanfaatkan tahun ini sebaik-baiknya',
   compat_summary: 'Hubungan Anda berdua dalam sekilas',
   compat_ch1: 'Bab 1 — Dua cetak biru',

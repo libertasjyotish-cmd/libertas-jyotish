@@ -240,7 +240,7 @@ const CHAPTER_TITLE = {
   yearly_ch5: 'Capítulo 5 — Tercer trimestre',
   yearly_ch6: 'Capítulo 6 — Cuarto trimestre',
   yearly_ch7: 'Capítulo 7 — El año por temas: trabajo, dinero, relaciones, bienestar',
-  yearly_ch8: 'Capítulo 8 — ¿Año de cambio o año de preparación? El momento de las grandes decisiones',
+  yearly_ch8: 'Capítulo 8 — Calendario de decisiones: trabajo, independencia, mudanza, relaciones, cierres, estudio, dinero',
   yearly_ch9: 'Capítulo 9 — Cómo aprovechar al máximo este año',
   compat_summary: 'Vuestra relación de un vistazo',
   compat_ch1: 'Capítulo 1 — Dos planos',

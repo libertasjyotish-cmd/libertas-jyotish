@@ -240,7 +240,7 @@ const CHAPTER_TITLE = {
   yearly_ch5: 'Kapitel 5 — Drittes Quartal',
   yearly_ch6: 'Kapitel 6 — Viertes Quartal',
   yearly_ch7: 'Kapitel 7 — Das Jahr nach Themen: Arbeit, Geld, Beziehungen, Wohlbefinden',
-  yearly_ch8: 'Kapitel 8 — Ein Jahr für Veränderungen oder ein Jahr der Vorbereitung? Das Timing Ihrer großen Entscheidungen',
+  yearly_ch8: 'Kapitel 8 — Entscheidungskalender: Arbeit, Selbstständigkeit, Umzug, Beziehung, Loslassen, Lernen, Geld',
   yearly_ch9: 'Kapitel 9 — Das Beste aus diesem Jahr machen',
   compat_summary: 'Ihre Beziehung auf einen Blick',
   compat_ch1: 'Kapitel 1 — Zwei Baupläne',
