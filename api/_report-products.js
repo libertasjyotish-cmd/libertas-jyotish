@@ -10,30 +10,54 @@ const RELATION_JA = {
 
 // 月別データ: 月から見たハウスに加えて、出生図の惑星と同じサインに重なる通過惑星（natalHits）と、
 // 木星・土星の位置から機械的に出した「動きやすさ」（momentum）を渡し、月ごとの読みに固有の根拠を持たせる。
+const { SIGN_LORD, HOUSE_DOMAIN } = require('./_dictionaries.js');
+
+// 惑星がその室に持ち込むもの（前向きな軸で。土星は「引き締め」ではなく「長く残る形にする」）
+const PLANET_BRINGS = {
+  Sun: '役割・自信・表に出ること', Moon: '気持ち・暮らし・人気', Mars: '行動・決着・勝ち取る力', Mercury: '話・取引・情報・契約',
+  Jupiter: '広がり・恵み・後押し', Venus: '豊かさ・楽しみ・魅力・実入り', Saturn: '持続・積み上げ・長く残る形',
+  Rahu: '新しい欲求・拡張・未知の領域', Ketu: '手放し・熟練・身軽さ'
+};
+
+const SIGN_ORDER = Object.keys(SIGN_LORD);
+const houseFromKeys = (from, to) => (from && to ? ((SIGN_ORDER.indexOf(to) - SIGN_ORDER.indexOf(from) + 12) % 12) + 1 : null);
+
+// 出生図の各惑星を「月から何室にあるか」で要約（月別の根拠を「あなたの出生の○○は○室」と名指しできるように）
+const natalCompact = (a) => {
+  const natal = (a?.planets || []).filter((p) => p.key !== 'Ascendant');
+  const moonKey = a?.moon?.signKey || natal.find((p) => p.key === 'Moon')?.signKey;
+  return natal.map((n) => ({
+    planet: n.name, sign: n.sign, houseFromMoon: houseFromKeys(moonKey, n.signKey),
+    area: HOUSE_DOMAIN.find((h) => h.house === houseFromKeys(moonKey, n.signKey))?.label, nakshatra: n.nakshatra, brings: PLANET_BRINGS[n.key]
+  }));
+};
+
 const monthsCompact = (months, a) => months.map((m) => {
   const natal = (a?.planets || []).filter((p) => p.key !== 'Ascendant');
+  const moonKey = a?.moon?.signKey || natal.find((p) => p.key === 'Moon')?.signKey;
   const momentum = (a?.turningPoints?.monthlyMomentum || []).find((x) => x.month === m.month);
   return {
     month: m.month,
     momentum: momentum ? momentum.score : undefined,
     dashaChange: (a?.dashaChanges || []).filter((c) => c.month === m.month).map((c) => `${c.level === 'maha' ? 'maha' : 'antar'}:${c.lord}`),
     planets: m.planets.map((p) => ({
-      planet: p.name, sign: p.sign, house: p.houseFromMoon, area: p.houseFromMoonLabel, retrograde: p.retrograde,
-      overNatal: natal.filter((n) => n.signKey === p.signKey).map((n) => n.name)
+      planet: p.name, brings: PLANET_BRINGS[p.key], sign: p.sign, house: p.houseFromMoon, area: p.houseFromMoonLabel, retrograde: p.retrograde,
+      overNatal: natal.filter((n) => n.signKey === p.signKey).map((n) => `${n.name}(出生でも月から${houseFromKeys(moonKey, n.signKey)}室)`),
+      signLordNatal: (() => { const l = natal.find((n) => n.key === SIGN_LORD[p.signKey]); return l ? `${l.name}は出生で月から${houseFromKeys(moonKey, l.signKey)}室` : undefined; })()
     }))
   };
 });
 
 const MONTH_SCHEMA = `{
       "overview": "この 3 か月の流れを、この人の出生図（月のサイン・現在のダシャー）に結びつけて。冒頭でこの章が扱う 3 か月（YYYY 年 M 月〜M 月）を明記し、前の四半期から何が変わるかを一文で言う（250文字程度）",
-      "howToRead": "この章の月別ブロックの読み方を一文で：各月は『起きやすい場面→星の根拠→この月の一手→避けたいこと→あなたへ』の順で、見取り図の節目や第 8 章の決断の窓とは違い『その月の日常で何をするか』に絞っている、と伝える（100文字以内）",
+      "howToRead": "この章の月別ブロックの読み方を一文で：各月は『その月の運の動き→星の根拠→運を取りに行く一手→運を逃がす行動→あなたへ』の順で、見取り図の節目や第 8 章の決断の窓とは違い『その月に何が入り・決まり・離れるか』に絞っている、と伝える（100文字以内）",
       "months": [{
         "month": "確定データの YYYY-MM をそのまま",
-        "theme": "月のテーマ（20文字以内。抽象語でなく場面が浮かぶ言葉）",
-        "scene": "その月にこの人の身に起きやすい場面を、惑星名や室の数字を一切使わず日常の言葉だけで『あなたは〜』と言い当てる。誰から何を言われるか、どんな連絡・誘い・出費・迷い・体の感覚が来るか、そのときあなたが何を感じるかまで描く。読者の職業・雇用・家族構成は不明なので、会社員・上司・同僚・子どもを前提にせず、その領域が動くときに『働いている人／家にいる時間が長い人／一人で暮らす人』のいずれの生活にも起きる形の場面を 2〜3 通り並べ、最後に共通する気持ちで結ぶ（300文字程度。overNatal に出生惑星がある領域は、その人にとって特に個人的に響く出来事として必ず入れる）",
-        "why": "根拠。ここだけで惑星名・月から何室（area）・逆行・出生惑星との重なり・ダシャー切替を名指しする（150文字程度）",
-        "move": "その月の具体的な一手。いつ（上旬・中旬・下旬）・誰に・何を・どう切り出すかまで、そのまま真似できる粒度で書く。相手は『家族・友人・パートナー・仕事や取引の相手など、あなたにとって〇〇に当たる人』のように、職業を仮定せず読者が自分で当てはめられる書き方にする（120文字程度。『意識する』『心がける』『整える』は禁止）",
-        "avoid": "その月に避けたい具体的な行動一つと、その理由（80文字以内）",
+        "theme": "その月の運の見出し（20文字以内。『実入りの話が来る月』『縁が一つ決まる月』のように、何が動くかが分かる言葉。生活態度の語は不可）",
+        "scene": "その月にこの人の運がどう動くかを『あなたは〜』と言い切る。何が入ってくるか（お金・話・縁・役割・評価）、何が決まるか、何が離れていくかを、その月の area と brings が示す領域で具体に書く（例: 金星が 2 室なら『実入りや報酬の話があなたの方に来る。値段を付け直すならこの月』）。惑星名・室の数字は使わないが、overNatal・signLordNatal・natalChart にあるこの人固有の配置を日常語に直して『あなたは生まれつき〇〇の人だから、この月は特に〜』とこの人だけに当てはまる形にする。場面は一つに絞り、『〜する人もいれば〜な人も』と複数の立場を並べない。職業・家族の断定（上司・同僚・子ども）はしないが、その代わりに相手を『あなたにお金を払う側の人』『あなたが話を決める相手』のように役割で呼ぶ（300文字程度）",
+        "why": "根拠。ここだけで惑星名・月から何室（area）・逆行・出生惑星との重なり（overNatal、出生での室も言う）・ダシャー切替を名指しする（150文字程度）",
+        "move": "その運を取りに行く一手。いつ（上旬・中旬・下旬）・誰に・何を・どう切り出すかまで、そのまま真似できる粒度で。必ず『何かを取る・決める・切り出す・申し出る・値段を付ける・会う』のどれか。相手は役割で呼ぶ（120文字程度。『意識する』『心がける』『整える』『見直す』『片づける』『言葉に気をつける』は禁止）",
+        "avoid": "その月の運を取り逃がす行動一つと、取り逃がすと何を失うか（80文字以内。生活態度の注意ではなく運の話）",
         "push": "背中を押す一言。この人が過去にやってきたはずのこと、持っている強みを引いて、読んだ人が『自分のことだ』と胸に響く言葉で（80文字以内。惑星名は使わない）"
       }]
     }`;
@@ -44,7 +68,7 @@ const YEARLY_VOICE = {
 これは暦の解説ではなく、目の前の一人に向けた 1 年の鑑定書です。次を徹底してください。
 1. 惑星やハウスの一般説明は各項目 1 文以内。残りは「あなたのこの 1 年はこうなる」というこの人固有の読みに使う。
 2. すべての読みに根拠を名指しで添える（例:「10 月は木星が月から 7 室、あなたの出生の金星に重なる」）。根拠のない一般論は書かない。
-3. 月別は必ず【その月に起きやすい具体的な場面（あなたは〜）→根拠→具体的な一手（いつ・誰に・何を）→避けること→背中を押す一言】の順。「良い時期です」「慎重に」で終わらせず、場面と行動を書く。
+3. 月別は必ず【その月にこの人の運がどう動くかの言い切り（あなたは〜）→根拠→運を取りに行く一手（いつ・誰に・何を）→運を逃がす行動→背中を押す一言】の順。読者がお金を払って知りたいのは「自分の運がいつ・どこで・どう動くか」であって生活の作法ではない。「部屋を片づける」「言葉に気をつける」「体調を整える」「見直す」「意識する」「慎重に」のような態度の助言は全面禁止。代わりに「何が入る・何が決まる・何が離れる」を書く。
 4. 「でしょう」「可能性があります」を乱用しない。空気・主題・向く行動は言い切る。断定を避けるのは健康・寿命・医療・法律・投資・具体的な出来事の成否だけ。
 5. 12 か月すべてを同じ調子で書かない。momentum が高い月は「ここで動く」と強く、低い月は「ここは仕込む」と静かに、月ごとの温度差を出す。overNatal に出生惑星があれば、その惑星の領域が個人的に強く動く月として必ず取り上げる。
 6. この人の出生図の強み（strength の上位、月のサイン、ダシャーの支配星）を毎章どこかで引き、「あなたには〇〇があるから」と結ぶ。読んだ人が「自分のことだ」と感じる当事者感を優先する。
@@ -52,9 +76,11 @@ const YEARLY_VOICE = {
 8. 【確定データ】にない惑星・月・配置を発明しない。文字数の目安は下限。要約や言い換えで埋めず、読者が翌月から使える具体を書く。
 9. データの内部名・数値を本文に出さない（momentum、overNatal、strength、score、スコア〇〇、数値〇〇 は禁止）。根拠は惑星名・室・領域の言葉に必ず言い換える。
 10. scene と push には惑星名・室の数字を書かない。そこは読者の生活の言葉だけで書き、星の話は why に集める。「〇〇な場面が増えていきます」のようなぼかしではなく、「昔の友人から急に連絡が来る」「請求書を見て手が止まる」「家の中の一角を片づけたくなる」「体の同じ場所が気になる」のような一場面を描く。
-11. 読者の立場を仮定しない。会社勤め・既婚・子どもあり・健康な現役世代を前提にした場面（上司・同僚・部下・昇進・残業・子どもの学校）ばかりにしない。働いていない人、独身の人、子どものいない人、家で介護や家事をする人、引退した人、学生にも「自分のことだ」と読める場面を選ぶ。10 室（仕事・社会）や 11 室（利得・人脈）でも、職場だけでなく「外での役割・人からの評価・頼まれごと・地域や趣味の集まり」に広げて描く。
+11. 読者の立場を仮定しない。会社勤め・既婚・子どもあり・健康な現役世代を前提にした場面（上司・同僚・部下・昇進・残業・子どもの学校）ばかりにしない。働いていない人、独身の人、子どものいない人、家で介護や家事をする人、引退した人、学生にも「自分のことだ」と読める場面を選ぶ。ただし複数の立場を列挙して薄めるのではなく、場面は一つ、相手は役割（あなたにお金を払う人・あなたが話を決める相手・あなたが頼られる相手）で呼ぶ。10 室（仕事・社会）や 11 室（利得・人脈）でも、職場だけでなく「外での役割・人からの評価・頼まれごと・地域や趣味の集まり」に広げて描く。
 12. 各月の生活領域は、その月の【確定データ】の area（月から何室か）と overNatal が指すものに従う。4 室なら住まい・家族、7 室なら対人・パートナー、6 室なら体調、2・12 室ならお金、5・9 室なら学び・創作、というように、配置が指す領域をそのまま場面にする。配置が仕事（10 室・11 室）を指す月だけ仕事を書き、家庭・対人・お金・体を指す月をそれ以外の話に読み替えない。領域が続くなら続けてよく、変化を演出するために配置にない領域を持ち出さない。
-13. 月の一覧は複数の章に出る（見取り図＝節目、第 1 章＝周期の切替、第 2 章＝大きな星のサイン移動、第 3〜6 章＝毎月の場面と一手、第 8 章＝決断の窓、第 9 章＝追い風・慎重）。スキーマの heading にはその一覧の内容を表す見出し（出力言語で 20 文字以内）、lead にはその一覧が他の章の月別と何が違うかを一文で書き、同じ月が別の章に出ても「同じことの繰り返し」に見えないよう角度を明示する。`,
+13. 月の一覧は複数の章に出る（見取り図＝節目、第 1 章＝周期の切替、第 2 章＝大きな星のサイン移動、第 3〜6 章＝毎月の場面と一手、第 8 章＝決断の窓、第 9 章＝追い風・慎重）。スキーマの heading にはその一覧の内容を表す見出し（出力言語で 20 文字以内）、lead にはその一覧が他の章の月別と何が違うかを一文で書き、同じ月が別の章に出ても「同じことの繰り返し」に見えないよう角度を明示する。
+14. 惑星が持ち込むもの（brings）を室の領域に掛けて運を読む。金星が 2 室なら「実入り・報酬・楽しむための支出」、木星なら「広がり・恵み」、土星なら「長く残る形になる・積み上がる」（引き締め・試練とは書かない）、火星なら「動き出す・決着がつく」。金運は「入る・出る・残る」の流れとして言い切ってよい。禁止は投資の銘柄・売買時期・利回りの助言だけで、金運そのものを避けて「言葉の話」に逃げない。
+15. 个人感を出すのは出生図である。natalChart（出生惑星の月からの室・ナクシャトラ）と overNatal・signLordNatal を使い、毎月少なくとも一つは「あなたは生まれつき〇〇を〇〇に持つ人だから、この月は他の人より〜」と、この人だけに当てはまる一文を入れる（scene では日常語で、why では惑星名で）。誰にでも当てはまる一般論や、複数の立場を並べてどれかに当たるようにする書き方は禁止。`,
   en: `[Voice]
 This is not an almanac but a one-year reading addressed to one person. Follow strictly:
 1. General explanation of a planet or house: at most one sentence per field. Spend the rest on what this year does to this person ("your year will ...").
@@ -67,9 +93,11 @@ This is not an almanac but a one-year reading addressed to one person. Follow st
 8. Never invent a planet, month or placement absent from the confirmed data. Character counts are minimums; never pad with summaries, write specifics the reader can use next month.
 9. Never expose internal field names or numbers (momentum, overNatal, strength, score, "a score of 85"). Always translate evidence into planet, house and life-area words.
 10. scene and push contain no planet names or house numbers: write them in the reader's everyday words only and keep the astrology in why. Not "situations will increase" but one moment: "an old friend messages you out of the blue", "you stop at an invoice you did not expect", "you feel the urge to clear one corner of your home", "the same spot in your body keeps asking for attention".
-11. Never assume the reader's station in life. Do not fill the year with workplace scenes (boss, coworkers, promotion, overtime, children's school). People who do not work, who are single, childless, retired, students, or who care for family at home must also read it as their own. Even for the 10th (work, society) and 11th (gains, network) houses, widen the scene to "your role outside the home, how people regard you, what you are asked to take on, a community or hobby circle".
+11. Never assume the reader's station in life. Do not fill the year with workplace scenes (boss, coworkers, promotion, overtime, children's school). People who do not work, who are single, childless, retired, students, or who care for family at home must also read it as their own — not by listing several situations, but with one scene whose counterpart is named by role (the one who pays you, the one you settle things with, the one who relies on you). Even for the 10th (work, society) and 11th (gains, network) houses, widen the scene to "your role outside the home, how people regard you, what you are asked to take on, a community or hobby circle".
 12. Each month's life area follows what the confirmed data says for that month (area = house from the Moon, and overNatal): 4th -> home and family, 7th -> partner and dealings, 6th -> body, 2nd/12th -> money, 5th/9th -> learning and creation. Write about work only in months where the placements point to the 10th or 11th, and never reinterpret a month about home, people, money or body as a work month. If the same area continues for several months, let it continue; do not invent an area absent from the placements to create variety.
-13. Month lists appear in several chapters (overview = turning points, ch.1 = cycle changes, ch.2 = sign changes of the slow planets, ch.3-6 = each month's scenes and moves, ch.8 = decision windows, ch.9 = tailwind/caution months). Where the schema has "heading", write a short heading in the output language (under 6 words) naming what that list is; in "lead", say in one sentence how this list differs from the monthly detail elsewhere, so a month appearing in more than one chapter never reads as repetition.`
+13. Month lists appear in several chapters (overview = turning points, ch.1 = cycle changes, ch.2 = sign changes of the slow planets, ch.3-6 = each month's scenes and moves, ch.8 = decision windows, ch.9 = tailwind/caution months). Where the schema has "heading", write a short heading in the output language (under 6 words) naming what that list is; in "lead", say in one sentence how this list differs from the monthly detail elsewhere, so a month appearing in more than one chapter never reads as repetition.
+14. Read each planet's gift (brings) through the house it occupies: Venus in the 2nd = income, fees, money for pleasure; Jupiter = expansion and blessing; Saturn = what becomes lasting and accumulates (never "restriction" or "trial"); Mars = movement and settlement. State money luck plainly as what comes in, goes out, and stays. The only prohibition is advice on specific investments, timing of trades or returns; do not dodge money into "mind your words".
+15. Individuality comes from the birth chart. Using natalChart (natal planets by house from the Moon and nakshatra), overNatal and signLordNatal, every month must contain at least one sentence that fits only this person: "because you were born with ... in ..., this month ... more than for others" (in everyday words in scene, with planet names in why). Generic statements, and scenes listing several walks of life so that one of them fits, are forbidden. Readers pay to learn when, where and how their luck moves, not for lifestyle advice: "tidy your room", "watch your words", "look after your health", "be careful" are banned; write what comes in, what gets decided, what leaves.`
 };
 
 const YEARLY_CHAPTERS = [
@@ -115,25 +143,25 @@ const YEARLY_CHAPTERS = [
   {
     id: 'ch3',
     title: '第3章 第1四半期（最初の 3 か月）',
-    pick: (a) => ({ months: monthsCompact(a.quarters[0].months, a), moon: a.moon, currentDasha: a.dasha?.current, strength: a.strength?.slice(0, 3) }),
+    pick: (a) => ({ months: monthsCompact(a.quarters[0].months, a), natalChart: natalCompact(a), moon: a.moon, currentDasha: a.dasha?.current, strength: a.strength?.slice(0, 3) }),
     schema: MONTH_SCHEMA
   },
   {
     id: 'ch4',
     title: '第4章 第2四半期',
-    pick: (a) => ({ months: monthsCompact(a.quarters[1].months, a), moon: a.moon, currentDasha: a.dasha?.current, strength: a.strength?.slice(0, 3) }),
+    pick: (a) => ({ months: monthsCompact(a.quarters[1].months, a), natalChart: natalCompact(a), moon: a.moon, currentDasha: a.dasha?.current, strength: a.strength?.slice(0, 3) }),
     schema: MONTH_SCHEMA
   },
   {
     id: 'ch5',
     title: '第5章 第3四半期',
-    pick: (a) => ({ months: monthsCompact(a.quarters[2].months, a), moon: a.moon, currentDasha: a.dasha?.current, strength: a.strength?.slice(0, 3) }),
+    pick: (a) => ({ months: monthsCompact(a.quarters[2].months, a), natalChart: natalCompact(a), moon: a.moon, currentDasha: a.dasha?.current, strength: a.strength?.slice(0, 3) }),
     schema: MONTH_SCHEMA
   },
   {
     id: 'ch6',
     title: '第6章 第4四半期',
-    pick: (a) => ({ months: monthsCompact(a.quarters[3].months, a), moon: a.moon, currentDasha: a.dasha?.current, strength: a.strength?.slice(0, 3) }),
+    pick: (a) => ({ months: monthsCompact(a.quarters[3].months, a), natalChart: natalCompact(a), moon: a.moon, currentDasha: a.dasha?.current, strength: a.strength?.slice(0, 3) }),
     schema: MONTH_SCHEMA
   },
   {
