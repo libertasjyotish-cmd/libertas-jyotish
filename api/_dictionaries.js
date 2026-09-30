@@ -133,7 +133,7 @@ const HOUSE_DOMAIN = [
   { house: 4, label: '家庭・土台', note: '住まい、心の安定、不動産' },
   { house: 5, label: '創造・学び', note: '企画力、子ども、投資の勘' },
   { house: 6, label: '健康・克服', note: '勤勉さ、競争、体調管理' },
-  { house: 7, label: '対人・契約', note: 'パートナー、取引、共同事業' },
+  { house: 7, label: '対人・パートナー', note: '配偶者・パートナー、共に進める相手' },
   { house: 8, label: '変容・継承', note: '転機、相続、深い探究' },
   { house: 9, label: '幸運・信条', note: '運の後押し、学問、遠方' },
   { house: 10, label: '仕事・社会', note: '職業、評価、社会的な立場' },

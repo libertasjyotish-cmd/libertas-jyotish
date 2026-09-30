@@ -71,7 +71,7 @@ const decisionsForMonth = (m, dashaChange) => {
     const r = at('Rahu');
     if (d.rahuWary && r && d.houses.includes(r.houseFromMoon)) { score -= 1; why.push(`ラーフが月から${r.houseFromMoon}室（欲が先に立つ配置）`); }
     const me = at('Mercury');
-    if (d.contract && me?.retrograde) { score -= 1; why.push('水星が逆行（取り決めは逆行明けに）'); }
+    if (d.contract && me?.retrograde) { score -= 1; why.push('水星が逆行（決めごとは逆行明けに）'); }
     if (d.dasha && dashaChange.length) { score += 1; why.push(`ダシャー切替（${dashaChange.join('・')}）`); }
     if (score >= 2) out.push({ decision: d.label, fit: '向く', why: why.join('、') });
     else if (score <= -1) out.push({ decision: d.label, fit: '待つ', why: why.join('、') });
@@ -132,7 +132,7 @@ const YEARLY_VOICE = {
 2. 領域は【確定データ】の area（月から何室）と brings（惑星が持ち込むもの）の掛け合わせで決める。配置が示していない領域は書かない。同じ領域が続くなら続けてよい。変化の演出はしない。
 3. 惑星の意味は brings のとおり。土星は持続・積み上げ・長く残る形（引き締め・試練とは書かない）。
 4. 金運は配置が財の室（2 室・11 室）や金星・木星の恵みを示す月にだけ、入る・出る・残るの流れとして言い切る。禁止は投資の銘柄・売買時期・利回りの助言のみ。
-5. 決断の向き不向きは【確定データ】の decisions・decisionCalendar のとおりに書く。そこに無い決断を足さず、ある決断を省かない。「引っ越すならこの月」「取り決めはこの月を待つ」と言い切る。断定を避けるのは相手の気持ちと成否の保証だけ。
+5. 決断の向き不向きは【確定データ】の decisions・decisionCalendar のとおりに書く。そこに無い決断を足さず、ある決断を省かない。「引っ越すならこの月」「決めるならこの月を待つ」と言い切る。断定を避けるのは相手の気持ちと成否の保証だけ。
 6. 12 か月で同じ型の一手を繰り返さない。前月と同じ相手・同じ手段・同じ動詞なら書き直す。
 7. 個人化は出生図からのみ。natalChart（出生惑星の月からの室・ナクシャトラ）・overNatal・signLordNatal を使い、毎月「あなたは生まれつき〜」の一文を必ず入れる（scene では日常語で、why では惑星名で）。誰にでも当たる一般論、複数の立場の列挙は禁止。
 8. 読者の職業・雇用・婚姻・子ども・年齢・健康状態を仮定しない。相手を上司・同僚・部下・家族・子どもと固定しない。
@@ -253,7 +253,7 @@ const YEARLY_CHAPTERS = [
     }),
     schema: `{
       "verdict": "scale が major なら「動く年」、moderate なら「一部の領域で動く年」、preparation なら「次の転機に向けて仕込む年」と確定データのまま判定し、根拠の配置（惑星名・月から何室・切替のダシャー）を名指しする（250文字程度）",
-      "calendar": { "heading": "見出し（20文字以内）", "lead": "この一覧は決断の種類ごとに今年の向く月・待つ月を答えるもので、第 3〜6 章の月別とは軸が違うと伝える（80文字以内）", "items": [{ "kind": "decisionCalendar の decision をそのまま", "text": "goMonths の月は『〜するならこの月』と、waitMonths の月は『〜の取り決めはこの月を待つ』と、根拠（why の惑星名・室）を添えて言い切る。両方無ければ『今年は星が押しも止めもしない』と書き、代わりにその決断に関わる出生図の配置（natalChart）からこの人の進め方を一文で（200文字程度）" }] },
+      "calendar": { "heading": "見出し（20文字以内）", "lead": "この一覧は決断の種類ごとに今年の向く月・待つ月を答えるもので、第 3〜6 章の月別とは軸が違うと伝える（80文字以内）", "items": [{ "kind": "decisionCalendar の decision をそのまま", "text": "goMonths の月は『〜するならこの月』と、waitMonths の月は『〜を決めるのはこの月を待つ』と、根拠（why の惑星名・室）を添えて言い切る。両方無ければ『今年は星が押しも止めもしない』と書き、代わりにその決断に関わる出生図の配置（natalChart）からこの人の進め方を一文で（200文字程度）" }] },
       "prepare": "向く月までに整えておくもの（資金・関係・技能など。確定データの弱い領域と natalChart に基づく。200文字程度）",
       "message": "決断を迫らず、しかし背中を押す締めの言葉（150文字程度）"
     }`
