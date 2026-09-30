@@ -18,7 +18,9 @@
     lang: 'ja',
     menu: {
       top: 'トップ', free: '無料診断', about: 'Libertas Jyotishとは',
-      report: '完全鑑定書（買い切り）', calendar: '年間運勢カレンダー', calendarNote: '準備中',
+      report: '完全鑑定書（買い切り）',
+      yearly: '年間運勢 鑑定書', compat: '相性 鑑定書', career: '仕事・金運 鑑定書', palm: 'カル・クンダリ（手相×出生図）',
+      calendar: '年間運勢カレンダー', calendarNote: '準備中',
       mypage: '会員マイページ', legal: '特定商取引法・利用規約', contact: 'お問い合わせ',
       toggleLabel: 'メニュー', navLabel: 'サイトメニュー'
     }
@@ -35,6 +37,15 @@
     { href: home + '#form-area', label: t.free },
     { href: home + '/pdf-purchase', label: t.report }
   ];
+  // 個別鑑定書はサイト内決済（KOMOJU）が日本向けのみのため、日本語メニューだけに出す。
+  if (lang === 'ja') {
+    LINKS.push(
+      { href: home + '/reports?product=yearly', label: t.yearly },
+      { href: home + '/reports?product=compat', label: t.compat },
+      { href: home + '/reports?product=career', label: t.career },
+      { href: home + '/palm-chart', label: t.palm }
+    );
+  }
   // 年間運勢カレンダーは準備中（日本語のみ案内し、他言語では出さない）
   if (lang === 'ja') LINKS.push({ href: home + '/calendar', label: t.calendar, note: t.calendarNote });
   if (guide) {
@@ -112,8 +123,9 @@
         note.textContent = lang === 'ja' ? `（${item.note}）` : ` (${item.note})`;
         a.appendChild(note);
       }
-      const target = item.href.split('#')[0];
-      if (target === path || (target !== home && path.indexOf(target + '/') === 0)) a.classList.add('is-current');
+      const target = item.href.split('#')[0].split('?')[0];
+      const query = item.href.indexOf('?') >= 0 ? item.href.slice(item.href.indexOf('?')) : '';
+      if ((target === path && (!query || query === window.location.search)) || (target !== home && path.indexOf(target + '/') === 0)) a.classList.add('is-current');
       menu.appendChild(a);
     }
 

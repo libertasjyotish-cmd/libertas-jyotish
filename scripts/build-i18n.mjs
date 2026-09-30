@@ -32,6 +32,11 @@ const BASE_LANG = 'ja';
 const SITE = 'https://www.libertas-jyotish.com';
 // sitemap.xml に載せる（＝検索結果に出したい）ページ。
 const SITEMAP_PAGES = ['index', 'pdf-purchase'];
+// {{robotsSaleJa}}: サイト内決済が日本向けのみの販売ページ。ja だけ index 可、他言語は noindex。
+const SALE_LANGS = new Set(['ja']);
+function buildRobotsSaleJa(lang) {
+  return SALE_LANGS.has(lang) ? '' : '<meta name="robots" content="noindex,nofollow">';
+}
 // 解説記事（data/guide/<lang>.json）。
 //   linked: true    … トップの記事一覧と共通メニューに載せる（サイト内から辿れる）
 //   published: true … 上記に加えて sitemap.xml に載せる（検索エンジンに出す）
@@ -208,6 +213,8 @@ function render(template, locale, base, context) {
       value = buildGuideLinks(locale.meta.lang);
     } else if (path === 'guideMenu') {
       value = buildGuideMenu(locale.meta.lang);
+    } else if (path === 'robotsSaleJa') {
+      value = buildRobotsSaleJa(locale.meta.lang);
     } else if (path === 'canonical') {
       value = pageUrl(locale.meta.lang, context.page);
     } else if (path === 'hreflang') {
