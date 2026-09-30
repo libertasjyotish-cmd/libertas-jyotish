@@ -554,6 +554,8 @@
     "reports.errFields": "Certains champs sont manquants ou invalides.",
     "reports.errServer": "Nous n'avons pas pu enregistrer votre commande. Veuillez réessayer plus tard.",
     "reports.errUnavailable": "Le paiement en ligne n'est pas encore disponible dans votre région. Veuillez revenir bientôt.",
+    "reports.etsyAlt": "Vous préférez Etsy ? Le même rapport de l’année y est aussi vendu.",
+    "reports.etsyLink": "Acheter sur Etsy",
     "mypage.tplTeaserTitle": "🔒 Suite dans le rapport détaillé",
     "mypage.tplTeaserCta": "Voir les jours à surveiller cette semaine, les jours porteurs et 3 actions concrètes →",
     "price.unavailable": "Le paiement en ligne est temporairement indisponible. Veuillez réessayer plus tard.",

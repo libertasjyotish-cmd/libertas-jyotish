@@ -554,6 +554,8 @@
     "reports.errFields": "Há campos em falta ou inválidos.",
     "reports.errServer": "Não foi possível registrar o pedido. Tente novamente mais tarde.",
     "reports.errUnavailable": "O pagamento online ainda não está disponível na sua região. Volte em breve.",
+    "reports.etsyAlt": "Prefere a Etsy? O mesmo relatório do ano também é vendido lá.",
+    "reports.etsyLink": "Comprar na Etsy",
     "mypage.tplTeaserTitle": "🔒 Continua no relatório detalhado",
     "mypage.tplTeaserCta": "Ver os dias de atenção, os dias a favor e 3 ações concretas →",
     "price.unavailable": "O pagamento online está temporariamente indisponível. Tente novamente mais tarde.",

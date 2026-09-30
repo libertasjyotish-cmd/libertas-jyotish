@@ -1,11 +1,11 @@
 // 個別鑑定書（相性・年間運勢・仕事）のサイト直販: POST /api/report-order
 // 入力を台帳（Etsy と共通）に awaiting_payment で登録し、決済先の URL を返す。
 //   日本かつ KOMOJU 有効 … KOMOJU ホストページ（metadata.order_id で台帳行に紐づく）
-//   それ以外           … 503 unavailable（サイト内決済が未接続の国・時期）
-// 決済確定（komoju-return / komoju-webhook）で status を new に進めると etsy-cron が生成・納品する。
+//   それ以外           … Gumroad 商品ページ（?order_id= で台帳行に紐づく。Gumroad 未公開の商品は 503 unavailable）
+// 決済確定（komoju-return / komoju-webhook / gumroad-webhook）で status を new に進めると etsy-cron が生成・納品する。
 // オーナー検証用: Authorization: Bearer <CRON_SECRET> ＋ test:true で決済を飛ばし、確定済み（new / awaiting_photos）で登録する。
 const crypto = require('crypto');
-const { AMOUNTS, resolveTier, resolveProvider, countryFrom } = require('./_pricing');
+const { AMOUNTS, GUMROAD_REPORT_LINKS, saleAvailable, resolveTier, resolveProvider, countryFrom } = require('./_pricing');
 const { createSession } = require('./_komoju');
 const { normalizeLang } = require('./_terms');
 const ledger = require('./_etsy-ledger');
@@ -87,12 +87,13 @@ module.exports = async (req, res) => {
   const ownerTest = isOwnerTest(req, body);
   const country = countryFrom(req);
   const provider = resolveProvider(country);
-  if (!ownerTest && provider !== 'komoju') {
+  if (!ownerTest && !saleAvailable(product, provider)) {
     return res.status(503).json({ error: 'unavailable' });
   }
 
   const orderId = `${ledger.WEB_PREFIX}${ownerTest ? 'test-' : ''}${crypto.randomBytes(8).toString('hex')}`;
-  const amount = AMOUNTS[product][resolveTier(country)];
+  const tier = resolveTier(country);
+  const amount = AMOUNTS[product][tier];
   try {
     if (ownerTest) {
       await ledger.upsertOrder(orderId, {
@@ -136,6 +137,13 @@ module.exports = async (req, res) => {
       language: lang,
       status: ledger.STATUS.AWAITING_PAYMENT
     });
+    if (provider === 'gumroad') {
+      const link = new URL(GUMROAD_REPORT_LINKS[product][tier]);
+      link.searchParams.set('wanted', 'true');
+      link.searchParams.set('email', email);
+      link.searchParams.set('order_id', orderId);
+      return res.status(200).json({ provider: 'gumroad', url: link.toString(), order: orderId });
+    }
     const origin = siteOrigin(req);
     const session = await createSession({
       product,

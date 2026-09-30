@@ -15,7 +15,7 @@
   <meta property="og:image" content="https://www.libertas-jyotish.com/img/og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <!-- カノニカルURL設定（Google審査・SEOリダイレクトエラー対策） -->
-  <meta name="robots" content="noindex,nofollow">
+  
   <link rel="canonical" href="https://www.libertas-jyotish.com/ar/reports">
   <link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/reports">
 <link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/reports">
@@ -285,6 +285,7 @@ window.LJ_I18N = {
         <div class="form-error" id="form-error"></div>
         <button id="btn-order" class="btn-purchase">المتابعة إلى الدفع</button>
         <p style="font-size:0.78rem; color:#6A5E58; margin-top:12px;">بطلبك توافق على الشروط والإفصاح التجاري. لكونه منتجاً رقمياً، لا يمكن الاسترداد بعد بدء الإعداد.</p>
+        <p id="etsy-alt" style="display:none; font-size:0.82rem; color:#5A4E48; margin-top:14px;">تفضّل Etsy؟ نفس تقرير العام القادم متاح هناك أيضًا. <a href="https://www.etsy.com/listing/4572470899/vedic-astrology-year-ahead-forecast-is" target="_blank" rel="noopener" style="color:#8B6B1B; text-decoration:underline;">الشراء عبر Etsy</a></p>
       </div>
 
     </div>
@@ -334,6 +335,8 @@ window.LJ_I18N = {
       var allowed = ['yearly'];
       var product = params.get('product');
       if (allowed.indexOf(product) < 0) product = 'yearly';
+      // 海外は同じ年間運勢を Etsy でも販売（Gumroad の代替導線）。日本はサイト内決済のみ。
+      if (LANG !== 'ja') document.getElementById('etsy-alt').style.display = 'block';
 
       function select(p) {
         product = p;

@@ -554,6 +554,8 @@
     "reports.errFields": "Some fields are missing or invalid.",
     "reports.errServer": "We could not take your order. Please try again later.",
     "reports.errUnavailable": "Online payment is not yet available in your region. Please check back soon.",
+    "reports.etsyAlt": "Prefer Etsy? The same Year Ahead report is also sold there.",
+    "reports.etsyLink": "Buy on Etsy",
     "mypage.tplTeaserTitle": "🔒 Continued in the detailed report",
     "mypage.tplTeaserCta": "See this week’s days to watch, tailwind days and 3 concrete moves →",
     "price.unavailable": "Online payment is temporarily unavailable. Please try again later.",
