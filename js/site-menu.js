@@ -38,13 +38,14 @@
     { href: home + '/pdf-purchase', label: t.report }
   ];
   // 個別鑑定書はサイト内決済（KOMOJU）が日本向けのみのため、日本語メニューだけに出す。
-  // 販売中は年間運勢カレンダー（年間運勢鑑定書）のみ。他は準備中（リンク無し）。
+  // 販売中は年間運勢カレンダー（年間運勢鑑定書）のみ。他は「準備中」見出しの下にリンク無しで並べる。
   if (lang === 'ja') {
     LINKS.push(
       { href: home + '/reports?product=yearly', label: t.calendar },
-      { label: t.compat, note: t.calendarNote, soon: true },
-      { label: t.career, note: t.calendarNote, soon: true },
-      { label: t.palm, note: t.calendarNote, soon: true }
+      { divider: true, label: t.calendarNote },
+      { label: t.compat, soon: true },
+      { label: t.career, soon: true },
+      { label: t.palm, soon: true }
     );
   }
   if (guide) {
