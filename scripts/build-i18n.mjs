@@ -215,8 +215,8 @@ function render(template, locale, base, context) {
     } else if (path === 'guideMenu') {
       value = buildGuideMenu(locale.meta.lang);
     } else if (path === 'pdfIntroJa') {
-      // 生涯完全鑑定書の商品説明。まず日本語のみ（他言語は空）。
-      value = locale.meta.lang === 'ja' ? expandPartials('{{>pdf-intro-ja}}') : '';
+      // 生涯完全鑑定書の商品説明（言語別 partial）。
+      value = expandPartials(`{{>pdf-intro-${locale.meta.lang}}}`);
     } else if (path === 'robotsSaleJa') {
       value = buildRobotsSaleJa(locale.meta.lang);
     } else if (path === 'canonical') {

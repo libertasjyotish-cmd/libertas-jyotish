@@ -39,8 +39,7 @@
   ];
   // 個別鑑定書で販売中なのは年間運勢（日本＝KOMOJU、他言語＝Gumroad/Etsy）のみ。
   // 日本語は他商品を「準備中」見出しの下にリンク無しで並べる。
-  // 日本語は商品説明＋注文フォームを一体にした /yearly、他言語は当面 /reports の注文フォーム。
-  LINKS.push({ href: home + (lang === 'ja' ? '/yearly' : '/reports?product=yearly'), label: t.calendar });
+  LINKS.push({ href: home + '/yearly', label: t.calendar });
   if (lang === 'ja') {
     LINKS.push(
       { divider: true, label: t.calendarNote },
