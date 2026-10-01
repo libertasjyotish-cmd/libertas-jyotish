@@ -38,13 +38,14 @@
     { href: home + '#form-area', label: t.free },
     { href: home + '/pdf-purchase', label: t.report }
   ];
-  // 個別鑑定書で販売中なのは年間運勢（日本＝KOMOJU、他言語＝Gumroad/Etsy）のみ。
+  // 個別鑑定書で販売中なのは年間運勢（全言語）と仕事運・金運・天職（日本語のみ、/ja/career）。
   // 他商品は「準備中」見出しの下にリンク無しで並べる。
   LINKS.push(
     { href: home + '/yearly', label: t.calendar },
+    ...(lang === 'ja' ? [{ href: home + '/career', label: t.career }] : []),
     { divider: true, label: t.calendarNote },
     { label: t.compat, soon: true },
-    { label: t.career, soon: true },
+    ...(lang === 'ja' ? [] : [{ label: t.career, soon: true }]),
     { label: t.palm, soon: true },
     { label: t.karma, soon: true }
   );
