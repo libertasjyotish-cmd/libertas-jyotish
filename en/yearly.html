@@ -108,7 +108,47 @@ body { font-family: 'Noto Serif', serif; }
   .pc-body { padding: 22px 16px 30px; }
 }
 </style>
-<script>window.LJ_I18N = {"lang":"ja","menu":{"top":"トップ","free":"無料診断","about":"Libertas Jyotishとは","report":"生涯完全鑑定書（買い切り）","calendar":"年間運勢カレンダー","calendarNote":"準備中","mypage":"会員マイページ","legal":"特定商取引法・利用規約","toggleLabel":"メニュー","navLabel":"サイトメニュー"},"guide":{"hub":"/en/guide","hubLabel":"解説記事一覧","intro":"/en/guide/indian-astrology","introLabel":"インド占星術とは","groupLabel":""}};</script>
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'en',
+  menu: {
+    top: 'Home',
+    free: 'Free reading',
+    about: 'About Libertas Jyotish',
+    report: 'Lifetime Report (one-off)',
+    yearly: 'Year Ahead Report',
+    compat: 'Compatibility Report',
+    career: 'Career, Wealth & Calling Report',
+    palm: 'Kar-Kundali (Palm × Birth Chart)',
+    karma: 'Karma & Dharma — Your Life Purpose',
+    calendar: 'Annual Fortune Calendar',
+    calendarNote: 'coming soon',
+    mypage: 'Member page',
+    legal: 'Legal notice and terms',
+    contact: 'Contact us',
+    toggleLabel: 'Menu',
+    navLabel: 'Site menu'
+  },
+  price: {
+    premium: '{price} / month (USD; local taxes may be added at checkout)',
+    pdf: '{price} one-off (USD; local taxes may be added at checkout)',
+    premiumApprox: 'About {price} / month — billed in USD, final amount shown at checkout',
+    pdfApprox: 'About {price} one-off — billed in USD, final amount shown at checkout',
+    checkoutOnly: 'The amount in your local currency is shown at checkout',
+    unavailable: 'Online payment is temporarily unavailable. Please try again later.'
+  },
+  playError: 'The Google Play purchase could not be completed. Please try again.',
+  playManage: 'Subscriptions bought in the app are managed (cancel, payment method) in Google Play → Subscriptions. Open it now?',
+  guide: {
+    hub: '/en/guide',
+    hubLabel: "All guides",
+    intro: '/en/guide/indian-astrology',
+    introLabel: "What is Vedic astrology?",
+    groupLabel: ""
+  }
+};
+</script>
 <script defer src="/js/site-menu.js"></script>
 </head>
 <body>

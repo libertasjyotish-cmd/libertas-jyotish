@@ -23,7 +23,8 @@ const USD_AMOUNTS = {
   premium: { T1: 6.99, T2: 3.99, T3: 2.49 },
   pdf: { T1: 59, T2: 39, T3: 23 },
   // 個別鑑定書のうち Gumroad 側で公開済みの商品だけ（未公開の商品はここに載せない＝海外は 503）。
-  yearly: { T1: 49, T2: 33, T3: 19 }
+  yearly: { T1: 49, T2: 33, T3: 19 },
+  career: { T1: 49, T2: 33, T3: 19 }
 };
 
 // Gumroad の商品ページ（個別鑑定書）。注文 ID は URL パラメータで渡し、Ping の url_params で受け取る。
@@ -32,6 +33,11 @@ const GUMROAD_REPORT_LINKS = {
     T1: 'https://libertajyoti.gumroad.com/l/yearly-t1',
     T2: 'https://libertajyoti.gumroad.com/l/yearly-t2',
     T3: 'https://libertajyoti.gumroad.com/l/yearly-t3'
+  },
+  career: {
+    T1: 'https://libertajyoti.gumroad.com/l/career-t1',
+    T2: 'https://libertajyoti.gumroad.com/l/career-t2',
+    T3: 'https://libertajyoti.gumroad.com/l/career-t3'
   }
 };
 
