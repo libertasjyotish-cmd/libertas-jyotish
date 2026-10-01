@@ -238,7 +238,8 @@ function titleKey(chapter, product) {
 
 // voice: 商品ごとの語り口（安全規則に追加で、鑑定としての踊り方を指定する）。{ ja, en } の文字列
 function buildPrompt(chapter, astro, terms, product, voice) {
-  const rules = terms.lang === 'ja' ? COMMON_RULES_JA : commonRulesFor(terms.outputLanguage);
+  let rules = terms.lang === 'ja' ? COMMON_RULES_JA : commonRulesFor(terms.outputLanguage);
+  if (product === 'career') rules = rules.replace('・企業名・職種名の断定', '・企業名の断定').replace(', company names or job titles', ' or company names');
   const style = voice ? `\n${terms.lang === 'ja' ? voice.ja : voice.en}\n` : '';
   return `${rules}${style}
 【章】${terms.chapterTitle(titleKey(chapter, product), chapter.title)}
