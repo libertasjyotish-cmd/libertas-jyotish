@@ -96,6 +96,11 @@
       background: rgba(212, 175, 55, 0.09); border-left: 3px solid var(--color-gold-main);
       padding: 12px 16px; margin: 14px 0; font-size: 0.9rem;
     }
+    .career-sec { margin: 0 0 18px; }
+    .career-h { border-bottom: 1px solid rgba(139, 107, 27, 0.35); padding-bottom: 4px; margin: 26px 0 10px; }
+    .career-item { margin: 0 0 14px; }
+    .career-item .fact { margin-bottom: 6px; }
+    .career-sub { font-size: 0.9rem; margin: 4px 0 4px 8px; }
     .fact .reason { display: block; font-size: 0.8rem; color: #6A5E58; margin-top: 4px; }
 
     table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 12px 0; }
@@ -539,6 +544,100 @@
       return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>${parts.join('')}`);
     }
 
+const CAREER_LABELS = {
+      essence: 'Esensi Gaya Kerja Berdasarkan Bagan',
+      selfMatch: 'Makna Keselarasan Diri',
+      callingType: 'Tipe Panggilan Hidup',
+      gifts: 'Aset Kekuatan Alami',
+      moneyLine: 'Sekilas Potensi Finansial',
+      stance: 'Sikap Dasar terhadap Kerja dan Finansial',
+      text: 'Pembacaan',
+      roles: 'Peran yang Selaras',
+      fields: 'Bidang yang Selaras',
+      avoid: 'Pola Kerja yang Menguras Energi',
+      jobs: 'Profesi yang Selaras',
+      firstChoice: 'Profesi Paling Selaras',
+      notFit: 'Profesi yang Kurang Selaras',
+      environment: 'Lingkungan Kerja yang Tepat',
+      thrive: 'Kondisi Tumbuh Optimal',
+      effortless: 'Karya yang Mengalir Alami',
+      flow: 'Titik Fokus Penuh',
+      drains: 'Pemicu Terkurasnya Energi',
+      dailyShape: 'Ritme Keseharian yang Selaras',
+      seen: 'Citra di Mata Orang Lain',
+      praised: 'Kualitas yang Paling Diapresiasi',
+      unaware: 'Kekuatan yang Belum Disadari',
+      misread: 'Potensi Kesalahpahaman',
+      reputation: 'Reputasi yang Terbangun',
+      talents: 'Bakat',
+      weapon: 'Kekuatan Terbesar',
+      learning: 'Cara Belajar dan Mengembangkan Keterampilan',
+      hidden: 'Bakat Terpendam',
+      employed: 'Jika Memilih Bekerja di Perusahaan',
+      independent: 'Jika Memilih Jalur Independen',
+      partner: 'Jika Memilih Kemitraan',
+      conditions: 'Prasyarat Sebelum Mengubah Jalur Kerja',
+      team: 'Dinamika Relasi di Tempat Kerja',
+      earningStyle: 'Gaya Menghasilkan Pendapatan',
+      channels: 'Saluran Masuknya Penghasilan',
+      pricing: 'Nilai yang Dihargai',
+      linkToSelf: 'Keselarasan Diri dan Pendapatan',
+      growthTiming: 'Periode Pertumbuhan Finansial',
+      keeping: 'Menyimpan dan Melindungi Aset',
+      leaks: 'Celah Kebocoran Finansial',
+      scores: 'Skor Ashtakavarga',
+      bigMoney: 'Perputaran Dana Besar',
+      advice: 'Langkah Memaksimalkan Peluang Finansial',
+      now: 'Periode Saat Ini',
+      periods: 'Ulasan Lintas Periode',
+      golden: 'Periode Paling Produktif',
+      lateBloom: 'Potensi yang Matang Seiring Waktu',
+      overview: 'Gambaran 12 Bulan ke Depan',
+      windows: 'Bulan-Bulan Penuh Dinamika',
+      bestMonth: 'Bulan untuk Keputusan Besar',
+      moneyMonth: 'Bulan Pergerakan Finansial',
+      holdMonth: 'Bulan untuk Menahan Diri',
+      year: 'Fokus Penataan Tahun Ini',
+      threeYears: 'Pilar Penguatan Tiga Tahun',
+      habit: 'Kebiasaan yang Mendukung Panggilan',
+      checklist: 'Daftar Evaluasi Keselarasan Diri',
+      message: 'Pesan Penutup',
+      actNow: 'Langkah Tiga Bulan ke Depan',
+      itemWhy: 'Landasan',
+      itemHow: 'Cara Mengoptimalkan Potensi'
+    };
+    const CAREER_SKIP = new Set(['title', 'catchphrase', 'intro']);
+    function careerItem(item) {
+      const head = item.name || item.condition || item.route || item.lord || item.month || '';
+      const sub = item.kind || '';
+      const labeled = { why: CAREER_LABELS.itemWhy, how: CAREER_LABELS.itemHow };
+      const body = Object.entries(item)
+        .filter(([k, val]) => !['name', 'condition', 'route', 'lord', 'month', 'kind'].includes(k) && typeof val === 'string' && val)
+        .map(([k, val]) => (labeled[k] ? `<p class="career-sub"><strong>${labeled[k]}</strong>　${esc(val)}</p>` : para(val)))
+        .join('');
+      return `<div class="career-item"><div class="fact"><strong>${esc(head)}</strong>${sub ? `　${esc(sub)}` : ''}</div>${body}</div>`;
+    }
+    function careerSection(key, v) {
+      if (v == null || v === '' || (Array.isArray(v) && !v.length)) return '';
+      const label = key === 'now' && Array.isArray(v) ? CAREER_LABELS.actNow : CAREER_LABELS[key];
+      const head = label ? `<h3 class="career-h">${esc(label)}</h3>` : '';
+      let body;
+      if (typeof v === 'string') body = para(v);
+      else if (Array.isArray(v)) body = typeof v[0] === 'string' ? list(v) : v.map(careerItem).join('');
+      else body = genericValue(v);
+      return `<section class="career-sec">${head}${body}</section>`;
+    }
+    function careerPage(ch) {
+      const parts = [];
+      if (ch.catchphrase) parts.push(`<div class="lead">${esc(ch.catchphrase)}</div>`);
+      if (ch.intro) parts.push(`<p class="lead-note">${esc(ch.intro)}</p>`);
+      for (const [key, v] of Object.entries(ch)) {
+        if (CAREER_SKIP.has(key)) continue;
+        parts.push(careerSection(key, v));
+      }
+      return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>${parts.join('')}`);
+    }
+
     function personLine(p) {
       if (!p) return '';
       const b = p.birth || {};
@@ -548,7 +647,7 @@
 
     function productCover(a) {
       const sub = a.product === 'yearly' ? 'Ramalan Tahun Depan (12 bulan ke depan)'
-        : a.product === 'career' ? 'Laporan Karier, Panggilan & Keuangan (Panggilan Hidup Anda)'
+        : a.product === 'career' ? 'Laporan Karier, Keuangan & Panggilan Hidup'
         : a.product === 'palm' ? 'Kar-Kundali: Laporan Veda Telapak Tangan & Peta Kelahiran'
         : a.product === 'karma' ? 'Karma dan Dharma — Panggilan Hidup Ini'
         : 'Laporan Kecocokan';
@@ -698,7 +797,7 @@
       const chapters = PROD_ORDER.map((id) => c[id]).filter(Boolean);
       const html = [productCover(a)];
       html.push(page(`<h2 class="chapter-title">Daftar isi</h2><ul class="toc">${chapters.map((ch) => `<li>${esc(ch.title)}</li>`).join('')}</ul>`));
-      for (const ch of chapters) html.push(genericPage(ch));
+      for (const ch of chapters) html.push(a.product === 'career' ? careerPage(ch) : genericPage(ch));
       if (a.product === 'career') { html.push(careerDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
       else if (a.product === 'palm') { html.push(palmPhotoPage(a)); html.push(palmDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
       else if (a.product === 'karma') { html.push(karmaChartsPage(a)); html.push(karmaDataPage(a)); html.push(planetsPage(a)); }

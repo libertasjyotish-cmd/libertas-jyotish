@@ -96,6 +96,11 @@
       background: rgba(212, 175, 55, 0.09); border-left: 3px solid var(--color-gold-main);
       padding: 12px 16px; margin: 14px 0; font-size: 0.9rem;
     }
+    .career-sec { margin: 0 0 18px; }
+    .career-h { border-bottom: 1px solid rgba(139, 107, 27, 0.35); padding-bottom: 4px; margin: 26px 0 10px; }
+    .career-item { margin: 0 0 14px; }
+    .career-item .fact { margin-bottom: 6px; }
+    .career-sub { font-size: 0.9rem; margin: 4px 0 4px 8px; }
     .fact .reason { display: block; font-size: 0.8rem; color: #6A5E58; margin-top: 4px; }
 
     table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 12px 0; }
@@ -539,6 +544,100 @@
       return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>${parts.join('')}`);
     }
 
+const CAREER_LABELS = {
+      essence: 'What your chart says about how you work',
+      selfMatch: 'What self-alignment means for you',
+      callingType: 'The type of your calling',
+      gifts: 'Qualities that are your assets at work',
+      moneyLine: 'Your money at a glance',
+      stance: 'Your basic stance toward work and money',
+      text: 'Reading',
+      roles: 'Roles that fit you',
+      fields: 'Fields that fit you',
+      avoid: 'Ways of working that drain you',
+      jobs: 'Occupations that fit you',
+      firstChoice: 'The occupation of deepest self-alignment',
+      notFit: 'Occupations that fit poorly',
+      environment: 'The environment that fits',
+      thrive: 'Conditions where your power shows',
+      effortless: 'Work that never feels like toil',
+      flow: 'When absorption happens',
+      drains: 'What drains you',
+      dailyShape: 'The shape of a self-aligned day',
+      seen: 'How others see you',
+      praised: 'What is actually praised',
+      unaware: 'Strengths you are unaware of',
+      misread: 'Where you are misread',
+      reputation: 'The reputation you build',
+      talents: 'Talents',
+      weapon: 'Your greatest weapon',
+      learning: 'How you learn and grow skills',
+      hidden: 'Talents not yet fully used',
+      employed: 'If you choose employment',
+      independent: 'If you choose independence',
+      partner: 'If you choose partnership',
+      conditions: 'Conditions to meet before changing how you work',
+      team: 'How you relate to people at work',
+      earningStyle: 'How you earn',
+      channels: 'Routes through which income arrives',
+      pricing: 'What you are paid for',
+      linkToSelf: 'Self-alignment and income',
+      growthTiming: 'Periods when income tends to grow',
+      keeping: 'Saving and protecting',
+      leaks: 'Where money leaks',
+      scores: 'Ashtakavarga scores',
+      bigMoney: 'How large sums move in your life',
+      advice: 'Actions that use your money luck',
+      now: 'The current period',
+      periods: 'Period by period',
+      golden: 'The most fruitful period',
+      lateBloom: 'What deepens with age',
+      overview: 'The flow of the next 12 months',
+      windows: 'Months with movement',
+      bestMonth: 'The month for a major decision',
+      moneyMonth: 'The month when income moves',
+      holdMonth: 'The month not to rush',
+      year: 'What to set in order this year',
+      threeYears: 'Pillars to grow over three years',
+      habit: 'Habits that fit your calling',
+      checklist: 'Questions to check your self-alignment',
+      message: 'Closing words',
+      actNow: 'What you can do in the next three months',
+      itemWhy: 'Basis',
+      itemHow: 'How to bring out your power'
+    };
+    const CAREER_SKIP = new Set(['title', 'catchphrase', 'intro']);
+    function careerItem(item) {
+      const head = item.name || item.condition || item.route || item.lord || item.month || '';
+      const sub = item.kind || '';
+      const labeled = { why: CAREER_LABELS.itemWhy, how: CAREER_LABELS.itemHow };
+      const body = Object.entries(item)
+        .filter(([k, val]) => !['name', 'condition', 'route', 'lord', 'month', 'kind'].includes(k) && typeof val === 'string' && val)
+        .map(([k, val]) => (labeled[k] ? `<p class="career-sub"><strong>${labeled[k]}</strong>　${esc(val)}</p>` : para(val)))
+        .join('');
+      return `<div class="career-item"><div class="fact"><strong>${esc(head)}</strong>${sub ? `　${esc(sub)}` : ''}</div>${body}</div>`;
+    }
+    function careerSection(key, v) {
+      if (v == null || v === '' || (Array.isArray(v) && !v.length)) return '';
+      const label = key === 'now' && Array.isArray(v) ? CAREER_LABELS.actNow : CAREER_LABELS[key];
+      const head = label ? `<h3 class="career-h">${esc(label)}</h3>` : '';
+      let body;
+      if (typeof v === 'string') body = para(v);
+      else if (Array.isArray(v)) body = typeof v[0] === 'string' ? list(v) : v.map(careerItem).join('');
+      else body = genericValue(v);
+      return `<section class="career-sec">${head}${body}</section>`;
+    }
+    function careerPage(ch) {
+      const parts = [];
+      if (ch.catchphrase) parts.push(`<div class="lead">${esc(ch.catchphrase)}</div>`);
+      if (ch.intro) parts.push(`<p class="lead-note">${esc(ch.intro)}</p>`);
+      for (const [key, v] of Object.entries(ch)) {
+        if (CAREER_SKIP.has(key)) continue;
+        parts.push(careerSection(key, v));
+      }
+      return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>${parts.join('')}`);
+    }
+
     function personLine(p) {
       if (!p) return '';
       const b = p.birth || {};
@@ -548,7 +647,7 @@
 
     function productCover(a) {
       const sub = a.product === 'yearly' ? 'Year-Ahead Forecast (next 12 months)'
-        : a.product === 'career' ? 'Career, Vocation & Wealth Report (Your Calling)'
+        : a.product === 'career' ? 'Career, Wealth & Calling Report'
         : a.product === 'palm' ? 'Kar-Kundali: Vedic Palm & Birth Chart Report'
         : a.product === 'karma' ? 'Karma & Dharma — The Calling of This Lifetime'
         : 'Compatibility Report';
@@ -698,7 +797,7 @@
       const chapters = PROD_ORDER.map((id) => c[id]).filter(Boolean);
       const html = [productCover(a)];
       html.push(page(`<h2 class="chapter-title">Contents</h2><ul class="toc">${chapters.map((ch) => `<li>${esc(ch.title)}</li>`).join('')}</ul>`));
-      for (const ch of chapters) html.push(genericPage(ch));
+      for (const ch of chapters) html.push(a.product === 'career' ? careerPage(ch) : genericPage(ch));
       if (a.product === 'career') { html.push(careerDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
       else if (a.product === 'palm') { html.push(palmPhotoPage(a)); html.push(palmDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
       else if (a.product === 'karma') { html.push(karmaChartsPage(a)); html.push(karmaDataPage(a)); html.push(planetsPage(a)); }

@@ -88,6 +88,11 @@
       background: rgba(212, 175, 55, 0.09); border-left: 3px solid var(--color-gold-main);
       padding: 12px 16px; margin: 14px 0; font-size: 0.9rem;
     }
+    .career-sec { margin: 0 0 18px; }
+    .career-h { border-bottom: 1px solid rgba(139, 107, 27, 0.35); padding-bottom: 4px; margin: 26px 0 10px; }
+    .career-item { margin: 0 0 14px; }
+    .career-item .fact { margin-bottom: 6px; }
+    .career-sub { font-size: 0.9rem; margin: 4px 0 4px 8px; }
     .fact .reason { display: block; font-size: 0.8rem; color: #6A5E58; margin-top: 4px; }
 
     table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 12px 0; }
@@ -531,6 +536,100 @@
       return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>${parts.join('')}`);
     }
 
+const CAREER_LABELS = {
+      essence: '{{t.pdf-report.career.essence|js}}',
+      selfMatch: '{{t.pdf-report.career.selfMatch|js}}',
+      callingType: '{{t.pdf-report.career.callingType|js}}',
+      gifts: '{{t.pdf-report.career.gifts|js}}',
+      moneyLine: '{{t.pdf-report.career.moneyLine|js}}',
+      stance: '{{t.pdf-report.career.stance|js}}',
+      text: '{{t.pdf-report.career.text|js}}',
+      roles: '{{t.pdf-report.career.roles|js}}',
+      fields: '{{t.pdf-report.career.fields|js}}',
+      avoid: '{{t.pdf-report.career.avoid|js}}',
+      jobs: '{{t.pdf-report.career.jobs|js}}',
+      firstChoice: '{{t.pdf-report.career.firstChoice|js}}',
+      notFit: '{{t.pdf-report.career.notFit|js}}',
+      environment: '{{t.pdf-report.career.environment|js}}',
+      thrive: '{{t.pdf-report.career.thrive|js}}',
+      effortless: '{{t.pdf-report.career.effortless|js}}',
+      flow: '{{t.pdf-report.career.flow|js}}',
+      drains: '{{t.pdf-report.career.drains|js}}',
+      dailyShape: '{{t.pdf-report.career.dailyShape|js}}',
+      seen: '{{t.pdf-report.career.seen|js}}',
+      praised: '{{t.pdf-report.career.praised|js}}',
+      unaware: '{{t.pdf-report.career.unaware|js}}',
+      misread: '{{t.pdf-report.career.misread|js}}',
+      reputation: '{{t.pdf-report.career.reputation|js}}',
+      talents: '{{t.pdf-report.career.talents|js}}',
+      weapon: '{{t.pdf-report.career.weapon|js}}',
+      learning: '{{t.pdf-report.career.learning|js}}',
+      hidden: '{{t.pdf-report.career.hidden|js}}',
+      employed: '{{t.pdf-report.career.employed|js}}',
+      independent: '{{t.pdf-report.career.independent|js}}',
+      partner: '{{t.pdf-report.career.partner|js}}',
+      conditions: '{{t.pdf-report.career.conditions|js}}',
+      team: '{{t.pdf-report.career.team|js}}',
+      earningStyle: '{{t.pdf-report.career.earningStyle|js}}',
+      channels: '{{t.pdf-report.career.channels|js}}',
+      pricing: '{{t.pdf-report.career.pricing|js}}',
+      linkToSelf: '{{t.pdf-report.career.linkToSelf|js}}',
+      growthTiming: '{{t.pdf-report.career.growthTiming|js}}',
+      keeping: '{{t.pdf-report.career.keeping|js}}',
+      leaks: '{{t.pdf-report.career.leaks|js}}',
+      scores: '{{t.pdf-report.career.scores|js}}',
+      bigMoney: '{{t.pdf-report.career.bigMoney|js}}',
+      advice: '{{t.pdf-report.career.advice|js}}',
+      now: '{{t.pdf-report.career.now|js}}',
+      periods: '{{t.pdf-report.career.periods|js}}',
+      golden: '{{t.pdf-report.career.golden|js}}',
+      lateBloom: '{{t.pdf-report.career.lateBloom|js}}',
+      overview: '{{t.pdf-report.career.overview|js}}',
+      windows: '{{t.pdf-report.career.windows|js}}',
+      bestMonth: '{{t.pdf-report.career.bestMonth|js}}',
+      moneyMonth: '{{t.pdf-report.career.moneyMonth|js}}',
+      holdMonth: '{{t.pdf-report.career.holdMonth|js}}',
+      year: '{{t.pdf-report.career.year|js}}',
+      threeYears: '{{t.pdf-report.career.threeYears|js}}',
+      habit: '{{t.pdf-report.career.habit|js}}',
+      checklist: '{{t.pdf-report.career.checklist|js}}',
+      message: '{{t.pdf-report.career.message|js}}',
+      actNow: '{{t.pdf-report.career.actNow|js}}',
+      itemWhy: '{{t.pdf-report.career.itemWhy|js}}',
+      itemHow: '{{t.pdf-report.career.itemHow|js}}'
+    };
+    const CAREER_SKIP = new Set(['title', 'catchphrase', 'intro']);
+    function careerItem(item) {
+      const head = item.name || item.condition || item.route || item.lord || item.month || '';
+      const sub = item.kind || '';
+      const labeled = { why: CAREER_LABELS.itemWhy, how: CAREER_LABELS.itemHow };
+      const body = Object.entries(item)
+        .filter(([k, val]) => !['name', 'condition', 'route', 'lord', 'month', 'kind'].includes(k) && typeof val === 'string' && val)
+        .map(([k, val]) => (labeled[k] ? `<p class="career-sub"><strong>${labeled[k]}</strong>　${esc(val)}</p>` : para(val)))
+        .join('');
+      return `<div class="career-item"><div class="fact"><strong>${esc(head)}</strong>${sub ? `　${esc(sub)}` : ''}</div>${body}</div>`;
+    }
+    function careerSection(key, v) {
+      if (v == null || v === '' || (Array.isArray(v) && !v.length)) return '';
+      const label = key === 'now' && Array.isArray(v) ? CAREER_LABELS.actNow : CAREER_LABELS[key];
+      const head = label ? `<h3 class="career-h">${esc(label)}</h3>` : '';
+      let body;
+      if (typeof v === 'string') body = para(v);
+      else if (Array.isArray(v)) body = typeof v[0] === 'string' ? list(v) : v.map(careerItem).join('');
+      else body = genericValue(v);
+      return `<section class="career-sec">${head}${body}</section>`;
+    }
+    function careerPage(ch) {
+      const parts = [];
+      if (ch.catchphrase) parts.push(`<div class="lead">${esc(ch.catchphrase)}</div>`);
+      if (ch.intro) parts.push(`<p class="lead-note">${esc(ch.intro)}</p>`);
+      for (const [key, v] of Object.entries(ch)) {
+        if (CAREER_SKIP.has(key)) continue;
+        parts.push(careerSection(key, v));
+      }
+      return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>${parts.join('')}`);
+    }
+
     function personLine(p) {
       if (!p) return '';
       const b = p.birth || {};
@@ -690,7 +789,7 @@
       const chapters = PROD_ORDER.map((id) => c[id]).filter(Boolean);
       const html = [productCover(a)];
       html.push(page(`<h2 class="chapter-title">{{t.pdf-report.tpl09|tpl}}</h2><ul class="toc">${chapters.map((ch) => `<li>${esc(ch.title)}</li>`).join('')}</ul>`));
-      for (const ch of chapters) html.push(genericPage(ch));
+      for (const ch of chapters) html.push(a.product === 'career' ? careerPage(ch) : genericPage(ch));
       if (a.product === 'career') { html.push(careerDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
       else if (a.product === 'palm') { html.push(palmPhotoPage(a)); html.push(palmDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
       else if (a.product === 'karma') { html.push(karmaChartsPage(a)); html.push(karmaDataPage(a)); html.push(planetsPage(a)); }
