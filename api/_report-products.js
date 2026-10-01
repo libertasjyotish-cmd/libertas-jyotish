@@ -441,104 +441,189 @@ function compatChapterIdsFor(relation) {
 }
 
 const careerHouse = (a, n) => (a.careerHouses || []).find((h) => h.house === n) || null;
+const planetOf = (a, k) => a.planets?.find((p) => p.key === k) || null;
+const careerCore = (a) => ({
+  ascendant: a.ascendant, moon: a.moon, sun: a.sun, nakshatra: a.nakshatra,
+  first: careerHouse(a, 1), tenth: careerHouse(a, 10), second: careerHouse(a, 2), eleventh: careerHouse(a, 11),
+  strongest: a.strength?.slice(0, 3), currentDasha: a.dasha?.current
+});
+
+// 仕事・金運鑑定書の語り口。中心軸は「自己一致＝天職」——出生図が示す資質と、日々やっている仕事・稼ぎ方が一致している状態を天職と呼び、
+// その一致がどこで起き、どこでずれるかを具体的な職種名・作業・評価・金銭の流れで言い切る。
+const CAREER_VOICE = {
+  ja: `【語り口】
+これは適性診断ではなく、目の前の一人に向けた「天職と金運」の鑑定書です。中心となる考えは一つ——自己一致感が天職である。出生図が示す資質と、日々やっている仕事・稼ぎ方が一致しているとき、人は苦労を苦労と感じず、周囲からも自然に評価され、お金もその一致の上に積み上がる。この鑑定書の仕事は、その一致がこの人の場合どこで起き、どこでずれるかを、具体的に言い当てることです。次を徹底してください。
+1. 職種名を具体的に挙げる。この商品に限り、職種名・役割名（例: 編集者、建築設計、臨床心理士、営業マネージャー、料理人、通訳、個人事業の講師）を複数、根拠つきで書いてよい。ただし根拠を【確定データ】の室・支配星・品位・在住惑星・ナクシャトラ・ダシャーで必ず示し、出生図が支えない職種は書かない。企業名・団体名・資格名の断定は書かない。
+2. 「向く職種」だけで終わらせない。何をしているときに力が出るか／何をしていれば苦にならないか／どんな環境・相手・速度・裁量なら自己一致が起きるか／逆に何が消耗の原因になるか——を、仕事の場面の具体（会議・制作・交渉・数字・現場・文章・人前・一人作業 など）で書く。
+3. 人からどう見られているかを書く。周囲（依頼する側・一緒に働く人・顧客・部下にあたる人）がこの人をどう評価し、何を頼み、どこを誤解しやすいかを、1 室・7 室・10 室と在住惑星から言い切る。本人が自覚していない評価を一つ以上含める。
+4. 金運は厚く書く。稼ぎ方の型（技能で稼ぐ・人を介して稼ぐ・仕組みで稼ぐ・名声で稼ぐ 等）、収入が入りやすい経路、何に値段がつくか、仕事と収入が結びつく条件、収入が増えやすい周期や月、漏れやすい癖と守り方、自己一致していると収入がどう変わるか、を 2 室・11 室・金星・木星・アシュタカヴァルガ・ダシャーから具体的に。禁止は投資の銘柄・売買時期・利回り・元本の保証、税務・契約の可否の断定だけで、お金の流れそのものは遠慮なく言い切る。
+5. 厚く、熱く。要約で埋めず、各項目の文字数の目安は下限とする。同じ内容を章をまたいで繰り返さず、章ごとに新しい具体を足す。「〜かもしれません」「〜でしょう」の乱用を避け、惑星配置が示すことは言い切る。断定を避けるのは成否の保証・健康・法律・投資の助言のみ。
+6. 個人化は出生図からのみ。毎章に「あなたは生まれつき〜」という文を根拠（惑星名・室・品位）つきで入れる。誰にでも当たる一般論、複数の立場の列挙は禁止。読者の年齢・現在の職業・雇用形態・婚姻を仮定しない（「今の会社」「転職活動中」などと書かない）。
+7. 品位（高揚・減衰・自室など）は前向きな言葉に直す。減衰は「努力で獲得する分野」「遅咲きで深くなる分野」として扱い、弱点の羅列にしない。
+8. 【確定データ】にない惑星・室・年月を書かない。内部名（lordPlacedIn・occupants・strength・score・careerWindows）や数値は本文に出さず、惑星名・室・領域の言葉で言い換える。
+9. 語りは古い寺院の占星術師が一人に語りかけるように、品格とです・ます調を維持。命令形は使わない。締めは読者が「これが自分だ」と確認できる肯定で終える。`,
+  en: `[Voice]
+This is not an aptitude test but a reading on vocation and money addressed to one person. Its single guiding idea: self-congruence is vocation. When the gifts shown in the birth chart match what a person does every day and how they earn, effort stops feeling like effort, others recognise them naturally, and money accumulates on top of that congruence. Your job is to pinpoint where that congruence occurs for this person and where it slips. Follow strictly:
+1. Name concrete occupations. For this product only, you may list several job titles and roles (e.g. editor, architectural designer, clinical psychologist, sales manager, chef, interpreter, independent instructor), each with its reason grounded in the confirmed data (houses, lords, dignity, occupants, nakshatra, dasha). Do not name occupations the chart does not support. Never assert company names, organisations or certifications.
+2. Do not stop at "suitable jobs". Write what they are doing when their power shows, what never feels like toil, which environment, pace, counterpart and degree of autonomy create congruence, and what drains them — in concrete work scenes (meetings, making things, negotiating, numbers, field work, writing, speaking in public, solitary work).
+3. Write how others see them: how clients, colleagues, those who commission them and those who report to them judge this person, what they ask of them and where they misread them — from the 1st, 7th and 10th houses and their occupants. Include at least one judgement the person is not aware of.
+4. Write money thickly: the earning pattern (by skill, through people, through systems, through reputation…), the channels income arrives through, what gets a price tag, the conditions under which work turns into income, the periods and months when income tends to grow, leakage habits and how to keep money, and how income changes when they are self-congruent — from the 2nd and 11th houses, Venus, Jupiter, Ashtakavarga and dasha. The only prohibitions are named securities, buy/sell timing, yields, capital guarantees and definitive tax/contract advice; state the flow of money itself plainly.
+5. Thick and warm. Character counts are minimums; never fill with summary. Do not repeat content across chapters — add new specifics each time. Avoid "may" and "might"; state what the placements show. Hedge only on guarantees of outcome, health, law and investment advice.
+6. Personalise only from the birth chart. In every chapter include a sentence "You were born with…" with its evidence (planet, house, dignity). No generic statements, no lists of alternative situations. Do not assume age, current job, employment status or marriage.
+7. Translate dignity into forward-looking language: debilitation is "a field earned through effort" or "a late-blooming field that deepens", never a list of weaknesses.
+8. Never invent planets, houses or dates absent from the confirmed data. Do not print internal keys (lordPlacedIn, occupants, strength, score, careerWindows) or numbers; paraphrase as planet, house and domain.
+9. Speak as an old temple astrologer addressing one person; keep dignity and warmth, no imperatives. End with an affirmation the reader can recognise as themselves.`
+};
 
 const CAREER_CHAPTERS = [
   {
     id: 'summary',
     title: 'あなたの天職の見取り図',
-    pick: (a) => ({
-      ascendant: a.ascendant, moon: a.moon, sun: a.sun, nakshatra: a.nakshatra,
-      tenth: careerHouse(a, 10), second: careerHouse(a, 2), eleventh: careerHouse(a, 11),
-      strongest: a.strength?.slice(0, 3), currentDasha: a.dasha?.current
-    }),
+    pick: (a) => careerCore(a),
     schema: `{
-      "catchphrase": "この人の働き方を一文で（30文字以内）",
-      "essence": "10 室・2 室・11 室の支配星と在住惑星、最も強い惑星から読む、仕事人生の全体像（300文字程度。職種名は断定しない）",
-      "callingType": "天職の型（創る／伝える／整える／導く／支える／探究する のいずれか。確定データに従う）",
-      "gifts": ["仕事で武器になる資質（各30文字以内）", "", ""],
-      "stance": "仕事とお金に向き合う基本姿勢（150文字程度）"
+      "catchphrase": "この人の働き方と稼ぎ方を一文で（40文字以内）",
+      "essence": "ラグナ・10 室・2 室・11 室の支配星と在住惑星、最も強い惑星から読む、この人の仕事人生の全体像（700文字以上。具体的な職種名を 2〜3 挙げてよい）",
+      "selfMatch": "この人にとっての自己一致とは何か——どんな仕事・働き方・稼ぎ方をしているときに「自分でいられる」と感じるか、逆に何をしていると自分から離れるか（500文字以上）",
+      "callingType": "天職の型（創る／伝える／整える／導く／支える／探究する／結ぶ のうち主となる型と副となる型を『主: 〜／副: 〜』の形で。確定データに従う）",
+      "gifts": ["仕事で武器になる資質と根拠の惑星（各50文字以内）", "", "", "", ""],
+      "moneyLine": "金運の見取り図——稼ぎ方の型と、お金がどこから入りどこへ流れる人か（350文字以上）",
+      "stance": "仕事とお金に向き合う基本姿勢（250文字以上）"
     }`
   },
   {
     id: 'ch1',
     title: '第1章 天職の型（10 室と支配星）',
-    pick: (a) => ({ tenth: careerHouse(a, 10), koto: a.boosters?.koto, sun: a.sun, strongest: a.strength?.slice(0, 3), d10Available: Boolean(a.charts?.d10) }),
+    pick: (a) => ({ tenth: careerHouse(a, 10), first: careerHouse(a, 1), koto: a.boosters?.koto, sun: a.sun, saturn: planetOf(a, 'Saturn'), strongest: a.strength?.slice(0, 3), d10Available: Boolean(a.charts?.d10) }),
     schema: `{
-      "intro": "10 室（仕事・社会的な立場）の読み方（150文字程度）",
-      "text": "10 室のサイン・支配星・その支配星の在住ハウスと品位から、どんな役割で力が出るか（500文字程度。職種名は断定せず、向く仕事の性質で書く）",
-      "fields": ["向いている仕事の領域・性質（各40文字以内。例: 人に教える・伝える仕事）", "", ""],
-      "avoid": "消耗しやすい働き方（200文字程度）"
+      "intro": "10 室（仕事・社会的な立場）と、その支配星がどこに居るかを読む意味（250文字以上）",
+      "text": "10 室のサイン・支配星・支配星の在住室と品位・在住惑星から、この人がどんな役割・立場で社会に立つと力が出るか（900文字以上。具体的な場面で）",
+      "roles": [{ "name": "向いている役割・職種名（25文字以内）", "why": "その役割が合う根拠となる配置（150文字以上）", "how": "その役割の中でどう働くと自己一致が起きるか（150文字以上）" }],
+      "fields": ["向いている仕事の領域（各40文字以内）", "", "", ""],
+      "avoid": "消耗しやすい働き方・立場と、その配置上の理由（300文字以上）"
     }`
   },
   {
     id: 'ch2',
-    title: '第2章 才能と技能（3 室・5 室・最強の惑星）',
-    pick: (a) => ({ third: careerHouse(a, 3), fifth: careerHouse(a, 5), strength: a.strength, mercury: a.planets?.find((p) => p.key === 'Mercury'), mars: a.planets?.find((p) => p.key === 'Mars') }),
+    title: '第2章 向いている職種——具体名で',
+    pick: (a) => ({ ...careerCore(a), third: careerHouse(a, 3), fifth: careerHouse(a, 5), sixth: careerHouse(a, 6), seventh: careerHouse(a, 7), ninth: careerHouse(a, 9), mercury: planetOf(a, 'Mercury'), venus: planetOf(a, 'Venus'), mars: planetOf(a, 'Mars'), jupiter: planetOf(a, 'Jupiter') }),
     schema: `{
-      "talents": [{ "name": "才能の名前（20文字以内）", "text": "その才能の根拠となる配置と、仕事での使い方（150文字程度）" }],
-      "learning": "学び方・スキルの伸ばし方の向き（250文字程度）",
-      "hidden": "まだ使い切っていない才能（200文字程度）"
+      "intro": "なぜ職種を具体名で挙げられるのか——10 室・2 室・11 室・3 室・5 室と最強の惑星を組み合わせる読み方（250文字以上）",
+      "jobs": [{ "name": "職種名（25文字以内。6〜8 件）", "why": "その職種が合う根拠となる配置（150文字以上）", "how": "その職種で自己一致が起きる働き方（どの工程・どの相手・どの裁量で）（150文字以上）" }],
+      "firstChoice": "上の中で最も自己一致が深い職種と、その理由（300文字以上）",
+      "notFit": [{ "name": "合いにくい職種・役割（25文字以内。3 件）", "why": "合いにくい理由となる配置と、それでも就くなら何を足すか（120文字以上）" }],
+      "environment": "合う環境——組織の規模・速度・人との距離・裁量の量・場所（屋内外・移動）（350文字以上）"
     }`
   },
   {
     id: 'ch3',
-    title: '第3章 雇われるか、独立するか（6 室・7 室・10 室）',
-    pick: (a) => ({ sixth: careerHouse(a, 6), seventh: careerHouse(a, 7), tenth: careerHouse(a, 10), saturn: a.planets?.find((p) => p.key === 'Saturn'), rahu: a.planets?.find((p) => p.key === 'Rahu') }),
+    title: '第3章 力が出る条件と、苦にならない作業',
+    pick: (a) => ({ first: careerHouse(a, 1), third: careerHouse(a, 3), sixth: careerHouse(a, 6), tenth: careerHouse(a, 10), moon: a.moon, nakshatra: a.nakshatra, mars: planetOf(a, 'Mars'), mercury: planetOf(a, 'Mercury'), saturn: planetOf(a, 'Saturn'), strongest: a.strength?.slice(0, 3) }),
     schema: `{
-      "intro": "6 室（勤め・奉仕）と 7 室（取引・パートナー）と 10 室の力関係の読み方（150文字程度）",
-      "text": "組織で働く・独立する・共同経営するのどれに適性が寄るか、確定データの根拠を示して（450文字程度。断定ではなく「寄る」）",
-      "conditions": ["独立や転職を考えるときに満たしておきたい条件（各40文字以内）", "", ""],
-      "team": "上司・同僚・取引相手との関わり方の型（200文字程度）"
+      "intro": "力が出る条件は 1 室・月・火星・水星・土星・6 室から読む——その考え方（250文字以上）",
+      "thrive": [{ "condition": "力が出る条件（30文字以内。4〜5 件）", "text": "その条件の根拠となる配置と、具体的な仕事の場面（180文字以上）" }],
+      "effortless": "何をしていれば苦にならないか——長時間続けても消耗せず、むしろ整う作業・工程・相手（600文字以上。具体的な動詞で）",
+      "flow": "没頭が起きる瞬間の描写——どんな課題・速度・一人か複数かのときに時間を忘れるか（350文字以上）",
+      "drains": "逆に、何が消耗の原因になるか——作業・環境・相手の型と配置上の理由（400文字以上）",
+      "dailyShape": "この人にとって自己一致が起きる 1 日の仕事の形（朝型か・まとまった時間か・人と会う比率・手を動かす比率）（300文字以上）"
     }`
   },
   {
     id: 'ch4',
-    title: '第4章 お金の型（2 室・11 室・アシュタカヴァルガ）',
-    pick: (a) => ({ second: careerHouse(a, 2), eleventh: careerHouse(a, 11), ashtakavarga: a.ashtakavarga, venus: a.planets?.find((p) => p.key === 'Venus'), jupiter: a.planets?.find((p) => p.key === 'Jupiter') }),
+    title: '第4章 人からどう見られているか——評価のされ方',
+    pick: (a) => ({ first: careerHouse(a, 1), seventh: careerHouse(a, 7), tenth: careerHouse(a, 10), eleventh: careerHouse(a, 11), sun: a.sun, moon: a.moon, venus: planetOf(a, 'Venus'), rahu: planetOf(a, 'Rahu'), strongest: a.strength?.slice(0, 3) }),
     schema: `{
-      "intro": "2 室（自分で稼ぐ・蓄える）と 11 室（得る・人脈）の読み方（150文字程度）",
-      "earning": "収入が入りやすい経路（労働・専門技能・人脈・仕組み など）と根拠（350文字程度。投資助言は書かない）",
-      "keeping": "貯める・守る力と、支出が膨らみやすい条件（300文字程度）",
-      "scores": "アシュタカヴァルガの 2 室・10 室・11 室の点数（確定データのものだけ）が示す厚み（200文字程度）",
-      "advice": ["金運を活かす行動（各40文字以内）", "", ""]
+      "intro": "周囲からの評価は 1 室（第一印象）・7 室（向き合う相手）・10 室（社会的な顔）と太陽・金星・ラーフから読む——その考え方（250文字以上）",
+      "seen": "依頼する側・一緒に働く人・顧客・部下にあたる人が、この人をどう見て、何を頼み、何を任せるか（600文字以上。相手の立場ごとに）",
+      "praised": ["実際に評価されている点と、その根拠の惑星（各50文字以内。4〜5 件）", "", "", ""],
+      "unaware": "本人が自覚していないが周囲が高く買っている点（300文字以上）",
+      "misread": "誤解されやすい点と、なぜそう見えるか、どう振る舞うと一致して見えるか（350文字以上）",
+      "reputation": "長い目で見て築かれる評判の形——何の人として覚えられるか（300文字以上）"
     }`
   },
   {
     id: 'ch5',
-    title: '第5章 仕事人生の周期（ダシャー）',
-    pick: (a) => ({ current: a.dasha?.current, upcoming: a.dasha?.upcoming, timeline: a.dasha?.timeline, tenth: careerHouse(a, 10), second: careerHouse(a, 2) }),
+    title: '第5章 才能と技能（3 室・5 室・最強の惑星）',
+    pick: (a) => ({ third: careerHouse(a, 3), fifth: careerHouse(a, 5), strength: a.strength, mercury: planetOf(a, 'Mercury'), mars: planetOf(a, 'Mars'), jupiter: planetOf(a, 'Jupiter'), nakshatra: a.nakshatra, yogas: a.yogas }),
     schema: `{
-      "intro": "ダシャー（運気の周期）が仕事に与える影響の考え方（200文字程度）",
-      "now": "現在の大周期・中周期の支配星が 10 室・2 室とどう関わり、仕事の今をどう作っているか（400文字程度）",
-      "periods": [{ "lord": "確定データの支配星名をそのまま", "text": "その周期に仕事・収入がどう動きやすいか（150文字程度。年は確定データのもの）" }],
-      "golden": "仕事の上で最も実りやすい周期とその使い方（250文字程度）"
+      "intro": "才能は 3 室（手と技）・5 室（創造と判断）・最も強い惑星・ナクシャトラから読む——その考え方（250文字以上）",
+      "talents": [{ "name": "才能の名前（20文字以内。4〜5 件）", "text": "その才能の根拠となる配置と、仕事での具体的な使い方・活きる職種（200文字以上）" }],
+      "weapon": "この人の最大の武器——仕事で一番お金と評価に変わる一つの能力（350文字以上）",
+      "learning": "学び方・技能の伸ばし方の向き（独学か師につくか・体で覚えるか理屈か・何歳からでも伸びる領域）（350文字以上）",
+      "hidden": "まだ使い切っていない才能と、それを仕事に出す入口（350文字以上）"
     }`
   },
   {
     id: 'ch6',
-    title: '第6章 キャリアが動く時期（今後 12 か月）',
+    title: '第6章 雇われるか、独立するか、組むか（6 室・7 室・10 室）',
+    pick: (a) => ({ sixth: careerHouse(a, 6), seventh: careerHouse(a, 7), tenth: careerHouse(a, 10), eleventh: careerHouse(a, 11), saturn: planetOf(a, 'Saturn'), rahu: planetOf(a, 'Rahu'), sun: a.sun, currentDasha: a.dasha?.current }),
+    schema: `{
+      "intro": "6 室（勤め・奉仕・日々の仕事）と 7 室（取引・パートナー）と 10 室の力関係の読み方（250文字以上）",
+      "text": "組織で働く・独立する・共同経営する・組織に居ながら自分の名前で動く のどれに適性が寄るか、根拠を示して（600文字以上。断定ではなく「寄る」）",
+      "employed": "雇われる形を選ぶなら、どんな組織・役割・上下関係なら自己一致が起きるか（350文字以上）",
+      "independent": "独立する形を選ぶなら、何を商品にし、誰を相手に、どの規模で始めると持続するか（350文字以上）",
+      "partner": "組む形を選ぶなら、どんな相手と役割分担すると強いか（300文字以上）",
+      "conditions": ["独立や働き方の変更を考えるときに満たしておきたい条件（各50文字以内）", "", "", ""],
+      "team": "上司・同僚・取引相手との関わり方の型（300文字以上）"
+    }`
+  },
+  {
+    id: 'ch7',
+    title: '第7章 お金の型——稼ぎ方・入る経路・増える時期・漏れる癖',
+    pick: (a) => ({ second: careerHouse(a, 2), eleventh: careerHouse(a, 11), fifth: careerHouse(a, 5), eighth: careerHouse(a, 8), tenth: careerHouse(a, 10), ashtakavarga: a.ashtakavarga, venus: planetOf(a, 'Venus'), jupiter: planetOf(a, 'Jupiter'), mercury: planetOf(a, 'Mercury'), moon: a.moon, currentDasha: a.dasha?.current, upcoming: a.dasha?.upcoming?.slice(0, 3), careerWindows: a.careerWindows, yogas: a.yogas }),
+    schema: `{
+      "intro": "2 室（自分で稼ぐ・蓄える）・11 室（得る・人脈・大きな収入）・5 室（投機ではなく創造から入る実り）・8 室（他者の資産・継承）・金星・木星から金運を読む考え方（250文字以上）",
+      "earningStyle": "この人の稼ぎ方の型——技能で稼ぐ・人を介して稼ぐ・仕組みで稼ぐ・名前（評判）で稼ぐ・育てて稼ぐ のうちどれが主でどれが副か、根拠つきで（500文字以上）",
+      "channels": [{ "route": "収入が入りやすい経路（30文字以内。4 件）", "text": "その経路の根拠となる配置と、どんな形（報酬・手数料・継続・単発・印税的な積み上げ）で入るか（180文字以上）" }],
+      "pricing": "この人の場合、何に値段がつくか——時間か、作品か、判断か、人を集める力か、信用か（350文字以上）",
+      "linkToSelf": "自己一致と収入の関係——自分に合わない仕事で稼ぐときと、合った仕事で稼ぐときで、お金の入り方・残り方がどう変わる人か（400文字以上）",
+      "growthTiming": "収入が増えやすい周期（ダシャーの支配星と 2 室・11 室の関係）と、今後 12 か月の中で財の室に木星・土星が入る月（確定データの年月のみ）（400文字以上）",
+      "keeping": "貯める・守る力——お金が残る条件と、この人に合った蓄え方（持ち方・分け方・決める頻度）（400文字以上。投資助言は書かない）",
+      "leaks": "お金が漏れやすい癖——どんな場面・感情・相手で支出が膨らむか、配置上の理由と止め方（400文字以上）",
+      "scores": "アシュタカヴァルガの 2 室・10 室・11 室の点数（確定データのものだけ）が示す財の厚みと、点が高い室・低い室の意味（250文字以上）",
+      "bigMoney": "この人の人生で大きなお金が動く形（自分で築く・人から受け取る・共同で得る・継承する）と、それが起きやすい周期（300文字以上）",
+      "advice": ["金運を活かす具体的な行動（各50文字以内。5 件）", "", "", "", ""]
+    }`
+  },
+  {
+    id: 'ch8',
+    title: '第8章 仕事人生の周期（ダシャー）',
+    pick: (a) => ({ current: a.dasha?.current, upcoming: a.dasha?.upcoming, timeline: a.dasha?.timeline, tenth: careerHouse(a, 10), second: careerHouse(a, 2), eleventh: careerHouse(a, 11) }),
+    schema: `{
+      "intro": "ダシャー（運気の周期）が仕事と収入に与える影響の考え方（250文字以上）",
+      "now": "現在の大周期・中周期の支配星が 10 室・2 室・11 室とどう関わり、仕事と収入の今をどう作っているか——この周期で自己一致しやすい働き方（600文字以上）",
+      "periods": [{ "lord": "確定データの支配星名をそのまま", "text": "その周期に仕事・立場・収入がどう動きやすいか、何に力を注ぐと実るか（250文字以上。年は確定データのもの）" }],
+      "golden": "仕事の上で最も実りやすい周期とその使い方（350文字以上）",
+      "lateBloom": "年齢を重ねるほど深まる領域——後半生で評価と収入が厚くなる働き方（300文字以上）"
+    }`
+  },
+  {
+    id: 'ch9',
+    title: '第9章 仕事と金運が動く時期（今後 12 か月）',
     pick: (a) => ({
       period: a.period, careerWindows: a.careerWindows, dashaChanges: a.dashaChanges, currentDasha: a.dasha?.current,
       transits: (a.careerTransits || []).map((m) => ({ month: m.month, ...Object.fromEntries(m.planets.map((p) => [p.planetKey, `L${p.houseFromLagna}/M${p.houseFromMoon}${p.retrograde ? ' R' : ''}`])) }))
     }),
     schema: `{
-      "overview": "今後 12 か月のキャリアの大きな流れ（250文字程度。期間は確定データの年月のみ）",
-      "windows": [{ "month": "確定データの YYYY-MM をそのまま", "kind": "転職に向く・独立の準備・昇進や評価・収入の見直し・学び直し など（30文字以内）", "text": "なぜその月か（木星・土星のハウス、ダシャー切替）と、どう動くとよいか（180文字程度）" }],
-      "bestMonth": "大きな決断に最も向く月とその根拠（150文字程度。該当が無ければ「今期は準備期」と正直に）",
-      "holdMonth": "急がない方がよい月または領域と根拠（120文字程度。無ければ短く）"
+      "overview": "今後 12 か月の仕事と収入の大きな流れ（400文字以上。期間は確定データの年月のみ）",
+      "windows": [{ "month": "確定データの YYYY-MM をそのまま", "kind": "働き方を変える・立場が上がる・評価される・収入が増える・収入の形を変える・学び直す など（30文字以内）", "text": "なぜその月か（木星・土星のラグナ・月からの室、ダシャー切替）と、その月に実行してよい具体的な行動（250文字以上）" }],
+      "bestMonth": "仕事の大きな決断（働き方を変える・新しい立場に就く・自分の名前で始める）に最も向く月と根拠（250文字以上。該当が無ければ「この 12 か月は土台を厚くする期間」と正直に）",
+      "moneyMonth": "収入が動きやすい月（財の室に木星・土星が入る月・ダシャー切替）と、その月に何が入りやすいか（250文字以上）",
+      "holdMonth": "急がない方がよい月または領域と根拠（150文字以上。無ければ短く）"
     }`
   },
   {
-    id: 'ch7',
-    title: '第7章 天職に近づくための行動計画',
-    pick: (a) => ({ strongest: a.strength?.slice(0, 3), tenth: careerHouse(a, 10), koto: a.boosters?.koto, careerWindows: a.careerWindows?.slice(0, 3) }),
+    id: 'ch10',
+    title: '第10章 天職に近づくための行動計画',
+    pick: (a) => ({ strongest: a.strength?.slice(0, 3), tenth: careerHouse(a, 10), second: careerHouse(a, 2), koto: a.boosters?.koto, workStyle: a.boosters?.workStyle, careerWindows: a.careerWindows?.slice(0, 3), currentDasha: a.dasha?.current }),
     schema: `{
-      "now": ["今から 3 か月でできること（各40文字以内）", "", ""],
-      "year": ["この 1 年で整えること（各40文字以内）", "", ""],
-      "habit": "天職の型に合った働き方の習慣（250文字程度）",
-      "message": "決断を迫らず、しかし背中を押す締めの言葉（200文字程度）"
+      "intro": "ここまでの章を一つに束ねる——この人の天職を一文で定義し直す（300文字以上）",
+      "now": ["今から 3 か月でできること（各50文字以内。5 件）", "", "", "", ""],
+      "year": ["この 1 年で整えること（各50文字以内。5 件）", "", "", "", ""],
+      "threeYears": "3 年の視野で育てる柱——何を名乗れる人になるか、収入の柱をどう組むか（400文字以上）",
+      "habit": "天職の型に合った働き方・稼ぎ方の習慣（350文字以上）",
+      "checklist": ["自己一致が起きているかを確かめる問い（各50文字以内。5 件）", "", "", "", ""],
+      "message": "決断を迫らず、しかし背中を押す締めの言葉——読者が「これが自分だ」と確認できる肯定で終える（350文字以上）"
     }`
   }
 ];
-
-module.exports = { YEARLY_CHAPTERS, YEARLY_VOICE, COMPAT_CHAPTERS, CAREER_CHAPTERS, compatChapterIdsFor, RELATION_JA };
+module.exports = { YEARLY_CHAPTERS, YEARLY_VOICE, COMPAT_CHAPTERS, CAREER_CHAPTERS, CAREER_VOICE, compatChapterIdsFor, RELATION_JA };
