@@ -84,8 +84,8 @@ module.exports = async (req, res) => {
         if (payment.status === 'captured' && id) return redirect(res, uploadUrl(id, lang));
         return redirect(res, `/${lang}/palm-chart?ordered=pending`);
       }
-      // 年間運勢・仕事運は独立の商品ページ（/<lang>/yearly・/ja/career）にフォームがある。他は /reports。
-      const page = product === 'yearly' || (product === 'career' && lang === 'ja') ? product : 'reports';
+      // 年間運勢・仕事運は独立の商品ページ（/<lang>/yearly・/<lang>/career）にフォームがある。他は /reports。
+      const page = product === 'yearly' || product === 'career' ? product : 'reports';
       return redirect(res, `/${lang}/${page}?ordered=${payment.status === 'captured' ? 'paid' : 'pending'}`);
     }
 

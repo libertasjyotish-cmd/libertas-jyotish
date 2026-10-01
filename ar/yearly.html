@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" dir="rtl">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -109,7 +109,47 @@ body { font-family: 'Noto Naskh Arabic', serif; }
   .pc-body { padding: 22px 16px 30px; }
 }
 </style>
-<script>window.LJ_I18N = {"lang":"ja","menu":{"top":"トップ","free":"無料診断","about":"Libertas Jyotishとは","report":"生涯完全鑑定書（買い切り）","calendar":"年間運勢カレンダー","calendarNote":"準備中","mypage":"会員マイページ","legal":"特定商取引法・利用規約","toggleLabel":"メニュー","navLabel":"サイトメニュー"},"guide":{"hub":"/ar/guide","hubLabel":"解説記事一覧","intro":"/ar/guide/indian-astrology","introLabel":"インド占星術とは","groupLabel":""}};</script>
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'ar',
+  menu: {
+    top: 'الرئيسية',
+    free: 'قراءة مجانية',
+    about: 'عن ليبرتاس جيوتيش',
+    report: 'تقرير العمر (دفعة واحدة)',
+    yearly: 'تقرير العام القادم',
+    compat: 'تقرير التوافق',
+    career: 'تقرير العمل والمال والرسالة',
+    palm: 'كار-كوندالي (الكف × خريطة الميلاد)',
+    karma: 'كارما ودارما — رسالة حياتك',
+    calendar: 'تقويم الحظ السنوي',
+    calendarNote: 'قريبًا',
+    mypage: 'صفحة العضوية',
+    legal: 'المعلومات القانونية والشروط',
+    contact: 'اتصل بنا',
+    toggleLabel: 'القائمة',
+    navLabel: 'قائمة الموقع'
+  },
+  price: {
+    premium: '{price} شهريًا (بالدولار الأمريكي؛ قد تُضاف الضرائب المحلية عند الدفع)',
+    pdf: '{price} دفعة واحدة (بالدولار الأمريكي؛ قد تُضاف الضرائب المحلية عند الدفع)',
+    premiumApprox: 'نحو {price} شهريًا — يُحاسَب بالدولار الأمريكي، ويظهر المبلغ النهائي عند الدفع',
+    pdfApprox: 'نحو {price} دفعة واحدة — يُحاسَب بالدولار الأمريكي، ويظهر المبلغ النهائي عند الدفع',
+    checkoutOnly: 'يظهر المبلغ بعملتك المحلية عند الدفع',
+    unavailable: 'الدفع عبر الإنترنت غير متاح مؤقتًا. يرجى المحاولة لاحقًا.'
+  },
+  playError: 'تعذّر إتمام عملية الشراء عبر Google Play. يرجى المحاولة مرة أخرى.',
+  playManage: 'تُدار الاشتراكات المشتراة داخل التطبيق (الإلغاء وطريقة الدفع) من Google Play ← الاشتراكات. هل تريد الفتح الآن؟',
+  guide: {
+    hub: '/ar/guide',
+    hubLabel: "كل المقالات",
+    intro: '/ar/guide/indian-astrology',
+    introLabel: "ما هو التنجيم الفيدي؟",
+    groupLabel: ""
+  }
+};
+</script>
 <script defer src="/js/site-menu.js"></script>
 </head>
 <body>

@@ -108,7 +108,47 @@ body { font-family: 'Noto Serif', serif; }
   .pc-body { padding: 22px 16px 30px; }
 }
 </style>
-<script>window.LJ_I18N = {"lang":"ja","menu":{"top":"トップ","free":"無料診断","about":"Libertas Jyotishとは","report":"生涯完全鑑定書（買い切り）","calendar":"年間運勢カレンダー","calendarNote":"準備中","mypage":"会員マイページ","legal":"特定商取引法・利用規約","toggleLabel":"メニュー","navLabel":"サイトメニュー"},"guide":{"hub":"/fr/guide","hubLabel":"解説記事一覧","intro":"/fr/guide/indian-astrology","introLabel":"インド占星術とは","groupLabel":""}};</script>
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'fr',
+  menu: {
+    top: 'Accueil',
+    free: 'Lecture gratuite',
+    about: 'À propos de Libertas Jyotish',
+    report: 'Rapport à vie (paiement unique)',
+    yearly: 'Rapport de l’année',
+    compat: 'Rapport de compatibilité',
+    career: 'Rapport carrière, argent et vocation',
+    palm: 'Kar-Kundali (paume × thème natal)',
+    karma: 'Karma et Dharma — votre mission de vie',
+    calendar: 'Calendrier annuel de la destinée',
+    calendarNote: 'bientôt disponible',
+    mypage: 'Espace membre',
+    legal: 'Mentions légales et conditions',
+    contact: 'Nous contacter',
+    toggleLabel: 'Menu',
+    navLabel: 'Menu du site'
+  },
+  price: {
+    premium: '{price} / mois (USD ; taxes locales éventuellement ajoutées au paiement)',
+    pdf: '{price} paiement unique (USD ; taxes locales éventuellement ajoutées au paiement)',
+    premiumApprox: 'Environ {price} / mois — facturé en USD, montant final affiché lors du paiement',
+    pdfApprox: 'Environ {price} en paiement unique — facturé en USD, montant final affiché lors du paiement',
+    checkoutOnly: 'Le montant dans votre devise locale sera affiché lors du paiement',
+    unavailable: 'Le paiement en ligne est temporairement indisponible. Veuillez réessayer plus tard.'
+  },
+  playError: 'L\'achat sur Google Play n\'a pas pu aboutir. Veuillez réessayer.',
+  playManage: 'Les abonnements souscrits dans l\'application sont gérés (annulation, mode de paiement) dans Google Play → Abonnements. L\'ouvrir maintenant ?',
+  guide: {
+    hub: '/fr/guide',
+    hubLabel: "Tous les guides",
+    intro: '/fr/guide/indian-astrology',
+    introLabel: "Qu'est-ce que l'astrologie védique ?",
+    groupLabel: ""
+  }
+};
+</script>
 <script defer src="/js/site-menu.js"></script>
 </head>
 <body>

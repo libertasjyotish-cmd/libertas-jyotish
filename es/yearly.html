@@ -108,7 +108,47 @@ body { font-family: 'Noto Serif', serif; }
   .pc-body { padding: 22px 16px 30px; }
 }
 </style>
-<script>window.LJ_I18N = {"lang":"ja","menu":{"top":"トップ","free":"無料診断","about":"Libertas Jyotishとは","report":"生涯完全鑑定書（買い切り）","calendar":"年間運勢カレンダー","calendarNote":"準備中","mypage":"会員マイページ","legal":"特定商取引法・利用規約","toggleLabel":"メニュー","navLabel":"サイトメニュー"},"guide":{"hub":"/es/guide","hubLabel":"解説記事一覧","intro":"/es/guide/indian-astrology","introLabel":"インド占星術とは","groupLabel":""}};</script>
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'es',
+  menu: {
+    top: 'Inicio',
+    free: 'Lectura gratuita',
+    about: 'Sobre Libertas Jyotish',
+    report: 'Informe Vitalicio (pago único)',
+    yearly: 'Informe del año',
+    compat: 'Informe de compatibilidad',
+    career: 'Informe de carrera, dinero y vocación',
+    palm: 'Kar-Kundali (palma × carta natal)',
+    karma: 'Karma y Dharma — tu propósito de vida',
+    calendar: 'Calendario Anual de la Fortuna',
+    calendarNote: 'próximamente',
+    mypage: 'Página de miembro',
+    legal: 'Información legal y términos',
+    contact: 'Contacto',
+    toggleLabel: 'Menú',
+    navLabel: 'Menú del sitio'
+  },
+  price: {
+    premium: '{price} al mes (USD; los impuestos locales pueden añadirse al pagar)',
+    pdf: '{price} pago único (USD; los impuestos locales pueden añadirse al pagar)',
+    premiumApprox: 'Unos {price} al mes — se cobra en USD; el importe final se muestra al pagar',
+    pdfApprox: 'Unos {price} en pago único — se cobra en USD; el importe final se muestra al pagar',
+    checkoutOnly: 'El importe en tu moneda local se muestra al pagar',
+    unavailable: 'El pago en línea no está disponible temporalmente. Inténtalo de nuevo más tarde.'
+  },
+  playError: 'No se pudo completar la compra en Google Play. Inténtalo de nuevo.',
+  playManage: 'Las suscripciones compradas en la app se gestionan (cancelar, método de pago) en Google Play → Suscripciones. ¿Abrir ahora?',
+  guide: {
+    hub: '/es/guide',
+    hubLabel: "Todas las guías",
+    intro: '/es/guide/indian-astrology',
+    introLabel: "¿Qué es la astrología védica?",
+    groupLabel: ""
+  }
+};
+</script>
 <script defer src="/js/site-menu.js"></script>
 </head>
 <body>

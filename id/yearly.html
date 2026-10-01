@@ -108,7 +108,47 @@ body { font-family: 'Noto Serif', serif; }
   .pc-body { padding: 22px 16px 30px; }
 }
 </style>
-<script>window.LJ_I18N = {"lang":"ja","menu":{"top":"トップ","free":"無料診断","about":"Libertas Jyotishとは","report":"生涯完全鑑定書（買い切り）","calendar":"年間運勢カレンダー","calendarNote":"準備中","mypage":"会員マイページ","legal":"特定商取引法・利用規約","toggleLabel":"メニュー","navLabel":"サイトメニュー"},"guide":{"hub":"/id/guide","hubLabel":"解説記事一覧","intro":"/id/guide/indian-astrology","introLabel":"インド占星術とは","groupLabel":""}};</script>
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'id',
+  menu: {
+    top: 'Beranda',
+    free: 'Pembacaan gratis',
+    about: 'Tentang Libertas Jyotish',
+    report: 'Laporan Seumur Hidup (sekali beli)',
+    yearly: 'Laporan Tahun Depan',
+    compat: 'Laporan Kecocokan',
+    career: 'Laporan Karier, Keuangan & Panggilan Hidup',
+    palm: 'Kar-Kundali (Telapak × Peta Kelahiran)',
+    karma: 'Karma & Dharma — Tujuan Hidup Anda',
+    calendar: 'Kalender Peruntungan Tahunan',
+    calendarNote: 'segera hadir',
+    mypage: 'Halaman anggota',
+    legal: 'Informasi hukum dan ketentuan',
+    contact: 'Hubungi kami',
+    toggleLabel: 'Menu',
+    navLabel: 'Menu situs'
+  },
+  price: {
+    premium: '{price} / bulan (USD; pajak lokal dapat ditambahkan saat checkout)',
+    pdf: '{price} sekali bayar (USD; pajak lokal dapat ditambahkan saat checkout)',
+    premiumApprox: 'Sekitar {price} / bulan — ditagih dalam USD, jumlah akhir ditampilkan saat checkout',
+    pdfApprox: 'Sekitar {price} sekali bayar — ditagih dalam USD, jumlah akhir ditampilkan saat checkout',
+    checkoutOnly: 'Jumlah dalam mata uang lokal Anda ditampilkan saat checkout',
+    unavailable: 'Pembayaran online sementara tidak tersedia. Silakan coba lagi nanti.'
+  },
+  playError: 'Pembelian Google Play tidak dapat diselesaikan. Silakan coba lagi.',
+  playManage: 'Langganan yang dibeli di aplikasi dikelola (batalkan, metode pembayaran) di Google Play → Langganan. Buka sekarang?',
+  guide: {
+    hub: '/id/guide',
+    hubLabel: "Semua panduan",
+    intro: '/id/guide/indian-astrology',
+    introLabel: "Apa itu astrologi Veda?",
+    groupLabel: ""
+  }
+};
+</script>
 <script defer src="/js/site-menu.js"></script>
 </head>
 <body>
