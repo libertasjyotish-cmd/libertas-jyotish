@@ -30,8 +30,10 @@ const LOCALE_DIR = join(ROOT, 'locales');
 const BASE_LANG = 'ja';
 // 検索エンジンに見せる正規のオリジン（apex は www へ 308 転送される）。
 const SITE = 'https://www.libertas-jyotish.com';
-// sitemap.xml に載せる（＝検索結果に出したい）ページ。
-const SITEMAP_PAGES = ['index', 'pdf-purchase'];
+// sitemap.xml に載せる（＝検索結果に出したい）ページ。全言語に存在し index 可のもの。
+const SITEMAP_PAGES = ['index', 'pdf-purchase', 'yearly', 'career'];
+// 一部の言語だけ index 可のページ（カル・クンダリは ja のみ販売・index 可）。
+const SITEMAP_PARTIAL_PAGES = { 'palm-chart': ['ja'] };
 // {{pdfIntroJa}}: 生涯完全鑑定書（pdf-purchase）の商品説明ブロック。日本語のみ展開、他言語は空。
 // {{robotsSaleJa}}: 販売ページの robots。日本は KOMOJU、他言語は Gumroad で年間運勢を販売中のため全言語 index 可。
 const SALE_LANGS = new Set(['ja', 'en', 'es', 'pt', 'ar', 'id', 'fr', 'de']);
@@ -142,6 +144,16 @@ function buildSitemap() {
         `    <loc>${pageUrl(entry.lang, page)}</loc>`,
         ...alternates,
         `    <xhtml:link rel="alternate" hreflang="x-default" href="${defaultUrl(page)}"/>`,
+        '  </url>'
+      ].join('\n'));
+    }
+  }
+  for (const [page, langs] of Object.entries(SITEMAP_PARTIAL_PAGES)) {
+    for (const lang of langs) {
+      urls.push([
+        '  <url>',
+        `    <loc>${pageUrl(lang, page)}</loc>`,
+        ...langs.map((alt) => `    <xhtml:link rel="alternate" hreflang="${alt}" href="${pageUrl(alt, page)}"/>`),
         '  </url>'
       ].join('\n'));
     }
