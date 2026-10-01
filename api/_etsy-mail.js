@@ -44,7 +44,7 @@ const PRODUCT_NAMES = {
   natal: 'Vedic astrology birth chart report',
   yearly: 'Vedic astrology year-ahead forecast',
   compat: 'Vedic astrology compatibility report',
-  career: 'Vedic astrology career & wealth report',
+  career: 'Vedic astrology career, wealth & calling report',
   palm: 'Kar-Kundali (Vedic palm & birth chart) report',
   karma: 'Karma & Dharma — The Calling of This Lifetime (Vedic astrology report)'
 };

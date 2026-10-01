@@ -96,6 +96,11 @@
       background: rgba(212, 175, 55, 0.09); border-left: 3px solid var(--color-gold-main);
       padding: 12px 16px; margin: 14px 0; font-size: 0.9rem;
     }
+    .career-sec { margin: 0 0 18px; }
+    .career-h { border-bottom: 1px solid rgba(139, 107, 27, 0.35); padding-bottom: 4px; margin: 26px 0 10px; }
+    .career-item { margin: 0 0 14px; }
+    .career-item .fact { margin-bottom: 6px; }
+    .career-sub { font-size: 0.9rem; margin: 4px 0 4px 8px; }
     .fact .reason { display: block; font-size: 0.8rem; color: #6A5E58; margin-top: 4px; }
 
     table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 12px 0; }
@@ -539,6 +544,100 @@
       return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>${parts.join('')}`);
     }
 
+const CAREER_LABELS = {
+      essence: 'دلالة خريطتك على أسلوب عملك',
+      selfMatch: 'مفهوم التوافق الذاتي لديك',
+      callingType: 'نمط رسالتك المهنية',
+      gifts: 'مزاياك ومصادر قوتك في العمل',
+      moneyLine: 'مسارك المالي بإيجاز',
+      stance: 'موقفك الأساسي من العمل والمال',
+      text: 'القراءة',
+      roles: 'الأدوار الملائمة لك',
+      fields: 'المجالات الأنسب لك',
+      avoid: 'أنماط عمل تستنزفك',
+      jobs: 'المهن المناسبة لك',
+      firstChoice: 'المهنة الأكثر توافقاً مع ذاتك',
+      notFit: 'مهن غير ملائمة',
+      environment: 'البيئة الأنسب للعمل',
+      thrive: 'شروط تجلّي قوتك وازدهارك',
+      effortless: 'عمل ينساب دون مشقة',
+      flow: 'أوقات الاندماج والتدفق',
+      drains: 'مسببات الاستنزاف',
+      dailyShape: 'ملامح اليوم المتناغم مع ذاتك',
+      seen: 'كيف يراك الآخرون',
+      praised: 'ما يحظى بالتقدير الفعلي',
+      unaware: 'نقاط قوة غائبة عن إدراكك',
+      misread: 'مواضع يُساء فهمك فيها',
+      reputation: 'السمعة التي تبنيها',
+      talents: 'المواهب',
+      weapon: 'سلاحك وميزتك الأقوى',
+      learning: 'أسلوبك في التعلم وتطوير المهارات',
+      hidden: 'مواهب كامنة لم تُستثمر بعد',
+      employed: 'في حال اختيار المسار الوظيفي',
+      independent: 'في حال اختيار العمل المستقل',
+      partner: 'في حال اختيار الشراكة',
+      conditions: 'شروط لازمة قبل تغيير نمط عملك',
+      team: 'أسلوب تعاملك مع الآخرين في العمل',
+      earningStyle: 'نمط اكتساب الدخل',
+      channels: 'مسارات تدفق الدخل',
+      pricing: 'القيمة التي تتقاضى أجراً عليها',
+      linkToSelf: 'التوافق الذاتي ونمو الدخل',
+      growthTiming: 'فترات نمو الدخل وازدهاره',
+      keeping: 'الادخار وحماية المال',
+      leaks: 'منافذ هدر المال وتسربه',
+      scores: 'درجات Ashtakavarga',
+      bigMoney: 'حركة التدفقات المالية الكبرى في حياتك',
+      advice: 'خطوات عملية لاستثمار حظك المالي',
+      now: 'الفترة الحالية',
+      periods: 'الفترات مرحلة بمرحلة',
+      golden: 'الفترة الأكثر إثماراً ونتاجاً',
+      lateBloom: 'ما يزداد عمقاً وازدهاراً مع النضج',
+      overview: 'مسار الاثني عشر شهراً القادمة',
+      windows: 'أشهر الحراك والتغيير',
+      bestMonth: 'الشهر الأنسب للقرارات الحاسمة',
+      moneyMonth: 'شهر الانتعاش والحركة المالية',
+      holdMonth: 'شهر التريث وعدم الاستعجال',
+      year: 'أولويات الترتيب والتنظيم لهذا العام',
+      threeYears: 'ركائز التطوير لثلاث سنوات قادمة',
+      habit: 'عادات داعمة لرسالتك المهنية',
+      checklist: 'أسئلة للتحقق من توافقك الذاتي',
+      message: 'رسالة ختامية',
+      actNow: 'خطوات للشهور الثلاثة القادمة',
+      itemWhy: 'الأساس والمنطق',
+      itemHow: 'كيف تُبرز طاقتك وقدراتك'
+    };
+    const CAREER_SKIP = new Set(['title', 'catchphrase', 'intro']);
+    function careerItem(item) {
+      const head = item.name || item.condition || item.route || item.lord || item.month || '';
+      const sub = item.kind || '';
+      const labeled = { why: CAREER_LABELS.itemWhy, how: CAREER_LABELS.itemHow };
+      const body = Object.entries(item)
+        .filter(([k, val]) => !['name', 'condition', 'route', 'lord', 'month', 'kind'].includes(k) && typeof val === 'string' && val)
+        .map(([k, val]) => (labeled[k] ? `<p class="career-sub"><strong>${labeled[k]}</strong>　${esc(val)}</p>` : para(val)))
+        .join('');
+      return `<div class="career-item"><div class="fact"><strong>${esc(head)}</strong>${sub ? `　${esc(sub)}` : ''}</div>${body}</div>`;
+    }
+    function careerSection(key, v) {
+      if (v == null || v === '' || (Array.isArray(v) && !v.length)) return '';
+      const label = key === 'now' && Array.isArray(v) ? CAREER_LABELS.actNow : CAREER_LABELS[key];
+      const head = label ? `<h3 class="career-h">${esc(label)}</h3>` : '';
+      let body;
+      if (typeof v === 'string') body = para(v);
+      else if (Array.isArray(v)) body = typeof v[0] === 'string' ? list(v) : v.map(careerItem).join('');
+      else body = genericValue(v);
+      return `<section class="career-sec">${head}${body}</section>`;
+    }
+    function careerPage(ch) {
+      const parts = [];
+      if (ch.catchphrase) parts.push(`<div class="lead">${esc(ch.catchphrase)}</div>`);
+      if (ch.intro) parts.push(`<p class="lead-note">${esc(ch.intro)}</p>`);
+      for (const [key, v] of Object.entries(ch)) {
+        if (CAREER_SKIP.has(key)) continue;
+        parts.push(careerSection(key, v));
+      }
+      return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>${parts.join('')}`);
+    }
+
     function personLine(p) {
       if (!p) return '';
       const b = p.birth || {};
@@ -548,7 +647,7 @@
 
     function productCover(a) {
       const sub = a.product === 'yearly' ? 'توقعات العام (الأشهر الاثنا عشر القادمة)'
-        : a.product === 'career' ? 'تقرير المهنة والرسالة والمال (رسالتك في العمل)'
+        : a.product === 'career' ? 'تقرير العمل والمال والرسالة'
         : a.product === 'palm' ? 'كار-كوندالي: تقرير فيدي للكف وخريطة الميلاد'
         : a.product === 'karma' ? 'الكارما والدارما — نداء هذه الحياة'
         : 'تقرير التوافق';
@@ -698,7 +797,7 @@
       const chapters = PROD_ORDER.map((id) => c[id]).filter(Boolean);
       const html = [productCover(a)];
       html.push(page(`<h2 class="chapter-title">المحتويات</h2><ul class="toc">${chapters.map((ch) => `<li>${esc(ch.title)}</li>`).join('')}</ul>`));
-      for (const ch of chapters) html.push(genericPage(ch));
+      for (const ch of chapters) html.push(a.product === 'career' ? careerPage(ch) : genericPage(ch));
       if (a.product === 'career') { html.push(careerDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
       else if (a.product === 'palm') { html.push(palmPhotoPage(a)); html.push(palmDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
       else if (a.product === 'karma') { html.push(karmaChartsPage(a)); html.push(karmaDataPage(a)); html.push(planetsPage(a)); }

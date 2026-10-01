@@ -19,7 +19,7 @@
     menu: {
       top: 'トップ', free: '無料診断', about: 'Libertas Jyotishとは',
       report: '生涯完全鑑定書（買い切り）',
-      yearly: '年間運勢 鑑定書', compat: '相性 鑑定書', career: '仕事・金運 鑑定書', palm: 'カル・クンダリ（手相×出生図）',
+      yearly: '年間運勢 鑑定書', compat: '相性 鑑定書', career: '仕事運・金運・天職 鑑定書', palm: 'カル・クンダリ（手相×出生図）',
       karma: 'Karma & Dharma ― 今世の天命',
       calendar: '年間運勢カレンダー', calendarNote: '準備中',
       mypage: '会員マイページ', legal: '特定商取引法・利用規約', contact: 'お問い合わせ',

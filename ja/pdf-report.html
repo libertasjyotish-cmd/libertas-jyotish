@@ -96,6 +96,11 @@
       background: rgba(212, 175, 55, 0.09); border-left: 3px solid var(--color-gold-main);
       padding: 12px 16px; margin: 14px 0; font-size: 0.9rem;
     }
+    .career-sec { margin: 0 0 18px; }
+    .career-h { border-bottom: 1px solid rgba(139, 107, 27, 0.35); padding-bottom: 4px; margin: 26px 0 10px; }
+    .career-item { margin: 0 0 14px; }
+    .career-item .fact { margin-bottom: 6px; }
+    .career-sub { font-size: 0.9rem; margin: 4px 0 4px 8px; }
     .fact .reason { display: block; font-size: 0.8rem; color: #6A5E58; margin-top: 4px; }
 
     table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 12px 0; }
@@ -539,6 +544,100 @@
       return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>${parts.join('')}`);
     }
 
+const CAREER_LABELS = {
+      essence: 'この出生図が語る働き方',
+      selfMatch: 'あなたにとっての自己一致',
+      callingType: '天職の型',
+      gifts: '仕事で武器になる資質',
+      moneyLine: '金運の見取り図',
+      stance: '仕事とお金への基本姿勢',
+      text: '読み解き',
+      roles: '向いている役割',
+      fields: '向いている領域',
+      avoid: '消耗しやすい働き方',
+      jobs: '向いている職種',
+      firstChoice: '最も自己一致が深い職種',
+      notFit: '合いにくい職種',
+      environment: '合う環境',
+      thrive: '力が出る条件',
+      effortless: '苦にならない作業',
+      flow: '没頭が起きる瞬間',
+      drains: '消耗の原因',
+      dailyShape: '自己一致が起きる一日の形',
+      seen: '周囲からの見え方',
+      praised: '実際に評価されている点',
+      unaware: '自覚していない強み',
+      misread: '誤解されやすい点',
+      reputation: '築かれていく評判',
+      talents: '才能',
+      weapon: '最大の武器',
+      learning: '学び方・伸ばし方',
+      hidden: 'まだ使い切っていない才能',
+      employed: '雇われる形を選ぶなら',
+      independent: '独立する形を選ぶなら',
+      partner: '組む形を選ぶなら',
+      conditions: '働き方を変える前に満たしたい条件',
+      team: '人との関わり方の型',
+      earningStyle: '稼ぎ方の型',
+      channels: '収入が入りやすい経路',
+      pricing: '何に値段がつくか',
+      linkToSelf: '自己一致と収入の関係',
+      growthTiming: '収入が増えやすい周期',
+      keeping: '貯める・守る力',
+      leaks: 'お金が漏れやすい癖',
+      scores: 'アシュタカヴァルガの点数',
+      bigMoney: '大きなお金が動く形',
+      advice: '金運を活かす行動',
+      now: '現在の周期',
+      periods: '周期ごとの流れ',
+      golden: '最も実りやすい周期',
+      lateBloom: '年齢とともに深まる領域',
+      overview: '12か月の大きな流れ',
+      windows: '動きのある月',
+      bestMonth: '大きな決断に向く月',
+      moneyMonth: '収入が動きやすい月',
+      holdMonth: '急がない方がよい月',
+      year: 'この1年で整えること',
+      threeYears: '3年で育てる柱',
+      habit: '天職に合った習慣',
+      checklist: '自己一致を確かめる問い',
+      message: '結びの言葉',
+      actNow: '今から3か月でできること',
+      itemWhy: '根拠',
+      itemHow: '力の出し方'
+    };
+    const CAREER_SKIP = new Set(['title', 'catchphrase', 'intro']);
+    function careerItem(item) {
+      const head = item.name || item.condition || item.route || item.lord || item.month || '';
+      const sub = item.kind || '';
+      const labeled = { why: CAREER_LABELS.itemWhy, how: CAREER_LABELS.itemHow };
+      const body = Object.entries(item)
+        .filter(([k, val]) => !['name', 'condition', 'route', 'lord', 'month', 'kind'].includes(k) && typeof val === 'string' && val)
+        .map(([k, val]) => (labeled[k] ? `<p class="career-sub"><strong>${labeled[k]}</strong>　${esc(val)}</p>` : para(val)))
+        .join('');
+      return `<div class="career-item"><div class="fact"><strong>${esc(head)}</strong>${sub ? `　${esc(sub)}` : ''}</div>${body}</div>`;
+    }
+    function careerSection(key, v) {
+      if (v == null || v === '' || (Array.isArray(v) && !v.length)) return '';
+      const label = key === 'now' && Array.isArray(v) ? CAREER_LABELS.actNow : CAREER_LABELS[key];
+      const head = label ? `<h3 class="career-h">${esc(label)}</h3>` : '';
+      let body;
+      if (typeof v === 'string') body = para(v);
+      else if (Array.isArray(v)) body = typeof v[0] === 'string' ? list(v) : v.map(careerItem).join('');
+      else body = genericValue(v);
+      return `<section class="career-sec">${head}${body}</section>`;
+    }
+    function careerPage(ch) {
+      const parts = [];
+      if (ch.catchphrase) parts.push(`<div class="lead">${esc(ch.catchphrase)}</div>`);
+      if (ch.intro) parts.push(`<p class="lead-note">${esc(ch.intro)}</p>`);
+      for (const [key, v] of Object.entries(ch)) {
+        if (CAREER_SKIP.has(key)) continue;
+        parts.push(careerSection(key, v));
+      }
+      return page(`<h2 class="chapter-title">${esc(ch.title)}</h2>${parts.join('')}`);
+    }
+
     function personLine(p) {
       if (!p) return '';
       const b = p.birth || {};
@@ -548,7 +647,7 @@
 
     function productCover(a) {
       const sub = a.product === 'yearly' ? '年間運勢鑑定書（今後 12 か月）'
-        : a.product === 'career' ? '仕事・適職・金運 鑑定書（あなたの天職）'
+        : a.product === 'career' ? '仕事運・金運・天職 鑑定書'
         : a.product === 'palm' ? '手相×出生図 統合鑑定「カル・クンダリ」'
         : a.product === 'karma' ? 'カルマとダルマ ― 今世の天命'
         : '相性鑑定書';
@@ -698,7 +797,7 @@
       const chapters = PROD_ORDER.map((id) => c[id]).filter(Boolean);
       const html = [productCover(a)];
       html.push(page(`<h2 class="chapter-title">目次</h2><ul class="toc">${chapters.map((ch) => `<li>${esc(ch.title)}</li>`).join('')}</ul>`));
-      for (const ch of chapters) html.push(genericPage(ch));
+      for (const ch of chapters) html.push(a.product === 'career' ? careerPage(ch) : genericPage(ch));
       if (a.product === 'career') { html.push(careerDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
       else if (a.product === 'palm') { html.push(palmPhotoPage(a)); html.push(palmDataPage(a)); html.push(chartsPage(a)); html.push(planetsPage(a)); }
       else if (a.product === 'karma') { html.push(karmaChartsPage(a)); html.push(karmaDataPage(a)); html.push(planetsPage(a)); }
