@@ -23,12 +23,11 @@ const GUIDE_DIR = join(ROOT, 'data', 'guide');
 
 const LANGS = readdirSync(GUIDE_DIR).filter((n) => n.endsWith('.json')).map((n) => n.replace(/\.json$/, '')).sort();
 // 鑑定書（有料）への導線。ラベルは共通メニュー（locales/<lang>.json の menu.* 文言）と揃える。
-// palm（カル・クンダリ）は日本語のみ販売中なので ja だけ出す。
+// 販売中の商品だけ載せる（palm・compat・karma は準備中のため載せない）。
 const PRODUCTS = [
   { key: 'calendar', path: 'yearly' },
   { key: 'career', path: 'career' },
-  { key: 'report', path: 'pdf-purchase' },
-  { key: 'palm', path: 'palm-chart', langs: ['ja'] }
+  { key: 'report', path: 'pdf-purchase' }
 ];
 // 記事テーマに最も近い鑑定書（先頭に「この記事に関連」付きで出す）。
 const RECOMMENDED = { career: 'career', marriage: 'calendar', dasha: 'calendar', nakshatra: 'report', horoscope: 'report', 'indian-astrology': 'report', 'free-reading': 'report' };
@@ -158,7 +157,7 @@ ${extra}`;
   }
 
   function products(slug) {
-    const list = PRODUCTS.filter((p) => !p.langs || p.langs.includes(LANG));
+    const list = [...PRODUCTS];
     const rec = slug ? RECOMMENDED[slug] : null;
     list.sort((a, b) => (a.key === rec ? -1 : 0) - (b.key === rec ? -1 : 0));
     const items = list.map((p) => {
