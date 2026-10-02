@@ -22,6 +22,16 @@ const OG_IMAGE = `${SITE}/img/og-image.jpg`;
 const GUIDE_DIR = join(ROOT, 'data', 'guide');
 
 const LANGS = readdirSync(GUIDE_DIR).filter((n) => n.endsWith('.json')).map((n) => n.replace(/\.json$/, '')).sort();
+// 鑑定書（有料）への導線。ラベルは共通メニュー（locales/<lang>.json の menu.* 文言）と揃える。
+// palm（カル・クンダリ）は日本語のみ販売中なので ja だけ出す。
+const PRODUCTS = [
+  { key: 'calendar', path: 'yearly' },
+  { key: 'career', path: 'career' },
+  { key: 'report', path: 'pdf-purchase' },
+  { key: 'palm', path: 'palm-chart', langs: ['ja'] }
+];
+// 記事テーマに最も近い鑑定書（先頭に「この記事に関連」付きで出す）。
+const RECOMMENDED = { career: 'career', marriage: 'calendar', dasha: 'calendar', nakshatra: 'report', horoscope: 'report', 'indian-astrology': 'report', 'free-reading': 'report' };
 const GUIDES = Object.fromEntries(LANGS.map((lang) => [lang, JSON.parse(readFileSync(join(GUIDE_DIR, `${lang}.json`), 'utf8'))]));
 
 function esc(text) {
@@ -147,6 +157,23 @@ ${extra}`;
 </aside>`;
   }
 
+  function products(slug) {
+    const list = PRODUCTS.filter((p) => !p.langs || p.langs.includes(LANG));
+    const rec = slug ? RECOMMENDED[slug] : null;
+    list.sort((a, b) => (a.key === rec ? -1 : 0) - (b.key === rec ? -1 : 0));
+    const items = list.map((p) => {
+      const tag = p.key === rec ? ` <span class="guide-products-tag">${esc(ui.productsRecommended)}</span>` : '';
+      return `<li><a href="/${LANG}/${p.path}">${esc(locale.strings[`menu.${p.key}`])}</a>${tag}</li>`;
+    }).join('\n');
+    return `<aside class="guide-products">
+<p class="guide-cta-title">${esc(ui.productsTitle)}</p>
+<p>${esc(ui.productsBody)}</p>
+<ul>
+${items}
+</ul>
+</aside>`;
+  }
+
   function relatedList(current) {
     const others = data.articles.filter((a) => a.slug !== current.slug);
     const items = others.map((a) => `<li><a href="/${LANG}/${SECTION}/${a.slug}">${esc(a.h1)}</a></li>`).join('\n');
@@ -193,6 +220,7 @@ ${article.sections.map(sectionHtml).join('\n')}
 <p class="note">${esc(ui.disclaimer)}</p>
 </article>
 ${cta()}
+${products(article.slug)}
 ${relatedList(article)}
 </main>
 ${footer()}
@@ -237,6 +265,7 @@ ${items}
 </ul>
 </article>
 ${cta()}
+${products(null)}
 </main>
 ${footer()}
 </body>
