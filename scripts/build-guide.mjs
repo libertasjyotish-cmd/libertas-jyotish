@@ -27,10 +27,11 @@ const LANGS = readdirSync(GUIDE_DIR).filter((n) => n.endsWith('.json')).map((n) 
 const PRODUCTS = [
   { key: 'calendar', path: 'yearly' },
   { key: 'career', path: 'career' },
-  { key: 'report', path: 'pdf-purchase' }
+  { key: 'report', path: 'pdf-purchase' },
+  { key: 'palm', path: 'palm-chart', langs: ['ja'] }
 ];
 // 記事テーマに最も近い鑑定書（先頭に「この記事に関連」付きで出す）。
-const RECOMMENDED = { career: 'career', marriage: 'calendar', dasha: 'calendar', nakshatra: 'report', horoscope: 'report', 'indian-astrology': 'report', 'free-reading': 'report' };
+const RECOMMENDED = { career: 'career', marriage: 'calendar', dasha: 'calendar', nakshatra: 'report', horoscope: 'report', 'indian-astrology': 'report', 'free-reading': 'report', palmistry: 'palm' };
 const GUIDES = Object.fromEntries(LANGS.map((lang) => [lang, JSON.parse(readFileSync(join(GUIDE_DIR, `${lang}.json`), 'utf8'))]));
 
 function esc(text) {
@@ -157,7 +158,7 @@ ${extra}`;
   }
 
   function products(slug) {
-    const list = [...PRODUCTS];
+    const list = PRODUCTS.filter((p) => !p.langs || p.langs.includes(LANG));
     const rec = slug ? RECOMMENDED[slug] : null;
     list.sort((a, b) => (a.key === rec ? -1 : 0) - (b.key === rec ? -1 : 0));
     const items = list.map((p) => {
