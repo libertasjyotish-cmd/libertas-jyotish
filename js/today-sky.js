@@ -1,8 +1,7 @@
 // 「今日の空」ウィジェット: /api/today の共通データから月相・ティティ・ナクシャトラと
 // 南インド式トランジット図を SVG で描く。データが取れない場合は枠ごと非表示にする。
 (function () {
-  const root = document.getElementById('today-sky');
-  if (!root) return;
+  let root = null;
   const lang = (window.LJ_I18N && window.LJ_I18N.lang) || document.documentElement.lang || 'ja';
   const ABBR = { Sun: 'Su', Moon: 'Mo', Mars: 'Ma', Mercury: 'Me', Jupiter: 'Ju', Venus: 'Ve', Saturn: 'Sa', Rahu: 'Ra', Ketu: 'Ke' };
   // 南インド式: 魚座を左上に固定し、時計回りに 12 星座を配置する
@@ -104,8 +103,14 @@ ${lit}
     root.hidden = false;
   }
 
-  fetch(`/api/today?lang=${encodeURIComponent(lang)}`)
-    .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
-    .then(render)
-    .catch(() => { root.hidden = true; });
+  function mount() {
+    root = document.getElementById('today-sky');
+    if (!root) return;
+    fetch(`/api/today?lang=${encodeURIComponent(lang)}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+      .then(render)
+      .catch(() => { root.hidden = true; });
+  }
+  window.LJTodaySky = { mount };
+  mount();
 })();

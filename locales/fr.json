@@ -481,6 +481,7 @@
     "pdf-report.writingSuffix": " chapitres restants...",
     "menu.top": "Accueil",
     "menu.free": "Lecture gratuite",
+    "menu.daily": "Lecture quotidienne (Premium)",
     "menu.about": "À propos de Libertas Jyotish",
     "menu.report": "Rapport à vie (paiement unique)",
     "menu.yearly": "Rapport de l’année",
@@ -710,6 +711,10 @@
     "pdf-report.career.message": "Message de conclusion",
     "pdf-report.career.actNow": "Actions pour le prochain trimestre",
     "pdf-report.career.itemWhy": "Fondement",
-    "pdf-report.career.itemHow": "Déploiement de votre puissance"
+    "pdf-report.career.itemHow": "Déploiement de votre puissance",
+    "result.freeLockTitle": "Continuer avec Premium",
+    "result.freeLockNote": "② Influence planétaire, ③ conseils du Mahadasha, ④ couleur et action porte-bonheur, ainsi que les jours à venir et les créneaux horaires sont affichés pour les membres Premium.",
+    "result.freeLucky": "Couleur et action porte-bonheur du jour",
+    "result.freeBlur": "Cette position porte son ombre à la fois sur les relations et les décisions professionnelles de la semaine. L'angle entre votre Lune natale et Mars indique qu'une pause donne un meilleur résultat que la précipitation."
   }
 }

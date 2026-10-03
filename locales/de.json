@@ -481,6 +481,7 @@
     "pdf-report.writingSuffix": " Kapitel...",
     "menu.top": "Startseite",
     "menu.free": "Kostenlose Analyse",
+    "menu.daily": "Tägliche Analyse (Premium)",
     "menu.about": "Über Libertas Jyotish",
     "menu.report": "Lebensbericht (einmalig)",
     "menu.yearly": "Jahresbericht",
@@ -710,6 +711,10 @@
     "pdf-report.career.message": "Schlusswort",
     "pdf-report.career.actNow": "Schritte für die nächsten drei Monate",
     "pdf-report.career.itemWhy": "Grundlage",
-    "pdf-report.career.itemHow": "Wie Sie Ihre Kraft entfalten"
+    "pdf-report.career.itemHow": "Wie Sie Ihre Kraft entfalten",
+    "result.freeLockTitle": "Weiter mit Premium",
+    "result.freeLockNote": "② Planeteneinfluss, ③ Mahadasha-Hinweise, ④ Glücksfarbe & -handlung sowie die kommenden Tage und Tageszeiten werden Premium-Mitgliedern angezeigt.",
+    "result.freeLucky": "Glücksfarbe & -handlung für heute",
+    "result.freeBlur": "Diese Stellung wirft diese Woche zugleich einen Schatten auf Beziehungen und berufliche Entscheidungen. Der Winkel zwischen Ihrem Geburtsmond und Mars sagt: Eine Pause bringt ein besseres Ergebnis als Eile."
   }
 }

@@ -121,6 +121,7 @@ window.LJ_I18N = {
   menu: {
     top: 'Beranda',
     free: 'Pembacaan gratis',
+    daily: 'Pembacaan harian (Premium)',
     about: 'Tentang Libertas Jyotish',
     report: 'Laporan Seumur Hidup (sekali beli)',
     yearly: 'Laporan Tahun Depan',
@@ -156,6 +157,8 @@ window.LJ_I18N = {
 };
 </script>
 <script defer src="/js/site-menu.js"></script>
+<link rel="stylesheet" href="/css/today-sky.css">
+<script defer src="/js/today-sky.js"></script>
 <script src="/js/checkout-links.js"></script>
 <script src="/js/play-billing.js"></script>
 <script src="/js/checkout-guard.js"></script>
@@ -385,6 +388,7 @@ readingContent = `
 <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.horoscope || '-'}</p>
 </div>
 
+${result.status === 'paid' ? `
 <div style="margin-bottom:24px;">
 <p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">② Pengaruh bintang</p>
 <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.influence || '-'}</p>
@@ -397,12 +401,13 @@ readingContent = `
 
 <div style="margin-top:25px; padding:15px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:8px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">
 ④ ${fr.lucky_element || '✨ Tema keberuntungan hari ini: keheningan dan perenungan mendalam'}
-</div>
+</div>` : buildFreeContinuation(fr)}
 `;
 }
 
 document.getElementById('content-area').innerHTML = `
 ${input ? `<div class="meta-card">✉️ Email: ${input.email || 'Tidak diisi'}<br>📅 Tanggal lahir: ${input.dob} ${input.tob || ''} | 📍 Tempat lahir: ${input.address || input.city}</div>` : ''}
+<div id="today-sky" class="today-sky" hidden></div>
 <div class="result-body">${readingContent}</div>
 ${result.geo_notice ? `<p style="margin:12px 4px 0; font-size:0.78rem; color:#6b5b4a; line-height:1.6;">${result.geo_notice}</p>` : ''}
 ${result.status === 'paid' ? '' : buildLockedPreview()}
@@ -414,6 +419,7 @@ ${result.status === 'paid' ? '' : buildLockedPreview()}
 `;
 
 window.LJCheckout.paint();
+if (window.LJTodaySky) window.LJTodaySky.mount();
 
 const upgradeBtn = document.getElementById('btn-upgrade-preview');
 if (upgradeBtn) {
@@ -425,6 +431,25 @@ window.LJCheckoutGuard.start('premium', 'id', hint);
 }
 
 // 無料鑑定との差が伝わるよう、有料会員に開放される項目をサンプル表示＋ぼかしで見せる
+function buildFreeContinuation(fr) {
+const line = '<p class="preview-text blur-content" aria-hidden="true">Posisi ini membayangi hubungan dan keputusan kerja minggu ini sekaligus. Sudut antara Bulan natal dan Mars Anda menunjukkan jeda sejenak memberi hasil lebih baik daripada terburu-buru.</p>';
+return `
+<div class="locked-wrapper free-continuation">
+<div>
+<p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">② Pengaruh bintang</p>${line}
+<p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">③ Panduan Mahadasha saat ini</p>${line}
+<p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">④ Warna & tindakan keberuntungan hari ini</p>${line}
+</div>
+<div class="lock-overlay">
+<div class="lock-icon">🔒</div>
+<div class="lock-title">Lanjutkan dengan Premium</div>
+${fr.premium_teaser ? `<p class="lock-note">${fr.premium_teaser}</p>` : `<p class="lock-note">② Pengaruh planet, ③ panduan Mahadasha, ④ warna & tindakan keberuntungan, serta hari-hari mendatang dan waktu per jam ditampilkan untuk anggota Premium.</p>`}
+<a href="#btn-upgrade-preview" onclick="document.getElementById('btn-upgrade-preview')?.scrollIntoView({behavior:'smooth',block:'center'});return false;" class="btn-primary" style="display:inline-block; width:auto; padding:10px 22px; text-decoration:none;">Berlangganan paket berbayar</a>
+</div>
+</div>
+`;
+}
+
 function buildLockedPreview() {
 return `
 <div class="locked-section">

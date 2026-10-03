@@ -323,7 +323,7 @@ module.exports = async function handler(req, res) {
       if (sameDayReading) {
         sameDayReading.profile_source = profileSource;
         sameDayReading.reading_cache = readingCache;
-        return res.status(200).json(sameDayReading);
+        return res.status(200).json(trimForFree(sameDayReading));
       }
 
       try {
@@ -514,7 +514,7 @@ module.exports = async function handler(req, res) {
           else console.warn('Sheets save not awaited: running out of time budget.');
         }
 
-        return res.status(200).json(cleanJsonResult);
+        return res.status(200).json(trimForFree(cleanJsonResult));
 
       } catch (innerError) {
         console.error("Critical inner loop error:", innerError);
@@ -801,6 +801,24 @@ const READING_STYLE = `
   - 断定は「傾向」の範囲で行うが、遠回しになりすぎず、読者に語りかける率直な文体で書く。
 `;
 
+// 無料会員への応答は「今日の空（別API）＋本日の運勢の冒頭2文」まで。②星の影響・③周期・④ラッキー要素は有料側だけに残す。
+// 生成・保存は全文のまま行い、応答時に削るので有料化後の再生成や台帳の互換性には影響しない。
+function firstSentences(text, n) {
+  const parts = String(text || '').match(/[^。．.!?！？؟]+[。．.!?！？؟]*\s*/g);
+  if (!parts) return String(text || '').trim();
+  return parts.slice(0, n).join('').trim();
+}
+function trimForFree(result) {
+  if (!result || result.status === 'paid' || !result.free_reading) return result;
+  const fr = result.free_reading;
+  result.free_reading = {
+    horoscope: firstSentences(fr.horoscope, 2),
+    premium_teaser: fr.premium_teaser || ''
+  };
+  result.free_trimmed = true;
+  return result;
+}
+
 // section: 'all'（既定）/ 'base'（プレミアム詳細以外）/ 'premium'（プレミアム詳細のみ）
 function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section = 'all', previous = null, today = null) {
   const planetList = extractPlanets(prokeralaData);
@@ -890,7 +908,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
       "sunSign": "${sunSign}",
       "nakshatra": "${nakshatra}",
       "free_reading": {
-        "horoscope": "本日の運勢（150〜180文字）。①今週の悩みテーマを状況として言い当て ②今日の心の状態 ③今日ひとつだけの具体行動、の順。",
+        "horoscope": "本日の運勢（150〜180文字）。①今週の悩みテーマを状況として言い当て ②今日の心の状態 ③今日ひとつだけの具体行動、の順。無料表示は冒頭2文だけなので、最初の2文で①の言い当てを完結させる。",
         "influence": "本日受ける星の影響（150〜180文字）。①で言い当てた状況が『なぜ今起きているか』を、トランジット天体と出生図の関係で説明し、読者の最近の判断を1文で肯定または意味づけし、最後にこの配置が抜けた後（天体の移動時期を根拠に）どう好転しやすいかを1文で添える。",
         "dasha_summary": "支配星周期の過ごし方（150文字前後）。現在の大周期がこの人の人生のどの領域を動かしているかを、生活の具体場面で書く。",
         "lucky_element": "✨ 本日のラッキーカラー: XXX | 開運アクション: XXX などの一言（1行）",

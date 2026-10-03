@@ -481,6 +481,7 @@
     "pdf-report.writingSuffix": " bab yang tersisa...",
     "menu.top": "Beranda",
     "menu.free": "Pembacaan gratis",
+    "menu.daily": "Pembacaan harian (Premium)",
     "menu.about": "Tentang Libertas Jyotish",
     "menu.report": "Laporan Seumur Hidup (sekali beli)",
     "menu.yearly": "Laporan Tahun Depan",
@@ -710,6 +711,10 @@
     "pdf-report.career.message": "Pesan Penutup",
     "pdf-report.career.actNow": "Langkah Tiga Bulan ke Depan",
     "pdf-report.career.itemWhy": "Landasan",
-    "pdf-report.career.itemHow": "Cara Mengoptimalkan Potensi"
+    "pdf-report.career.itemHow": "Cara Mengoptimalkan Potensi",
+    "result.freeLockTitle": "Lanjutkan dengan Premium",
+    "result.freeLockNote": "② Pengaruh planet, ③ panduan Mahadasha, ④ warna & tindakan keberuntungan, serta hari-hari mendatang dan waktu per jam ditampilkan untuk anggota Premium.",
+    "result.freeLucky": "Warna & tindakan keberuntungan hari ini",
+    "result.freeBlur": "Posisi ini membayangi hubungan dan keputusan kerja minggu ini sekaligus. Sudut antara Bulan natal dan Mars Anda menunjukkan jeda sejenak memberi hasil lebih baik daripada terburu-buru."
   }
 }

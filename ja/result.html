@@ -121,6 +121,7 @@ window.LJ_I18N = {
   menu: {
     top: 'トップ',
     free: '無料診断',
+    daily: '毎日の鑑定（プレミアム会員）',
     about: 'Libertas Jyotishとは',
     report: '生涯完全鑑定書（買い切り）',
     yearly: '年間運勢 鑑定書',
@@ -156,6 +157,8 @@ window.LJ_I18N = {
 };
 </script>
 <script defer src="/js/site-menu.js"></script>
+<link rel="stylesheet" href="/css/today-sky.css">
+<script defer src="/js/today-sky.js"></script>
 <script src="/js/checkout-links.js"></script>
 <script src="/js/play-billing.js"></script>
 <script src="/js/checkout-guard.js"></script>
@@ -385,6 +388,7 @@ readingContent = `
 <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.horoscope || '-'}</p>
 </div>
 
+${result.status === 'paid' ? `
 <div style="margin-bottom:24px;">
 <p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:6px;">② 本日受ける星の影響 (Astro Influence)</p>
 <p style="color:#4a3e36; line-height:1.7; text-align:justify; margin-left:8px;">${fr.influence || '-'}</p>
@@ -397,12 +401,13 @@ readingContent = `
 
 <div style="margin-top:25px; padding:15px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:8px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">
 ④ ${fr.lucky_element || '✨ 本日のラッキーテーマ: 沈黙と深い内省'}
-</div>
+</div>` : buildFreeContinuation(fr)}
 `;
 }
 
 document.getElementById('content-area').innerHTML = `
 ${input ? `<div class="meta-card">✉️ メール: ${input.email || '未設定'}<br>📅 生年月日: ${input.dob} ${input.tob || ''} | 📍 出生地: ${input.address || input.city}</div>` : ''}
+<div id="today-sky" class="today-sky" hidden></div>
 <div class="result-body">${readingContent}</div>
 ${result.geo_notice ? `<p style="margin:12px 4px 0; font-size:0.78rem; color:#6b5b4a; line-height:1.6;">${result.geo_notice}</p>` : ''}
 ${result.status === 'paid' ? '' : buildLockedPreview()}
@@ -414,6 +419,7 @@ ${result.status === 'paid' ? '' : buildLockedPreview()}
 `;
 
 window.LJCheckout.paint();
+if (window.LJTodaySky) window.LJTodaySky.mount();
 
 const upgradeBtn = document.getElementById('btn-upgrade-preview');
 if (upgradeBtn) {
@@ -425,6 +431,25 @@ window.LJCheckoutGuard.start('premium', 'ja', hint);
 }
 
 // 無料鑑定との差が伝わるよう、有料会員に開放される項目をサンプル表示＋ぼかしで見せる
+function buildFreeContinuation(fr) {
+const line = '<p class="preview-text blur-content" aria-hidden="true">この配置は今週の人間関係と仕事の判断に同時に影を落としています。出生図の月と火星の角度が示すのは、焦って動くより一拍置いたほうが結果が良いということ。</p>';
+return `
+<div class="locked-wrapper free-continuation">
+<div>
+<p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">② 本日受ける星の影響 (Astro Influence)</p>${line}
+<p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">③ 支配星周期の過ごし方 (Current Mahadasha Guidance)</p>${line}
+<p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">④ 本日のラッキーカラー／アクション</p>${line}
+</div>
+<div class="lock-overlay">
+<div class="lock-icon">🔒</div>
+<div class="lock-title">続きはプレミアム会員で</div>
+${fr.premium_teaser ? `<p class="lock-note">${fr.premium_teaser}</p>` : `<p class="lock-note">②星の影響・③支配星周期の過ごし方・④ラッキーカラー／アクション、翌日以降と時間帯の吉凶はプレミアム会員に表示されます。</p>`}
+<a href="#btn-upgrade-preview" onclick="document.getElementById('btn-upgrade-preview')?.scrollIntoView({behavior:'smooth',block:'center'});return false;" class="btn-primary" style="display:inline-block; width:auto; padding:10px 22px; text-decoration:none;">有料プランに登録する</a>
+</div>
+</div>
+`;
+}
+
 function buildLockedPreview() {
 return `
 <div class="locked-section">
