@@ -481,6 +481,7 @@
     "pdf-report.writingSuffix": "章を執筆中です...",
     "menu.top": "トップ",
     "menu.free": "無料診断",
+    "menu.daily": "毎日の鑑定（プレミアム会員）",
     "menu.about": "Libertas Jyotishとは",
     "menu.report": "生涯完全鑑定書（買い切り）",
     "menu.yearly": "年間運勢 鑑定書",
@@ -710,6 +711,10 @@
     "pdf-report.career.message": "結びの言葉",
     "pdf-report.career.actNow": "今から3か月でできること",
     "pdf-report.career.itemWhy": "根拠",
-    "pdf-report.career.itemHow": "力の出し方"
+    "pdf-report.career.itemHow": "力の出し方",
+    "result.freeLockTitle": "続きはプレミアム会員で",
+    "result.freeLockNote": "②星の影響・③支配星周期の過ごし方・④ラッキーカラー／アクション、翌日以降と時間帯の吉凶はプレミアム会員に表示されます。",
+    "result.freeLucky": "本日のラッキーカラー／アクション",
+    "result.freeBlur": "この配置は今週の人間関係と仕事の判断に同時に影を落としています。出生図の月と火星の角度が示すのは、焦って動くより一拍置いたほうが結果が良いということ。"
   }
 }

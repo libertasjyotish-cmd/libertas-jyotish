@@ -481,6 +481,7 @@
     "pdf-report.writingSuffix": " capítulos restantes...",
     "menu.top": "Início",
     "menu.free": "Leitura gratuita",
+    "menu.daily": "Leitura diária (Premium)",
     "menu.about": "Sobre a Libertas Jyotish",
     "menu.report": "Relatório Vitalício (avulso)",
     "menu.yearly": "Relatório do ano",
@@ -710,6 +711,10 @@
     "pdf-report.career.message": "Mensagem de encerramento",
     "pdf-report.career.actNow": "Ações para os próximos três meses",
     "pdf-report.career.itemWhy": "Fundamento",
-    "pdf-report.career.itemHow": "Como manifestar seu potencial"
+    "pdf-report.career.itemHow": "Como manifestar seu potencial",
+    "result.freeLockTitle": "Continue com o Premium",
+    "result.freeLockNote": "② Influência planetária, ③ orientação do Mahadasha, ④ cor e ação da sorte, além dos próximos dias e das faixas horárias, são exibidos para membros Premium.",
+    "result.freeLucky": "Cor e ação da sorte de hoje",
+    "result.freeBlur": "Esta posição lança sombra sobre os relacionamentos e as decisões de trabalho desta semana. O ângulo entre sua Lua natal e Marte indica que uma pausa traz melhor resultado do que a pressa."
   }
 }

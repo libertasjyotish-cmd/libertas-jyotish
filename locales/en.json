@@ -481,6 +481,7 @@
     "pdf-report.writingSuffix": " chapters...",
     "menu.top": "Home",
     "menu.free": "Free reading",
+    "menu.daily": "Daily reading (Premium)",
     "menu.about": "About Libertas Jyotish",
     "menu.report": "Lifetime Report (one-off)",
     "menu.yearly": "Year Ahead Report",
@@ -710,6 +711,10 @@
     "pdf-report.career.message": "Closing words",
     "pdf-report.career.actNow": "What you can do in the next three months",
     "pdf-report.career.itemWhy": "Basis",
-    "pdf-report.career.itemHow": "How to bring out your power"
+    "pdf-report.career.itemHow": "How to bring out your power",
+    "result.freeLockTitle": "Continue with Premium",
+    "result.freeLockNote": "② Planetary influence, ③ Mahadasha guidance, ④ lucky color & action, plus the days ahead and hour-by-hour timing are shown to Premium members.",
+    "result.freeLucky": "Today's lucky color & action",
+    "result.freeBlur": "This placement casts a shadow over both relationships and work decisions this week. The angle between your natal Moon and Mars says a pause brings a better outcome than a rush."
   }
 }

@@ -284,6 +284,7 @@ window.LJ_I18N = {
   menu: {
     top: 'Startseite',
     free: 'Kostenlose Analyse',
+    daily: 'Tägliche Analyse (Premium)',
     about: 'Über Libertas Jyotish',
     report: 'Lebensbericht (einmalig)',
     yearly: 'Jahresbericht',
@@ -440,7 +441,7 @@ Lade die heutigen Horoskopdaten...
 </div>
 
 <!-- プレミアム鑑定カルテ -->
-<h2 style="font-size:1.15rem; color:var(--color-gold-dark); text-align:left; margin-bottom:12px;">📜 Premium-Horoskopdeutung</h2>
+<h2 id="premium" style="font-size:1.15rem; color:var(--color-gold-dark); text-align:left; margin-bottom:12px;">📜 Premium-Horoskopdeutung</h2>
 <p id="premium-sample-lead" style="display:none; font-size:0.82rem; color:#5A4E48; text-align:left; margin-bottom:12px;">Unten sehen Sie ein Beispiel, wie es aussieht. Sobald Sie beitreten, wechselt es zu den echten Inhalten basierend auf Ihrem eigenen Geburtshoroskop.</p>
 
 <div id="premium-gatekeeper" class="locked-wrapper">
@@ -1359,9 +1360,14 @@ if (data.free_reading) {
 const fr = data.free_reading;
 let html = '';
 if (fr.horoscope) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>① Heutiges Horoskop:</strong><br>${fr.horoscope}</div>`;
+if (data.status === 'paid') {
 if (fr.influence) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>② Astrologischer Einfluss:</strong><br>${fr.influence}</div>`;
 if (fr.dasha_summary) html += `<div style="margin-bottom:12px; line-height:1.7;"><strong>③ Aktueller Mahadasha-Wegweiser:</strong><br>${fr.dasha_summary}</div>`;
 if (fr.lucky_element) html += `<div style="margin-top:15px; padding:10px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:6px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">④ ${fr.lucky_element}</div>`;
+} else {
+const blur = '<div class="blur-content" aria-hidden="true" style="line-height:1.7; margin-bottom:10px;">Diese Stellung wirft diese Woche zugleich einen Schatten auf Beziehungen und berufliche Entscheidungen. Der Winkel zwischen Ihrem Geburtsmond und Mars sagt: Eine Pause bringt ein besseres Ergebnis als Eile.</div>';
+html += `<div style="margin-top:14px;"><strong>② Astrologischer Einfluss:</strong>${blur}<strong>③ Aktueller Mahadasha-Wegweiser:</strong>${blur}<strong>④ Glücksfarbe & -handlung für heute</strong>${blur}</div>`;
+}
 if (data.status !== 'paid' && fr.premium_teaser) html += `<div style="margin-top:14px; padding:12px 14px; background:rgba(58,46,43,0.06); border-left:3px solid var(--color-gold-main); border-radius:6px; font-size:0.86rem; line-height:1.7; color:#4a3e36;"><div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:4px;">🔒 Fortsetzung im detaillierten Bericht</div>${fr.premium_teaser}<div style="margin-top:8px;"><a href="#btn-upgrade-premium" onclick="document.getElementById('btn-upgrade-premium')?.scrollIntoView({behavior:'smooth',block:'center'});return false;" style="font-weight:600; color:var(--color-gold-dark); text-decoration:underline;">Sehen Sie die wichtigen Tage dieser Woche, Tage mit Rückenwind und 3 konkrete Schritte →</a></div></div>`;
 if (data.geo_notice) html += `<p style="margin-top:12px; font-size:0.78rem; color:#6b5b4a; line-height:1.6;">${data.geo_notice}</p>`;
 document.getElementById('today-transit-text').innerHTML = html;

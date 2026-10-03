@@ -17,7 +17,7 @@
   const FALLBACK = {
     lang: 'ja',
     menu: {
-      top: 'トップ', free: '無料診断', about: 'Libertas Jyotishとは',
+      top: 'トップ', free: '無料診断', daily: '毎日の鑑定（プレミアム会員）', about: 'Libertas Jyotishとは',
       report: '生涯完全鑑定書（買い切り）',
       yearly: '年間運勢 鑑定書', compat: '相性 鑑定書', career: '仕事運・金運・天職 鑑定書', palm: 'カル・クンダリ（手相×出生図）',
       karma: 'Karma & Dharma ― 今世の天命',
@@ -36,6 +36,7 @@
   const LINKS = [
     { href: home, label: t.top },
     { href: home + '#form-area', label: t.free },
+    { href: home + '/mypage#premium', label: t.daily },
     { href: home + '/pdf-purchase', label: t.report }
   ];
   // 個別鑑定書で販売中なのは年間運勢・仕事運・金運・天職・カル・クンダリ（全言語）。
@@ -55,7 +56,7 @@
       { href: guide.hub, label: guide.hubLabel }
     );
   } else {
-    LINKS.splice(2, 0, { href: home + '#about', label: t.about });
+    LINKS.splice(3, 0, { href: home + '#about', label: t.about });
   }
   LINKS.push(
     { divider: true },
