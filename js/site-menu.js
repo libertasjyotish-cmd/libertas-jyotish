@@ -38,16 +38,18 @@
     { href: home + '#form-area', label: t.free },
     { href: home + '/pdf-purchase', label: t.report }
   ];
-  // 個別鑑定書で販売中なのは年間運勢と仕事運・金運・天職（全言語、/<lang>/yearly・/<lang>/career）。
+  // 個別鑑定書で販売中なのは年間運勢と仕事運・金運・天職（全言語）とカル・クンダリ（ja のみ）。
   // 他商品は「準備中」見出しの下にリンク無しで並べる。
+  // カル・クンダリは日本語のみ販売中（/ja/palm-chart）。他言語は準備中。
+  const palmOpen = lang === 'ja';
   LINKS.push(
     { href: home + '/yearly', label: t.calendar },
-    { href: home + '/career', label: t.career },
-    { divider: true, label: t.calendarNote },
-    { label: t.compat, soon: true },
-    { label: t.palm, soon: true },
-    { label: t.karma, soon: true }
+    { href: home + '/career', label: t.career }
   );
+  if (palmOpen) LINKS.push({ href: home + '/palm-chart', label: t.palm });
+  LINKS.push({ divider: true, label: t.calendarNote }, { label: t.compat, soon: true });
+  if (!palmOpen) LINKS.push({ label: t.palm, soon: true });
+  LINKS.push({ label: t.karma, soon: true });
   if (guide) {
     LINKS.push(
       { divider: true, label: guide.groupLabel },
