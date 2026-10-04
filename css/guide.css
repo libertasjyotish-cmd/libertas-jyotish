@@ -204,3 +204,16 @@ body {
 .guide .guide-index a { display: block; padding: 14px 0; text-decoration: none; color: inherit; }
 .guide .guide-index-title { display: block; font-weight: 600; color: #6b4f10; margin-bottom: 4px; }
 .guide .guide-index-desc { display: block; font-size: 0.88rem; color: #5a4c3e; }
+
+.guide .guide-collection { margin-top: 24px; }
+.guide .guide-collection h2 { color: #6b4f10; font-size: 1.05rem; margin: 0 0 8px; }
+.guide .guide-collection-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 4px 16px;
+  margin-top: 12px;
+}
+.guide .guide-collection-list li { border-bottom: 1px solid rgba(139, 107, 27, 0.25); }
+.guide .guide-collection-list a { display: block; padding: 8px 0; font-size: 0.95rem; color: var(--guide-text); text-decoration: none; }
+.guide .guide-collection-list a:hover { text-decoration: underline; }

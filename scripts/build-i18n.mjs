@@ -43,6 +43,8 @@ function buildRobotsSaleJa(lang) {
 //   published: true … 上記に加えて sitemap.xml に載せる（検索エンジンに出す）
 const GUIDE_DIR = join(ROOT, 'data/guide');
 const GUIDE_SECTION = 'guide';
+// 連作ページ（data/guide/<name>/<lang>.json）。build-guide.mjs の COLLECTION_DIRS と揃える。
+const COLLECTION_DIRS = ['nakshatra'];
 
 const PARTIAL_DIR = join(TEMPLATE_DIR, 'partials');
 const PARTIAL = /\{\{>\s*([a-zA-Z0-9_-]+)\s*\}\}/g;
@@ -117,6 +119,14 @@ function buildGuideSitemapUrls() {
     urls.push(`  <url>\n    <loc>${base}</loc>\n  </url>`);
     for (const article of guide.articles) {
       urls.push(`  <url>\n    <loc>${base}/${article.slug}</loc>\n  </url>`);
+    }
+    for (const name of COLLECTION_DIRS) {
+      const path = join(GUIDE_DIR, name, `${entry.lang}.json`);
+      if (!existsSync(path)) continue;
+      const col = readJson(path);
+      for (const item of col.items) {
+        urls.push(`  <url>\n    <loc>${base}/${col.slugPrefix}-${item.slug}</loc>\n  </url>`);
+      }
     }
   }
   return urls;

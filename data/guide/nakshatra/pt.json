@@ -1,0 +1,875 @@
+{
+  "parent": "nakshatra",
+  "slugPrefix": "nakshatra",
+  "ui": {
+    "listHeading": "Os 27 nakshatras, um a um",
+    "factsHeading": "Características principais",
+    "listLead": "Escolha o nakshatra da sua Lua na lista abaixo para saber mais."
+  },
+  "items": [
+    {
+      "slug": "ashwini",
+      "latin": "Ashwini",
+      "lord": "Ketu",
+      "name": "Ashwini",
+      "title": "Ashwini Nakshatra: Significado e Características",
+      "description": "Conheça Ashwini, o primeiro nakshatra da astrologia védica. Descubra seus símbolos, regência de Ketu e tendências psicológicas da Lua natal.",
+      "h1": "Ashwini Nakshatra na Astrologia Védica",
+      "lead": "Ashwini é a primeira morada lunar do zodíaco na tradição da astrologia védica, associada ao pulsar inicial da vida. Na perspectiva indiana, os nakshatras são analisados a partir da posição da Lua no nascimento, e não pelo signo solar da astrologia ocidental, revelando padrões profundos da percepção interior.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo Tradicional",
+          "body": "Localizado no zodíaco sideral entre 0°00 e 13°20 do signo de Áries, Ashwini é governado pelo planeta Ketu e tem como divindade tutelar os Ashwini Kumaras. Seu símbolo tradicional é a cabeça de cavalo, expressando agilidade e prontidão instintiva para o movimento. Na tradição védica, suas palavras-chave clássicas são inícios e recuperação rápida, indicando uma força natural de renovação."
+        },
+        {
+          "heading": "Tendências Psicológicas da Lua em Ashwini",
+          "body": "Quando a Lua natal se situa em Ashwini, a mente tende a operar com grande velocidade e um anseio espontâneo por novidade. Há frequentemente uma necessidade intrínseca de dar o primeiro passo diante de qualquer situação, aliada a um entusiasmo vibrante por novos projetos. Por outro lado, essa busca constante por estímulos pode gerar momentos de impaciência ou dificuldade em sustentar rotinas prolongadas. A postura interna é habitualmente otimista, sendo comum uma notável capacidade de restaurar o ânimo após fases de cansaço. Essa configuração é tradicionalmente lida como uma mente orientada para a ação direta e para a independência."
+        },
+        {
+          "heading": "Dinâmica nas Relações Interpessoais",
+          "body": "Nas interações cotidianas, a pessoa com a Lua em Ashwini tende a ser direta, espontânea e prestativa quando percebe alguém em apuros imediatos. Seu ritmo de comunicação costuma ser acelerado, o que pode fazer com que prefira companhias ativas e desprovidas de hesitação excessiva. Essa franqueza rápida pode ocasionalmente soar abrupta para temperamentos mais cautelosos, embora raramente carregue ressentimento duradouro. O convívio tende a se fortalecer através de trocas transparentes e do apoio prático em momentos decisivos."
+        },
+        {
+          "heading": "Expressão no Trabalho e Ritmo de Ação",
+          "body": "No trabalho, o padrão de Ashwini costuma se harmonizar com ocupações que valorizam respostas rápidas, iniciativa pioneira ou processos de reparo e recuperação. O ritmo profissional mais confortável é aquele que oferece autonomia para iniciar projetos sem depender de longos trâmites burocráticos. Ambientes excessivamente estáticos ou repetitivos tendem a gerar frustração, incentivando a busca por atividades que exijam reflexos ágeis. Funções ligadas à superação de crises pontuais ou à liderança inicial de ideias costumam atrair esse posicionamento."
+        },
+        {
+          "heading": "Tendências no Período de Ketu Dasha",
+          "body": "Durante o período planetário de Ketu, a pessoa com a Lua em Ashwini tende a vivenciar fases de introspecção e revisão de suas motivações mais profundas. Esse ciclo é tradicionalmente compreendido como um momento propício para cultivar o desapego de resultados materiais imediatos e reavaliar a direção dos próprios impulsos. Trata-se de uma fase frequentemente associada a compreensões interiores sutis e a uma reorientação mais essencial dos projetos de vida."
+        }
+      ]
+    },
+    {
+      "slug": "bharani",
+      "latin": "Bharani",
+      "lord": "Venus",
+      "name": "Bharani",
+      "title": "Bharani: O Nakshatra da Resistência na Astrologia",
+      "description": "Entenda o nakshatra Bharani na astrologia védica, sua ligação com a Lua de nascimento e seus temas tradicionais de resistência e sustentação interior.",
+      "h1": "Bharani e Seus Significados na Astrologia Védica",
+      "lead": "Na astrologia indiana, Bharani destaca-se por sua intensidade associada aos processos de maturação e renovação. Ao contrário da astrologia ocidental, que costuma focar no signo solar, a tradição védica analisa primordialmente a posição da Lua natal para identificar essas moradas celestes.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbologia Tradicional",
+          "body": "Bharani ocupa a faixa sideral de 13°20 a 26°40 do signo de Áries e tem Vênus como seu planeta regente. Essa morada lunar tem como divindade associada Yama e é simbolizada pela yoni, ou ventre. Seus temas e palavras-chave tradicionais incluem a resistência e a capacidade de suportar peso, indicando a sustentação de encargos e processos intensos."
+        },
+        {
+          "heading": "Tendências Internas da Lua em Bharani",
+          "body": "Quando a Lua está posicionada em Bharani no mapa de nascimento, a pessoa tende a apresentar uma notável firmeza emocional diante de momentos desafiadores. Há com frequência uma predisposição interior para acolher responsabilidades densas sem recuar com facilidade. Essa configuração costuma inclinar a mente a aceitar o tempo necessário para o desenvolvimento lento de cada fase da vida. Ao mesmo tempo, pode existir uma forte seriedade íntima em relação aos próprios deveres, exigindo momentos de silêncio para a restauração das energias. Essa postura psicológica tende a se manifestar como uma força silenciosa que suporta tensões prolongadas."
+        },
+        {
+          "heading": "Dinâmica nas Relações Interpessoais",
+          "body": "No convívio com os outros, quem tem a Lua nessa morada tende a ser visto como uma base estável e protetora durante períodos de instabilidade alheia. Há uma propensão a oferecer amparo consistente, sustentando conversas difíceis e situações delicadas com sobriedade. Por outro lado, essa postura pode por vezes ser lida como reservada ou rigorosa, já que há um apreço natural pela seriedade nos compromissos assumidos. O afeto costuma ser demonstrado de forma leal e prática, priorizando a estabilidade mútua."
+        },
+        {
+          "heading": "Abordagem no Trabalho e Ação Cotidiana",
+          "body": "Na esfera do trabalho, o estilo de atuação ligado a esse nakshatra tende a se alinhar com atividades que demandam paciência, perseverança e tolerância a esforços contínuos. O ritmo costuma ser firme e focado em concluir projetos exigentes que outras pessoas poderiam considerar exaustivos. Existe uma inclinação para gerenciar tarefas que requerem cuidado meticuloso ao lidar com etapas de transição. Desse modo, o avanço constante e fundamentado costuma ser mais confortável do que ações precipitadas."
+        },
+        {
+          "heading": "O Período de Dasha de Vênus",
+          "body": "Durante o período de dasha regido por Vênus para quem nasce com a Lua em Bharani, questões relativas a valores pessoais, harmonia e estabilidade material tendem a ganhar destaque. Essa fase é tradicionalmente compreendida como um momento em que a necessidade de equilibrar as cargas assumidas com o bem-estar torna-se mais evidente. O ciclo costuma favorecer a consolidação dos resultados obtidos por meio da dedicação anterior, permitindo uma convivência mais serena com os próprios compromissos."
+        }
+      ]
+    },
+    {
+      "slug": "krittika",
+      "latin": "Krittika",
+      "lord": "Sun",
+      "name": "Krittika",
+      "title": "Nakshatra Krittika na Astrologia Védica",
+      "description": "Conheça o nakshatra Krittika na astrologia védica, seus símbolos de chama e navalha, sua regência solar e traços da Lua nesta morada lunar.",
+      "h1": "Krittika: O Fogo e o Discernimento na Astrologia Védica",
+      "lead": "Na astrologia védica, Krittika é reconhecido como um nakshatra de grande força transformadora e foco refinado. Diferente da astrologia ocidental tradicional, que prioriza o signo solar, o sistema védico analisa a posição da Lua no momento do nascimento para compreender a estrutura profunda da mente e das tendências pessoais.",
+      "sections": [
+        {
+          "heading": "Fundamentos e símbolos tradicionais",
+          "body": "Krittika posiciona-se no zodíaco sideral entre 26°40 de Áries e 10°00 de Touro, sendo governado pelo Sol. Sua divindade associada é Agni, o princípio sagrado do fogo, e seus símbolos são a lâmina e a chama. A tradição atribui a este nakshatra palavras-chave fundamentais como cortar através de bloqueios e a purificação contínua da matéria e das ideias."
+        },
+        {
+          "heading": "Tendências da mente sob a influência lunar",
+          "body": "Com a Lua natal posicionada em Krittika, a paisagem interior tende a ser marcada por intelecto afiado e um desejo genuíno por verdade e clareza. Essa posição sugere uma mente que raramente tolera falsidades, preferindo queimar ambiguidades para enxergar a essência de cada situação. Há com frequência um misto de ímpeto inicial com necessidade de firmeza material, criando uma determinação concentrada em seus objetivos íntimos. A autocrítica e o rigor interno costumam ser intensos, impulsionando a pessoa a um aperfeiçoamento constante de seus próprios talentos."
+        },
+        {
+          "heading": "Manifestação nos relacionamentos interpessoais",
+          "body": "Nas relações com os outros, essa energia tende a se expressar através de uma postura honesta, protetora e direta. Krittika costuma nutrir quem ama, mas não hesita em cortar ilusões com observações incisivas quando percebe que a clareza é necessária. Essa comunicação assertiva é frequentemente admirada pela autenticidade, embora possa exigir cautela para não soar excessivamente rígida aos que preferem abordagens mais suaves."
+        },
+        {
+          "heading": "Atuação no trabalho e rotina",
+          "body": "No trabalho, o fluxo de ação associado a Krittika prospera em atividades que demandam rigor analítico, precisão técnica ou liderança com autoridade natural. Existe uma capacidade de iniciar mudanças necessárias com rapidez e, simultaneamente, manter o foco na construção de algo concreto. Papéis que envolvem reforma de processos, avaliação crítica, ensino ou instrumentos de corte e transformação alinham-se favoravelmente a esse ritmo de movimento."
+        },
+        {
+          "heading": "O período de Surya dasha",
+          "body": "Durante o dasha regido pelo Sol, que rege Krittika, costumam emergir temas de autonomia, visibilidade e reavaliação de prioridades de vida. Esse ciclo tende a atuar como um intervalo de purificação, estimulando o corte de dinâmicas obsoletas para favorecer uma identidade mais segura. Tradicionalmente, é uma fase em que o senso de propósito e a capacidade de liderar o próprio caminho ganham maior evidência."
+        }
+      ]
+    },
+    {
+      "slug": "rohini",
+      "latin": "Rohini",
+      "lord": "Moon",
+      "name": "Rohini",
+      "title": "Rohini Nakshatra: Significado e Características",
+      "description": "Conheça o nakshatra Rohini na astrologia védica, sua posição sideral em Touro, regência da Lua e suas tendências de nutrição e abundância.",
+      "h1": "Rohini Nakshatra na Astrologia Védica",
+      "lead": "Diferente da astrologia ocidental baseada no signo solar, a tradição védica foca na posição ocupada pela Lua no nascimento para identificar o nakshatra de uma pessoa. Nesse contexto, Rohini é tradicionalmente associado ao cultivo da vida, à estabilidade e à valorização das expressões materiais e sensíveis da existência.",
+      "sections": [
+        {
+          "heading": "Fundamentos e simbolismo tradicional",
+          "body": "Na astronomia e astrologia sideral, Rohini situa-se entre 10°00 e 23°20 do signo de Touro e tem a Lua como seu planeta regente. Essa mansão lunar é associada à divindade Prajapati (Brahma) e representada pelo símbolo da carroça de boi. Suas palavras-chave tradicionais são nutrição e abundância, indicando capacidade de sustentação contínua e frutificação."
+        },
+        {
+          "heading": "Tendências internas sob a influência de Rohini",
+          "body": "Com a Lua posicionada neste nakshatra no momento do nascimento, o universo emocional tende a buscar estabilidade por meio do conforto sensorial e da harmonia ao redor. Há frequentemente uma apreciação espontânea pela beleza, pela arte e por ritmos de vida que permitam tranquilidade interior. A pessoa costuma processar sentimentos de forma paciente, demonstrando uma natureza fértil para gestar planos e ideias com constância. Por outro lado, pode haver uma propensão ao apego às circunstâncias conhecidas e certa relutância diante de mudanças repentinas. De maneira geral, a vida psíquica tende a se orientar pela preservação do bem-estar e pelo cultivo de ambientes acolhedores."
+        },
+        {
+          "heading": "Dinâmica nas relações interpessoais",
+          "body": "No contato com os outros, Rohini tende a manifestar um magnetismo calmo, acompanhado de uma postura calorosa e protetora. O afeto costuma ser demonstrado por meio de gestos práticos de acolhimento e do desejo sincero de oferecer suporte a quem se estima. Quando surgem inseguranças emocionais, pode transparecer certa possessividade ou receio de rompimentos. Em condições equilibradas, a convivência tende a ser caracterizada pela lealdade e pela construção de laços duradouros e confiáveis."
+        },
+        {
+          "heading": "Atuação no trabalho e ritmo de vida",
+          "body": "O modo de agir mais compatível com esse nakshatra envolve persistência, regularidade e atenção à qualidade estética ou prática das tarefas. Atividades ligadas ao cuidado, design, alimentação, cultivo da terra ou qualquer setor que demande desenvolvimento gradual costumam ressoar bem com essa energia. A preferência tende a ser por ambientes organizados e estáveis, onde não haja cobrança por acelerações desnecessárias. A produtividade costuma se intensificar quando o indivíduo sente verdadeira afinidade com o que produz e observa o crescimento tangível de seus esforços."
+        },
+        {
+          "heading": "Temas do período de dasha da Lua",
+          "body": "Durante o ciclo planetário (dasha) regido pela Lua para quem tem Rohini em evidência, questões ligadas ao lar, à família e à segurança emocional tendem a ganhar primeiro plano. Essa fase frequentemente estimula a busca por estabilidade material e pelo aprimoramento das condições de vida cotidiana. Também podem vir à tona reflexões sobre como equilibrar a necessidade de conforto com a capacidade de desapego, incentivando a maturação interna."
+        }
+      ]
+    },
+    {
+      "slug": "mrigashira",
+      "latin": "Mrigashira",
+      "lord": "Mars",
+      "name": "Mrigashira",
+      "title": "Mrigashira Nakshatra: Significado na Astrologia Védica",
+      "description": "Conheça o nakshatra Mrigashira na astrologia védica, seus fundamentos astronômicos e as tendências de sensibilidade e busca associadas à Lua natal.",
+      "h1": "Mrigashira Nakshatra: Características e Tendências",
+      "lead": "Na astrologia védica, o nakshatra Mrigashira representa a essência da curiosidade intelectual e da contínua exploração interior. Diferente da astrologia ocidental focada no signo solar, a tradição indiana analisa primordialmente o posicionamento da Lua no nascimento para delinear a mente e o temperamento.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo de Mrigashira",
+          "body": "Sideralmente situado entre Touro 23°20 e Gêmeos 6°40, Mrigashira tem Marte como planeta regente. Sua divindade associada é Soma, também chamado de Chandra, e seu símbolo característico é a cabeça de cervo. Suas palavras-chave tradicionais são busca e sensibilidade, refletindo uma natureza orientada ao rastreamento constante de verdades e experiências."
+        },
+        {
+          "heading": "Tendências Internas com a Lua neste Nakshatra",
+          "body": "Quando a Lua natal ocupa este nakshatra, a mente costuma operar com uma agilidade perceptiva incomum e um anseio sincero por descobertas. A sensibilidade inerente permite captar matizes emocionais sutis nos ambientes, o que pode gerar uma vigilância atenta semelhante à do cervo. É comum que surja uma inclinação a questionar conceitos estabelecidos e a contemplar múltiplos caminhos diante de um mesmo tema. Essa mobilidade psíquica por vezes resulta em inquietude, tornando benéfico o cultivo de hábitos regulares de foco mental. Tradicionalmente, considera-se que essa posição lunar favorece uma imaginação rica e um apreço especial pela harmonia estética."
+        },
+        {
+          "heading": "Expressão nas Relações Interpessoais",
+          "body": "No contato com os outros, pessoas com forte influência deste nakshatra costumam manifestar cordialidade e interesse genuíno nas vivências alheias. Sua sensibilidade apurada facilita trocas empáticas, ainda que possa existir certa hesitação prudente antes da entrega de total confiança. Uma vez estabelecido o conforto mútuo, a convivência tende a ser enriquecida por lealdade, conversas estimulantes e generosidade de afeto."
+        },
+        {
+          "heading": "Trabalho e Modo de Ação",
+          "body": "Na esfera profissional, há uma propensão para funções que envolvam investigação, comunicação e adaptabilidade constante. A forma de agir costuma aliar a determinação executiva marciana à agilidade mental necessária para gerenciar tarefas diversificadas. Ambientes excessivamente rígidos ou monótonos tendem a ser mais desafiadores, enquanto contextos com espaço para exploração e refinamento intelectual costumam favorecer sua dedicação."
+        },
+        {
+          "heading": "O Período Dasha de Marte",
+          "body": "Durante o período dasha regido por Marte, as inclinações de Mrigashira costumam ganhar maior dinamismo, incentivando tomadas de iniciativa e foco em projetos pessoais. A tradição védica lê essa fase como propícia para estruturar metas práticas e transformar impulsos mentais em ações construtivas. O período costuma destacar a importância de equilibrar a urgência por resultados com pausas que preservem a calma mental."
+        }
+      ]
+    },
+    {
+      "slug": "ardra",
+      "latin": "Ardra",
+      "lord": "Rahu",
+      "name": "Ardra",
+      "title": "Ardra Nakshatra: Significado na Astrologia Védica",
+      "description": "Conheça o nakshatra Ardra na astrologia védica, seus símbolos, tendências emocionais e a influência do regente Rahu sob a perspectiva lunar.",
+      "h1": "Ardra Nakshatra: Características e Simbolismo",
+      "lead": "Na astrologia védica, Ardra é uma morada lunar associada à intensidade emocional e aos processos profundos de renovação interior. Diferente da astrologia ocidental focada no signo solar, a tradição indiana observa a posição da Lua no nascimento para compreender a mente e o temperamento de alguém.",
+      "sections": [
+        {
+          "heading": "Fundamentos astronômicos e mitológicos",
+          "body": "Ardra situa-se na faixa sideral de Gêmeos entre 6°40 e 20°00, sob a regência planetária de Rahu. Sua divindade governante é Rudra, a faceta transformadora da tempestade cósmica, e seu símbolo característico é a lágrima. Seus temas tradicionais centram-se em tempestade e transformação, sugerindo processos em que momentos de purificação abrem espaço para um novo começo."
+        },
+        {
+          "heading": "Tendências da mente e do mundo interior",
+          "body": "Quem nasce com a Lua neste nakshatra tende a experimentar uma vida interior marcada por grande vivacidade intelectual e percepção aguçada do ambiente ao redor. A mente costuma transitar por fases de inquietação reflexiva que precedem momentos de clareza súbita. Há uma predisposição tradicional para questionar convenções estabelecidas e encarar verdades complexas de maneira direta. Esse fluxo psicológico muitas vezes requer períodos de solitude para assimilar emoções densas e convertê-las em sabedoria prática."
+        },
+        {
+          "heading": "Expressão nas relações cotidianas",
+          "body": "Nas relações interpessoais, essa posição lunar tende a se manifestar por meio de uma comunicação franca e desprovida de artifícios. Essa honestidade espontânea pode ocasionalmente surpreender os outros, mas também costuma cultivar conexões baseadas em integridade mútua. Em vínculos mais próximos, há uma busca recorrente por autenticidade, na qual eventuais atritos são lidos como etapas naturais para o fortalecimento da convivência."
+        },
+        {
+          "heading": "Atuação no trabalho e rotina",
+          "body": "No plano profissional, Ardra tende a se alinhar a atividades que exigem raciocínio analítico, resolução de problemas intricados ou pesquisa minuciosa. Funções ligadas à tecnologia, inovação ou reorganização de sistemas em momentos de instabilidade costumam ressoar com suas qualidades. O estilo de atuação mais confortável geralmente envolve flexibilidade mental e desafios intelectuais contínuos, evitando a monotonia."
+        },
+        {
+          "heading": "A dinâmica do período de Rahu",
+          "body": "Durante a fase de Rahu dasha, a pessoa tende a vivenciar uma aceleração nas ambições cotidianas e um convite a rever prioridades pessoais. Esse ciclo costuma suscitar o interesse por novos aprendizados e o contato com realidades diferentes do meio tradicional. Tradicionalmente, é interpretado como uma época em que velhos hábitos se desorganizam para permitir que mudanças significativas ocorram no estilo de vida."
+        }
+      ]
+    },
+    {
+      "slug": "punarvasu",
+      "latin": "Punarvasu",
+      "lord": "Jupiter",
+      "name": "Punarvasu",
+      "title": "Nakshatra Punarvasu: Significado e Características",
+      "description": "Conheça o nakshatra Punarvasu na astrologia védica, regido por Júpiter. Entenda suas tendências emocionais, simbolismo e dinamismo na leitura lunar.",
+      "h1": "O Nakshatra Punarvasu na Astrologia Védica",
+      "lead": "Na astrologia védica, os nakshatras revelam nuances da consciência a partir da posição exata da Lua no momento do nascimento, diferindo da ênfase no signo solar da tradição ocidental. Punarvasu se destaca como uma morada lunar associada aos ciclos de recomeço e à capacidade de restaurar o equilíbrio interno.",
+      "sections": [
+        {
+          "heading": "Origens e Simbolismo Tradicional",
+          "body": "Punarvasu abrange a faixa sideral de Gêmeos 20°00 a Câncer 3°20 e tem Júpiter como seu planeta regente. Essa mansão é representada pelo símbolo de uma aljava com flechas e consagrada à divindade Aditi. Em sua essência clássica, os termos tradicionais que a definem são renovação e retorno."
+        },
+        {
+          "heading": "Tendências Internas e a Lua em Punarvasu",
+          "body": "Quando a Lua se encontra em Punarvasu no mapa natal, a vida interior tende a ser marcada por um otimismo sereno e pela busca por simplicidade. Há frequentemente uma disposição natural para perdoar e superar contratempos emocionais, acolhendo a ideia de que sempre é possível recomeçar com calma. A mente costuma gravitar em torno de valores éticos e espirituais, valorizando a moderação em vez de excessos. Essa configuração também pode inclinar o indivíduo a uma profunda necessidade de segurança emocional após períodos de incerteza. Tradicionalmente, interpreta-se que essa postura promove resiliência mental e uma confiança silenciosa na regeneração da própria energia."
+        },
+        {
+          "heading": "Expressão nos Relacionamentos",
+          "body": "Nas relações interpessoais, quem tem essa posição lunar costuma manifestar uma presença acolhedora, generosa e compreensiva com as falhas alheias. É comum que surja a tendência a atuar como um porto seguro ou mediador nos momentos de atrito, priorizando a reconciliação. Embora busquem a convivência pacífica, essas pessoas tendem a preservar seu espaço pessoal para restaurar suas forças. Essa dinâmica favorece laços baseados na lealdade mútua e na hospitalidade sincera."
+        },
+        {
+          "heading": "Atuação Profissional e Dinâmica de Ação",
+          "body": "No campo da atuação e do trabalho, a energia de Punarvasu favorece processos que envolvem restauração, ensino, mediação e planejamento paciente. O ritmo de realização tende a ser mais fluido e orgânico, evitando a pressa desmedida para garantir que os projetos mantenham um fundamento ético sólido. Costuma haver facilidade em retomar empreendimentos inacabados ou reformular ideias com nova clareza. Movimentos repetitivos e conscientes no dia a dia geralmente ajudam a canalizar esse impulso de aprimoramento constante."
+        },
+        {
+          "heading": "O Período do Dasha de Júpiter",
+          "body": "Durante o período planetário conhecido como dasha de Júpiter, temas voltados à sabedoria, aprendizado e expansão da consciência tendem a emergir com maior clareza. Esse ciclo é tradicionalmente visto como uma fase propícia para aprofundar convicções pessoais, resolver pendências antigas e vivenciar recuperações graduais em diversas áreas. A experiência costuma direcionar o foco para o cultivo de horizontes mais amplos e para o reencontro com princípios que trazem estabilidade interior."
+        }
+      ]
+    },
+    {
+      "slug": "pushya",
+      "latin": "Pushya",
+      "lord": "Saturn",
+      "name": "Pushya",
+      "title": "Pushya Nakshatra na Astrologia Védica: Guia e Significado",
+      "description": "Conheça o nakshatra Pushya na astrologia védica, sua posição sideral em Câncer, simbolismos tradicionais e as tendências ligadas à Lua natal.",
+      "h1": "Pushya Nakshatra: Características e Simbolismo Védico",
+      "lead": "Pushya é uma das mansões lunares mais respeitadas na tradição da astrologia védica, associada a qualidades de sustentação e generosidade. Diferente do signo solar da astrologia ocidental, o sistema indiano baseia essa leitura na posição da Lua no momento do nascimento para indicar a natureza essencial da mente.",
+      "sections": [
+        {
+          "heading": "Fundamentos astronômicos e símbolos tradicionais",
+          "body": "Situado na faixa sideral de Câncer entre 3°20 e 16°40, o nakshatra Pushya é governado pelo planeta Saturno e tem Brihaspati como sua divindade regente. Seus símbolos clássicos são o úbere de vaca e a flor de lótus, aludindo ao florescimento e à fertilidade do espírito. Na literatura astrológica tradicional, suas palavras-chave centrais são a nutrição e a confiança."
+        },
+        {
+          "heading": "Disposição interior da Lua em Pushya",
+          "body": "Quando a Lua ocupa Pushya na carta natal, a pessoa tende a manifestar uma postura interna voltada para a estabilidade emocional e o acolhimento sincero. Essa leitura lunar destaca o universo psíquico e as motivações íntimas, diferenciando-se da ênfase que o horóscopo solar dá à personalidade exterior. Indivíduos sob essa influência costumam cultivar paciência e demonstram apreço espontâneo por princípios éticos elevados. Há também uma tendência a manter a calma diante de cenários desafiadores, buscando sempre o discernimento antes da reação. Essa configuração é tradicionalmente descrita como portadora de uma serenidade madura, na qual a autodisciplina convive em harmonia com a sensibilidade afetiva."
+        },
+        {
+          "heading": "Relações interpessoais e convivência",
+          "body": "No convívio social e familiar, quem nasce com essa influência costuma ser percebido como uma presença estável, compreensiva e disposta a orientar. Suas trocas afetivas tendem a se apoiar na lealdade constante e no cultivo de laços baseados no respeito e na segurança mútua. Em vez de conexões superficiais, há uma predileção por interações profundas que permitam oferecer amparo e encorajamento genuínos. Essa dedicação protetora pode, em certos momentos, pedir atenção para que o ato de cuidar dos outros não suplante o autocuidado."
+        },
+        {
+          "heading": "Atuação profissional e ritmo de realização",
+          "body": "No trabalho, as tendências de Pushya se alinham favoravelmente a atividades que exigem método, perseverança e capacidade de sustentar processos a longo prazo. O ritmo que melhor convém a essa energia é constante e sem pressa, valorizando a qualidade das entregas acima do imediatismo. Setores ligados ao ensino, à mentoria ou a qualquer esforço de desenvolvimento humano costumam dialogar bem com essa postura nutridora. A conduta ética e o compromisso tácito com a responsabilidade tendem a render credibilidade e estima no meio profissional."
+        },
+        {
+          "heading": "Temas frequentes no período de Saturno",
+          "body": "Durante o dasha de Saturno, regente deste nakshatra, a tônica costuma recair sobre o amadurecimento pessoal, a paciência e a consolidação de objetivos essenciais. Esse ciclo tende a incentivar a estruturação prática da rotina e a revisão lúcida de responsabilidades assumidas. A astrologia védica habitualmente compreende esse momento como um período de colheita gradual, sustentada pelo esforço continuado e pela sobriedade."
+        }
+      ]
+    },
+    {
+      "slug": "ashlesha",
+      "latin": "Ashlesha",
+      "lord": "Mercury",
+      "name": "Ashlesha",
+      "title": "Ashlesha Nakshatra: Significado e Características",
+      "description": "Conheça o nakshatra Ashlesha na astrologia védica, seus símbolos tradicionais, regência planetária e as tendências quando a Lua ocupa essa posição.",
+      "h1": "Ashlesha Nakshatra na Astrologia Védica",
+      "lead": "Ashlesha é uma das mansões lunares mais intrigantes da astrologia védica, associada a uma profunda capacidade de percepção e intensidade psicológica. Na tradição indiana, o nakshatra é identificado pela posição da Lua no momento do nascimento, diferentemente do signo solar enfatizado na astrologia ocidental.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo de Ashlesha",
+          "body": "Situado inteiramente no signo sideral de Câncer, entre 16°40 e 30°00, Ashlesha é governado pelo planeta Mercúrio e associado à divindade das Nagas. Seu símbolo tradicional é a serpente enrolada, refletindo conceitos ancestrais de enlaçamento e insight penetrante. Essa combinação cosmológica sugere uma natureza voltada à investigação profunda e à capacidade de absorver conhecimentos ocultos."
+        },
+        {
+          "heading": "Tendências Psicológicas e a Influência Lunar",
+          "body": "Quando a Lua natal se posiciona em Ashlesha, a mente costuma operar com forte agudeza analítica e uma intuição investigativa marcante. A pessoa tende a perceber camadas sutis da realidade e intenções que frequentemente passam despercebidas pela maioria ao seu redor. Pode haver uma predisposição natural para a cautela e a reserva emocional, buscando proteger sua vulnerabilidade interior. Ao mesmo tempo, nota-se uma inclinação para a introspecção e para o entendimento profundo das complexidades psicológicas humanas."
+        },
+        {
+          "heading": "Dinâmica nos Relacionamentos e Interações Sociais",
+          "body": "Nos vínculos interpessoais, quem possui essa influência lunar costuma demonstrar prudência antes de conceder total confiança a alguém. Existe uma tendência a estabelecer conexões protetoras e muito próximas, o que em certos momentos pode se manifestar como intensidade relacional. Quando estabelecem laços duradouros, essas pessoas tendem a demonstrar lealdade vigilante e uma habilidade singular para orientar os outros com percepções aguçadas."
+        },
+        {
+          "heading": "Vocação e Ritmo Profissional",
+          "body": "No ambiente de trabalho, Ashlesha tende a se destacar em atividades que exigem estratégia, observação minuciosa e leitura precisa das entrelinhas. Áreas ligadas à pesquisa detalhada, diagnósticos analíticos ou comunicação estratégica costumam dialogar bem com seus talentos naturais. A preferência costuma recair sobre atuações mais reservadas ou cargos que garantam independência para investigar e atuar com discrição."
+        },
+        {
+          "heading": "O Período de Dasha de Mercúrio",
+          "body": "Durante o período do dasha de Mercúrio, planeta regente de Ashlesha, temas ligados ao estudo, à comunicação e ao refinamento do intelecto tendem a ganhar grande evidência. É comum que surja uma inclinação para analisar círculos sociais, buscando discernir quais trocas intelectuais realmente agregam valor. Essa fase também costuma favorecer a resolução prática de pendências por meio do pensamento lógico e da observação atenta."
+        }
+      ]
+    },
+    {
+      "slug": "magha",
+      "latin": "Magha",
+      "lord": "Ketu",
+      "name": "Magha",
+      "title": "Nakshatra Magha na Astrologia Védica",
+      "description": "Descubra o nakshatra Magha na astrologia védica, seus símbolos tradicionais, regência e as tendências quando a Lua ocupa essa posição natal.",
+      "h1": "O Nakshatra Magha e Seu Significado",
+      "lead": "O nakshatra Magha é uma das mansões lunares fundamentais da astrologia védica, tradicionalmente associado ao senso de nobreza e continuidade de linhagem. Diferente da astrologia ocidental que prioriza o signo solar, na tradição indiana a análise parte da posição exata da Lua no nascimento para mapear os padrões da mente.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo de Magha",
+          "body": "Situado no zodíaco sideral entre 0°00 e 13°20 de Leão, Magha é regido pelo planeta Ketu. A divindade associada a esta mansão são os Pitris, os ancestrais, e o seu símbolo tradicional é o trono real. Entre as palavras-chave tradicionais que definem a sua essência figuram herança e autoridade."
+        },
+        {
+          "heading": "Tendências Internas da Mente Lunar",
+          "body": "Quando a Lua ocupa Magha no momento do nascimento, a pessoa costuma carregar um profundo respeito pelas raízes familiares e pelo legado recebido. Há com frequência um anseio espontâneo por reconhecimento e por ocupar um lugar de dignidade pessoal no próprio ambiente. A mente tende a funcionar com firmeza de princípios, valorizando posturas honradas e demonstrações de integridade. Esse posicionamento também pode despertar certa autocrítica caso a pessoa sinta que não está correspondendo às expectativas herdadas. Ao mesmo tempo, a sensibilidade interna muitas vezes busca alinhar a própria trajetória com um propósito que honre as gerações passadas."
+        },
+        {
+          "heading": "Relações Interpessoais e Convivência",
+          "body": "Nas interações sociais, quem possui essa configuração tende a projetar uma presença marcante e formal, transmitindo naturalmente um ar de respeito. Costuma haver lealdade aos amigos e aos grupos de convivência, embora a pessoa possa demonstrar desconforto com atitudes percebidas como desrespeitosas. As relações costumam fluir melhor quando há reconhecimento mútuo de limites e valorização das contribuições de cada um."
+        },
+        {
+          "heading": "Atuação Profissional e Postura de Vida",
+          "body": "No âmbito profissional, o perfil ligado a Magha costuma se inclinar para funções em que a liderança, a organização e o senso de dever estejam presentes. Há uma tendência a conduzir tarefas com autonomia e método, preservando padrões elevados de qualidade e responsabilidade institucional. O modo de agir mais natural costuma envolver paciência estratégica e a valorização de estruturas que já provaram seu mérito ao longo do tempo."
+        },
+        {
+          "heading": "O Período Planetário de Ketu",
+          "body": "Durante a dasha regida por Ketu, temas relacionados ao desapego material e à introspecção profunda costumam emergir com mais intensidade. É comum que surjam reflexões sobre o valor das honras mundanas em comparação com o sentido interno de pertencimento e espiritualidade. Esse período é tradicionalmente interpretado como um momento propício para reavaliar ambições e estabelecer uma conexão mais madura com a própria ancestralidade."
+        }
+      ]
+    },
+    {
+      "slug": "purva-phalguni",
+      "latin": "Purva Phalguni",
+      "lord": "Venus",
+      "name": "Purva Phalguni",
+      "title": "Purva Phalguni: O Nakshatra do Descanso e Prazer",
+      "description": "Conheça o nakshatra Purva Phalguni na astrologia védica, suas características ligadas a Vênus, a Lua natal e os temas de desfrute e descanso.",
+      "h1": "Purva Phalguni na Astrologia Védica",
+      "lead": "Na astrologia védica, Purva Phalguni é a mansão lunar associada à celebração da vida, ao relaxamento e à apreciação estética. Ao contrário da astrologia ocidental focada no signo solar, o nakshatra é identificado pela posição da Lua no momento do nascimento, revelando a base emocional e psíquica da pessoa.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo Tradicional",
+          "body": "Purva Phalguni está situado na faixa sideral de 13°20 a 26°40 de Leão e tem Vênus como seu planeta regente. Sua divindade associada é Bhaga, o dispensador da fortuna e da harmonia, tendo como símbolo tradicional as pernas dianteiras de uma cama. Suas palavras-chave clássicas são descanso e desfrute, marcando um espaço cósmico voltado à pausa regeneradora e ao apreço pelos prazeres da existência."
+        },
+        {
+          "heading": "Tendências Internas sob a Lua em Purva Phalguni",
+          "body": "Quem nasce com a Lua neste nakshatra tende a manifestar uma natureza calorosa, afetuosa e naturalmente voltada ao conforto pessoal. Existe uma inclinação para buscar momentos de serenidade e prazer genuíno, evitando tensões desnecessárias no cotidiano. Tradicionalmente, essas pessoas demonstram sensibilidade para as artes, beleza visual e experiências sensoriais refinadas. Em contrapartida, pode surgir uma disposição à complacência quando confrontadas com exigências excessivamente rigorosas. O equilíbrio interno costuma depender da capacidade de harmonizar os períodos de descanso legítimo com as responsabilidades práticas da vida."
+        },
+        {
+          "heading": "Dinâmica nas Relações Interpessoais",
+          "body": "Nas interações sociais e afetivas, Purva Phalguni costuma conferir um magnetismo acolhedor, generoso e sociável. Essas pessoas geralmente buscam parcerias baseadas no companheirismo descontraído, no afeto mútuo e na celebração conjunta dos momentos agradáveis. Há uma tendência natural a evitar confrontos agressivos, preferindo resolver divergências por meio de gestos cordiais e conciliação pacífica."
+        },
+        {
+          "heading": "Expressão Profissional e Ritmo de Atuação",
+          "body": "No ambiente de trabalho, o ritmo característico deste nakshatra floresce melhor em atividades que envolvam criatividade, estética, hospitalidade ou mediação interpessoal. A pessoa tende a atuar com mais eficácia quando dispõe de autonomia e de um ambiente acolhedor, longe de pressões desmedidas. A produtividade costuma ser potencializada pela alternância consciente entre esforços focados e intervalos de descanso reparador."
+        },
+        {
+          "heading": "O Período Planetário de Vênus",
+          "body": "Durante o dasha de Vênus, regente deste nakshatra, temas ligados a relacionamentos, conforto material e expressão criativa costumam vir para o primeiro plano. Esse período é tradicionalmente interpretado como uma fase propícia para reavaliar prioridades estéticas, aprofundar laços de afeto e buscar uma rotina com mais qualidade de vida. Também pode se manifestar a necessidade de cultivar a moderação, prevenindo o apego excessivo a comodidades imediatas."
+        }
+      ]
+    },
+    {
+      "slug": "uttara-phalguni",
+      "latin": "Uttara Phalguni",
+      "lord": "Sun",
+      "name": "Uttara Phalguni",
+      "title": "Uttara Phalguni na Astrologia Védica",
+      "description": "Descubra as características de Uttara Phalguni na astrologia védica, seus temas de parcerias, contratos, regência do Sol e simbolismo lunar.",
+      "h1": "O Nakshatra Uttara Phalguni e Seus Significados",
+      "lead": "Na astrologia védica, o nakshatra é identificado primordialmente pela posição da Lua no momento do nascimento, diferindo da ênfase no signo solar da astrologia ocidental. Uttara Phalguni representa uma energia de estabilidade, honra e compromisso duradouro, frequentemente associada à consolidação de vínculos materiais e sociais.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo de Uttara Phalguni",
+          "body": "Com sua extensão sideral cobrindo de Leão 26°40 a Virgem 10°00, este nakshatra é regido pelo Sol e tem como divindade tutelar Aryaman. Seu símbolo tradicional são as pernas traseiras de uma cama, remetendo ao repouso após o dever cumprido e à sustentação da vida cotidiana. As palavras-chave tradicionalmente associadas a essa mansão lunar são contratos e parcerias, refletindo a base formal dos acordos entre as pessoas."
+        },
+        {
+          "heading": "Tendências Internas sob a Influência da Lua",
+          "body": "Quando a Lua se localiza em Uttara Phalguni no mapa natal, a mente costuma buscar clareza de princípios e um forte senso de dever pessoal. Existe frequentemente uma inclinação para a generosidade, acompanhada por um anseio sincero de ser útil ao ambiente social de forma organizada. A pessoa tende a valorizar o decoro e a retidão, sentindo desconforto diante de comportamentos instáveis ou atitudes que careçam de ética. Por outro lado, pode se manifestar uma autocrítica acentuada ou uma exigência elevada em relação ao próprio cumprimento de promessas."
+        },
+        {
+          "heading": "Dinâmica nas Relações e Parcerias",
+          "body": "Nas relações interpessoais, essa posição reflete uma predisposição natural para firmar compromissos formais e preservar laços de lealdade mútua. A convivência costuma ser pautada por regras claras de respeito e cooperação, em que a confiança é construída gradualmente pela coerência de conduta. Há comumente uma vocação para atuar como ponto de apoio estável e mediador pacífico para pessoas próximas."
+        },
+        {
+          "heading": "Atuação Profissional e Postura Prática",
+          "body": "Em termos de trabalho, a atuação tende a se destacar em contextos que demandam organização, gestão de acordos institucionais e liderança responsável. O ritmo de ação costuma ser metódico e perseverante, priorizando a estabilidade de longo prazo em vez de resultados imediatos e arriscados. Atividades que envolvem negociação formal, diplomacia e administração de recursos coletivos encontram forte afinidade com essa disposição."
+        },
+        {
+          "heading": "O Período de Dasha do Sol",
+          "body": "Durante o período planetário regido pelo Sol, temas ligados à visibilidade pessoal, autoridade moral e formalização de acordos tendem a ganhar relevância. Essa fase é tradicionalmente lida como um momento propício para o fortalecimento da autoconfiança e para a reavaliação de compromissos assumidos perante a comunidade. Costuma ser um ciclo voltado para o amadurecimento do caráter e para o exercício consciente da integridade em todas as ações."
+        }
+      ]
+    },
+    {
+      "slug": "hasta",
+      "latin": "Hasta",
+      "lord": "Moon",
+      "name": "Hasta",
+      "title": "Nakshatra Hasta na Astrologia Védica: Significado",
+      "description": "Conheça o nakshatra Hasta na astrologia védica, suas características ligadas à destreza manual e como a posição da Lua molda suas tendências naturais.",
+      "h1": "O Nakshatra Hasta na Astrologia Védica",
+      "lead": "Na astrologia védica, Hasta é uma mansão lunar frequentemente associada à habilidade prática, ao refinamento dos detalhes e ao poder transformador do toque. A análise deste nakshatra oferece uma perspectiva sobre os ritmos internos e a forma como a mente processa a realidade física.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo de Hasta",
+          "body": "Situado na faixa sideral entre 10°00 e 23°20 de Virgem, Hasta tem a Lua como planeta regente. Essa mansão lunar é simbolizada por uma mão aberta e associada à divindade Savitar. Suas palavras-chave tradicionais são ofício e destreza, apontando para a aplicação inteligente da atenção e da capacidade técnica."
+        },
+        {
+          "heading": "Tendências Internas e a Mente",
+          "body": "Diferente da astrologia ocidental, que costuma focar no signo solar, a tradição védica lê o nakshatra a partir da posição natal da Lua, refletindo os padrões mentais e emocionais. Quem nasce com a Lua em Hasta tende a demonstrar uma mente ágil, observadora e inclinada à resolução metódica de problemas. Costuma haver uma busca espontânea por clareza, ordem e aperfeiçoamento constante no cotidiano. No entanto, essa atenção minuciosa aos detalhes às vezes pode se manifestar internamente como inquietação ou autocrítica sutil. O equilíbrio emocional geralmente é encontrado quando o indivíduo canaliza essa energia mental para atividades que combinem inteligência e sensibilidade."
+        },
+        {
+          "heading": "Relações e Convivência Social",
+          "body": "Nas relações interpessoais, indivíduos com forte presença de Hasta tendem a demonstrar generosidade e presteza nas interações cotidianas. Há uma propensão a oferecer ajuda prática e palpável para as pessoas próximas, agindo com cordialidade e senso de humor leve. Por vezes, sua percepção aguçada pode captar nuances que passam despercebidas aos outros, exigindo cuidado para não soar excessivamente analítico nas conversas. De modo geral, valorizam conexões em que haja troca intelectual, respeito mútuo e cooperação sincera."
+        },
+        {
+          "heading": "Abordagem no Trabalho e Ritmo de Ação",
+          "body": "No ambiente de trabalho, essa influência costuma se manifestar em tarefas que demandam precisão, manipulação cuidadosa ou talento técnico específico. O estilo de atuação tende a ser metódico, adaptável e orientado a processos que exigem paciência e destreza manual ou conceitual. Esses nativos frequentemente se sentem confortáveis em funções onde possam organizar, reparar, criar ou aprimorar sistemas e materiais. Um ritmo constante e organizado geralmente favorece a produtividade e evita o esgotamento por acúmulo de tarefas."
+        },
+        {
+          "heading": "O Período do Dasha da Lua",
+          "body": "Durante o período do dasha regido pela Lua, temas ligados ao autoconhecimento emocional, às mudanças domésticas e ao aprimoramento de habilidades cotidianas tendem a ganhar maior visibilidade na vida do indivíduo. É uma fase tradicionalmente interpretada como favorável para desenvolver a intuição e cultivar maior cuidado com o ritmo pessoal de descanso e atividade. As oscilações de humor ou de foco podem surgir com maior frequência, demandando momentos de quietude para reequilibrar a mente."
+        }
+      ]
+    },
+    {
+      "slug": "chitra",
+      "latin": "Chitra",
+      "lord": "Mars",
+      "name": "Chitra",
+      "title": "Nakshatra Chitra na Astrologia Védica",
+      "description": "Descubra o significado do nakshatra Chitra na astrologia védica, seus símbolos tradicionais, regência de Marte e tendências da Lua natal.",
+      "h1": "O Nakshatra Chitra na Astrologia Védica",
+      "lead": "Na astrologia védica, o nakshatra é identificado pela posição da Lua no momento do nascimento, revelando nuances profundas da mente e do temperamento que diferem do signo solar ocidental. Chitra destaca-se como uma mansão lunar ligada à capacidade de estruturar a matéria e manifestar beleza de forma intencional.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo Tradicional",
+          "body": "Com sua extensão sideral compreendida entre 23°20 de Virgem e 6°40 de Libra, este nakshatra é governado pelo planeta Marte e tem como divindade tutelar Tvashtar. Seu símbolo clássico é uma joia brilhante, elemento que sintetiza a preciosidade e a perfeição técnica. Tradicionalmente, suas palavras-chave são brilho e design, expressando a busca por refinamento formal e clareza visual."
+        },
+        {
+          "heading": "Tendências Internas da Lua em Chitra",
+          "body": "Quando a Lua ocupa Chitra no mapa natal, a mente tende a operar com forte senso estético e inclinação ao aperfeiçoamento constante dos detalhes. Existe frequentemente um impulso interior para moldar o ambiente, buscando harmonia entre utilidade prática e impacto visual. A pessoa costuma vivenciar uma curiosidade ativa sobre como as coisas são feitas, desejando compreender a mecânica por trás das formas. Por outro lado, pode surgir uma autocrítica rigorosa quando o resultado externo não corresponde à imagem ideal concebida na imaginação. Esse padrão interno reflete um anseio constante por clareza e distinção em suas expressões pessoais."
+        },
+        {
+          "heading": "Dinâmica nas Relações Interpessoais",
+          "body": "Nas relações cotidianas, indivíduos com a Lua nesta posição costumam ser percebidos como pessoas atraentes, expressivas e atentas às sutilezas sociais. Eles tendem a valorizar interações onde haja espaço para elegância, diálogo inteligente e apreciação mútua do estilo de cada um. Ocasionalmente, uma postura direta ou crítica pode transparecer na convivência, reflexo natural da influência marciana sobre seus padrões de exigência. De forma geral, estabelecem vínculos mais sólidos com aqueles que compreendem seu apreço por autenticidade e beleza estruturada."
+        },
+        {
+          "heading": "Expressão Profissional e Ritmo de Ação",
+          "body": "No campo profissional, Chitra costuma favorecer ocupações que demandem planejamento técnico, senso de proporção e execução primorosa. Atividades que unem criatividade visual a processos metódicos tendem a ressoar profundamente com a natureza dessa posição lunar. O ritmo de trabalho mais harmônico geralmente envolve etapas bem definidas, nas quais a energia possa ser direcionada para polir e finalizar cada projeto com excelência. A autonomia para conceber soluções originais costuma ser um elemento essencial para a sua satisfação produtiva."
+        },
+        {
+          "heading": "Influências do Período de Marte",
+          "body": "Durante o dasha de Marte, planeta regente de Chitra, temas associados à iniciativa, ambição construtiva e necessidade de afirmação pessoal tendem a ganhar destaque no ciclo de vida. Esse período frequentemente convida a pessoa a canalizar sua vitalidade em projetos concretos e a resolver pendências materiais com maior assertividade. Tradicionalmente, observa-se também a oportunidade de exercitar a paciência e a diplomacia, equilibrando o ímpeto realizador com a ponderação nas decisões."
+        }
+      ]
+    },
+    {
+      "slug": "swati",
+      "latin": "Swati",
+      "lord": "Rahu",
+      "name": "Swati",
+      "title": "Swati Nakshatra na Astrologia Védica: Significado",
+      "description": "Descubra o nakshatra Swati na astrologia védica. Compreenda seus traços de independência e flexibilidade baseados na posição lunar de nascimento.",
+      "h1": "Swati Nakshatra: Características e Simbolismo",
+      "lead": "Na astrologia védica, o nakshatra Swati representa uma força sutil de movimento contínuo e busca por autonomia individual. Ao contrário da astrologia ocidental focada no signo solar, as leituras tradicionais indianas partem da posição da Lua no momento do nascimento para desvendar essas disposições.",
+      "sections": [
+        {
+          "heading": "Fundamentos astronômicos e simbologia de Swati",
+          "body": "Posicionado no zodíaco sideral entre 6°40 e 20°00 de Libra, este nakshatra é regido pelo planeta Rahu e associado à divindade Vayu. Seu símbolo tradicional é um jovem broto ao vento, expressando visualmente a capacidade de se curvar diante das correntes sem se quebrar. A partir dessas referências, suas palavras-chave tradicionais são independência e flexibilidade."
+        },
+        {
+          "heading": "Tendências internas e perfil lunar",
+          "body": "Quando a Lua se encontra em Swati no nascimento, a mente tende a valorizar intensamente a liberdade de pensamento e a espontaneidade. Costuma haver uma disposição íntima para se adaptar com leveza às mudanças, assemelhando-se à natureza do ar que contorna obstáculos sem perder sua direção. Essas pessoas frequentemente buscam clareza interna por meio da reflexão pessoal, evitando sentimentos de rigidez ou controle excessivo sobre suas emoções. Ao mesmo tempo, pode surgir uma inquietação interna recorrente, que as impulsiona a explorar novas ideias antes mesmo de concluir ciclos anteriores. Essa mobilidade psíquica favorece um aprendizado contínuo, embora exija momentos conscientes de pausa para manter o equilíbrio emocional."
+        },
+        {
+          "heading": "A dinâmica nas relações interpessoais",
+          "body": "Nas interações sociais, a energia de Swati costuma manifestar-se por meio de uma postura diplomática, aberta ao diálogo e respeitosa com a diversidade de opiniões. Tende a existir facilidade para transitar entre diferentes círculos sociais, mantendo conexões harmoniosas sem criar dependências restritivas. Embora valorizem a companhia alheia, essas pessoas costumam preservar um espaço intocado de individualidade que garante sua sensação de autonomia. Esse equilíbrio sutil entre cordialidade e distância saudável frequentemente atrai relações baseadas no respeito mútuo."
+        },
+        {
+          "heading": "Estilo de atuação e ambiente profissional",
+          "body": "No ambiente profissional, o ritmo que melhor convém a essa influência é aquele que oferece autonomia operacional e espaço para negociações dinâmicas. O estilo de atuação tende a prosperar em contextos onde a mediação, a comunicação aberta e a adaptação a cenários imprevisíveis sejam valorizadas. Em vez de estruturas excessivamente rígidas ou rotinas monótonas, prefere-se a liberdade de organizar o próprio tempo e testar abordagens variadas. Assim, a capacidade de articular caminhos alternativos torna-se um dos recursos mais orgânicos de seu modo de agir."
+        },
+        {
+          "heading": "Temas comuns durante o Rahu dasha",
+          "body": "Durante o período do Rahu dasha para quem tem a Lua em Swati, costumam emergir temas ligados à expansão de horizontes e ao desejo de romper barreiras convencionais. Essa fase tradicionalmente intensifica a busca por autoafirmação e por caminhos menos usuais de expressão no mundo exterior. Também é frequente que surjam momentos de profunda reflexão sobre o significado real de liberdade pessoal em meio a transformações rápidas de vida."
+        }
+      ]
+    },
+    {
+      "slug": "vishakha",
+      "latin": "Vishakha",
+      "lord": "Jupiter",
+      "name": "Vishakha",
+      "title": "Vishakha Nakshatra na Astrologia Védica",
+      "description": "Conheça o nakshatra Vishakha na astrologia védica: seus símbolos, divindades, tendências psicológicas e a influência do regente Júpiter.",
+      "h1": "O Nakshatra Vishakha na Astrologia Védica",
+      "lead": "Na tradição astrológica da Índia, Vishakha representa a força direcionada e a determinação para alcançar metas significativas. Este nakshatra traz uma energia de superação e foco contínuo no crescimento pessoal.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo de Vishakha",
+          "body": "No zodíaco sideral, Vishakha estende-se de 20°00 de Libra a 3°20 de Escorpião, sob a regência do planeta Júpiter. Sua divindade tutelar é Indragni, uma união entre Indra e Agni, e seu símbolo principal é o arco triunfal. Tradicionalmente, este nakshatra é associado a palavras-chave como propósito e ambição, marcando um caminho de persistência."
+        },
+        {
+          "heading": "Tendências Internas e a Lua em Vishakha",
+          "body": "Diferente da astrologia ocidental focada no signo solar, a astrologia védica analisa o nakshatra a partir da posição da Lua no nascimento para compreender a mente e as emoções. Quem nasce com a Lua em Vishakha tende a vivenciar um senso agudo de direcionamento interno e uma busca constante por autorrealização. É comum existir uma inquietação produtiva que move o indivíduo a superar obstáculos internos e aprimorar suas próprias habilidades com perseverança. Em alguns momentos, esse impulso pode gerar uma sensação passageira de frustração caso as expectativas pessoais demorem a se manifestar. Ainda assim, a mente costuma encontrar equilíbrio ao canalizar essa intensidade em objetivos claros de longo prazo."
+        },
+        {
+          "heading": "Dinâmicas nos Relacionamentos",
+          "body": "Nos relacionamentos, a pessoa com forte influência de Vishakha tende a demonstrar lealdade e uma presença inspiradora para quem compartilha dos mesmos ideais. Pode haver, contudo, uma predisposição a comparações ou competitividade velada quando o foco na ambição pessoal se sobrepõe à empatia. A convivência flui de forma mais harmoniosa quando há espaço para autonomia mútua e apoio sincero aos projetos individuais de cada parte."
+        },
+        {
+          "heading": "Trabalho e Estilo de Ação",
+          "body": "Na esfera profissional, Vishakha inclina a pessoa a métodos de trabalho focados na conquista progressiva e na superação de limites técnicos ou conceituais. Ambientes que exigem planejamento estratégico, liderança e dedicação contínua tendem a ser bastante favoráveis para esse padrão de energia. A capacidade de manter o olhar fixo no objetivo final permite que esse indivíduo atravesse etapas trabalhosas sem perder a motivação essencial."
+        },
+        {
+          "heading": "O Período de Dasha de Júpiter",
+          "body": "Durante o período planetário ou dasha de Júpiter, temas ligados ao aprendizado superior, à expansão ética e ao senso de propósito costumam emergir com mais intensidade. Tradicionalmente, essa fase é vista como um momento propício para reavaliar ambições e alinhar ações práticas a valores morais mais amplos. Também tende a se manifestar um interesse renovado por orientações filosóficas ou mentores que auxiliem na consolidação de grandes aspirações de vida."
+        }
+      ]
+    },
+    {
+      "slug": "anuradha",
+      "latin": "Anuradha",
+      "lord": "Saturn",
+      "name": "Anuradha",
+      "title": "Nakshatra Anuradha na Astrologia Védica",
+      "description": "Descubra o nakshatra Anuradha na astrologia védica: seus símbolos, regência de Saturno, qualidades da Lua natal e dinâmicas nos relacionamentos.",
+      "h1": "O Nakshatra Anuradha na Astrologia Védica",
+      "lead": "Na astrologia védica, o nakshatra é identificado a partir da posição exata da Lua no momento do nascimento, diferindo da ênfase no signo solar comum na astrologia ocidental. Anuradha representa uma força lunar ligada à sensibilidade emocional profunda e à busca por cooperação genuína ao longo da vida.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo",
+          "body": "Situado entre 3°20 e 16°40 do signo sideral de Escorpião, Anuradha tem como planeta regente Saturno e está sob a tutela da divindade Mitra. Seu símbolo tradicional é a flor de lótus, refletindo a capacidade de florescer mesmo em ambientes desafiadores. Na sabedoria védica, suas palavras-chave clássicas são a devoção e a amizade."
+        },
+        {
+          "heading": "Tendências Internas e Natureza Emocional",
+          "body": "Quando a Lua se encontra em Anuradha, a mente tende a buscar um equilíbrio sutil entre a disciplina e o anseio por conexão íntima. Há frequentemente uma disposição para acolher emoções intensas sem perder a firmeza de propósito, como a flor de lótus que emerge imaculada da água turva. Essa configuração costuma indicar uma mente leal, dotada de persistência silenciosa e capacidade de transformar crises em amadurecimento pessoal. O indivíduo tende a nutrir sentimentos com devoção discreta, embora possa enfrentar ocasionais sensações de solidão interior antes de estabelecer sua estabilidade emocional."
+        },
+        {
+          "heading": "Relações e Convivência com os Outros",
+          "body": "Sob a influência da divindade Mitra, regente dos pactos e das alianças, a pessoa tende a valorizar a cordialidade sincera e a lealdade nos vínculos afetivos. As amizades costumam ocupar um papel central em sua trajetória, servindo tanto de refúgio quanto de motivação para o crescimento mútuo. Apesar dessa facilidade para construir laços afetuosos, pode surgir uma inclinação a guardar ressentimentos ou a demorar para se abrir inteiramente, exigindo tempo para que a confiança se estabeleça de forma plena."
+        },
+        {
+          "heading": "Atuação Profissional e Ritmo de Vida",
+          "body": "No âmbito profissional, Anuradha favorece abordagens colaborativas que combinem a paciência estruturada de Saturno com a habilidade diplomática de Mitra. O trabalho tende a render melhores frutos quando desenvolvido em equipe ou em atividades que exijam pesquisa aprofundada, mediação e perseverança em projetos de longo prazo. Essa natureza costuma caminhar com passos firmes e cuidadosos, evitando decisões precipitadas e priorizando a construção gradual de resultados duradouros."
+        },
+        {
+          "heading": "O Período de Saturno Dasha",
+          "body": "Durante a passagem pelo dasha de Saturno, planeta regente deste nakshatra, tendem a vir à tona questões ligadas à responsabilidade pessoal, limites e deveres acumulados. É tradicionalmente visto como uma fase de reestruturação prática, na qual a paciência e a maturidade são postas à prova diante das demandas do cotidiano. Esse ciclo costuma favorecer a consolidação de objetivos de vida duradouros, desde que haja disposição para assumir esforços constantes e desapego em relação aos resultados imediatos."
+        }
+      ]
+    },
+    {
+      "slug": "jyeshtha",
+      "latin": "Jyeshtha",
+      "lord": "Mercury",
+      "name": "Jyeshtha",
+      "title": "Nakshatra Jyeshtha: Significado na Astrologia Védica",
+      "description": "Descubra as características do nakshatra Jyeshtha na astrologia védica, seus símbolos, planeta regente e tendências segundo a posição da Lua.",
+      "h1": "O Nakshatra Jyeshtha na Astrologia Védica",
+      "lead": "Na astrologia védica, o nakshatra é identificado pela posição da Lua no momento do nascimento, diferindo da ênfase no signo solar comum no Ocidente. Jyeshtha é uma morada lunar associada à busca por autonomia, ao amadurecimento precoce e à capacidade de oferecer amparo aos outros.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo de Jyeshtha",
+          "body": "No zodíaco sideral, este nakshatra ocupa a faixa de Escorpião 16°40–30°00 e tem como planeta regente Mercúrio. Sua divindade associada é Indra, e seus símbolos tradicionais são o brinco e o guarda-chuva. A partir dessa base clássica, as noções de senioridade e responsabilidade orientam as leituras tradicionais sobre suas qualidades."
+        },
+        {
+          "heading": "Tendências Psicológicas com a Lua em Jyeshtha",
+          "body": "Com a Lua situada em Jyeshtha, a pessoa tende a apresentar uma mente perspicaz, atenta a detalhes sutis e a jogos de influência ao seu redor. Costuma existir uma inclinação a desenvolver maturidade cedo, acompanhada pelo sentimento íntimo de que é preciso cuidar de assuntos sérios sem depender dos demais. Esse posicionamento é tradicionalmente interpretado como gerador de uma forte reserva emocional, onde a autossuficiência serve como escudo de proteção. Por vezes, a mente pode oscilar entre o orgulho de sua capacidade e a preocupação em manter a segurança de suas conquistas."
+        },
+        {
+          "heading": "Dinâmicas nas Relações Interpessoais",
+          "body": "No convívio social e afetivo, quem nasce com esta influência lunar tende a assumir uma postura protetora, agindo quase como uma figura de liderança familiar ou comunitária. A lealdade aos seus pares costuma ser profunda, embora a confiança possa levar tempo para se consolidar plenamente. As trocas tendem a ser mais harmônicas quando o respeito mútuo e o reconhecimento do espaço de cada um estão bem estabelecidos."
+        },
+        {
+          "heading": "Estilo de Atuação e Trabalho",
+          "body": "No ambiente profissional, Jyeshtha costuma se expressar com eficiência em atividades que exigem discrição, capacidade analítica e condução de situações complexas. A postura no trabalho tende a ser focada em assumir o comando de desafios com seriedade, evitando atalhos que possam comprometer a integridade dos processos. Ambientes que valorizam a experiência acumulada e concedem autonomia para a tomada de decisões favorecem essa forma de atuar."
+        },
+        {
+          "heading": "O Período Planetário de Mercúrio",
+          "body": "Durante o dasha de Mercúrio, temas relacionados ao intelecto, à comunicação precisa e à gestão prática do cotidiano tendem a ganhar destaque. Essa fase é tradicionalmente lida como uma etapa de amadurecimento estratégico, em que o discernimento mental é chamado a ordenar prioridades. Questões ligadas à autoridade e ao dever assumem um papel central no desenvolvimento das atividades do período."
+        }
+      ]
+    },
+    {
+      "slug": "mula",
+      "latin": "Mula",
+      "lord": "Ketu",
+      "name": "Mula",
+      "title": "Mula Nakshatra: Características na Astrologia Védica",
+      "description": "Conheça o nakshatra Mula na astrologia védica, suas características quando a Lua está posicionada nele, regência de Ketu e tendências de investigação.",
+      "h1": "O Nakshatra Mula na Astrologia Védica",
+      "lead": "Na astrologia indiana, o nakshatra é identificado a partir da posição da Lua no mapa de nascimento, diferindo da ênfase no signo solar comum à astrologia ocidental. Mula representa um ponto do zodíaco associado ao aprofundamento reflexivo e à busca pelo entendimento essencial da vida.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo",
+          "body": "Mula ocupa a posição sideral de Sagitário 0°00–13°20 e é regido pelo planeta Ketu. Sua divindade tradicional é Nirriti e seu símbolo consiste em um feixe de raízes. A partir dessas referências, seus temas fundamentais costumam ser interpretados através das palavras-chave raízes e investigação."
+        },
+        {
+          "heading": "Tendências Internas com a Lua em Mula",
+          "body": "Quando a Lua está posicionada neste nakshatra, a mente tende a buscar a origem primária das circunstâncias, evitando julgamentos superficiais. Há frequentemente uma inclinação para examinar premissas estabelecidas e desconstruir convicções que já não encontram sustentação. Essa dinâmica psicológica pode trazer momentos de recolhimento ou busca por desapego em relação a ilusões cotidianas. Com o amadurecimento, essa atitude interna costuma se manifestar como estabilidade mental e discernimento fundamentado na própria vivência."
+        },
+        {
+          "heading": "Dinâmicas nas Relações Interpessoais",
+          "body": "Nos vínculos sociais e afetivos, quem possui essa configuração lunar costuma valorizar interações transparentes e livres de artifícios. Pode existir pouca paciência com formalidades vazias, havendo preferência por conversas honestas que abordem o cerne dos assuntos. Em certos momentos, a clareza direta dessa postura pode parecer intensa para pessoas ao redor, exigindo tato na convivência cotidiana."
+        },
+        {
+          "heading": "Atuação Profissional e Movimento",
+          "body": "No trabalho, essa posição lunar costuma harmonizar-se com atividades que demandam pesquisa minuciosa, análise diagnóstica e exploração de temas complexos. A aptidão para ir ao fundo dos problemas favorece métodos investigativos que identificam a causa de uma questão em vez de tratar apenas os efeitos. Trajetórias que proporcionam autonomia de pensamento e clareza de propósito tendem a dialogar bem com esse modo de operar."
+        },
+        {
+          "heading": "Temas do Período de Ketu Dasha",
+          "body": "Durante o período conhecido como Ketu dasha, questões voltadas à revisão de estruturas de vida e ao desapego material costumam ganhar relevância. Trata-se de uma fase tradicionalmente ligada ao fechamento de etapas e ao aprofundamento no autoconhecimento. Essas vivências tendem a incentivar uma reflexão serena sobre o que realmente possui valor duradouro para o indivíduo."
+        }
+      ]
+    },
+    {
+      "slug": "purva-ashadha",
+      "latin": "Purva Ashadha",
+      "lord": "Venus",
+      "name": "Purva Ashadha",
+      "title": "Purva Ashadha na Astrologia Védica: Significado",
+      "description": "Conheça o nakshatra Purva Ashadha na astrologia védica, suas características ligadas à Lua natal, regência de Vênus e simbolismos tradicionais.",
+      "h1": "O Nakshatra Purva Ashadha e Suas Características",
+      "lead": "Purva Ashadha é a vigésima mansão lunar da astrologia védica, associada tradicionalmente a uma postura de grande nobreza e autoconfiança. Ao contrário da astrologia ocidental com foco no signo solar, a tradição indiana analisa o nakshatra primordialmente a partir da posição da Lua no momento do nascimento.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo Tradicional",
+          "body": "Purva Ashadha ocupa a faixa de 13°20 a 26°40 do signo sideral de Sagitário e tem Vênus como seu planeta regente. Sua divindade tutelar é Apas, que personifica as águas cósmicas, e sua representação tradicional se dá pela figura de um cesto de joeirar. A partir desses elementos, a astrologia védica associa este nakshatra a palavras-chave tradicionais como vitória e otimismo."
+        },
+        {
+          "heading": "Tendências Internas sob a Influência da Lua",
+          "body": "Quando a Lua se localiza em Purva Ashadha, a mente tende a manifestar uma confiança natural em sua capacidade de triunfar sobre as circunstâncias adversas. O indivíduo costuma nutrir um otimismo profundo, acreditando com firmeza que as dificuldades temporárias eventualmente darão lugar a soluções favoráveis. Há também uma inclinação instintiva para separar o essencial do descartável, traço simbolizado pelo gesto de joeirar grãos. Essa forte certeza interior pode, em alguns momentos, ser percebida como orgulho ou teimosia intelectual. Ainda assim, a essência dessa vivência psíquica costuma ser pautada pela integridade pessoal e por um desejo sincero de elevação."
+        },
+        {
+          "heading": "Dinâmica nas Relações Interpessoais",
+          "body": "No contato com os outros, quem tem esta marcação lunar costuma expressar um encanto amistoso, proporcionado pelo influxo gracioso de Vênus sobre o entusiasmo de Sagitário. Essas pessoas tendem a atuar como esteios de encorajamento para amigos e familiares, oferecendo apoio e palavras motivadoras em tempos difíceis. Ocasionalmente, sua postura inabalável pode parecer impositiva em discussões, exigindo o aprendizado da escuta paciente diante de pontos de vista divergentes. Em geral, valorizam laços baseados na lealdade recíproca e na liberdade para que ambos os lados possam crescer."
+        },
+        {
+          "heading": "Estilo de Trabalho e Manifestação Prática",
+          "body": "Em termos de trabalho, o perfil associado a este nakshatra tende a fluir melhor em projetos que demandam planejamento de longo fôlego e capacidade de inspirar equipes. A pessoa costuma agir com determinação gradual, sabendo esperar o momento certo para filtrar oportunidades e colher resultados expressivos. Áreas que combinam princípios éticos, diplomacia e um senso refinado de estética costumam abrigar bem essa maneira de operar. A produtividade tende a crescer substancialmente quando o indivíduo sente que suas metas profissionais dialogam com seus ideais mais amplos."
+        },
+        {
+          "heading": "O Período Planetário de Vênus",
+          "body": "Durante o dasha de Vênus, a pessoa com a Lua em Purva Ashadha tende a vivenciar uma fase de forte foco em parcerias, estética e redefinição de prioridades pessoais. Os textos tradicionais apontam que esse ciclo costuma favorecer a busca por conforto material e o aprofundamento das afinidades criativas. Trata-se comumente de um intervalo em que os anseios de vitória se entrelaçam à necessidade de cultivar beleza, prazer sereno e harmonia na vida cotidiana."
+        }
+      ]
+    },
+    {
+      "slug": "uttara-ashadha",
+      "latin": "Uttara Ashadha",
+      "lord": "Sun",
+      "name": "Uttara Ashadha",
+      "title": "Uttara Ashadha: Significado na Astrologia Védica",
+      "description": "Conheça o nakshatra Uttara Ashadha na astrologia védica. Descubra seus simbolismos, tendências psicológicas e a influência da Lua neste signo.",
+      "h1": "Uttara Ashadha: O Nakshatra da Realização Firme",
+      "lead": "Na astrologia védica, o nakshatra de nascimento é determinado pela posição exata da Lua no momento do parto, refletindo as bases emocionais e mentais de um indivíduo. Uttara Ashadha é a vigésima primeira mansão lunar, tradicionalmente associada a uma força serena, integridade e uma postura resiliente diante da vida.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo",
+          "body": "No zodíaco sideral, Uttara Ashadha estende-se de 26°40 de Sagitário a 10°00 de Capricórnio, sendo regido pelo Sol. Essa mansão é simbolizada pela presa de elefante e associada aos Vishwadevas, as divindades universais que personificam as leis cósmicas. Suas palavras-chave tradicionais são persistência e realização, refletindo uma natureza voltada à construção sólida e duradoura."
+        },
+        {
+          "heading": "Tendências Internas e Mente Lunar",
+          "body": "Quando a Lua se localiza em Uttara Ashadha, a mente costuma desenvolver uma inclinação natural para a paciência e a sobriedade emocional. A pessoa tende a processar seus sentimentos com base em princípios éticos firmes, preferindo a estabilidade à impulsividade momentânea. Há frequentemente uma forte crença interna no próprio esforço, o que gera uma sensação tranquila de dever e responsabilidade pessoal. Por vezes, essa postura pode se manifestar internamente como uma autoexigência silenciosa, que busca a excelência sem alarde. A busca por um propósito com significado coletivo costuma orientar seus anseios mais profundos."
+        },
+        {
+          "heading": "Dinâmica nos Relacionamentos",
+          "body": "Nas interações cotidianas, a presença de Uttara Ashadha costuma transparecer como confiabilidade, respeito e certa discrição reservada. A pessoa tende a atrair a confiança alheia graças à sua postura leal, embora raramente demonstre afeto de maneira efusiva ou dramática. Os laços sociais e afetivos são cultivados com base no compromisso mútuo e na integridade partilhada, priorizando relações que ofereçam solidez a longo prazo."
+        },
+        {
+          "heading": "Atuação Profissional e Ritmo de Vida",
+          "body": "No campo profissional, a abordagem prática deste nakshatra favorece projetos de longo prazo que demandem organização meticulosa e perseverança inabalável. O indivíduo tende a avançar em passos regulares e estruturados, alcançando suas metas mais pela constância do que pela pressa. Atividades ligadas à liderança ética, administração ou estruturas institucionais costumam harmonizar-se com essa cadência metódica e realizadora."
+        },
+        {
+          "heading": "O Período da Dasha do Sol",
+          "body": "Durante a dasha regida pelo Sol, temas ligados à autoridade pessoal, ao propósito de vida e ao reconhecimento público tendem a vir à tona com maior intensidade. Essa fase costuma convidar o indivíduo a assumir maiores responsabilidades e a alinhar suas ações aos seus valores essenciais mais verdadeiros. Tradicionalmente, é um período lido como propício para consolidar a autoconfiança e colher os frutos da persistência mantida ao longo dos anos."
+        }
+      ]
+    },
+    {
+      "slug": "shravana",
+      "latin": "Shravana",
+      "lord": "Moon",
+      "name": "Shravana",
+      "title": "Nakshatra Shravana na Astrologia Védica",
+      "description": "Conheça o nakshatra Shravana na astrologia védica: seus símbolos, regência da Lua e as tendências de escuta, aprendizado e conexão interior.",
+      "h1": "Shravana: O Nakshatra da Escuta e do Aprendizado",
+      "lead": "Shravana é a vigésima segunda mansão lunar da astrologia védica, profundamente associada à busca por sabedoria e à capacidade de prestar atenção. Esta morada celeste convida a uma postura receptiva diante do conhecimento e da própria vida.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbologia de Shravana",
+          "body": "Localizado no zodíaco sideral entre 10°00 e 23°20 do signo de Capricórnio, Shravana tem a Lua como seu planeta regente e é associado à divindade Vishnu. Seus símbolos tradicionais são a orelha e as três pegadas, alinhando-se diretamente às suas palavras-chave clássicas: ouvir e aprender. Essa configuração aponta para a importância da transmissão do conhecimento e da assimilação consciente das experiências."
+        },
+        {
+          "heading": "Tendências Internas e a Mente Lunar",
+          "body": "Na astrologia védica, o nakshatra é identificado a partir da posição da Lua no nascimento, e não pelo signo solar comum na astrologia ocidental, revelando a natureza da mente e das emoções. Quem nasce com a Lua em Shravana costuma carregar uma inclinação marcante para a observação serena e a reflexão antes de agir. Há uma forte tendência a valorizar a sabedoria acumulada, nutrindo um interesse genuíno por estudos e tradições filosóficas. Emocionalmente, essa influência pode favorecer uma postura receptiva e paciente diante dos altos e baixos cotidianos. Por outro lado, pode surgir uma sensibilidade aguçada aos ruídos externos, exigindo momentos regulares de silêncio para restaurar a clareza mental."
+        },
+        {
+          "heading": "Relações Interpessoais e Convivência",
+          "body": "Nas relações com os outros, essa posição lunar costuma manifestar-se por meio de uma capacidade notável de escuta atenta, tornando a pessoa uma presença acolhedora e confiável. O interesse sincero pelo que os outros têm a dizer tende a facilitar amizades sólidas e parcerias respeitosas. Contudo, pode haver certo desconforto diante de conversas superficiais ou de ambientes excessivamente barulhentos e caóticos. De modo geral, o vínculo é fortalecido quando existe espaço para trocas intelectuais construtivas e apoio mútuo."
+        },
+        {
+          "heading": "Expressão Profissional e Ritmo de Ação",
+          "body": "No trabalho, a energia de Shravana tende a fluir com facilidade em funções que envolvam pesquisa, ensino, comunicação, preservação de registros ou mediação. A preferência costuma ser por métodos consistentes e passos graduais, evitando decisões precipitadas que não tenham sido devidamente analisadas. Essa postura reflexiva permite que os desafios sejam contornados com organização e bom senso. Projetos que demandam concentração e transmissão criteriosa de informações costumam ser os mais harmoniosos para esse perfil."
+        },
+        {
+          "heading": "O Período da Dasha da Lua",
+          "body": "Durante o período planetário regido pela Lua, conhecido como Moon dasha, os temas de Shravana tendem a vir à tona com maior intensidade na vida da pessoa. É uma fase tradicionalmente associada ao aprofundamento nos estudos, ao desenvolvimento da intuição e à busca por maior estabilidade emocional. Questões ligadas à receptividade e à qualidade das relações cotidianas também costumam exigir mais atenção e discernimento ao longo desse ciclo."
+        }
+      ]
+    },
+    {
+      "slug": "dhanishta",
+      "latin": "Dhanishta",
+      "lord": "Mars",
+      "name": "Dhanishta",
+      "title": "Dhanishta Nakshatra: Significado e Características",
+      "description": "Descubra o nakshatra Dhanishta na astrologia védica, seus símbolos de ritmo e riqueza, a regência de Marte e a influência da Lua natal.",
+      "h1": "Dhanishta Nakshatra na Astrologia Védica",
+      "lead": "Na astrologia védica, o nakshatra é determinado pela posição exata da Lua no momento do nascimento, diferindo do signo solar popular no Ocidente. Dhanishta é uma mansão lunar associada à cadência, à capacidade de coordenação e ao fluxo dinâmico de recursos na vida.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo de Dhanishta",
+          "body": "Dhanishta estende-se sidereamente de 23°20' de Capricórnio a 6°40' de Aquário, sendo regida pelo planeta Marte. Sua divindade regente são os Vasus, divindades associadas à estabilidade e aos elementos da criação material. Tradicionalmente simbolizada pelo tambor e pela flauta, esta constelação carrega como palavras-chave tradicionais riqueza e ritmo."
+        },
+        {
+          "heading": "Tendências Internas sob a Influência Lunar",
+          "body": "Ter a Lua nesta posição sugere uma mente que busca naturalmente o compasso e a organização das próprias emoções. Os indivíduos tendem a manifestar uma resiliência notável, combinando o impulso ativo marciano com foco prático em suas metas. Há frequentemente uma sensibilidade afinada com expressões artísticas, cadência musical e sistemas estruturados de pensamento. Em diversos momentos, surge o anseio por conquistas visíveis, contrabalançado por uma necessidade interior de harmonia e quietude. Essa configuração psicológica favorece a perseverança metódica para estruturar projetos que demandam maturação contínua."
+        },
+        {
+          "heading": "Relações Interpessoais e Convivência",
+          "body": "Nas relações sociais, a presença da Lua em Dhanishta costuma favorecer a capacidade de congregar pessoas em torno de metas conjuntas. Há uma postura naturalmente protetora e leal com os círculos mais próximos de amizade. Em alguns contextos, a assertividade de Marte pode transparecer como firmeza direta, o que convida a um exercício equilibrado de sensibilidade às opiniões alheias. As conexões duradouras tendem a se apoiar na admiração mútua e no respeito ao ritmo de cada indivíduo."
+        },
+        {
+          "heading": "Carreira e Dinâmica de Trabalho",
+          "body": "O fluxo profissional mais condizente com essa influência envolve constância, ritmo ordenado e metas objetivas. Atividades ligadas à gestão, às artes performáticas, à engenharia ou ao trabalho em organizações coletivas costumam acolher bem essas aptidões. O estilo de atuação tende a aliar iniciativa com paciência para agir no momento mais oportuno. Ambientes com regras claras e distribuição justa de responsabilidades costumam proporcionar maior produtividade."
+        },
+        {
+          "heading": "O Período Planetário de Marte (Dasha)",
+          "body": "Durante o período regido por Marte, inclinações voltadas à autonomia, à afirmação pessoal e ao avanço prático tendem a se tornar mais evidentes. Essa fase costuma demandar esforço direcionado e determinação para ultrapassar pendências antigas. Tradicionalmente, considera-se que esse ciclo pede atenção à moderação de impulsos para sustentar a vitalidade física e a clareza mental."
+        }
+      ]
+    },
+    {
+      "slug": "shatabhisha",
+      "latin": "Shatabhisha",
+      "lord": "Rahu",
+      "name": "Shatabhisha",
+      "title": "Shatabhisha: Significado e Traços na Astrologia Védica",
+      "description": "Descubra o nakshatra Shatabhisha na astrologia védica, suas características ligadas à Lua natal, regência de Rahu e temas tradicionais de cura.",
+      "h1": "Shatabhisha na Astrologia Védica",
+      "lead": "Shatabhisha é uma das vinte e sete mansões lunares da tradição védica, associada a uma natureza contemplativa e enigmática. Aqueles que buscam compreender essa posição frequentemente se deparam com um arquétipo voltado à introspecção e à busca por renovação.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo de Shatabhisha",
+          "body": "Na astrologia sideral, Shatabhisha ocupa o intervalo de 6°40 a 20°00 do signo de Aquário, sendo governado pelo planeta Rahu. Seu simbolismo é representado por um círculo vazio, tendo a divindade Varuna como sua regente associada. Entre suas palavras-chave tradicionais destacam-se a cura e a privacidade, delineando um espaço de contenção e restauração."
+        },
+        {
+          "heading": "Tendências Internas sob a Influência Lunar",
+          "body": "Diferente da astrologia ocidental, que costuma enfatizar o signo solar, a astrologia védica lê o nakshatra a partir do posicionamento exato da Lua no momento do nascimento. Quando a Lua se encontra em Shatabhisha, a mente tende a desenvolver uma predisposição acentuada para a reflexão solitária e o distanciamento analítico. O indivíduo frequentemente sente uma necessidade intrínseca de recolhimento para processar suas próprias emoções longe de interferências externas. Essa postura é tradicionalmente associada a uma busca paciente por equilíbrio interior e regeneração pessoal. Também se observa uma inclinação natural para questionar padrões vigentes e preservar um núcleo de mistério sobre a própria vida."
+        },
+        {
+          "heading": "Relações e Convivência com os Outros",
+          "body": "No convívio social, as pessoas com essa influência lunar tendem a estabelecer limites claros e a valorizar a discrição acima da exposição constante. Elas costumam manter um círculo restrito de convivência, preferindo trocas verdadeiras e reservadas a reuniões com excesso de ruído ou superficialidade. Embora possam por vezes parecer distantes ou difíceis de decifrar, costumam demonstrar grande lealdade àqueles que respeitam seu ritmo e seu espaço."
+        },
+        {
+          "heading": "Abordagem no Trabalho e Ritmo de Ação",
+          "body": "No campo profissional, costuma haver uma afinidade com tarefas que permitam autonomia, pesquisa aprofundada ou processos contínuos de reparação e reorganização. O ritmo de trabalho tende a ser metódico, fluindo melhor em ambientes onde não haja exigência de interações ininterruptas. Atividades que exigem olhar atento a detalhes ocultos e resolução paciente de problemas complexos alinham-se naturalmente a esse modo de operar."
+        },
+        {
+          "heading": "O Período da Dasha de Rahu",
+          "body": "Durante o período planetário conhecido como Rahu dasha, os temas característicos de Shatabhisha tendem a se manifestar com maior evidência na vida do indivíduo. É comum que essa fase convide a uma profunda reavaliação de prioridades, incentivando o desenvolvimento da autonomia e o cultivo do silêncio interior. Tradicionalmente, esse ciclo é interpretado como um momento de confronto com ilusões, abrindo espaço para processos significativos de restauração e amadurecimento."
+        }
+      ]
+    },
+    {
+      "slug": "purva-bhadrapada",
+      "latin": "Purva Bhadrapada",
+      "lord": "Jupiter",
+      "name": "Purva Bhadrapada",
+      "title": "Purva Bhadrapada: Significado na Astrologia Védica",
+      "description": "Descubra as características de Purva Bhadrapada na astrologia védica, seus símbolos tradicionais e a influência da Lua neste nakshatra singular.",
+      "h1": "Purva Bhadrapada na Astrologia Védica",
+      "lead": "Purva Bhadrapada é um dos nakshatras mais profundos e transformadores da tradição astrológica da Índia. Sua energia está associada a processos de transição interior e a um impulso natural para compreender dimensões complexas da existência.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo Tradicional",
+          "body": "Na astrologia védica, Purva Bhadrapada se estende de Aquário 20°00 a Peixes 3°20 no zodíaco sideral e tem Júpiter como planeta regente. A divindade associada a esta mansão lunar é Aja Ekapada, tendo como símbolo tradicional as pernas dianteiras de um leito funerário. Em textos clássicos, suas palavras-chave definidoras são intensidade e duas faces, refletindo uma natureza que abriga extremos e transformações marcantes."
+        },
+        {
+          "heading": "Tendências Interiores e a Posição da Lua",
+          "body": "Diferente da astrologia ocidental focada no signo solar, a tradição indiana analisa o nakshatra a partir da posição exata da Lua no mapa de nascimento. Quem nasce sob a influência lunar de Purva Bhadrapada costuma carregar um universo psicológico de notável intensidade emocional e intelectual. É comum que exista uma dualidade evidente, oscilando entre impulsos materiais intensos e uma inclinação sincera ao desapego reflexivo. Essa dinâmica interna tende a gerar uma visão crítica sobre as convenções sociais e um desejo contínuo de autotransformação. Tradicionalmente, percebe-se nesses indivíduos uma predisposição a mergulhar profundamente em suas próprias contradições para extrair sabedoria."
+        },
+        {
+          "heading": "Dinâmica Social e Relações Interpessoais",
+          "body": "No contato social, essa energia pode se manifestar por meio de uma postura inicialmente reservada, que esconde uma capacidade de entrega profunda quando há confiança mútua. As pessoas com essa marca lunar tendem a ser leais, mas podem alternar entre momentos de grande calor humano e períodos de isolamento introspectivo. Essa oscilação é frequentemente compreendida como parte de sua necessidade de digerir experiências complexas sem interferências externas. Em grupos, costumam valorizar conversas autênticas, preferindo evitar interações superficiais ou que pareçam artificiais."
+        },
+        {
+          "heading": "Atuação Profissional e Ritmo de Ação",
+          "body": "No âmbito profissional, Purva Bhadrapada costuma favorecer atividades que exijam investigação perspicaz, reformas estruturais ou resolução de questões intrincadas. Ambientes monótonos ou excessivamente burocráticos tendem a limitar a vitalidade criativa associada a essa influência astrológica. O ritmo de trabalho que melhor se alinha a essa posição costuma alternar fases de grande concentração e esforço focalizado com pausas necessárias para renovação mental."
+        },
+        {
+          "heading": "O Período da Dasha de Júpiter",
+          "body": "Durante a dasha regida por Júpiter, planeta senhor deste nakshatra, tendem a emergir reflexões fundamentais sobre propósitos morais, crenças e direcionamentos de vida. Esse ciclo costuma ser vivenciado como um período de amadurecimento dos temas ligados à busca de sabedoria e reavaliação de prioridades éticas. Na leitura tradicional, é um momento em que a intensidade característica deste nakshatra pode ser canalizada para o desenvolvimento do discernimento filosófico."
+        }
+      ]
+    },
+    {
+      "slug": "uttara-bhadrapada",
+      "latin": "Uttara Bhadrapada",
+      "lord": "Saturn",
+      "name": "Uttara Bhadrapada",
+      "title": "Uttara Bhadrapada: Significado na Astrologia Védica",
+      "description": "Conheça o nakshatra Uttara Bhadrapada na astrologia védica, suas características fundamentais, simbolismos e tendências da Lua nessa posição natal.",
+      "h1": "Uttara Bhadrapada na Astrologia Védica",
+      "lead": "Na tradição da astrologia védica, Uttara Bhadrapada é uma morada lunar associada ao recolhimento, à serenidade e à maturação da consciência. Diferente da astrologia ocidental focada no signo solar, a leitura dos nakshatras parte da posição exata da Lua no nascimento, revelando tendências da mente e das emoções.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismo Tradicional",
+          "body": "Situado no zodíaco sideral entre 3°20 e 16°40 de Peixes, Uttara Bhadrapada é regido pelo planeta Saturno e presidido pela divindade Ahirbudhnya. Seu símbolo tradicional corresponde às pernas traseiras de um leito funerário, marcando repouso e transição de ciclos. A partir desses elementos, as palavras-chave tradicionalmente associadas a essa mansão são profundidade e estabilidade."
+        },
+        {
+          "heading": "Tendências Internas e a Mente Lunar",
+          "body": "Quando a Lua ocupa Uttara Bhadrapada no mapa natal, a pessoa costuma demonstrar uma natureza reflexiva, voltada para a introspecção e para a busca de sentido existencial. Há uma inclinação natural para manter a calma emocional diante de períodos desafiadores, buscando compreender os processos da vida com paciência. Essa postura pode gerar uma sensação de comedimento interior, onde sentimentos intensos são processados com reserva antes de serem expressos. Em muitos casos, observa-se também uma predisposição para o autocontrole e para a busca de serenidade por meio da contemplação contínua."
+        },
+        {
+          "heading": "Relações Interpessoais e Convivência",
+          "body": "No convívio social e afetivo, a energia deste nakshatra costuma se manifestar por meio de uma postura leal, confiável e ponderada. As pessoas com essa configuração tendem a ser ouvintes atentas, oferecendo apoio estável sem a necessidade de demonstrações dramáticas de afeto. Por valorizarem a privacidade e o respeito mútuo, podem parecer reservadas no primeiro contato, mas costumam construir laços profundos e duradouros com o passar do tempo."
+        },
+        {
+          "heading": "Atuação Profissional e Ritmo de Vida",
+          "body": "No campo profissional, a abordagem tende a se apoiar na disciplina, no método e na capacidade de sustentar projetos a longo prazo. Ambientes que exigem pesquisa paciente, análise aprofundada ou capacidade de organização costumam se alinhar bem a esse temperamento. O ritmo mais favorável para essas pessoas geralmente envolve constância em vez de pressa, permitindo que cada etapa seja consolidada com segurança antes de novos passos serem dados."
+        },
+        {
+          "heading": "O Período de Saturno Dasha",
+          "body": "Durante o período planetário de Saturno, regente deste nakshatra, tendem a vir à tona temas ligados à responsabilidade pessoal, à maturidade e à reestruturação de bases de vida. Esse ciclo costuma demandar paciência redobrada e convida ao desapego de ilusões, favorecendo a consolidação de objetivos construídos com esforço ético e dedicação. É uma fase tradicionalmente associada ao aprendizado prático da resiliência e ao fortalecimento da estabilidade interior."
+        }
+      ]
+    },
+    {
+      "slug": "revati",
+      "latin": "Revati",
+      "lord": "Mercury",
+      "name": "Revati",
+      "title": "Nakshatra Revati: Significado na Astrologia Védica",
+      "description": "Conheça o nakshatra Revati na astrologia védica, sua ligação com a Lua natal, simbolismos de conclusão e a regência planetária de Mercúrio.",
+      "h1": "Revati: O Nakshatra da Conclusão e Orientação",
+      "lead": "Revati é a vigésima sétima e última morada lunar na astrologia védica, associada ao fechamento harmonioso do zodíaco e à preservação dos caminhos. Diferente da astrologia ocidental focada no signo solar, os nakshatras são interpretados a partir da posição da Lua no mapa de nascimento, refletindo os padrões mentais e emocionais profundos.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Simbolismos Tradicionais",
+          "body": "No cálculo sideral, Revati ocupa a faixa de Peixes 16°40–30°00 e tem como planeta regente Mercúrio. Sua divindade associada é Pushan, figura mitológica responsável pela nutrição e por guiar viajantes em suas jornadas. Seus símbolos são o peixe e o tambor, conectando-se tradicionalmente às palavras-chave de orientação e conclusão."
+        },
+        {
+          "heading": "Tendências da Mente com a Lua em Revati",
+          "body": "Pessoas que têm a Lua neste nakshatra tendem a vivenciar uma disposição interna marcada pela compaixão e pelo desejo de acolhimento. Há frequentemente uma inclinação reflexiva que busca compreender as nuances dos sentimentos humanos com paciência e brandura. O universo interior costuma valorizar a paz e a conciliação, demonstrando sensibilidade aos ciclos de início e término das experiências cotidianas. Essa posição lunar é tradicionalmente lida como uma mente receptiva, propensa a encontrar significado através da tolerância e do suporte emocional. Muitas vezes, existe um talento intuitivo para perceber quando uma fase precisa ser encerrada para que uma nova harmonia se estabeleça."
+        },
+        {
+          "heading": "Dinâmicas nos Relacionamentos",
+          "body": "Nas relações interpessoais, quem possui essa configuração tende a se apresentar como uma presença tranquila e confiável, capaz de ouvir sem julgamentos precipitados. Costuma haver facilidade para prestar apoio moral e servir de guia para amigos e parceiros em momentos de transição pessoal. No convívio diário, há uma busca natural por ambientes harmoniosos, embora possa surgir o desafio de preservar os próprios limites para não absorver inquietações de terceiros. A lealdade e a consideração mútua costumam ser a base dos laços duradouros estabelecidos por esse perfil."
+        },
+        {
+          "heading": "Atuação Profissional e Movimento no Mundo",
+          "body": "No campo do trabalho, a pessoa tende a responder melhor a funções que exijam empatia combinada com a clareza analítica própria de Mercúrio. Atividades ligadas à mentoria, ao aconselhamento, à proteção de grupos vulneráveis ou à condução de projetos até sua entrega final tendem a ressoar com esse ritmo. Ambientes excessivamente agressivos costumam ser desgastantes, fazendo com que o indivíduo prefira espaços colaborativos onde a gentileza e o cuidado prevaleçam. A realização profissional é frequentemente associada à capacidade de ajudar os outros a encontrar seu próprio caminho com estabilidade."
+        },
+        {
+          "heading": "O Período Planetário de Mercúrio",
+          "body": "Durante o dasha regido por Mercúrio, temas relativos à comunicação, ao discernimento intelectual e à conclusão de etapas tendem a se destacar. Essa fase é tradicionalmente compreendida como um momento propício para organizar pensamentos, aprofundar estudos e refinar o modo como se expressa no mundo. Costuma ser um ciclo em que processos antigos chegam a um desfecho natural, permitindo que a pessoa utilize o aprendizado acumulado para orientar seus próximos passos com mais lucidez."
+        }
+      ]
+    }
+  ]
+}
