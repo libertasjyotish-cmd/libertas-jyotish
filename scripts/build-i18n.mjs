@@ -31,7 +31,7 @@ const BASE_LANG = 'ja';
 // 検索エンジンに見せる正規のオリジン（apex は www へ 308 転送される）。
 const SITE = 'https://www.libertas-jyotish.com';
 // sitemap.xml に載せる（＝検索結果に出したい）ページ。全言語に存在し index 可のもの。
-const SITEMAP_PAGES = ['index', 'pdf-purchase', 'yearly', 'career', 'palm-chart'];
+const SITEMAP_PAGES = ['index', 'products', 'pdf-purchase', 'yearly', 'career', 'palm-chart'];
 // {{pdfIntroJa}}: 生涯完全鑑定書（pdf-purchase）の商品説明ブロック。日本語のみ展開、他言語は空。
 // {{robotsSaleJa}}: 販売ページの robots。日本は KOMOJU、他言語は Gumroad で年間運勢を販売中のため全言語 index 可。
 const SALE_LANGS = new Set(['ja', 'en', 'es', 'pt', 'ar', 'id', 'fr', 'de']);
