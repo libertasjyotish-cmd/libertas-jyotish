@@ -502,6 +502,7 @@ window.LJ_I18N = {
 <a class="lang-link" href="/fr" hreflang="fr" lang="fr" title="Français" aria-label="Français"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">Français</span></a>
 <a class="lang-link" href="/de" hreflang="de" lang="de" title="Deutsch" aria-label="Deutsch"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">Deutsch</span></a>
 </nav>
+<script>document.querySelectorAll('.lang-switch a').forEach(function(a){a.addEventListener('click',function(){document.cookie='lj_lang='+a.getAttribute('hreflang')+';path=/;max-age=31536000;samesite=lax';});});</script>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 
