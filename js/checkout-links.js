@@ -61,6 +61,7 @@
     // 会員権はこのメールアドレスで当サイトのアカウントに紐づける。
     // 日本（provider: komoju）は自サイトの /api/komoju-checkout 経由で KOMOJU の決済ページへ遷移する。
     checkoutUrlFor: function (product, email) {
+      if (window.LJTrack) window.LJTrack('begin_checkout', { product: product, provider: resolved.provider || 'unknown' });
       if (resolved.provider === 'komoju') {
         var lang = (window.LJ_I18N && window.LJ_I18N.lang) || 'ja';
         return '/api/komoju-checkout?product=' + encodeURIComponent(product) +

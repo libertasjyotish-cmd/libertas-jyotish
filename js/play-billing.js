@@ -67,6 +67,7 @@
     buy: function (product, email) {
       var sku = SKUS[product];
       if (!sku) return Promise.reject(new Error('invalid_product'));
+      if (window.LJTrack) window.LJTrack('begin_checkout', { product: product, provider: 'play' });
       var request = new PaymentRequest(
         [{ supportedMethods: METHOD, data: { sku: sku } }],
         { total: { label: 'Total', amount: { currency: 'JPY', value: '0' } } }
@@ -74,6 +75,9 @@
       return request.show().then(function (response) {
         var token = response.details && response.details.purchaseToken;
         return verify(product, token, email).then(function (data) {
+          if (window.LJTrack) {
+            window.LJTrack(product === 'premium' ? 'premium_signup_completed' : 'purchase_completed', { product: product, provider: 'play' });
+          }
           return response.complete('success').then(function () { return data; });
         }, function (err) {
           return response.complete('fail').then(function () { throw err; });

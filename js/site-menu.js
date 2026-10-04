@@ -11,6 +11,10 @@
   s.defer = true;
   s.src = '/_vercel/insights/script.js';
   document.head.appendChild(s);
+
+  const ga = document.createElement('script');
+  ga.src = '/js/analytics.js';
+  document.head.appendChild(ga);
 })();
 
 (function () {

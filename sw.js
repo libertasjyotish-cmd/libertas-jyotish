@@ -1,4 +1,4 @@
-const CACHE_NAME = 'libertas-jyotish-v100';
+const CACHE_NAME = 'libertas-jyotish-v101';
 // vercel.json の cleanUrls: true に合わせ、リダイレクトされない実体パスを指定する
 const ASSETS_TO_CACHE = [
   '/ja',
@@ -9,6 +9,7 @@ const ASSETS_TO_CACHE = [
   '/css/parchment.css',
   '/css/rtl.css',
   '/js/site-menu.js',
+  '/js/analytics.js',
   '/js/today-sky.js',
   '/css/today-sky.css',
   '/manifest.json',
