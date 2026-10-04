@@ -10,7 +10,8 @@
     "build:i18n": "node scripts/build-i18n.mjs",
     "check:i18n": "node scripts/build-i18n.mjs --check",
     "build:guide": "node scripts/build-guide.mjs",
-    "check:guide": "node scripts/build-guide.mjs --check"
+    "check:guide": "node scripts/build-guide.mjs --check",
+    "report:gsc": "node scripts/gsc-report.mjs"
   },
   "dependencies": {
     "@sparticuz/chromium": "^149.0.0",
