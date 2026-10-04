@@ -31,7 +31,10 @@ const BASE_LANG = 'ja';
 // 検索エンジンに見せる正規のオリジン（apex は www へ 308 転送される）。
 const SITE = 'https://www.libertas-jyotish.com';
 // sitemap.xml に載せる（＝検索結果に出したい）ページ。全言語に存在し index 可のもの。
-const SITEMAP_PAGES = ['index', 'products', 'pdf-purchase', 'yearly', 'career', 'palm-chart'];
+const SITEMAP_PAGES = [
+  'index', 'products', 'pdf-purchase', 'yearly', 'career', 'palm-chart',
+  'tools/moon-sign', 'tools/nakshatra', 'tools/dasha'
+];
 // {{pdfIntroJa}}: 生涯完全鑑定書（pdf-purchase）の商品説明ブロック。日本語のみ展開、他言語は空。
 // {{robotsSaleJa}}: 販売ページの robots。日本は KOMOJU、他言語は Gumroad で年間運勢を販売中のため全言語 index 可。
 const SALE_LANGS = new Set(['ja', 'en', 'es', 'pt', 'ar', 'id', 'fr', 'de']);
@@ -178,6 +181,21 @@ function readJson(path) {
   return JSON.parse(readFileSync(path, 'utf8'));
 }
 
+// templates/ 直下と1階層下（templates/tools/ など）のテンプレートを集める。partials は除く。
+function listTemplates(dir, prefix = '') {
+  const entries = readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name));
+  const out = [];
+  for (const entry of entries) {
+    if (entry.isDirectory()) {
+      if (entry.name === 'partials') continue;
+      out.push(...listTemplates(join(dir, entry.name), `${prefix}${entry.name}/`));
+    } else if (entry.name.endsWith('.html')) {
+      out.push(`${prefix}${entry.name}`);
+    }
+  }
+  return out;
+}
+
 function lookup(obj, path) {
   if (Object.prototype.hasOwnProperty.call(obj, path)) return obj[path];
   return path.split('.').reduce((acc, key) => (acc == null ? undefined : acc[key]), obj);
@@ -209,6 +227,12 @@ function render(template, locale, base, context) {
   template = expandPartials(template);
   const output = template.replace(PLACEHOLDER, (match, path, filter) => {
     let value;
+    // {{tool.*}}: 共通 partial（tool-page）から、そのページのツールの文言を引く。
+    // 例：tools/moon-sign.html の {{tool.h1}} → {{t.tools.moonSign.h1}}
+    if (path.startsWith('tool.')) {
+      if (!context.tool) throw new Error(`${context.name}: {{tool.*}} は templates/tools/ 以下でのみ使えます`);
+      path = `t.tools.${context.tool}.${path.slice(5)}`;
+    }
     if (path.startsWith('t.')) {
       const key = path.slice(2);
       value = lookup(locale.strings, key);
@@ -229,6 +253,9 @@ function render(template, locale, base, context) {
       value = expandPartials(`{{>pdf-intro-${locale.meta.lang}}}`);
     } else if (path === 'robotsSaleJa') {
       value = buildRobotsSaleJa(locale.meta.lang);
+    } else if (path === 'page') {
+      // {{page}}: そのページのパス（例 tools/moon-sign）。単機能ツールが自分の種別をJSへ渡すのに使う。
+      value = context.page;
     } else if (path === 'canonical') {
       value = pageUrl(locale.meta.lang, context.page);
     } else if (path === 'hreflang') {
@@ -248,7 +275,7 @@ function render(template, locale, base, context) {
 
 function main() {
   const check = process.argv.includes('--check');
-  const templates = readdirSync(TEMPLATE_DIR).filter((name) => name.endsWith('.html')).sort();
+  const templates = listTemplates(TEMPLATE_DIR);
   const langs = readdirSync(LOCALE_DIR).filter((name) => name.endsWith('.json')).map((name) => name.replace(/\.json$/, '')).sort();
   const base = readJson(join(LOCALE_DIR, `${BASE_LANG}.json`));
 
@@ -261,10 +288,14 @@ function main() {
     const missingKeys = new Set();
     for (const name of templates) {
       const template = readFileSync(join(TEMPLATE_DIR, name), 'utf8');
-      const { output, missing } = render(template, locale, base, { name: `${lang}/${name}`, page: name.replace(/\.html$/, '') });
+      const page = name.replace(/\.html$/, '');
+      const toolMatch = /^tools\/(.+)$/.exec(page);
+      const tool = toolMatch ? toolMatch[1].replace(/-([a-z])/g, (m, c) => c.toUpperCase()) : null;
+      const { output, missing } = render(template, locale, base, { name: `${lang}/${name}`, page, tool });
       missing.forEach((key) => missingKeys.add(key));
 
       const outPath = join(outDir, name);
+      if (!check) mkdirSync(dirname(outPath), { recursive: true });
       if (check) {
         const current = existsSync(outPath) ? readFileSync(outPath, 'utf8') : null;
         if (current !== output) stale.push(`${lang}/${name}`);

@@ -1151,8 +1151,78 @@ async function fetchCompatData({ a, b, lang, relation = 'general' }) {
   };
 }
 
+// 単機能ツール（月星座・ナクシャトラ・現在のダシャー）が表示する項目だけを取得する。
+// 解説ページ（/<lang>/guide/nakshatra-<slug> と dasha-<slug>）へ繋ぐため slug も返す。
+// 27宿の順番は NAKSHATRA_ORDER と同じ。
+const NAKSHATRA_SLUG = [
+  'ashwini', 'bharani', 'krittika', 'rohini', 'mrigashira', 'ardra',
+  'punarvasu', 'pushya', 'ashlesha', 'magha', 'purva-phalguni',
+  'uttara-phalguni', 'hasta', 'chitra', 'swati', 'vishakha', 'anuradha',
+  'jyeshtha', 'mula', 'purva-ashadha', 'uttara-ashadha', 'shravana',
+  'dhanishta', 'shatabhisha', 'purva-bhadrapada', 'uttara-bhadrapada', 'revati'
+];
+
+// ヴィムショッタリー・ダシャーの支配星（27宿に9惑星が3巡する固定の並び）
+const VIMSHOTTARI_LORDS = ['Ketu', 'Venus', 'Sun', 'Moon', 'Mars', 'Rahu', 'Jupiter', 'Saturn', 'Mercury'];
+const DASHA_SLUG = {
+  Ketu: 'ketu', Venus: 'venus', Sun: 'sun', Moon: 'moon', Mars: 'mars',
+  Rahu: 'rahu', Jupiter: 'jupiter', Saturn: 'saturn', Mercury: 'mercury'
+};
+
+async function fetchChartBasics({ dob, tob, lat, lon, lang }) {
+  const terms = createTerms(lang);
+  const token = await getAccessToken();
+  const datetime = localDateTimeToIso(dob, tob, zoneForCoordinates(lat, lon));
+  const base = { datetime, coordinates: `${lat},${lon}`, ayanamsa: 1 };
+
+  const [planetPosition, kundli] = await Promise.all([
+    callEndpoint(token, 'astrology/planet-position', base),
+    callEndpoint(token, 'astrology/kundli/advanced', base)
+  ]);
+  if (!planetPosition) throw new Error('prokerala_position_failed');
+
+  const planets = normalizePlanets(planetPosition, terms);
+  const moon = planets.find((p) => p.key === 'Moon') || null;
+  const sun = planets.find((p) => p.key === 'Sun') || null;
+  const asc = planets.find((p) => p.key === 'Ascendant') || null;
+
+  const details = kundli?.data?.nakshatra_details || null;
+  const nakshatraKey = details?.nakshatra?.name
+    ? toJapaneseNakshatra(details.nakshatra.name)
+    : moon?.nakshatraKey || '';
+  const index = NAKSHATRA_ORDER.indexOf(nakshatraKey);
+  const lordKey = index >= 0 ? VIMSHOTTARI_LORDS[index % 9] : null;
+
+  const dasha = normalizeDasha(kundli, terms);
+  const maha = dasha?.current?.maha || null;
+  const nextStart = maha ? maha.end : null;
+  const upcoming = nextStart ? (dasha.timeline || []).find((t) => t.start === nextStart) : null;
+  const periodOf = (p) => (p ? {
+    lord: p.lord,
+    name: p.lordJa,
+    slug: DASHA_SLUG[p.lord] || null,
+    start: p.start,
+    end: p.end
+  } : null);
+
+  return {
+    lang: terms.lang,
+    birth: { dob, tob: tob || '12:00' },
+    moonSign: moon?.sign || '',
+    sunSign: sun?.sign || '',
+    lagna: asc?.sign || '',
+    nakshatra: terms.nakshatra(nakshatraKey),
+    nakshatraSlug: index >= 0 ? NAKSHATRA_SLUG[index] : null,
+    nakshatraPada: details?.nakshatra?.pada ?? null,
+    nakshatraLord: lordKey ? { lord: lordKey, name: terms.planet(lordKey, PLANET_JA[lordKey] || lordKey) } : null,
+    dasha: periodOf(maha),
+    nextDasha: periodOf(upcoming)
+  };
+}
+
 module.exports = {
   fetchReportData,
+  fetchChartBasics,
   fetchYearlyData,
   fetchCareerData,
   fetchKarmaData,

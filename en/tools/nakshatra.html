@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Nakshatra Calculator (27 Lunar Mansions) | Vedic Astrology</title>
+<meta name="description" content="Calculate your birth Nakshatra (lunar mansion), Pada, and ruling planet for free from your birth date, time, and place. Access comprehensive guide pages for each of the 27 Nakshatras.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Libertas Jyotish">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Free Nakshatra Calculator (27 Lunar Mansions) | Vedic Astrology">
+<meta property="og:description" content="Calculate your birth Nakshatra (lunar mansion), Pada, and ruling planet for free from your birth date, time, and place. Access comprehensive guide pages for each of the 27 Nakshatras.">
+<meta property="og:url" content="https://www.libertas-jyotish.com/en/tools/nakshatra">
+<meta property="og:image" content="https://www.libertas-jyotish.com/img/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://www.libertas-jyotish.com/en/tools/nakshatra">
+<link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/tools/nakshatra">
+<link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/tools/nakshatra">
+<link rel="alternate" hreflang="es" href="https://www.libertas-jyotish.com/es/tools/nakshatra">
+<link rel="alternate" hreflang="pt" href="https://www.libertas-jyotish.com/pt/tools/nakshatra">
+<link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar/tools/nakshatra">
+<link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id/tools/nakshatra">
+<link rel="alternate" hreflang="fr" href="https://www.libertas-jyotish.com/fr/tools/nakshatra">
+<link rel="alternate" hreflang="de" href="https://www.libertas-jyotish.com/de/tools/nakshatra">
+<link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/tools/nakshatra">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0c1a1f">
+<link rel="icon" type="image/png" href="/img/libertas-logo.png">
+<link rel="apple-touch-icon" href="/img/libertas-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/guide.css">
+<link rel="stylesheet" href="/css/tools.css">
+<style>body{font-family:'Noto Serif', serif;}</style>
+<script defer src="/js/site-menu.js"></script>
+<script defer src="/js/tools.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Find Your Nakshatra","url":"https://www.libertas-jyotish.com/en/tools/nakshatra","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"en","description":"Calculate your birth Nakshatra (lunar mansion), Pada, and ruling planet for free from your birth date, time, and place. Access comprehensive guide pages for each of the 27 Nakshatras.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.libertas-jyotish.com/en"},{"@type":"ListItem","position":2,"name":"Find Your Nakshatra","item":"https://www.libertas-jyotish.com/en/tools/nakshatra"}]}]}</script>
+</head>
+<body>
+{{>i18n-globals}}
+<script>window.LJ_TOOLS = {
+  tool: 'tools/nakshatra',
+  labels: {
+    moonSign: 'Moon Sign',
+    sunSign: 'Sun Sign (Sidereal)',
+    lagna: 'Lagna (Ascendant)',
+    nakshatra: 'Nakshatra',
+    pada: 'Pada',
+    nakshatraLord: 'Ruling Planet',
+    dasha: 'Current Mahadasha',
+    nextDasha: 'Next Mahadasha'
+  },
+  padaValue: 'Pada {pada}',
+  period: '{start} – {end}',
+  guideLink: 'Read about {name}',
+  submit: 'Calculate for Free',
+  submitting: 'Calculating…',
+  errors: {
+    date: 'Please enter your date of birth.',
+    place: 'Please enter your place of birth.',
+    placeNotFound: 'Could not identify the place of birth. Please try adding a city, state, or country name.',
+    generic: 'Calculation could not be completed. Please try again in a few moments.'
+  }
+};</script>
+<header class="site-header" data-site-header></header>
+<main class="guide tool-page">
+<nav class="breadcrumb" aria-label="Current Location"><ol><li><a href="/en">Home</a></li><li aria-current="page">Find Your Nakshatra</li></ol></nav>
+<article>
+<h1>Find Your Nakshatra</h1>
+<p class="lead">Calculate the Nakshatra (lunar mansion) where the Moon was placed at your birth, along with its Pada and ruling planet, using your birth date, time, and place. Explore detailed explanations for your birth star directly from your results.</p>
+
+<form class="tool-form" id="tool-form" novalidate>
+<div class="tool-field">
+<label for="tool-date">Date of Birth</label>
+<input type="date" id="tool-date" name="date" required>
+</div>
+<div class="tool-field">
+<label for="tool-time">Time of Birth <span class="tool-hint">(Leave blank if unknown; calculated using 12:00 PM)</span></label>
+<input type="time" id="tool-time" name="time">
+</div>
+<div class="tool-field">
+<label for="tool-place">Place of Birth</label>
+<input type="text" id="tool-place" name="place" placeholder="e.g., Shinjuku, Tokyo" autocomplete="off" required>
+</div>
+<button type="submit" class="tool-submit" id="tool-submit">Calculate for Free</button>
+<p class="tool-status" id="tool-status" role="status" aria-live="polite" hidden></p>
+</form>
+
+<section class="tool-result" id="tool-result" hidden>
+<h2>Calculation Results</h2>
+<dl class="tool-values" id="tool-values"></dl>
+<p class="tool-geo" id="tool-geo" hidden></p>
+<p class="tool-guide" id="tool-guide" hidden></p>
+</section>
+
+<section>
+<h2>What Is a Nakshatra?</h2>
+<p>Nakshatras are 27 divisions of the ecliptic, commonly known as lunar mansions. Because they divide the zodiac much more finely than the 12 signs, they allow for a deeper understanding of personal qualities, even among individuals sharing the same Moon sign. In Vedic astrology, the Nakshatra occupied by the Moon at birth is treated as your birth star (Janma Nakshatra), used to analyze innate tendencies, marriage compatibility, and planetary timing.</p>
+</section>
+<section>
+<h2>Padas and Ruling Planets</h2>
+<p>Each Nakshatra is divided into four Padas (3°20' each), and interpretations vary depending on which Pada your Moon occupies. In addition, each of the 27 Nakshatras is assigned a ruling planet following a repeating sequence of nine planetary rulers: Ketu, Venus, Sun, Moon, Mars, Rahu, Jupiter, Saturn, and Mercury. This ruling planet serves as the starting point for the Vimshottari Dasha system.</p>
+</section>
+<section>
+<h2>Information Required for Calculation</h2>
+<p>The Moon transits through a single Nakshatra in about one day, and a Pada changes roughly every six hours. Therefore, while your birth date alone may be enough to identify the Nakshatra, an accurate birth time is necessary to calculate the exact Pada. If your birth time is unknown, the calculation is performed using 12:00 PM.</p>
+</section>
+<p class="note">This tool displays astronomical calculation results based on traditional calculation principles. It does not guarantee future events and does not substitute for medical, legal, or financial advice.</p>
+</article>
+<aside class="guide-cta">
+<p class="guide-cta-title">Looking for a Detailed Written Reading?</p>
+<p>In our free reading, you can explore your personality traits and current life themes in writing, based on your calculated Moon sign, Nakshatra, and Dasha.</p>
+<a class="guide-cta-btn" href="/en#form-area" data-tool-cta="free">Start Free Reading</a>
+</aside>
+<aside class="guide-products">
+<p class="guide-cta-title">To Learn More in Depth</p>
+<p>Comprehensive, chapter-by-chapter birth chart reading report (PDF).</p>
+<ul>
+<li><a href="/en/yearly" data-tool-cta="yearly">Year Ahead Report</a></li>
+<li><a href="/en/career" data-tool-cta="career">Career, Wealth & Calling Report</a></li>
+<li><a href="/en/pdf-purchase" data-tool-cta="report">Lifetime Report</a></li>
+</ul>
+</aside>
+<section class="related">
+<h2>Other Calculation Tools</h2>
+<ul class="tool-links">
+<li><a href="/en/tools/moon-sign">Find Your Moon Sign</a></li>
+<li><a href="/en/tools/nakshatra">Find Your Nakshatra</a></li>
+<li><a href="/en/tools/dasha">Find Your Current Dasha Period</a></li>
+</ul>
+</section>
+</main>
+<footer class="guide-footer">
+{{>legal-links}}
+<p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+</footer>
+</body>
+</html>

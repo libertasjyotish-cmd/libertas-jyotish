@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nakshatra (Mondhaus) kostenlos berechnen | Vedische Astrologie</title>
+<meta name="description" content="Berechnen Sie Ihr Nakshatra (Mondhaus), Pada und den Herrscherplaneten anhand von Geburtsdatum, -zeit und -ort kostenlos. Erfahren Sie mehr über die 27 Nakshatras.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Libertas Jyotish">
+<meta property="og:locale" content="de_DE">
+<meta property="og:title" content="Nakshatra (Mondhaus) kostenlos berechnen | Vedische Astrologie">
+<meta property="og:description" content="Berechnen Sie Ihr Nakshatra (Mondhaus), Pada und den Herrscherplaneten anhand von Geburtsdatum, -zeit und -ort kostenlos. Erfahren Sie mehr über die 27 Nakshatras.">
+<meta property="og:url" content="https://www.libertas-jyotish.com/de/tools/nakshatra">
+<meta property="og:image" content="https://www.libertas-jyotish.com/img/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://www.libertas-jyotish.com/de/tools/nakshatra">
+<link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/tools/nakshatra">
+<link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/tools/nakshatra">
+<link rel="alternate" hreflang="es" href="https://www.libertas-jyotish.com/es/tools/nakshatra">
+<link rel="alternate" hreflang="pt" href="https://www.libertas-jyotish.com/pt/tools/nakshatra">
+<link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar/tools/nakshatra">
+<link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id/tools/nakshatra">
+<link rel="alternate" hreflang="fr" href="https://www.libertas-jyotish.com/fr/tools/nakshatra">
+<link rel="alternate" hreflang="de" href="https://www.libertas-jyotish.com/de/tools/nakshatra">
+<link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/tools/nakshatra">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0c1a1f">
+<link rel="icon" type="image/png" href="/img/libertas-logo.png">
+<link rel="apple-touch-icon" href="/img/libertas-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/guide.css">
+<link rel="stylesheet" href="/css/tools.css">
+<style>body{font-family:'Noto Serif', serif;}</style>
+<script defer src="/js/site-menu.js"></script>
+<script defer src="/js/tools.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Nakshatra berechnen","url":"https://www.libertas-jyotish.com/de/tools/nakshatra","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"de","description":"Berechnen Sie Ihr Nakshatra (Mondhaus), Pada und den Herrscherplaneten anhand von Geburtsdatum, -zeit und -ort kostenlos. Erfahren Sie mehr über die 27 Nakshatras.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Startseite","item":"https://www.libertas-jyotish.com/de"},{"@type":"ListItem","position":2,"name":"Nakshatra berechnen","item":"https://www.libertas-jyotish.com/de/tools/nakshatra"}]}]}</script>
+</head>
+<body>
+{{>i18n-globals}}
+<script>window.LJ_TOOLS = {
+  tool: 'tools/nakshatra',
+  labels: {
+    moonSign: 'Mondzeichen',
+    sunSign: 'Sonnenzeichen (siderisch)',
+    lagna: 'Lagna (Aszendent)',
+    nakshatra: 'Nakshatra',
+    pada: 'Pada',
+    nakshatraLord: 'Herrscherplanet',
+    dasha: 'Aktuelle Mahadasha',
+    nextDasha: 'Nächste Mahadasha'
+  },
+  padaValue: '{pada}. Pada',
+  period: '{start} bis {end}',
+  guideLink: 'Erklärung zu {name} lesen',
+  submit: 'Kostenlos berechnen',
+  submitting: 'Wird berechnet…',
+  errors: {
+    date: 'Bitte geben Sie Ihr Geburtsdatum ein.',
+    place: 'Bitte geben Sie Ihren Geburtsort ein.',
+    placeNotFound: 'Der Geburtsort konnte nicht gefunden werden. Bitte versuchen Sie es mit Angabe von Stadt und Land erneut.',
+    generic: 'Berechnung fehlgeschlagen. Bitte versuchen Sie es später noch einmal.'
+  }
+};</script>
+<header class="site-header" data-site-header></header>
+<main class="guide tool-page">
+<nav class="breadcrumb" aria-label="Aktuelle Position"><ol><li><a href="/de">Startseite</a></li><li aria-current="page">Nakshatra berechnen</li></ol></nav>
+<article>
+<h1>Nakshatra berechnen</h1>
+<p class="lead">Berechnen Sie anhand von Geburtsdatum, -zeit und -ort das Nakshatra (Mondhaus), in dem der Mond bei Ihrer Geburt stand, sowie das Pada und den Herrscherplaneten. Vom Ergebnis gelangen Sie direkt zur Erklärung Ihres Nakshatras.</p>
+
+<form class="tool-form" id="tool-form" novalidate>
+<div class="tool-field">
+<label for="tool-date">Geburtsdatum</label>
+<input type="date" id="tool-date" name="date" required>
+</div>
+<div class="tool-field">
+<label for="tool-time">Geburtszeit <span class="tool-hint">(Falls unbekannt, leer lassen. Es wird mit 12:00 Uhr gerechnet)</span></label>
+<input type="time" id="tool-time" name="time">
+</div>
+<div class="tool-field">
+<label for="tool-place">Geburtsort</label>
+<input type="text" id="tool-place" name="place" placeholder="z. B. Berlin, Deutschland" autocomplete="off" required>
+</div>
+<button type="submit" class="tool-submit" id="tool-submit">Kostenlos berechnen</button>
+<p class="tool-status" id="tool-status" role="status" aria-live="polite" hidden></p>
+</form>
+
+<section class="tool-result" id="tool-result" hidden>
+<h2>Berechnungsergebnis</h2>
+<dl class="tool-values" id="tool-values"></dl>
+<p class="tool-geo" id="tool-geo" hidden></p>
+<p class="tool-guide" id="tool-guide" hidden></p>
+</section>
+
+<section>
+<h2>Was ist ein Nakshatra?</h2>
+<p>Ein Nakshatra ist einer von 27 Abschnitten der Ekliptik, auch Mondhaus oder Mondstation genannt. Da sie den Tierkreis feiner unterteilen als die 12 Zeichen, ermöglichen sie eine differenziertere Betrachtung von Personen mit demselben Mondzeichen. In der indischen Astrologie wird das Nakshatra der Geburtsmondstellung als persönliches Mondhaus betrachtet und dient zur Analyse von Wesenszügen, Partnerschaftskompatibilität und zeitlichen Phasen.</p>
+</section>
+<section>
+<h2>Pada und Herrscherplanet</h2>
+<p>Jedes Nakshatra ist in 4 Padas (je 3°20') unterteilt, und die Deutung variiert je nach Pada. Zudem ist jedem der 27 Nakshatras ein bestimmter Herrscherplanet zugeordnet (in einer dreifachen Abfolge der neun Planeten: Ketu, Venus, Sonne, Mond, Mars, Rahu, Jupiter, Saturn und Merkur). Dieser Herrscher bestimmt den Beginn des Vimshottari-Dasha-Zyklus.</p>
+</section>
+<section>
+<h2>Erforderliche Angaben für die Berechnung</h2>
+<p>Der Mond durchwandert ein Nakshatra in etwa einem Tag, während ein Pada in circa sechs Stunden durchlaufen wird. Um das Nakshatra zu ermitteln, reicht daher oft das Geburtsdatum aus; für die exakte Bestimmung des Pada ist die Geburtszeit jedoch notwendig. Ist die Geburtszeit nicht bekannt, wird mit 12:00 Uhr gerechnet.</p>
+</section>
+<p class="note">Dieses Tool zeigt Ergebnisse astronomischer Berechnungen auf Basis traditioneller Regeln. Es garantiert keine zukünftigen Ereignisse und ersetzt keine medizinische, rechtliche oder finanzielle Beratung.</p>
+</article>
+<aside class="guide-cta">
+<p class="guide-cta-title">Möchten Sie eine ausführliche Deutung lesen?</p>
+<p>In der kostenlosen Analyse erhalten Sie auf Basis Ihres hier berechneten Mondzeichens, Nakshatras und Dashas eine schriftliche Deutung Ihrer Wesensmerkmale und aktuellen Lebensphase.</p>
+<a class="guide-cta-btn" href="/de#form-area" data-tool-cta="free">Kostenlose Analyse starten</a>
+</aside>
+<aside class="guide-products">
+<p class="guide-cta-title">Für noch tiefere Einblicke</p>
+<p>Ein strukturiertes Horoskop-Gutachten (PDF), das auf Ihrem vollständigen Geburtshoroskop basiert.</p>
+<ul>
+<li><a href="/de/yearly" data-tool-cta="yearly">Jahresbericht</a></li>
+<li><a href="/de/career" data-tool-cta="career">Bericht zu Beruf, Geld & Berufung</a></li>
+<li><a href="/de/pdf-purchase" data-tool-cta="report">Lebensbericht</a></li>
+</ul>
+</aside>
+<section class="related">
+<h2>Weitere Berechnungstools</h2>
+<ul class="tool-links">
+<li><a href="/de/tools/moon-sign">Mondzeichen berechnen</a></li>
+<li><a href="/de/tools/nakshatra">Nakshatra berechnen</a></li>
+<li><a href="/de/tools/dasha">Aktuelle Dasha-Phase berechnen</a></li>
+</ul>
+</section>
+</main>
+<footer class="guide-footer">
+{{>legal-links}}
+<p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+</footer>
+</body>
+</html>

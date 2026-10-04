@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculateur de Nakshatra (27 demeures lunaires) gratuit | Astrologie védique</title>
+<meta name="description" content="Calculez gratuitement votre Nakshatra lunaire, son Pada et sa planète maîtresse à partir de vos date, heure et lieu de naissance. Accédez aux descriptions détaillées des 27 demeures lunaires.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Libertas Jyotish">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Calculateur de Nakshatra (27 demeures lunaires) gratuit | Astrologie védique">
+<meta property="og:description" content="Calculez gratuitement votre Nakshatra lunaire, son Pada et sa planète maîtresse à partir de vos date, heure et lieu de naissance. Accédez aux descriptions détaillées des 27 demeures lunaires.">
+<meta property="og:url" content="https://www.libertas-jyotish.com/fr/tools/nakshatra">
+<meta property="og:image" content="https://www.libertas-jyotish.com/img/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://www.libertas-jyotish.com/fr/tools/nakshatra">
+<link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/tools/nakshatra">
+<link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/tools/nakshatra">
+<link rel="alternate" hreflang="es" href="https://www.libertas-jyotish.com/es/tools/nakshatra">
+<link rel="alternate" hreflang="pt" href="https://www.libertas-jyotish.com/pt/tools/nakshatra">
+<link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar/tools/nakshatra">
+<link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id/tools/nakshatra">
+<link rel="alternate" hreflang="fr" href="https://www.libertas-jyotish.com/fr/tools/nakshatra">
+<link rel="alternate" hreflang="de" href="https://www.libertas-jyotish.com/de/tools/nakshatra">
+<link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/tools/nakshatra">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0c1a1f">
+<link rel="icon" type="image/png" href="/img/libertas-logo.png">
+<link rel="apple-touch-icon" href="/img/libertas-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/guide.css">
+<link rel="stylesheet" href="/css/tools.css">
+<style>body{font-family:'Noto Serif', serif;}</style>
+<script defer src="/js/site-menu.js"></script>
+<script defer src="/js/tools.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Calculer votre Nakshatra","url":"https://www.libertas-jyotish.com/fr/tools/nakshatra","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"fr","description":"Calculez gratuitement votre Nakshatra lunaire, son Pada et sa planète maîtresse à partir de vos date, heure et lieu de naissance. Accédez aux descriptions détaillées des 27 demeures lunaires.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://www.libertas-jyotish.com/fr"},{"@type":"ListItem","position":2,"name":"Calculer votre Nakshatra","item":"https://www.libertas-jyotish.com/fr/tools/nakshatra"}]}]}</script>
+</head>
+<body>
+{{>i18n-globals}}
+<script>window.LJ_TOOLS = {
+  tool: 'tools/nakshatra',
+  labels: {
+    moonSign: 'Signe lunaire (Chandra Rashi)',
+    sunSign: 'Signe solaire (sidéral)',
+    lagna: 'Lagna (Ascendant)',
+    nakshatra: 'Nakshatra',
+    pada: 'Pada',
+    nakshatraLord: 'Planète maîtresse',
+    dasha: 'Mahadasha actuelle',
+    nextDasha: 'Prochaine Mahadasha'
+  },
+  padaValue: 'Pada {pada}',
+  period: 'De {start} à {end}',
+  guideLink: 'Lire l\'interprétation de {name}',
+  submit: 'Calculer gratuitement',
+  submitting: 'Calcul en cours…',
+  errors: {
+    date: 'Veuillez saisir votre date de naissance.',
+    place: 'Veuillez saisir votre lieu de naissance.',
+    placeNotFound: 'Impossible de localiser le lieu de naissance. Veuillez préciser la ville ou le pays et réessayer.',
+    generic: 'Une erreur est survenue lors du calcul. Veuillez réessayer ultérieurement.'
+  }
+};</script>
+<header class="site-header" data-site-header></header>
+<main class="guide tool-page">
+<nav class="breadcrumb" aria-label="Vous êtes ici"><ol><li><a href="/fr">Accueil</a></li><li aria-current="page">Calculer votre Nakshatra</li></ol></nav>
+<article>
+<h1>Calculer votre Nakshatra</h1>
+<p class="lead">Déterminez le Nakshatra (demeure lunaire) dans lequel se trouvait la Lune à votre naissance, ainsi que son Pada et son maître planétaire, à partir de votre date, heure et lieu de naissance.</p>
+
+<form class="tool-form" id="tool-form" novalidate>
+<div class="tool-field">
+<label for="tool-date">Date de naissance</label>
+<input type="date" id="tool-date" name="date" required>
+</div>
+<div class="tool-field">
+<label for="tool-time">Heure de naissance <span class="tool-hint">(Laisser vide si inconnue. Calculé à 12h00)</span></label>
+<input type="time" id="tool-time" name="time">
+</div>
+<div class="tool-field">
+<label for="tool-place">Lieu de naissance</label>
+<input type="text" id="tool-place" name="place" placeholder="Ex. : Paris, France" autocomplete="off" required>
+</div>
+<button type="submit" class="tool-submit" id="tool-submit">Calculer gratuitement</button>
+<p class="tool-status" id="tool-status" role="status" aria-live="polite" hidden></p>
+</form>
+
+<section class="tool-result" id="tool-result" hidden>
+<h2>Résultats du calcul</h2>
+<dl class="tool-values" id="tool-values"></dl>
+<p class="tool-geo" id="tool-geo" hidden></p>
+<p class="tool-guide" id="tool-guide" hidden></p>
+</section>
+
+<section>
+<h2>Qu'est-ce qu'un Nakshatra ?</h2>
+<p>Les Nakshatras sont 27 divisions de l'écliptique, souvent appelées « demeures lunaires ». Offrant un découpage beaucoup plus fin que les 12 signes du zodiaque, ils permettent de distinguer avec précision les nuances de personnalité entre deux personnes ayant le même signe lunaire. En astrologie védique, la demeure où résidait la Lune à la naissance constitue votre Nakshatra natal, pilier pour analyser la nature profonde, la compatibilité de couple et les cycles de vie.</p>
+</section>
+<section>
+<h2>Les Padas et les maîtres planétaires</h2>
+<p>Chaque Nakshatra est divisé en 4 Padas (quarts de 3°20' chacun), apportant des nuances spécifiques à l'interprétation. De plus, chacune des 27 demeures est gouvernée par une planète maîtresse (selon un cycle de 9 planètes répété trois fois : Ketu, Vénus, Soleil, Lune, Mars, Rahu, Jupiter, Saturne, Mercure). Cette planète maîtresse sert également de point de départ au cycle du Vimshottari Dasha.</p>
+</section>
+<section>
+<h2>Informations requises pour le calcul</h2>
+<p>La Lune traverse un Nakshatra en environ 24 heures et un Pada en 6 heures environ. Bien que la date de naissance suffise souvent à trouver le Nakshatra, l'heure exacte de naissance est indispensable pour déterminer précisément le Pada. En l'absence d'heure précise, le calcul est effectué à 12h00.</p>
+</section>
+<p class="note">Cet outil affiche les résultats de calculs astronomiques fondés sur les règles traditionnelles. Il ne garantit en aucun cas des événements futurs et ne constitue pas un conseil médical, juridique ou financier.</p>
+</article>
+<aside class="guide-cta">
+<p class="guide-cta-title">Pour une lecture détaillée</p>
+<p>Notre analyse gratuite vous permet de découvrir en détail vos tendances de personnalité et vos cycles actuels à partir de votre signe lunaire, nakshatra et dasha calculés ici.</p>
+<a class="guide-cta-btn" href="/fr#form-area" data-tool-cta="free">Commencer l'analyse gratuite</a>
+</aside>
+<aside class="guide-products">
+<p class="guide-cta-title">Pour aller plus loin</p>
+<p>Un thème astral complet rédigé sous forme de rapport détaillé (PDF), basé sur l'ensemble de votre carte du ciel.</p>
+<ul>
+<li><a href="/fr/yearly" data-tool-cta="yearly">Rapport de l’année</a></li>
+<li><a href="/fr/career" data-tool-cta="career">Rapport carrière, argent et vocation</a></li>
+<li><a href="/fr/pdf-purchase" data-tool-cta="report">Rapport à vie</a></li>
+</ul>
+</aside>
+<section class="related">
+<h2>Autres outils de calcul</h2>
+<ul class="tool-links">
+<li><a href="/fr/tools/moon-sign">Calculer votre signe lunaire</a></li>
+<li><a href="/fr/tools/nakshatra">Calculer votre Nakshatra</a></li>
+<li><a href="/fr/tools/dasha">Calculer votre période de Dasha actuelle</a></li>
+</ul>
+</section>
+</main>
+<footer class="guide-footer">
+{{>legal-links}}
+<p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+</footer>
+</body>
+</html>
