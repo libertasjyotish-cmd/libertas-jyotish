@@ -1,0 +1,308 @@
+{
+  "parent": "dasha",
+  "slugPrefix": "dasha",
+  "ui": {
+    "listHeading": "Os nove períodos de dasha, um a um",
+    "factsHeading": "Informações essenciais",
+    "listLead": "Escolha o período de dasha em que você se encontra atualmente."
+  },
+  "items": [
+    {
+      "slug": "ketu",
+      "latin": "Ketu",
+      "lord": "Ketu",
+      "years": 7,
+      "name": "Dasha de Ketu",
+      "title": "Dasha de Ketu na Astrologia Védica: Guia e Temas",
+      "description": "Entenda os temas da Dasha de Ketu na astrologia védica, com foco no desapego, busca interior e na forma como esse ciclo de sete anos se manifesta.",
+      "h1": "Compreendendo a Dasha de Ketu na Astrologia Védica",
+      "lead": "A Dasha de Ketu é um período de sete anos dentro da astrologia védica tradicionalmente associado ao aprofundamento espiritual e à reavaliação de prioridades mundanas. Essa fase costuma convidar o indivíduo a uma jornada introspectiva, marcada pelo desapego de velhos padrões e pela busca por uma verdade interior mais essencial.",
+      "sections": [
+        {
+          "heading": "Estrutura e fundamentos do ciclo de Ketu",
+          "body": "Com duração de sete anos, essa fase integra o sistema Vimshottari Dasha, um ciclo total de cento e vinte anos que organiza as diferentes etapas da vida na tradição astrológica da Índia. Dentro desse sistema, Ketu rege os nakshatras Ashwini, Magha e Mula, associados a pontos de transição e reinício no zodíaco lunar. Os temas clássicos do período concentram-se no desapego, no processo de abrir mão daquilo que já cumpriu seu papel e no direcionamento da consciência para uma busca interior mais profunda."
+        },
+        {
+          "heading": "Tendências e dinâmicas internas durante o período",
+          "body": "Ao longo dessa fase, o foco do indivíduo tende a se deslocar do reconhecimento puramente externo para a compreensão de suas motivações íntimas. Não se trata de uma experiência inerentemente boa ou ruim, pois sua manifestação é tradicionalmente lida em conjunto com a posição de Ketu no mapa natal e com os aspectos que ele recebe. É comum que surja uma inclinação para momentos de solidão reflexiva, práticas meditativas ou questionamentos existenciais sobre o que realmente possui valor duradouro. Além disso, ambições e apegos que perderam o sentido tendem a se dissolver de maneira orgânica, incentivando uma simplificação da vida cotidiana. Esse movimento costuma abrir espaço para uma percepção mais sutil da realidade e para um contato mais genuíno com a própria essência."
+        },
+        {
+          "heading": "Manifestações na carreira e nos relacionamentos",
+          "body": "No trabalho, o período pode trazer uma diminuição do interesse pelo prestígio convencional, favorecendo atuações mais independentes, pesquisas, consultorias ou atividades ligadas ao autoconhecimento. Nas relações pessoais, tende a emergir a necessidade de maior espaço individual e de interações fundamentadas em afinidades autênticas, em vez de meras convenções sociais. Em vez de determinar desfechos fixos, a tradição astrológica sugere que esse ciclo promove um alinhamento sincero, no qual dinâmicas relacionais e profissionais passam por uma depuração de expectativas irreais."
+        },
+        {
+          "heading": "Evolução do período e a influência dos subperíodos",
+          "body": "Tradicionalmente, a dasha tende a se iniciar com certa sensação de estranhamento em relação às rotinas habituais, amadurecendo gradualmente para uma postura de maior aceitação e discernimento contemplativo com o passar dos anos. Esse ciclo de sete anos não é uniforme, sendo subdividido em fases menores chamadas antardashas, nas quais outros planetas dividem o protagonismo temporário. A presença do regente de cada antardasha interage diretamente com as qualidades de Ketu, alterando a textura da experiência ao alternar momentos de introspecção com etapas de maior atividade externa ou foco prático."
+        },
+        {
+          "heading": "Como identificar o seu momento astrológico",
+          "body": "Para descobrir em qual dasha você se encontra, o cálculo parte do nakshatra ocupado pela Lua no momento exato do seu nascimento, e não do signo solar característico da astrologia ocidental. Por essa razão, são indispensáveis a data exata de nascimento, o horário preciso e a cidade onde você nasceu para posicionar a Lua corretamente. A partir desses dados astronômicos específicos, determina-se o ponto de início da sequência Vimshottari e o cronograma correspondente às etapas de vida de cada pessoa."
+        }
+      ]
+    },
+    {
+      "slug": "venus",
+      "latin": "Venus",
+      "lord": "Venus",
+      "years": 20,
+      "name": "Dasha de Vênus",
+      "title": "Dasha de Vênus na Astrologia Védica: Guia e Temas",
+      "description": "Entenda a Dasha de Vênus na astrologia védica, seus temas de relacionamentos, arte e conforto ao longo do ciclo Vimshottari de vinte anos.",
+      "h1": "Compreendendo a Dasha de Vênus na Astrologia Védica",
+      "lead": "Na astrologia védica, a Dasha de Vênus representa uma das principais fases do desenvolvimento pessoal ao longo do mapa natal. Esse período convida a pessoa a explorar valores ligados à harmonia, aos afetos e à busca por estabilidade material e estética.",
+      "sections": [
+        {
+          "heading": "Fundamentos e duração do período de Vênus",
+          "body": "A Dasha de Vênus tem a duração de vinte anos e integra o ciclo Vimshottari dasha, que compreende um total de cento e vinte anos. No sistema védico, este planeta rege os nakshatras Bharani, Purva Phalguni e Purva Ashadha. Os temas tradicionalmente associados a esse intervalo de tempo envolvem relacionamentos, conforto, arte e dinheiro."
+        },
+        {
+          "heading": "Temas e tendências comuns da fase",
+          "body": "Durante esse ciclo, o indivíduo tende a voltar sua atenção para a qualidade das experiências cotidianas e para a busca de bem-estar. Questões ligadas à valorização pessoal, ao refinamento sensorial e ao apreço por ambientes agradáveis costumam ganhar maior evidência. A tradição astrológica não considera o período intrinsecamente benéfico ou adverso, pois seus efeitos são interpretados em conjunto com a posição e os aspectos de Vênus no mapa individual. Dependendo dessa configuração natal, a fase pode suscitar momentos de serenidade estética ou evidenciar dilemas relacionados a excessos e apegos materiais."
+        },
+        {
+          "heading": "Manifestações no trabalho e nas relações",
+          "body": "Nas relações interpessoais, este período frequentemente intensifica a busca por acordos equilibrados, parcerias afetivas e compreensão mútua. No campo profissional, tendem a surgir oportunidades ou interesse em áreas ligadas à criatividade, diplomacia, comunicação harmoniosa e gestão de recursos. Em vez de indicar eventos fixos, a fase sugere uma inclinação maior para cultivar alianças estratégicas e valorizar a cooperação nos ambientes coletivos."
+        },
+        {
+          "heading": "A evolução do ciclo e as antardashas",
+          "body": "Ao longo de seus vinte anos, o período costuma ser lido como um processo gradual que se transforma à medida que os anos avançam. As fases internas, denominadas antardashas, introduzem a influência de outros planetas e alteram a textura das experiências vivenciadas. Desse modo, o tom venusiano central ganha matizes distintos conforme o regente de cada subdivisão interage com os temas de conforto e ligação afetiva."
+        },
+        {
+          "heading": "Como identificar a sua dasha atual",
+          "body": "Para determinar se alguém está vivenciando a Dasha de Vênus, o cálculo astrológico baseia-se exclusivamente no nakshatra ocupado pela Lua no momento do nascimento, diferindo da ênfase no signo solar comum na astrologia ocidental. Por essa razão, é indispensável dispor da data de nascimento, do horário exato e da cidade onde ocorreu o parto para traçar as coordenadas precisas do mapa. Com esses dados em mãos, é possível projetar a ordem cronológica exata das regências planetárias ao longo da vida."
+        }
+      ]
+    },
+    {
+      "slug": "sun",
+      "latin": "Sun",
+      "lord": "Sun",
+      "years": 6,
+      "name": "Mahadasha do Sol",
+      "title": "Mahadasha do Sol na Astrologia Védica: Entenda o Período",
+      "description": "Descubra as características e temas tradicionais da Mahadasha do Sol na astrologia védica, incluindo sua duração, nakshatras e influências no mapa.",
+      "h1": "Mahadasha do Sol: Temas e Características na Astrologia Védica",
+      "lead": "Na astrologia védica, a Mahadasha do Sol representa uma fase de foco na identidade essencial, na autoridade e no senso de propósito do indivíduo. Esse período planetário faz parte do sistema tradicional de ciclos temporais e convida à compreensão do papel pessoal no mundo.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Duração da Regência Solar",
+          "body": "Com duração de seis anos, a Mahadasha do Sol integra o ciclo Vimshottari dasha, cuja extensão total é de cento e vinte anos. O Sol rege as nakshatras Krittika, Uttara Phalguni e Uttara Ashadha dentro desse esquema astrológico. Tradicionalmente, os temas centrais associados a esse intervalo de tempo giram em torno de posição, reconhecimento e responsabilidade."
+        },
+        {
+          "heading": "O que o Período Costuma Trazer à Tona",
+          "body": "Durante a regência solar, costuma emergir uma necessidade mais evidente de clareza sobre os próprios limites e capacidades de liderança. O período tende a colocar em primeiro plano questões relacionadas à visibilidade social e à postura ética diante dos compromissos assumidos. Na astrologia védica, essa fase não é considerada inerentemente positiva ou negativa, pois sua manifestação depende diretamente do posicionamento do Sol no mapa natal. Conforme os aspectos e a casa astrológica ocupada pelo astro, a pessoa pode vivenciar momentos de maior cobrança interna ou de consolidação do respeito alheio."
+        },
+        {
+          "heading": "Manifestações no Trabalho e nos Relacionamentos",
+          "body": "No âmbito profissional, esse período costuma intensificar as exigências de autonomia, demandando maturidade na tomada de decisões e na gestão de deveres. Nas relações pessoais, a busca por respeito mútuo e honestidade direta tende a se tornar mais pronunciada. Caso a pessoa enfrente dinâmicas de poder ou atritos de ego, o período convida à reflexão sobre a dignidade sem cair na imposição autoritária."
+        },
+        {
+          "heading": "Evolução do Ciclo e a Influência das Antardashas",
+          "body": "Tradicionalmente, a dasha é lida como um processo contínuo que se inicia com a definição das responsabilidades e evolui para a maturidade das escolhas tomadas ao longo dos anos. A textura dessa trajetória não permanece idêntica em toda a sua extensão, pois os subperíodos, conhecidos como antardashas, introduzem a energia de outros planetas à dinâmica solar. Cada transição de antardasha modula o tom da experiência, combinando as qualidades do planeta regente do subperíodo com o papel central do Sol."
+        },
+        {
+          "heading": "Como Identificar o Período Planetário Atual",
+          "body": "Para descobrir qual dasha está ativa, o cálculo é baseado na nakshatra que a Lua ocupava no momento do nascimento, diferindo inteiramente do signo solar da astrologia ocidental. Por essa razão, são imprescindíveis a data exata, a hora precisa e o local de nascimento para determinar o ponto lunar correto. A partir dessa coordenada natal, delineia-se a ordem cronológica dos ciclos planetários ao longo da vida."
+        }
+      ]
+    },
+    {
+      "slug": "moon",
+      "latin": "Moon",
+      "lord": "Moon",
+      "years": 10,
+      "name": "Dasha da Lua",
+      "title": "Dasha da Lua na Astrologia Védica: Significado e Ciclo",
+      "description": "Entenda o que representa a Dasha da Lua na astrologia védica, sua duração de dez anos, temas tradicionais de cuidado e como esse ciclo se manifesta.",
+      "h1": "Dasha da Lua: Significado e Influências na Astrologia Védica",
+      "lead": "Na astrologia védica, a Dasha da Lua representa um ciclo significativo voltado para o universo interior e as dinâmicas emocionais da vida. Esse período é tradicionalmente interpretado como uma fase em que a sensibilidade, a vida doméstica e os laços afetivos ganham maior destaque.",
+      "sections": [
+        {
+          "heading": "Estrutura e Duração do Ciclo",
+          "body": "A Dasha da Lua tem duração fixa de 10 anos e integra o sistema Vimshottari dasha, cujo ciclo total abrange 120 anos. Dentro desse sistema cosmológico, a Lua rege os nakshatras Rohini, Hasta e Shravana. Os temas tradicionais associados a esse período concentram-se em sentimentos, lar, cuidado e conexão."
+        },
+        {
+          "heading": "Temas em Destaque Durante a Fase",
+          "body": "Durante esse período, as atenções costumam se voltar de forma mais expressiva para a segurança emocional e o bem-estar psicológico. O ambiente doméstico tende a assumir um papel central, estimulando o desejo de cultivar raízes e proteger os espaços íntimos. As pessoas frequentemente relatam uma percepção mais aguçada de suas próprias necessidades internas e daquelas de quem está ao redor. Essa fase não é inerentemente favorável ou desfavorável por si só, pois seus desdobramentos são tradicionalmente analisados a partir do posicionamento específico da Lua no mapa natal. Assim, a vivência desse intervalo reflete a maturidade emocional com que cada indivíduo lida com suas marés internas."
+        },
+        {
+          "heading": "Manifestações no Trabalho e nos Relacionamentos",
+          "body": "Nas relações interpessoais, esse período tende a favorecer a busca por vínculos mais profundos, apoio mútuo e trocas baseadas na empatia e na confiança. No âmbito profissional, a fase pode suscitar maior interesse por atividades que envolvam acolhimento, colaboração em equipe ou áreas ligadas ao público e ao cuidado. Em vez de uma busca exclusiva por status externo, a motivação no trabalho frequentemente passa a depender da ressonância emocional e do senso de pertencimento proporcionados pela ocupação."
+        },
+        {
+          "heading": "Desenvolvimento do Ciclo e Subperíodos",
+          "body": "Ao longo de sua extensão, a Dasha da Lua é tradicionalmente lida como um processo gradual que se aprofunda desde a adaptação inicial até a consolidação de uma nova estabilidade interior ao seu término. Essa jornada de dez anos não é uniforme, pois é subdividida em antardashas, ou subperíodos regidos pelos outros planetas, que alteram a textura e o ritmo das experiências vividas. Dessa maneira, a interação entre a energia lunar e a influência de cada sub-regente delineia variações sutis no foco das atenções em cada etapa do ciclo."
+        },
+        {
+          "heading": "Como Identificar o Seu Período Atual",
+          "body": "Para saber se você está vivenciando esse período, é necessário calcular a dasha a partir da posição exata da Lua no momento do nascimento, e não com base no signo solar comum na astrologia ocidental. O início da sequência depende diretamente do nakshatra ocupado pela Lua, exigindo a data, a hora precisa e o local exato do nascimento para um cálculo correto. Por meio dessas informações, traça-se o mapa védico que indica quando a regência lunar se inicia e se encerra ao longo da vida."
+        }
+      ]
+    },
+    {
+      "slug": "mars",
+      "latin": "Mars",
+      "lord": "Mars",
+      "years": 7,
+      "name": "Dasha de Marte",
+      "title": "Dasha de Marte na Astrologia Védica: Significado e Ciclos",
+      "description": "Entenda o Dasha de Marte na astrologia védica, seus temas de iniciativa e foco, a duração de sete anos e como esse período atua no mapa natal.",
+      "h1": "O Dasha de Marte na Astrologia Védica",
+      "lead": "O Dasha de Marte representa uma fase do sistema védico voltada à mobilização de recursos internos e à canalização de energia direta. Esse ciclo costuma marcar momentos em que a busca por autonomia e a disposição para enfrentar desafios práticos ganham maior relevância na vida cotidiana.",
+      "sections": [
+        {
+          "heading": "Fundamentos e estrutura do período",
+          "body": "Com duração exata de sete anos, o Dasha de Marte integra o ciclo geral do Vimshottari Dasha, que totaliza cento e vinte anos na tradição da astrologia védica. Nesse esquema temporal, Marte exerce regência sobre as nakshatras Mrigashira, Chitra e Dhanishta. Os temas tradicionalmente associados a esse período concentram-se no ímpeto pessoal, no senso de competição e na predisposição para a tomada de ações decisivas."
+        },
+        {
+          "heading": "Manifestações gerais e leitura no mapa natal",
+          "body": "Durante esse intervalo de tempo, as atenções costumam se voltar para a coragem, o estabelecimento de limites e a prontidão diante de obstáculos imediatos. A tonalidade marciana tende a incentivar respostas diretas, diminuindo a inclinação para hesitações ou esperas prolongadas. Na tradição védica, esse período nunca é compreendido como inerentemente bom ou ruim por si só. Os efeitos observados costumam depender fundamentalmente da localização, das dignidades e dos aspectos recebidos por Marte no mapa individual, modulando se o período se expressa com mais construtividade ou com tendência a atritos."
+        },
+        {
+          "heading": "Dinâmicas na carreira e nas relações",
+          "body": "No trabalho, essa fase tende a favorecer papéis que demandam iniciativa assertiva, liderança prática e firmeza em ambientes competitivos. O indivíduo pode sentir um impulso renovado para agir de forma independente, assumir tarefas desafiadoras e resolver gargalos operacionais com agilidade. No campo das relações interpessoais, o período costuma colocar a honestidade direta e o espaço pessoal em primeiro plano, exigindo atenção para equilibrar a determinação própria com a consideração pelos outros."
+        },
+        {
+          "heading": "Evolução do ciclo e a influência dos subperíodos",
+          "body": "Ao longo de seus sete anos, a experiência do período não se mantém homogênea, revelando diferentes nuances conforme o tempo avança. Essa modulação ocorre pela passagem dos antardashas, os subperíodos nos quais outros planetas combinam suas naturezas específicas com a base energética de Marte. Tradicionalmente, o começo do ciclo costuma marcar a transição e a adaptação a um ritmo mais dinâmico, enquanto os anos finais preparam o terreno para as demandas do dasha seguinte."
+        },
+        {
+          "heading": "Como identificar o dasha em curso",
+          "body": "Para descobrir em qual dasha uma pessoa se encontra, o cálculo parte estritamente da nakshatra ocupada pela Lua no instante do nascimento, e não do signo solar característico da astrologia ocidental. Esse ponto astronômico define a abertura da sequência temporal de cento e vinte anos e organiza toda a cronologia subsequente. Por conta dessa precisão técnica, o cálculo exato exige o registro correto da data, do horário exato com minutos e do local geográfico de nascimento."
+        }
+      ]
+    },
+    {
+      "slug": "rahu",
+      "latin": "Rahu",
+      "lord": "Rahu",
+      "years": 18,
+      "name": "Rahu Dasha",
+      "title": "Rahu Dasha na Astrologia Védica: O Que Significa",
+      "description": "Entenda o que é Rahu Dasha na astrologia védica, seus temas tradicionais de ambição e expansão, sua duração de 18 anos e a influência no mapa natal.",
+      "h1": "Rahu Dasha: Entenda o Período na Astrologia Védica",
+      "lead": "A Rahu Dasha é um dos períodos planetários mais marcantes da astrologia védica, associado a processos de transformação e busca por crescimento. Na tradição indiana, essa fase costuma indicar momentos em que o indivíduo é convidado a explorar territórios desconhecidos em sua trajetória de vida.",
+      "sections": [
+        {
+          "heading": "Estrutura e Duração da Rahu Dasha",
+          "body": "Com uma duração de 18 anos, a Rahu Dasha faz parte do ciclo Vimshottari dasha, um sistema tradicional que totaliza 120 anos distribuídos entre diferentes regentes planetários. Dentro dessa estrutura astrológica, Rahu rege especificamente as nakshatras Ardra, Swati e Shatabhisha. Essa extensão temporal possibilita que os temas associados a esse ponto se desenvolvam de maneira gradual ao longo de quase duas décadas."
+        },
+        {
+          "heading": "Temas Tradicionais e Tendências do Período",
+          "body": "Entre os temas tradicionalmente associados a essa fase estão a ambição intensa, o contato com assuntos estrangeiros e a expansão em direção ao que é pouco familiar. O período não é considerado inerentemente bom ou ruim por si só, pois seus desdobramentos costumam ser lidos em conjunto com a posição de Rahu no mapa natal de cada pessoa. Durante esses anos, o indivíduo tende a sentir uma atração natural por experiências fora de sua zona de conforto e por realizações expressivas. Esse movimento pode incentivar a superação de limites convencionais, trazendo à tona motivações que antes permaneciam adormecidas. Ao mesmo tempo, a tradição enfatiza que a forte busca por conquistas externas costuma convidar a momentos de discernimento para equilibrar os desejos materiais com a estabilidade interior."
+        },
+        {
+          "heading": "Manifestações na Carreira e nos Relacionamentos",
+          "body": "No ambiente profissional, a Rahu Dasha tende a despertar um forte anseio por reconhecimento, inovação e projetos ligados a culturas diferentes ou meios não tradicionais. Em contrapartida, na esfera dos relacionamentos, esse período costuma favorecer a aproximação com pessoas de origens distintas ou padrões de convivência atípicos. As parcerias afetivas e sociais podem passar por reavaliações importantes, dependendo de como as ambições individuais se alinham com a convivência interpessoal ao longo do tempo."
+        },
+        {
+          "heading": "Evolução do Ciclo e a Influência das Antardashas",
+          "body": "O desdobramento da Rahu Dasha é tradicionalmente interpretado como um processo que costuma iniciar com forte inquietação ou desejo de renovação, amadurecendo gradualmente até alcançar maior clareza sobre os caminhos escolhidos. Ao longo desses 18 anos, a experiência se subdivide em períodos menores chamados antardashas, nos quais outros planetas assumem uma regência secundária e alteram a textura prática da fase. Essa alternância faz com que momentos de grande impulso externo se intercalem com etapas voltadas à integração e à reavaliação dos passos dados."
+        },
+        {
+          "heading": "Como Descobrir o Período Vigente no Mapa",
+          "body": "Para identificar em qual dasha uma pessoa se encontra, a astrologia védica calcula a sequência temporal a partir da nakshatra em que a Lua estava posicionada no instante do nascimento, e não com base no signo solar da astrologia ocidental. Por esse motivo, a definição exata do ciclo exige o conhecimento da data de nascimento, do horário preciso e do local de nascimento. A partir dessas coordenadas astronômicas, torna-se possível traçar a ordem e a duração de cada fase planetária correspondente à trajetória individual."
+        }
+      ]
+    },
+    {
+      "slug": "jupiter",
+      "latin": "Jupiter",
+      "lord": "Jupiter",
+      "years": 16,
+      "name": "Dasha de Júpiter",
+      "title": "Dasha de Júpiter na Astrologia Védica: Guia e Temas",
+      "description": "Compreenda a Dasha de Júpiter na astrologia védica, seus temas de aprendizado, crescimento e expansão ao longo do ciclo de dezesseis anos.",
+      "h1": "O Significado da Dasha de Júpiter na Astrologia Védica",
+      "lead": "Na astrologia védica, a Dasha de Júpiter representa uma fase importante da vida frequentemente associada à busca por sentido, conhecimento e desenvolvimento pessoal. Esse período tende a convidar o indivíduo a refletir sobre seus valores fundamentais e sobre a direção ética de sua trajetória.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Estrutura no Ciclo de Vimshottari",
+          "body": "Com uma duração de dezesseis anos, a Dasha de Júpiter integra o ciclo completo de Vimshottari dasha, que soma cento e vinte anos no total. Na tradição védica, Júpiter rege os nakshatras Punarvasu, Vishakha e Purva Bhadrapada. Os temas centrais atribuídos classicamente a este período giram em torno do aprendizado, do crescimento interior, do ensino e das crenças que sustentam a visão de mundo."
+        },
+        {
+          "heading": "Temas Tradicionais e Tendências do Período",
+          "body": "Durante esses anos, costuma haver uma inclinação maior para o aprofundamento filosófico, espiritual ou acadêmico. O período tende a trazer à tona questões ligadas à ética pessoal e à forma como o indivíduo compartilha sua sabedoria com os outros. A tradição astrológica não define essa fase como intrinsecamente boa ou difícil por si só, pois seus desdobramentos são lidos em conjunto com a posição e as condições de Júpiter no mapa natal. Desse modo, o momento pode favorecer a busca por mentores e o questionamento sobre os propósitos que orientam as decisões diárias. Conforme a configuração astrológica individual, o período tende a manifestar tanto oportunidades de expansão de horizontes quanto o desafio de manter a moderação."
+        },
+        {
+          "heading": "Manifestações na Vida Profissional e nas Relações",
+          "body": "No âmbito profissional, esse período costuma favorecer ocupações ligadas à transmissão de conhecimento, assessoria, liderança ética ou atividades que demandem visão estratégica ampla. Nas relações pessoais, a convivência tende a ser valorizada por trocas intelectuais profundas, generosidade mútua e apoio ao amadurecimento do parceiro. É comum que os relacionamentos passem a exigir maior alinhamento moral e valores compartilhados para que se sustentem com harmonia. Como a leitura depende da dignidade do planeta no mapa, os vínculos podem oscilar entre um forte senso de companheirismo e a necessidade de evitar posturas dogmáticas."
+        },
+        {
+          "heading": "O Desenvolvimento Temporal e os Subperíodos",
+          "body": "A fase de dezesseis anos é tradicionalmente compreendida como um processo gradual que evolui desde as descobertas iniciais até uma maturidade reflexiva mais consolidada no final. Ao longo desse percurso, ocorrem os subperíodos, conhecidos como antardashas, que modulam o tom da experiência ao combinar a energia de Júpiter com a de outros planetas. Essa alternância explica por que determinados momentos parecem mais voltados à ação exterior, enquanto outros convidam ao recolhimento ou à reestruturação. Assim, a textura do período nunca é linear ou estática, variando conforme cada etapa planetária se desdobra."
+        },
+        {
+          "heading": "Como Identificar o Período Ativo no Mapa",
+          "body": "Para saber se você está atravessando essa fase, é necessário calcular o mapa com base no dia, na hora exata e no local do nascimento. Diferente da astrologia ocidental popular, que se apoia no signo solar, a sequência das dashas védicas é determinada pelo nakshatra em que a Lua se encontrava no momento do nascimento. A partir dessa posição lunar precisa, os astrólogos védicos traçam a linha do tempo das regências planetárias ao longo de toda a vida."
+        }
+      ]
+    },
+    {
+      "slug": "saturn",
+      "latin": "Saturn",
+      "lord": "Saturn",
+      "years": 19,
+      "name": "Dasha de Saturno",
+      "title": "Dasha de Saturno na Astrologia Védica: Entenda o Ciclo",
+      "description": "Compreenda o significado da Dasha de Saturno na astrologia védica, seus temas tradicionais de estrutura e paciência, e como calcular esse período.",
+      "h1": "O Significado da Dasha de Saturno na Astrologia Védica",
+      "lead": "Na astrologia védica, a Dasha de Saturno representa uma fase significativa voltada para o amadurecimento e a consolidação de bases na vida de um indivíduo. Esse ciclo convida a uma reflexão profunda sobre limites pessoais e dedicação constante, sendo interpretado de acordo com a posição desse planeta no mapa natal.",
+      "sections": [
+        {
+          "heading": "Fundamentos e Duração da Dasha de Saturno",
+          "body": "A Dasha de Saturno tem a duração de 19 anos e integra o sistema Vimshottari dasha, um ciclo de 120 anos no total. Saturno rege tradicionalmente as nakshatras Pushya, Anuradha e Uttara Bhadrapada. Diante desses elementos, os temas tradicionais associados a esse período concentram-se na resistência, na estrutura e no desenvolvimento de um trabalho lento e duradouro."
+        },
+        {
+          "heading": "Tendências e Dinâmicas Tradicionais do Período",
+          "body": "Tradicionalmente, a Dasha de Saturno não é considerada intrinsecamente boa ou ruim, pois sua manifestação é interpretada a partir da posição particular do planeta no mapa natal. Essa fase tende a trazer para o primeiro plano a necessidade de realismo, demandando disciplina perante as obrigações e paciência com o tempo natural de maturação das coisas. É comum que o período estimule uma avaliação de prioridades, incentivando o abandono de excessos em favor daquilo que possui solidez. Momentos que exigem perseverança tendem a se destacar, ressaltando o valor da resiliência diante de responsabilidades estruturais. Dessa forma, a vivência desse intervalo costuma ser lida como um processo de fortalecimento gradual por meio da dedicação continuada."
+        },
+        {
+          "heading": "Manifestações no Trabalho e nas Relações",
+          "body": "No âmbito profissional, esse período tende a valorizar o esforço constante, as responsabilidades assumidas com seriedade e a edificação de competências que gerem estabilidade no longo prazo. Em vez de avanços imediatos, costuma haver uma exigência maior de organização metódica e respeito aos processos estabelecidos. Na esfera dos relacionamentos, a fase tende a convidar à maturidade mútua, favorecendo laços baseados no compromisso genuíno e na cooperação diante dos desafios cotidianos."
+        },
+        {
+          "heading": "Desenvolvimento do Ciclo e as Antardashas",
+          "body": "Ao longo de seus 19 anos, a Dasha de Saturno é tradicionalmente descrita como um caminho de maturação gradual, cujos anos iniciais frequentemente exigem reorganização e cujos momentos finais tendem a evidenciar as estruturas consolidadas. A experiência não é estática ao longo de quase duas décadas, pois a textura do ciclo é constantemente modulada pelas antardashas, que são subperíodos governados por diferentes planetas. Cada antardasha adiciona nuances específicas aos temas centrais de Saturno, alterando o tom das experiências e o foco das atividades em cada etapa."
+        },
+        {
+          "heading": "Como Identificar o seu Período Atual",
+          "body": "Para descobrir em qual dasha uma pessoa se encontra, é necessária a elaboração do mapa natal utilizando a data, a hora exata e a cidade de nascimento. Diferentemente da astrologia ocidental, que enfatiza o signo solar, o início e o andamento da sequência das dashas no sistema védico são calculados exclusivamente a partir da nakshatra que a Lua ocupava no momento do nascimento. Com esses dados precisos, determina-se a ordem planetária do ciclo Vimshottari e o período maior em vigor no momento presente."
+        }
+      ]
+    },
+    {
+      "slug": "mercury",
+      "latin": "Mercury",
+      "lord": "Mercury",
+      "years": 17,
+      "name": "Mahadasha de Mercúrio",
+      "title": "Mahadasha de Mercúrio na Astrologia Védica",
+      "description": "Entenda a Mahadasha de Mercúrio na astrologia védica, seus temas de análise e comunicação, sua duração de 17 anos e a influência dos períodos.",
+      "h1": "Mahadasha de Mercúrio na Astrologia Védica",
+      "lead": "Na astrologia védica, a Mahadasha de Mercúrio representa uma fase de grande estímulo intelectual e adaptabilidade na jornada de um indivíduo. Esse período tende a direcionar a atenção para a troca de informações, o raciocínio lógico e o desenvolvimento de novas competências práticas.",
+      "sections": [
+        {
+          "heading": "Estrutura e fundamentos do ciclo de Mercúrio",
+          "body": "Com uma duração de 17 anos, essa fase integra o ciclo tradicional da Vimshottari dasha, que compreende um total de 120 anos distribuídos entre diferentes regentes planetários. Nesse sistema, Mercúrio rege as nakshatras Ashlesha, Jyeshtha e Revati, determinando a ordem do ciclo para quem nasce sob essas mansões lunares. Os temas centrais associados a esse período envolvem tradicionalmente a comunicação, a análise, o comércio e o refinamento da habilidade prática."
+        },
+        {
+          "heading": "Tendências e manifestações intelectuais",
+          "body": "Durante esses anos, a mente costuma buscar clareza por meio do estudo contínuo, da leitura e da organização de dados conceituais. É comum notar uma maior flexibilidade nas rotinas diárias, permitindo que diferentes assuntos sejam explorados de maneira simultânea e curiosa. A capacidade de expressar ideias com precisão tende a ganhar destaque, favorecendo a articulação verbal e escrita em diversas esferas da vida. Essa fase não deve ser classificada de forma absoluta como boa ou ruim em si mesma, pois sua leitura tradicional depende da colocação de Mercúrio no mapa natal. Desse modo, a tendência geral pode oscilar entre a produtividade mental e a dispersão, conforme o estado geral do planeta na carta astrológica."
+        },
+        {
+          "heading": "Expressão no trabalho e nas relações interpessoais",
+          "body": "Na vida profissional, esse período costuma favorecer atividades voltadas à negociação, ao comércio, à escrita e a tarefas que demandem cálculo e raciocínio analítico. As relações interpessoais tendem a se apoiar fortemente no diálogo claro, no humor compartilhado e na troca constante de pontos de vista. Parcerias produtivas e amizades intelectuais frequentemente ganham relevância sob essa influência cósmica. Contudo, o tom exato dessas interações é modulado pelos aspectos e casas astrológicas com os quais Mercúrio se conecta no mapa de nascimento."
+        },
+        {
+          "heading": "A evolução do período e o papel das antardashas",
+          "body": "O desdobramento dos 17 anos é tradicionalmente lido como um processo gradual que parte do estímulo mental inicial até a consolidação de conhecimentos mais maduros ao final da jornada. Ao longo desse caminho, a textura da experiência se transforma continuamente através das antardashas, que são os subperíodos regidos pelos outros planetas. Cada subperíodo combina a energia ágil e reflexiva de Mercúrio com as características específicas do regente subordinado, alternando fases de introspecção, ação ou reestruturação. Por essa razão, os acontecimentos e o ritmo interno variam de forma marcante de uma etapa para outra."
+        },
+        {
+          "heading": "Como identificar a dasha no mapa védico",
+          "body": "Para descobrir a fase dasha em que uma pessoa se encontra, é imprescindível dispor da data, do local e do horário exato de nascimento. Ao contrário da astrologia ocidental fundamentada no signo solar, o início do ciclo védico é calculado a partir da nakshatra que a Lua ocupava no momento do parto. Munido desses dados precisos, o cálculo astronômico revela qual período planetário estava ativo no nascimento e em qual ciclo o indivíduo está no presente."
+        }
+      ]
+    }
+  ]
+}

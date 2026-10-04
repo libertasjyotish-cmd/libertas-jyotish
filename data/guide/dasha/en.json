@@ -1,0 +1,308 @@
+{
+  "parent": "dasha",
+  "slugPrefix": "dasha",
+  "ui": {
+    "listHeading": "The Nine Planetary Periods",
+    "factsHeading": "Period Overview",
+    "listLead": "Select the dasha period you are currently experiencing to learn more about its influence."
+  },
+  "items": [
+    {
+      "slug": "ketu",
+      "latin": "Ketu",
+      "lord": "Ketu",
+      "years": 7,
+      "name": "Ketu Mahadasha",
+      "title": "Understanding the Ketu Mahadasha in Vedic Astrology",
+      "description": "Learn how the Ketu Mahadasha is interpreted in Vedic astrology, exploring its core themes of detachment, inner reflection, and personal shifts.",
+      "h1": "An Introduction to the Ketu Mahadasha",
+      "lead": "In Vedic astrology, the Ketu Mahadasha represents a significant phase characterized by introspection, reorientation, and spiritual inquiry. Rather than emphasizing external expansion, this planetary cycle traditionally directs attention inward toward deeper contemplation and personal simplification.",
+      "sections": [
+        {
+          "heading": "Core Framework of the Cycle",
+          "body": "The Ketu Mahadasha lasts for seven years as part of the broader Vimshottari dasha cycle of 120 years in total. Within this framework, Ketu rules the nakshatras of Ashwini, Magha, and Mula. Throughout this timeframe, the traditional themes of detachment, letting go, and inner search serve as the primary focus of the experience."
+        },
+        {
+          "heading": "Themes and Psychological Focus",
+          "body": "During this chapter of life, individuals often find that long-standing material ambitions or external pursuits begin to lose some of their urgency. A quiet reevaluation of priorities tends to emerge, encouraging a natural release of habits, perspectives, or attachments that no longer serve a meaningful purpose. The period is traditionally read as fostering a reflective disposition, leading people toward solitude, philosophical studies, or contemplative practices. Astrologers do not view this cycle as inherently good or bad on its own, as its expression is read alongside Ketu's placement and relationships within the birth chart. Ultimately, the emphasis tends to fall on shedding superficial concerns in favor of genuine inner clarity."
+        },
+        {
+          "heading": "Expressions in Work and Relationships",
+          "body": "In professional environments, this period often manifests as a desire for deeper meaning over status, sometimes leading people to feel less invested in competitive corporate climbing or public recognition. In personal connections, a tendency toward emotional detachment or a preference for quiet space can appear, which requires patience and understanding. Partnerships based on superficial dynamics may undergo re-evaluation, while connections rooted in mutual autonomy and shared quietude tend to feel more comfortable."
+        },
+        {
+          "heading": "Progression and Sub-Periods",
+          "body": "The cycle is traditionally read as opening with a distinct pivot away from prior worldly momentum, encouraging a step back from external dependencies. Over its course, the experience tends to evolve from initial uncertainty into a more grounded sense of autonomy and perspective. The sub-periods, known as antardashas, continuously change this texture because each subsequent planetary influence introduces its own unique priorities. A sub-period ruled by a more socially oriented or structurally minded planet can create temporary shifts in focus, blending worldly responsibilities with Ketu's broader contemplative atmosphere."
+        },
+        {
+          "heading": "Calculating the Active Dasha",
+          "body": "To determine whether a person is experiencing this phase, an astrological chart must be drawn using their exact birth date, time, and geographic location. Unlike Western astrology, which relies on the Sun sign, the Vimshottari sequence is calculated exclusively from the nakshatra that the Moon occupied at birth. Because the Moon moves rapidly, precise birth data is required to identify the correct starting dasha and calculate the timing of each period accurately."
+        }
+      ]
+    },
+    {
+      "slug": "venus",
+      "latin": "Venus",
+      "lord": "Venus",
+      "years": 20,
+      "name": "Venus Dasha",
+      "title": "Understanding the Venus Dasha in Vedic Astrology",
+      "description": "Learn about the twenty-year Venus Dasha in Vedic astrology, exploring its traditional themes of relationships, comfort, art, and personal growth.",
+      "h1": "An Introduction to the Venus Dasha in Vedic Astrology",
+      "lead": "In Vedic astrology, the Venus Dasha represents a major planetary phase governed by Venus, traditionally associated with material refinement and personal connection. Rather than determining fixed events, this period is understood as a long-term backdrop that highlights specific aesthetic, relational, and worldly tendencies.",
+      "sections": [
+        {
+          "heading": "Core Facts and Nakshatra Rulership",
+          "body": "The Venus Dasha spans a length of twenty years, making it the single longest planetary period within the traditional Vimshottari dasha cycle of 120 years in total. In this system, Venus rules three specific nakshatras: Bharani, Purva Phalguni, and Purva Ashadha. The core themes traditionally attributed to this period revolve around relationships, comfort, art and money, though its overall expression is interpreted in the context of the planet's placement in the individual birth chart."
+        },
+        {
+          "heading": "General Tendencies and Manifestations",
+          "body": "During this multi-decade phase, an individual's focus often leans toward seeking harmony, aesthetic pleasure, and domestic ease in daily living. Matters of companionship, artistic expression, and financial security frequently come to the forefront of personal awareness. This cycle is not considered inherently positive or difficult on its own, as its qualitative expression is traditionally read in connection with how Venus is positioned and conditioned across the natal chart. When supportive chart factors align, a person may experience a natural inclination toward diplomacy and refined leisure, whereas more complex chart placements might highlight themes of overindulgence or interpersonal compromise. Ultimately, the period tends to illuminate how one values both internal contentment and external abundance."
+        },
+        {
+          "heading": "Venus Dasha in Relationships and Career",
+          "body": "In interpersonal dynamics, this phase traditionally shifts attention toward partnership, mutual understanding, and the desire for peaceable cooperation in both personal and professional ties. When it comes to vocational matters, individuals often find themselves drawn toward creative fields, collaborative endeavors, or projects where aesthetic judgment and social skills play an essential role. Rather than guaranteeing financial success or romantic fulfillment, the period tends to encourage activities that cultivate diplomacy, shared values, and fair exchange with colleagues and partners."
+        },
+        {
+          "heading": "The Progression of Time and Antardashas",
+          "body": "Because this major period endures for two decades, its texture is not static but evolves as it cycles through smaller planetary intervals known as antardashas. Each sub-period introduces the distinct influence of another planet, which temporarily modifies how the overarching Venusian themes of comfort, connection, or resources are experienced. Astrologers traditionally observe an initial adjustment phase at the beginning of the twenty years, followed by shifting developmental chapters as different planetary archetypes blend with Venus, culminating in a transitional closing phase before the next major cycle begins."
+        },
+        {
+          "heading": "Calculating Your Current Dasha",
+          "body": "To determine whether someone is currently experiencing a Venus Dasha, their astrological timing is calculated directly from the nakshatra the Moon occupied at the moment of birth. Unlike Western astrology, which primarily emphasizes the solar calendar and the Sun sign, the Vimshottari dasha system relies entirely on precise lunar calculations. For this reason, an individual must provide their exact birth date, time, and geographic location to generate an accurate natal chart and dasha timeline."
+        }
+      ]
+    },
+    {
+      "slug": "sun",
+      "latin": "Sun",
+      "lord": "Sun",
+      "years": 6,
+      "name": "Sun Mahadasha",
+      "title": "Understanding the Sun Mahadasha in Vedic Astrology",
+      "description": "Learn about the six-year Sun Mahadasha in Vedic astrology, exploring its traditional focus on position, recognition, and individual responsibility.",
+      "h1": "The Sun Mahadasha in Vedic Astrology",
+      "lead": "In Indian astrology, the Sun mahadasha represents a phase where core identity, vitality, and external standing come under personal scrutiny. Rather than being universally favorable or challenging, this planetary cycle is traditionally interpreted through the specific placement and condition of the Sun in an individual's birth chart.",
+      "sections": [
+        {
+          "heading": "The Framework of the Sun Mahadasha",
+          "body": "The Sun mahadasha lasts for six years, making it the shortest major period within the 120-year Vimshottari dasha cycle. Astrologically, this cycle connects directly to the nakshatras ruled by the Sun: Krittika, Uttara Phalguni, and Uttara Ashadha. Throughout this six-year timeframe, the period traditionally emphasizes matters of position, recognition, and personal responsibility."
+        },
+        {
+          "heading": "Themes Brought to the Fore",
+          "body": "During this cycle, individuals often find questions of personal authority, integrity, and self-expression rising to prominence. The period tends to highlight an awareness of one's public footprint, often bringing past efforts into the light of external appraisal. Because the Sun signifies the core self and vitality, internal confidence and clarity of purpose are often tested or refined over these years. The overall experience is not inherently fortunate or adverse, as traditional analysis always weighs the Sun's house placement, sign, and planetary associations. Ultimately, it tends to encourage a clearer understanding of how one holds power and fulfills obligations."
+        },
+        {
+          "heading": "Impact on Work and Relationships",
+          "body": "In professional environments, this period frequently brings opportunities to step into greater leadership, shoulder executive duties, or interface more directly with authorities and institutions. At the same time, relationships with father figures, mentors, and senior colleagues often take center stage for resolution or growth. In personal partnerships, the focus tends to shift toward mutual respect and boundaries, which can sometimes challenge connections if pride or ego goes unexamined."
+        },
+        {
+          "heading": "Progression and Sub-Periods",
+          "body": "The six-year cycle traditionally begins with an initial reorientation of priorities, often building toward a peak of outward involvement before concluding with a period of consolidation. Within this broader span, shorter sub-periods known as antardashas alter the texture of everyday experiences by blending the themes of other planets with the Sun's core emphasis. For example, a sub-period ruled by a complementary planet may soften or energize the atmosphere, ensuring the six years rarely feel uniform throughout."
+        },
+        {
+          "heading": "Identifying Your Current Planetary Period",
+          "body": "Determining whether you are currently in a Sun mahadasha requires an accurate birth chart calculated from your exact birth date, time, and location. Unlike Western astrology systems that emphasize the solar sign, the Vimshottari dasha sequence is calculated strictly from the nakshatra the Moon occupied at the moment of birth. By identifying the Moon's initial lunar mansion and degree, an ephemeris can outline the precise timetable of each planetary period across a lifetime."
+        }
+      ]
+    },
+    {
+      "slug": "moon",
+      "latin": "Moon",
+      "lord": "Moon",
+      "years": 10,
+      "name": "Moon Dasha",
+      "title": "Understanding the Moon Dasha in Vedic Astrology",
+      "description": "Learn about the ten-year Moon Dasha in Vedic astrology, exploring its traditional themes of home, feelings, connection, and planetary sub-periods.",
+      "h1": "The Meaning and Themes of the Moon Dasha",
+      "lead": "In Vedic astrology, the Moon dasha represents a major life chapter centered on emotional experience and inner awareness. Readers encountering this period often seek to understand how its reflective focus shapes their everyday reality.",
+      "sections": [
+        {
+          "heading": "Core Framework of the Period",
+          "body": "Spanning a length of 10 years, this phase forms an integral part of the Vimshottari dasha cycle of 120 years in total. Within this astrological system, the Moon rules the nakshatras of Rohini, Hasta, and Shravana. Across this span of time, the traditional themes of the period center on feelings, home, care and connection."
+        },
+        {
+          "heading": "Emotional and Psychological Focus",
+          "body": "During this chapter, an individual's attention traditionally turns toward inner comfort, peace of mind, and the immediate domestic realm. People often report a heightened sensitivity to their environment alongside an increased need for mutually supportive spaces. The period is not considered inherently good or bad on its own, as its expression is traditionally read together with the Moon's placement and dignity in the natal chart. Rather than compelling constant external ambition, this time tends to foster introspection, receptivity, and the strengthening of personal roots. Everyday habits and subjective well-being often become central to navigating life's demands."
+        },
+        {
+          "heading": "Expressions in Work and Relationships",
+          "body": "In the sphere of work, this period tends to favor responsibilities that demand empathy, cooperation, or public responsiveness rather than purely competitive dynamics. Work settings that provide a sense of psychological safety and stability tend to feel far more sustainable throughout these years. In personal partnerships, the decade typically emphasizes the value of shared vulnerability, family ties, and domestic warmth. Relationships are frequently assessed by how genuinely safe, nurturing, and emotionally honest they feel to both individuals."
+        },
+        {
+          "heading": "The Progression and Sub-Periods",
+          "body": "The cycle traditionally begins with a gradual inward adjustment as the mind attunes to a more feeling-centered rhythm of daily living. Over the course of the ten years, sub-periods known as antardashas alter the texture of experience by introducing the distinct qualities of other planetary influences. While the foundational focus on care and connection remains constant, these internal phases can bring varying waves of activity, structure, or contemplation. By the closing phase, the dasha is traditionally understood to leave the individual with a more clarified sense of what provides true emotional sustenance."
+        },
+        {
+          "heading": "Locating Your Current Dasha",
+          "body": "A person discovers their current planetary chapter through a calculation based on the specific nakshatra the Moon occupied at birth, rather than the Sun sign used in Western astrology. Because the Moon moves swiftly through the zodiac, an exact birth date, accurate time, and geographical place of birth are strictly required. These precise details allow an astrologer to construct the personal timeline and confirm whether this ten-year period is currently active."
+        }
+      ]
+    },
+    {
+      "slug": "mars",
+      "latin": "Mars",
+      "lord": "Mars",
+      "years": 7,
+      "name": "Mars Dasha",
+      "title": "Understanding the Mars Dasha in Vedic Astrology",
+      "description": "Explore the themes of the Mars dasha in Vedic astrology, including its seven-year duration, traditional influences, and how it is calculated at birth.",
+      "h1": "Understanding the Mars Dasha",
+      "lead": "In Vedic astrology, the Mars dasha represents a major planetary phase associated with vitality, initiative, and focused energy. Astrologers view this period through the lens of individual birth charts, observing how planetary placements guide human experience over several years.",
+      "sections": [
+        {
+          "heading": "Core Principles and Duration",
+          "body": "Lasting for seven years, the Mars dasha forms a distinct segment of the traditional 120-year Vimshottari dasha cycle. Mars governs the nakshatras of Mrigashira, Chitra, and Dhanishta, which connect its qualities to specific areas of the zodiac. Across these years, the traditional themes of the period center around drive, competition, and decisive action."
+        },
+        {
+          "heading": "General Themes and Tendencies",
+          "body": "During this planetary phase, people often notice a heightened urge to confront challenges directly and pursue personal ambitions. The period is not inherently positive or negative on its own, as its qualities are traditionally evaluated alongside the placement, dignity, and associations of Mars in the birth chart. When the planetary energy is well-supported, it tends to encourage courage, physical stamina, and a willingness to initiate bold endeavors. If Mars encounters stressful aspects in the chart, the same underlying drive may instead emerge as restlessness, impatience, or friction. Ultimately, the cycle tends to highlight how an individual manages assertion and direct effort in daily life."
+        },
+        {
+          "heading": "Expressions in Work and Relationships",
+          "body": "In professional settings, this phase tends to favor leadership roles, technical projects, or environments where healthy competition and swift problem-solving are valued. Work life may accelerate, prompting people to defend their ideas or take on tasks requiring considerable independent initiative. Within personal relationships, the period is traditionally read as bringing direct communication to the forefront, which can either clarify long-standing tensions or create occasional friction if compromise is lacking. Balancing firmness with empathy is often seen as a central theme across both professional and personal bonds."
+        },
+        {
+          "heading": "Progression and Sub-Periods",
+          "body": "The Mars dasha is traditionally understood to begin with a surge of renewed focus as its primary themes emerge, before settling into a sustained rhythm of effort and strategic adjustment toward the middle years. As the phase nears its completion, the initial intensity often gives way to reflection and preparation for the subsequent planetary period. Throughout this seven-year span, various sub-periods, known as antardashas, continuously modify the texture of daily experiences by blending the qualities of other planets with the core nature of Mars. These shifting sub-cycles explain why different years within the same dasha can feel markedly distinct in temperament and focus."
+        },
+        {
+          "heading": "Calculating Your Dasha Timeline",
+          "body": "Determining whether someone is currently in a Mars dasha requires calculating the exact position of the Moon at the moment of birth. Unlike western astrology, which relies on the Sun sign, the Vedic dasha sequence is calculated specifically from the Moon's nakshatra. To map this timeline accurately, an individual needs their exact birth date, time of birth, and geographic place of birth."
+        }
+      ]
+    },
+    {
+      "slug": "rahu",
+      "latin": "Rahu",
+      "lord": "Rahu",
+      "years": 18,
+      "name": "Rahu Mahadasha",
+      "title": "Understanding Rahu Mahadasha in Vedic Astrology",
+      "description": "Explore the 18-year Rahu Mahadasha in Vedic astrology, its traditional themes of ambition and foreign matters, and how its sub-periods unfold.",
+      "h1": "A Guide to the Rahu Mahadasha in Vedic Astrology",
+      "lead": "In Indian astrology, the Rahu mahadasha is a major planetary phase marked by profound personal exploration and worldly focus. Spanning nearly two decades, this influential period is traditionally read as an invitation to engage with unconventional life experiences and uncharted territory.",
+      "sections": [
+        {
+          "heading": "The Structure and Core Themes of the Period",
+          "body": "The Rahu dasha lasts for 18 years within the broader 120-year Vimshottari dasha cycle. In this astrological framework, Rahu rules the nakshatras of Ardra, Swati, and Shatabhisha. The traditional themes of this period center on expansion into the unfamiliar, intense ambition, and involvement with foreign matters."
+        },
+        {
+          "heading": "Archetypal Influences and Natal Considerations",
+          "body": "Rather than being seen as inherently favorable or difficult, this cycle is traditionally read in close conjunction with Rahu's placement, house, and aspects in the natal chart. Individuals often encounter an intensified drive to push beyond established personal or societal boundaries during these years. The influence of Rahu tends to stimulate curiosity regarding novel perspectives, modern advancements, or environments distinct from one's origins. At times, this outward momentum can lead to a period of evaluating personal motivations and distinguishing genuine aspirations from passing trends. Practitioners generally suggest that understanding this period requires observing how clearly an individual balances ambition with grounded discernment."
+        },
+        {
+          "heading": "Manifestations in Professional Life and Relationships",
+          "body": "In professional spheres, this phase often coincides with shifts toward uncharted industries, non-traditional career paths, or roles involving international contacts and foreign connections. Professional ambition tends to run high, encouraging unconventional problem-solving and an eagerness to embrace modern innovations. In personal relationships, the period is traditionally read as drawing connections with people from diverse backgrounds, which can broaden social circles and challenge existing relationship dynamics."
+        },
+        {
+          "heading": "Progression Over Time and the Role of Antardashas",
+          "body": "The 18-year timeframe is traditionally viewed as an evolving narrative that often begins with noticeable adjustments in perspective before settling into more integrated life patterns. The overarching experience is constantly shaped by sub-periods known as antardashas, which introduce the qualities of each planetary ruler into Rahu's primary framework. A sub-period ruled by a stabilizing planet tends to offer a reflective, steady tone, whereas a sub-period ruled by an active planet can heighten external activity and momentum. As the period draws to a close, the focus traditionally shifts away from intense worldly striving toward the quieter, transitional themes of the upcoming dasha."
+        },
+        {
+          "heading": "Determining Your Current Astrological Period",
+          "body": "To identify which mahadasha you are currently experiencing, a complete calculation of the Vimshottari cycle is required. Unlike Western astrology, which establishes its baseline around the Sun sign, the starting point of the Indian dasha sequence is determined solely by the nakshatra the Moon occupied at the moment of birth. Because the Moon moves swiftly through the lunar mansions, discovering your accurate dasha timeline requires knowing your exact date, time, and geographic place of birth."
+        }
+      ]
+    },
+    {
+      "slug": "jupiter",
+      "latin": "Jupiter",
+      "lord": "Jupiter",
+      "years": 16,
+      "name": "Jupiter Mahadasha",
+      "title": "Jupiter Mahadasha: Meaning and Traditional Themes",
+      "description": "Learn about the Jupiter Mahadasha in Vedic astrology, its 16-year duration, core themes of growth and belief, and how its sub-periods unfold.",
+      "h1": "Understanding the Jupiter Mahadasha in Vedic Astrology",
+      "lead": "In Vedic astrology, the Jupiter Mahadasha represents an extended planetary cycle centered on wisdom, ethics, and personal perspective. It is an influential phase in an individual's life journey, traditionally inviting reflection on overarching values and long-term aspirations.",
+      "sections": [
+        {
+          "heading": "The Structure and Nakshatras of the Period",
+          "body": "Spanning a length of 16 years, the Jupiter dasha forms an integral chapter within the Vimshottari dasha cycle of 120 years in total. In traditional astrology, Jupiter rules the nakshatras Punarvasu, Vishakha, and Purva Bhadrapada. The traditional themes of the period revolve around learning, growth, teaching and belief."
+        },
+        {
+          "heading": "Themes and Tendencies of the Cycle",
+          "body": "During this cycle, individuals often find their attention naturally turning toward higher philosophical questions, mentorship, and personal expansion. The era tends to bring matters of personal ethics and worldview into sharper focus, encouraging deeper inquiry into spiritual or academic interests. Astrologers traditionally read this period not as good or bad in itself, but as an experience shaped by Jupiter's placement and condition in the chart. When examined through the natal chart, the period tends to emphasize an expansion of consciousness, though its specific flavor depends on the planet's overall relationships."
+        },
+        {
+          "heading": "Expressions in Work and Relationships",
+          "body": "In professional spheres, this period often highlights opportunities for advisory roles, education, leadership, or sharing guidance with peers. Daily responsibilities tend to shift toward work that aligns with a broader sense of purpose and ethical principles. Within personal relationships, the period is traditionally seen as encouraging connections built on mutual respect, shared philosophies, and collaborative intellectual growth."
+        },
+        {
+          "heading": "Progression and the Role of Sub-Periods",
+          "body": "The sixteen-year arc is traditionally read as unfolding gradually, beginning with an initial orientation toward Jupiterian principles and deepening into greater philosophical maturity over time. Throughout this era, smaller planetary segments known as antardashas modify the overarching atmosphere. Each sub-period introduces the energy of its governing planet, continually altering the texture and immediate focus of life experiences across the broader cycle."
+        },
+        {
+          "heading": "Calculating Your Active Dasha",
+          "body": "A person discovers their current planetary period through calculations derived from the nakshatra the Moon occupied at birth, rather than from the familiar Sun sign of Western astrology. Because precise astronomical positions dictate the Vimshottari cycle, an individual must provide their exact birth date, time, and geographic location to generate an accurate chart. These details establish the starting point of the sequence and reveal which planetary ruler is currently active."
+        }
+      ]
+    },
+    {
+      "slug": "saturn",
+      "latin": "Saturn",
+      "lord": "Saturn",
+      "years": 19,
+      "name": "Saturn Dasha",
+      "title": "Understanding the Saturn Dasha in Vedic Astrology",
+      "description": "Explore the Saturn Dasha in Vedic astrology, a 19-year period shaped by discipline, long-term structure, and steady personal endurance.",
+      "h1": "Understanding the Saturn Dasha",
+      "lead": "In Indian astrology, the Saturn dasha is traditionally regarded as a major developmental chapter oriented around maturity and patience. Rather than producing sudden shifts, this planetary cycle is seen as a time when long-term effort and structural stability gradually come to the foreground.",
+      "sections": [
+        {
+          "heading": "Core Framework and Nakshatras",
+          "body": "The Saturn dasha spans a duration of 19 years within the broader 120-year Vimshottari dasha cycle. In this tradition, Saturn governs the nakshatras of Pushya, Anuradha, and Uttara Bhadrapada. The overarching themes traditionally associated with this timeframe are endurance, structure, and slow, lasting work."
+        },
+        {
+          "heading": "Themes and Developmental Focus",
+          "body": "This phase of life tends to bring matters of duty, personal discipline, and reality testing into sharper focus. It is rarely considered universally good or inherently difficult on its own, as practitioners traditionally interpret its influence in relation to Saturn's placement, dignity, and aspects in the individual birth chart. Individuals often report feeling prompted to strip away superficial ambitions in favor of foundations that can withstand the test of time. Rather than delivering rapid rewards, the cycle tends to cultivate psychological resilience through gradual responsibility and steady persistence."
+        },
+        {
+          "heading": "Manifestation in Work and Relationships",
+          "body": "In professional life, the Saturn dasha often favors steady vocational commitment, institutional responsibility, and quiet perseverance over dramatic leaps or sudden public recognition. Projects begun under this planetary influence tend to demand meticulous craftsmanship and thorough preparation to yield enduring results. In personal relationships, the period is traditionally read as an invitation to define mutual obligations, practice emotional reliability, and value long-term fidelity over fleeting excitement."
+        },
+        {
+          "heading": "Progression and Sub-Period Shifts",
+          "body": "The period is traditionally understood to unfold gradually, often beginning with an initial phase of adjustment where older structures and routines are recalibrated. Over the course of the nineteen years, the qualitative tone is continuously modified by smaller planetary intervals known as antardashas. Each sub-period blends its own planetary character with Saturnian themes, ensuring that the overall chapter experiences varied intervals of introversion, movement, or material consolidation before concluding."
+        },
+        {
+          "heading": "Determining Your Current Planetary Period",
+          "body": "Unlike Western astrology, which primarily emphasizes the tropical Sun sign, the Vimshottari dasha sequence is calculated from the exact nakshatra occupied by the Moon at birth. To accurately calculate which planetary period is running, one must know the precise birth date, exact birth time, and geographic coordinates of the birth place. An accurate chart calculation reveals the starting point of the sequence and shows where a person currently stands along the timeline."
+        }
+      ]
+    },
+    {
+      "slug": "mercury",
+      "latin": "Mercury",
+      "lord": "Mercury",
+      "years": 17,
+      "name": "Mercury Mahadasha",
+      "title": "Understanding the Mercury Mahadasha in Vedic Astrology",
+      "description": "Learn how the 17-year Mercury Mahadasha influences intellect, communication, and commerce based on planetary placements in Indian astrology.",
+      "h1": "The Mercury Mahadasha in Vedic Astrology",
+      "lead": "In Indian astrology, the Mercury Mahadasha represents an extended planetary cycle centered on intellectual development, commerce, and adaptability. This phase is traditionally examined through the lens of an individual's unique birth chart rather than interpreted as inherently positive or negative.",
+      "sections": [
+        {
+          "heading": "Foundational Facts of the Period",
+          "body": "The Mercury Mahadasha spans a duration of 17 years within the complete 120-year Vimshottari dasha cycle. Mercury rules three specific nakshatras in this astrological system: Ashlesha, Jyeshtha, and Revati. Across this period, the traditional themes brought forward center on communication, analysis, trade and skill."
+        },
+        {
+          "heading": "Themes and Tendencies Brought to Light",
+          "body": "During this 17-year phase, individuals often notice an emphasis on mental activity, learning, and the processing of detailed information. The planetary influence tends to foster curiosity, potentially directing attention toward writing, research, or analytical problem-solving. How comfortably these themes manifest depends largely on the placement and associations of Mercury in the individual's birth chart. When well-integrated, the period is traditionally read as encouraging intellectual clarity and resourceful thinking. Conversely, complex placements may simply reflect phases of mental restlessness, overthinking, or divided focus."
+        },
+        {
+          "heading": "Expressions in Vocation and Personal Dynamics",
+          "body": "In professional matters, this period tends to highlight commercial ventures, negotiations, and pursuits that rely heavily on communicative or technical craft. Relationships often take on a more conversational or intellectually driven tone, where the open exchange of thoughts becomes central to mutual understanding. However, an overemphasis on pure logic can sometimes diminish emotional nuance, which is traditionally balanced by pairing clear expression with active listening."
+        },
+        {
+          "heading": "The Trajectory Across Time and Sub-Periods",
+          "body": "The Mercury Mahadasha does not present a uniform experience from start to finish, as it is divided into sub-periods known as antardashas. Each antardasha introduces the secondary influence of another planet, modifying the central themes of Mercury with its own distinct qualities. The beginning of the period often marks an awakening of intellectual priorities, while later stages tend to integrate the skills and lessons gathered across the preceding years. Astrologers traditionally evaluate these shifts by observing how Mercury interacts with the specific ruler of each active sub-period."
+        },
+        {
+          "heading": "Calculating Your Current Planetary Period",
+          "body": "To determine whether you are currently experiencing a Mercury dasha, an astrological chart must be cast using your exact birth date, time, and geographic location. Unlike Western astrology, which calculates primary cycles from the Sun sign, the Vimshottari dasha sequence starts from the nakshatra the Moon occupied at birth. This precise lunar placement identifies where you entered the broader cycle and maps out the timing of all subsequent mahadashas."
+        }
+      ]
+    }
+  ]
+}
