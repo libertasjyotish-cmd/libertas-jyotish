@@ -11,7 +11,8 @@
     "check:i18n": "node scripts/build-i18n.mjs --check",
     "build:guide": "node scripts/build-guide.mjs",
     "check:guide": "node scripts/build-guide.mjs --check",
-    "report:gsc": "node scripts/gsc-report.mjs"
+    "report:gsc": "node scripts/gsc-report.mjs",
+    "gen:nakshatra": "node scripts/gen-nakshatra-pages.mjs"
   },
   "dependencies": {
     "@sparticuz/chromium": "^149.0.0",

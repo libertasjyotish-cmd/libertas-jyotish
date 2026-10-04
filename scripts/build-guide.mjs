@@ -20,6 +20,9 @@ const SECTION = 'guide';
 const SITE_NAME = 'Libertas Jyotish';
 const OG_IMAGE = `${SITE}/img/og-image.jpg`;
 const GUIDE_DIR = join(ROOT, 'data', 'guide');
+// 連作ページ（ナクシャトラ27宿など）。data/guide/<name>/<lang>.json に記事が入る。
+// URL は /<lang>/guide/<slugPrefix>-<slug> で、親記事（parent）から一覧でリンクする。
+const COLLECTION_DIRS = ['nakshatra'];
 
 const LANGS = readdirSync(GUIDE_DIR).filter((n) => n.endsWith('.json')).map((n) => n.replace(/\.json$/, '')).sort();
 // 鑑定書（有料）への導線。ラベルは共通メニュー（locales/<lang>.json の menu.* 文言）と揃える。
@@ -33,6 +36,15 @@ const PRODUCTS = [
 // 記事テーマに最も近い鑑定書（先頭に「この記事に関連」付きで出す）。
 const RECOMMENDED = { career: 'career', marriage: 'calendar', dasha: 'calendar', nakshatra: 'report', horoscope: 'report', 'indian-astrology': 'report', 'free-reading': 'report', palmistry: 'palm' };
 const GUIDES = Object.fromEntries(LANGS.map((lang) => [lang, JSON.parse(readFileSync(join(GUIDE_DIR, `${lang}.json`), 'utf8'))]));
+const COLLECTIONS = Object.fromEntries(LANGS.map((lang) => [lang, COLLECTION_DIRS
+  .map((name) => join(GUIDE_DIR, name, `${lang}.json`))
+  .filter((path) => existsSync(path))
+  .map((path) => JSON.parse(readFileSync(path, 'utf8')))
+  .filter((col) => col.items.length)]));
+
+function pageSlug(col, item) {
+  return `${col.slugPrefix}-${item.slug}`;
+}
 
 function esc(text) {
   return String(text)
@@ -48,7 +60,9 @@ function jsonLd(obj) {
 
 // 同じ記事（slug）が存在する言語だけ hreflang を張る。x-default は英語があれば英語、なければ日本語。
 function alternates(slug) {
-  const langs = LANGS.filter((l) => (slug ? GUIDES[l].articles.some((a) => a.slug === slug) : true));
+  const has = (l) => GUIDES[l].articles.some((a) => a.slug === slug)
+    || COLLECTIONS[l].some((col) => col.items.some((it) => pageSlug(col, it) === slug));
+  const langs = LANGS.filter((l) => (slug ? has(l) : true));
   const path = (l) => `${SITE}/${l}/${SECTION}${slug ? `/${slug}` : ''}`;
   const links = langs.map((l) => `<link rel="alternate" hreflang="${l}" href="${path(l)}">`);
   const def = langs.includes('en') ? 'en' : langs[0];
@@ -174,6 +188,14 @@ ${items}
 </aside>`;
   }
 
+  // 親記事の末尾に置く27宿（連作）への一覧リンク。
+  function collectionList(col) {
+    const items = col.items
+      .map((it) => `<li><a href="/${LANG}/${SECTION}/${pageSlug(col, it)}">${esc(it.name)}</a></li>`)
+      .join('\n');
+    return `<section class="guide-collection">\n<h2>${esc(col.ui.listHeading)}</h2>\n<p>${esc(col.ui.listLead)}</p>\n<ul class="guide-collection-list">\n${items}\n</ul>\n</section>`;
+  }
+
   function relatedList(current) {
     const others = data.articles.filter((a) => a.slug !== current.slug);
     const items = others.map((a) => `<li><a href="/${LANG}/${SECTION}/${a.slug}">${esc(a.h1)}</a></li>`).join('\n');
@@ -203,6 +225,7 @@ ${items}
       author: { '@type': 'Organization', name: SITE_NAME, url: SITE },
       publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE, logo: { '@type': 'ImageObject', url: `${SITE}/img/libertas-logo.png` } }
     });
+    const collections = COLLECTIONS[LANG].filter((col) => col.parent === article.slug).map((col) => `${collectionList(col)}\n`).join('');
 
     return `<!DOCTYPE html>
 <html lang="${LANG}" dir="${dir}">
@@ -219,9 +242,65 @@ ${breadcrumbNav(crumbs)}
 ${article.sections.map(sectionHtml).join('\n')}
 <p class="note">${esc(ui.disclaimer)}</p>
 </article>
-${cta()}
+${collections}${cta()}
 ${products(article.slug)}
 ${relatedList(article)}
+</main>
+${footer()}
+</body>
+</html>
+`;
+  }
+
+  // 連作の1ページ（例: /ja/guide/nakshatra-ashwini）。
+  function collectionItemPage(col, item, index) {
+    const slug = pageSlug(col, item);
+    const canonical = `${HUB_URL}/${slug}`;
+    const parent = data.articles.find((a) => a.slug === col.parent);
+    const crumbs = [
+      { name: ui.crumbHome, url: HOME_URL },
+      { name: ui.crumbHub, url: HUB_URL },
+      { name: parent.h1, url: `${HUB_URL}/${parent.slug}` },
+      { name: item.h1, url: canonical }
+    ];
+    const ld = jsonLd({
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: item.title,
+      description: item.description,
+      inLanguage: LANG,
+      mainEntityOfPage: canonical,
+      image: OG_IMAGE,
+      isPartOf: { '@type': 'CollectionPage', name: parent.title, url: `${HUB_URL}/${parent.slug}` },
+      author: { '@type': 'Organization', name: SITE_NAME, url: SITE },
+      publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE, logo: { '@type': 'ImageObject', url: `${SITE}/img/libertas-logo.png` } }
+    });
+    const neighbours = [col.items[index - 1], col.items[index + 1]]
+      .filter(Boolean)
+      .map((it) => `<li><a href="/${LANG}/${SECTION}/${pageSlug(col, it)}">${esc(it.name)}</a></li>`);
+    const related = `<section class="related">\n<h2>${esc(ui.relatedHeading)}</h2>\n<ul>\n${[
+      `<li><a href="/${LANG}/${SECTION}/${parent.slug}">${esc(parent.h1)}</a></li>`,
+      ...neighbours
+    ].join('\n')}\n</ul>\n</section>`;
+
+    return `<!DOCTYPE html>
+<html lang="${LANG}" dir="${dir}">
+<head>
+${head({ title: item.title, description: item.description, canonical, ogType: 'article', slug, extra: `${ld}\n${breadcrumbLd(crumbs)}` })}
+</head>
+<body>
+${header()}
+<main class="guide">
+${breadcrumbNav(crumbs)}
+<article>
+<h1>${esc(item.h1)}</h1>
+<p class="lead">${esc(item.lead)}</p>
+${item.sections.map(sectionHtml).join('\n')}
+<p class="note">${esc(ui.disclaimer)}</p>
+</article>
+${cta()}
+${products(col.parent)}
+${related}
 </main>
 ${footer()}
 </body>
@@ -275,7 +354,11 @@ ${footer()}
 
   return [
     [join(ROOT, LANG, SECTION, 'index.html'), hubPage()],
-    ...data.articles.map((article) => [join(ROOT, LANG, SECTION, `${article.slug}.html`), articlePage(article)])
+    ...data.articles.map((article) => [join(ROOT, LANG, SECTION, `${article.slug}.html`), articlePage(article)]),
+    ...COLLECTIONS[LANG].flatMap((col) => col.items.map((item, i) => [
+      join(ROOT, LANG, SECTION, `${pageSlug(col, item)}.html`),
+      collectionItemPage(col, item, i)
+    ]))
   ];
 }
 
