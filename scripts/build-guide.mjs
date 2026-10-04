@@ -22,7 +22,7 @@ const OG_IMAGE = `${SITE}/img/og-image.jpg`;
 const GUIDE_DIR = join(ROOT, 'data', 'guide');
 // 連作ページ（ナクシャトラ27宿など）。data/guide/<name>/<lang>.json に記事が入る。
 // URL は /<lang>/guide/<slugPrefix>-<slug> で、親記事（parent）から一覧でリンクする。
-const COLLECTION_DIRS = ['nakshatra'];
+const COLLECTION_DIRS = ['nakshatra', 'dasha'];
 
 const LANGS = readdirSync(GUIDE_DIR).filter((n) => n.endsWith('.json')).map((n) => n.replace(/\.json$/, '')).sort();
 // 鑑定書（有料）への導線。ラベルは共通メニュー（locales/<lang>.json の menu.* 文言）と揃える。

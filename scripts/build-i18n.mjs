@@ -44,7 +44,7 @@ function buildRobotsSaleJa(lang) {
 const GUIDE_DIR = join(ROOT, 'data/guide');
 const GUIDE_SECTION = 'guide';
 // 連作ページ（data/guide/<name>/<lang>.json）。build-guide.mjs の COLLECTION_DIRS と揃える。
-const COLLECTION_DIRS = ['nakshatra'];
+const COLLECTION_DIRS = ['nakshatra', 'dasha'];
 
 const PARTIAL_DIR = join(TEMPLATE_DIR, 'partials');
 const PARTIAL = /\{\{>\s*([a-zA-Z0-9_-]+)\s*\}\}/g;
