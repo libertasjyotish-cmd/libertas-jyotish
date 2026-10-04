@@ -1,6 +1,6 @@
 // 共通メニュー（js/site-menu.js）に載せる単機能ツール。build-i18n.mjs と build-guide.mjs で共有する。
 // 言語は段階的に増やす。増やすときは TOOLS_MENU_LANGS に足すだけでよい。
-export const TOOLS_MENU_LANGS = new Set(['ja']);
+export const TOOLS_MENU_LANGS = new Set(['ja', 'en', 'es', 'pt', 'ar', 'id', 'fr', 'de']);
 
 export const TOOLS_MENU = [
   { page: 'tools/moon-sign', labelKey: 'tools.moonSign.h1' },
