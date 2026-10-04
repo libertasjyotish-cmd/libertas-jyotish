@@ -23,6 +23,7 @@
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { toolsMenu } from './tools-menu.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const TEMPLATE_DIR = join(ROOT, 'templates');
@@ -109,6 +110,22 @@ function buildGuideMenu(lang) {
     intro: '/${lang}/${GUIDE_SECTION}/${intro.slug}',
     introLabel: ${JSON.stringify(intro.menuLabel || intro.h1)},
     groupLabel: ${JSON.stringify(guide.index.menuGroup || '')}
+  }`;
+}
+
+// 共通メニューへ渡す単機能ツールのリンク先。対象外の言語では空文字。
+function buildToolsMenu(lang, strings) {
+  const tools = toolsMenu(lang, (key) => lookup(strings, key));
+  if (!tools) return '';
+  const items = tools.items.map(
+    (item) => `      { href: '${item.href}', label: ${JSON.stringify(item.label)} }`
+  );
+  return `,
+  tools: {
+    groupLabel: ${JSON.stringify(tools.groupLabel)},
+    items: [
+${items.join(',\n')}
+    ]
   }`;
 }
 
@@ -218,8 +235,15 @@ function escapeAttr(value) {
   return String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 }
 
+// partial の中の partial（tool-page → i18n-globals）も展開するため、残らなくなるまで繰り返す。
 function expandPartials(template) {
-  return template.replace(PARTIAL, (match, name) => readFileSync(join(PARTIAL_DIR, `${name}.html`), 'utf8').replace(/\n$/, ''));
+  for (let depth = 0; PARTIAL.test(template); depth += 1) {
+    PARTIAL.lastIndex = 0;
+    if (depth > 10) throw new Error('partial の入れ子が深すぎます（循環参照の可能性）');
+    template = template.replace(PARTIAL, (match, name) => readFileSync(join(PARTIAL_DIR, `${name}.html`), 'utf8').replace(/\n$/, ''));
+  }
+  PARTIAL.lastIndex = 0;
+  return template;
 }
 
 function render(template, locale, base, context) {
@@ -248,6 +272,8 @@ function render(template, locale, base, context) {
       value = buildGuideLinks(locale.meta.lang);
     } else if (path === 'guideMenu') {
       value = buildGuideMenu(locale.meta.lang);
+    } else if (path === 'toolsMenu') {
+      value = buildToolsMenu(locale.meta.lang, locale.strings);
     } else if (path === 'pdfIntroJa') {
       // 生涯完全鑑定書の商品説明（言語別 partial）。
       value = expandPartials(`{{>pdf-intro-${locale.meta.lang}}}`);

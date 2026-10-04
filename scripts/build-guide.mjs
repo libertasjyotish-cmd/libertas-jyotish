@@ -13,6 +13,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { toolsMenu } from './tools-menu.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://www.libertas-jyotish.com';
@@ -129,6 +130,8 @@ ${extra}`;
         groupLabel: data.index.menuGroup || ''
       }
     };
+    const tools = toolsMenu(LANG, (key) => locale.strings[key]);
+    if (tools) globals.tools = tools;
     return `<script>window.LJ_I18N = ${JSON.stringify(globals).replace(/</g, '\\u003c')};</script>`;
   }
 

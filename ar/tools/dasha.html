@@ -39,7 +39,49 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"معرفة فترة الداشا الحالية","url":"https://www.libertas-jyotish.com/ar/tools/dasha","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ar","description":"احسب مجاناً فترة الكوكب (الماها داشا) الحالية التي تمر بها ضمن دورة فيمشوتاري داشا (دورة الـ 120 عاماً)، واعرف تاريخ الانتقال إلى الفترة التالية بناءً على بيانات ميلادك.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"الرئيسية","item":"https://www.libertas-jyotish.com/ar"},{"@type":"ListItem","position":2,"name":"معرفة فترة الداشا الحالية","item":"https://www.libertas-jyotish.com/ar/tools/dasha"}]}]}</script>
 </head>
 <body>
-{{>i18n-globals}}
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'ar',
+  menu: {
+    top: 'الرئيسية',
+    free: 'قراءة مجانية',
+    daily: 'القراءة اليومية (بريميوم)',
+    about: 'عن ليبرتاس جيوتيش',
+    products: 'قائمة التقارير',
+    report: 'تقرير العمر',
+    yearly: 'تقرير العام القادم',
+    compat: 'تقرير التوافق',
+    career: 'تقرير العمل والمال والرسالة',
+    palm: 'كار-كوندالي (الكف × خريطة الميلاد)',
+    karma: 'كارما ودارما — رسالة حياتك',
+    calendar: 'تقويم الحظ السنوي',
+    calendarNote: 'قريبًا',
+    mypage: 'صفحة العضوية',
+    legal: 'المعلومات القانونية والشروط',
+    contact: 'اتصل بنا',
+    toggleLabel: 'القائمة',
+    navLabel: 'قائمة الموقع'
+  },
+  price: {
+    premium: '{price} شهريًا (بالدولار الأمريكي؛ قد تُضاف الضرائب المحلية عند الدفع)',
+    pdf: '{price} دفعة واحدة (بالدولار الأمريكي؛ قد تُضاف الضرائب المحلية عند الدفع)',
+    premiumApprox: 'نحو {price} شهريًا — يُحاسَب بالدولار الأمريكي، ويظهر المبلغ النهائي عند الدفع',
+    pdfApprox: 'نحو {price} دفعة واحدة — يُحاسَب بالدولار الأمريكي، ويظهر المبلغ النهائي عند الدفع',
+    checkoutOnly: 'يظهر المبلغ بعملتك المحلية عند الدفع',
+    unavailable: 'الدفع عبر الإنترنت غير متاح مؤقتًا. يرجى المحاولة لاحقًا.'
+  },
+  playError: 'تعذّر إتمام عملية الشراء عبر Google Play. يرجى المحاولة مرة أخرى.',
+  playManage: 'تُدار الاشتراكات المشتراة داخل التطبيق (الإلغاء وطريقة الدفع) من Google Play ← الاشتراكات. هل تريد الفتح الآن؟',
+  guide: {
+    hub: '/ar/guide',
+    hubLabel: "كل المقالات",
+    intro: '/ar/guide/indian-astrology',
+    introLabel: "ما هو التنجيم الفيدي؟",
+    groupLabel: ""
+  }
+};
+</script>
 <script>window.LJ_TOOLS = {
   tool: 'tools/dasha',
   labels: {
@@ -133,7 +175,11 @@
 </section>
 </main>
 <footer class="guide-footer">
-{{>legal-links}}
+<a href="/ar/legal">المعلومات القانونية</a>
+<a href="/ar/legal#terms">شروط الاستخدام</a>
+<a href="/ar/legal#privacy">سياسة الخصوصية</a>
+<a href="/ar/legal#refund">سياسة الاسترداد</a>
+<a href="/ar/contact">اتصل بنا</a>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 </body>

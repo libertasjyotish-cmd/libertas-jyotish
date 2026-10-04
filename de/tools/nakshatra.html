@@ -39,7 +39,49 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Nakshatra berechnen","url":"https://www.libertas-jyotish.com/de/tools/nakshatra","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"de","description":"Berechnen Sie Ihr Nakshatra (Mondhaus), Pada und den Herrscherplaneten anhand von Geburtsdatum, -zeit und -ort kostenlos. Erfahren Sie mehr über die 27 Nakshatras.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Startseite","item":"https://www.libertas-jyotish.com/de"},{"@type":"ListItem","position":2,"name":"Nakshatra berechnen","item":"https://www.libertas-jyotish.com/de/tools/nakshatra"}]}]}</script>
 </head>
 <body>
-{{>i18n-globals}}
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'de',
+  menu: {
+    top: 'Startseite',
+    free: 'Kostenlose Analyse',
+    daily: 'Tägliche Analyse (Premium)',
+    about: 'Über Libertas Jyotish',
+    products: 'Berichte',
+    report: 'Lebensbericht',
+    yearly: 'Jahresbericht',
+    compat: 'Kompatibilitätsbericht',
+    career: 'Bericht zu Beruf, Geld & Berufung',
+    palm: 'Kar-Kundali (Handfläche × Geburtshoroskop)',
+    karma: 'Karma & Dharma — Ihre Lebensaufgabe',
+    calendar: 'Jährlicher Glückskalender',
+    calendarNote: 'bald verfügbar',
+    mypage: 'Mitgliederbereich',
+    legal: 'Impressum und AGB',
+    contact: 'Kontaktieren Sie uns',
+    toggleLabel: 'Menü',
+    navLabel: 'Seitenmenü'
+  },
+  price: {
+    premium: '{price} / Monat (USD; lokale Steuern ggf. an der Kasse)',
+    pdf: '{price} einmalig (USD; lokale Steuern ggf. an der Kasse)',
+    premiumApprox: 'Etwa {price} / Monat — Abrechnung in USD, endgültiger Betrag an der Kasse',
+    pdfApprox: 'Etwa {price} einmalig — Abrechnung in USD, endgültiger Betrag an der Kasse',
+    checkoutOnly: 'Der Betrag in Ihrer Landeswährung wird an der Kasse angezeigt',
+    unavailable: 'Die Online-Zahlung ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.'
+  },
+  playError: 'Der Kauf über Google Play konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.',
+  playManage: 'In der App gekaufte Abonnements werden in Google Play → Abonnements verwaltet (Kündigung, Zahlungsmethode). Jetzt öffnen?',
+  guide: {
+    hub: '/de/guide',
+    hubLabel: "Alle Ratgeber",
+    intro: '/de/guide/indian-astrology',
+    introLabel: "Was ist vedische Astrologie?",
+    groupLabel: ""
+  }
+};
+</script>
 <script>window.LJ_TOOLS = {
   tool: 'tools/nakshatra',
   labels: {
@@ -133,7 +175,11 @@
 </section>
 </main>
 <footer class="guide-footer">
-{{>legal-links}}
+<a href="/de/legal">Impressum</a>
+<a href="/de/legal#terms">Nutzungsbedingungen</a>
+<a href="/de/legal#privacy">Datenschutzerklärung</a>
+<a href="/de/legal#refund">Rückerstattungsrichtlinien</a>
+<a href="/de/contact">Kontakt</a>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 </body>

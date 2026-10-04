@@ -39,7 +39,49 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Cek Nakshatra Anda","url":"https://www.libertas-jyotish.com/id/tools/nakshatra","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"id","description":"Hitung Nakshatra kelahiran, Pada, dan planet penguasanya secara gratis berdasarkan tanggal, waktu, dan tempat lahir. Lanjutkan membaca ulasan lengkap untuk masing-masing 27 Nakshatra.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Beranda","item":"https://www.libertas-jyotish.com/id"},{"@type":"ListItem","position":2,"name":"Cek Nakshatra Anda","item":"https://www.libertas-jyotish.com/id/tools/nakshatra"}]}]}</script>
 </head>
 <body>
-{{>i18n-globals}}
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'id',
+  menu: {
+    top: 'Beranda',
+    free: 'Pembacaan gratis',
+    daily: 'Pembacaan harian (Premium)',
+    about: 'Tentang Libertas Jyotish',
+    products: 'Daftar Laporan',
+    report: 'Laporan Seumur Hidup',
+    yearly: 'Laporan Tahun Depan',
+    compat: 'Laporan Kecocokan',
+    career: 'Laporan Karier, Keuangan & Panggilan Hidup',
+    palm: 'Kar-Kundali (Telapak × Peta Kelahiran)',
+    karma: 'Karma & Dharma — Tujuan Hidup Anda',
+    calendar: 'Kalender Peruntungan Tahunan',
+    calendarNote: 'segera hadir',
+    mypage: 'Halaman anggota',
+    legal: 'Informasi hukum dan ketentuan',
+    contact: 'Hubungi kami',
+    toggleLabel: 'Menu',
+    navLabel: 'Menu situs'
+  },
+  price: {
+    premium: '{price} / bulan (USD; pajak lokal dapat ditambahkan saat checkout)',
+    pdf: '{price} sekali bayar (USD; pajak lokal dapat ditambahkan saat checkout)',
+    premiumApprox: 'Sekitar {price} / bulan — ditagih dalam USD, jumlah akhir ditampilkan saat checkout',
+    pdfApprox: 'Sekitar {price} sekali bayar — ditagih dalam USD, jumlah akhir ditampilkan saat checkout',
+    checkoutOnly: 'Jumlah dalam mata uang lokal Anda ditampilkan saat checkout',
+    unavailable: 'Pembayaran online sementara tidak tersedia. Silakan coba lagi nanti.'
+  },
+  playError: 'Pembelian Google Play tidak dapat diselesaikan. Silakan coba lagi.',
+  playManage: 'Langganan yang dibeli di aplikasi dikelola (batalkan, metode pembayaran) di Google Play → Langganan. Buka sekarang?',
+  guide: {
+    hub: '/id/guide',
+    hubLabel: "Semua panduan",
+    intro: '/id/guide/indian-astrology',
+    introLabel: "Apa itu astrologi Veda?",
+    groupLabel: ""
+  }
+};
+</script>
 <script>window.LJ_TOOLS = {
   tool: 'tools/nakshatra',
   labels: {
@@ -133,7 +175,11 @@
 </section>
 </main>
 <footer class="guide-footer">
-{{>legal-links}}
+<a href="/id/legal">Informasi hukum</a>
+<a href="/id/legal#terms">Syarat Penggunaan</a>
+<a href="/id/legal#privacy">Kebijakan Privasi</a>
+<a href="/id/legal#refund">Kebijakan Pengembalian Dana</a>
+<a href="/id/contact">Hubungi kami</a>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 </body>

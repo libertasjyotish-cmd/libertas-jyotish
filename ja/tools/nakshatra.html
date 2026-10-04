@@ -39,7 +39,57 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"ナクシャトラを調べる","url":"https://www.libertas-jyotish.com/ja/tools/nakshatra","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ja","description":"生年月日・出生時刻・出生地から、月のナクシャトラ（27宿）とパダ・支配星を無料計算します。結果から27宿それぞれの解説ページへ進めます。","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"トップ","item":"https://www.libertas-jyotish.com/ja"},{"@type":"ListItem","position":2,"name":"ナクシャトラを調べる","item":"https://www.libertas-jyotish.com/ja/tools/nakshatra"}]}]}</script>
 </head>
 <body>
-{{>i18n-globals}}
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'ja',
+  menu: {
+    top: 'トップ',
+    free: '無料診断',
+    daily: '毎日の鑑定（プレミアム会員）',
+    about: 'Libertas Jyotishとは',
+    products: '鑑定書一覧',
+    report: '生涯完全鑑定書',
+    yearly: '年間運勢 鑑定書',
+    compat: '相性 鑑定書',
+    career: '仕事運・金運・天職 鑑定書',
+    palm: 'カル・クンダリ（手相×出生図）',
+    karma: 'Karma & Dharma ― 今世の天命',
+    calendar: '年間運勢カレンダー',
+    calendarNote: '準備中',
+    mypage: '会員マイページ',
+    legal: '特定商取引法・利用規約',
+    contact: 'お問い合わせ',
+    toggleLabel: 'メニュー',
+    navLabel: 'サイトメニュー'
+  },
+  price: {
+    premium: '月額 {price}（税込）',
+    pdf: '買い切り {price}（税込）',
+    premiumApprox: '月額 約{price}（税込・決済画面で確定）',
+    pdfApprox: '買い切り 約{price}（税込・決済画面で確定）',
+    checkoutOnly: '金額はご利用の通貨で決済画面に表示されます',
+    unavailable: 'サイト内決済は準備中です。公開までお待ちください。'
+  },
+  playError: 'Google Play での購入を完了できませんでした。もう一度お試しください。',
+  playManage: '定期購入の管理（解約・支払い方法）は Google Play の「定期購入」画面で行います。開きますか？',
+  guide: {
+    hub: '/ja/guide',
+    hubLabel: "解説記事一覧",
+    intro: '/ja/guide/indian-astrology',
+    introLabel: "インド占星術とは",
+    groupLabel: ""
+  },
+  tools: {
+    groupLabel: "無料の計算ツール",
+    items: [
+      { href: '/ja/tools/moon-sign', label: "月星座を調べる" },
+      { href: '/ja/tools/nakshatra', label: "ナクシャトラを調べる" },
+      { href: '/ja/tools/dasha', label: "現在のダシャー期を調べる" }
+    ]
+  }
+};
+</script>
 <script>window.LJ_TOOLS = {
   tool: 'tools/nakshatra',
   labels: {
@@ -133,7 +183,11 @@
 </section>
 </main>
 <footer class="guide-footer">
-{{>legal-links}}
+<a href="/ja/legal">特定商取引法に基づく表記</a>
+<a href="/ja/legal#terms">利用規約</a>
+<a href="/ja/legal#privacy">プライバシーポリシー</a>
+<a href="/ja/legal#refund">返金ポリシー</a>
+<a href="/ja/contact">お問い合わせ</a>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 </body>
