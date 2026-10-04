@@ -18,7 +18,7 @@
     lang: 'ja',
     menu: {
       top: 'トップ', free: '無料診断', daily: '毎日の鑑定（プレミアム会員）', about: 'Libertas Jyotishとは',
-      report: '生涯完全鑑定書',
+      products: '鑑定書一覧', report: '生涯完全鑑定書',
       yearly: '年間運勢 鑑定書', compat: '相性 鑑定書', career: '仕事運・金運・天職 鑑定書', palm: 'カル・クンダリ（手相×出生図）',
       karma: 'Karma & Dharma ― 今世の天命',
       calendar: '年間運勢カレンダー', calendarNote: '準備中',
@@ -37,18 +37,9 @@
     { href: home, label: t.top },
     { href: home + '#form-area', label: t.free },
     { href: home + '/mypage#premium', label: t.daily },
-    { href: home + '/pdf-purchase', label: t.report }
+    // 個別の鑑定書は /products の一覧ページに集約（販売中・準備中の表示もそちら）。
+    { href: home + '/products', label: t.products }
   ];
-  // 個別鑑定書で販売中なのは年間運勢・仕事運・金運・天職・カル・クンダリ（全言語）。
-  // 他商品は「準備中」見出しの下にリンク無しで並べる。
-  LINKS.push(
-    { href: home + '/yearly', label: t.calendar },
-    { href: home + '/career', label: t.career },
-    { href: home + '/palm-chart', label: t.palm },
-    { divider: true, label: t.calendarNote },
-    { label: t.compat, soon: true },
-    { label: t.karma, soon: true }
-  );
   if (guide) {
     LINKS.push(
       { divider: true, label: guide.groupLabel },
