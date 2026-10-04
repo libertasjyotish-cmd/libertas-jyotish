@@ -36,6 +36,8 @@
   const home = '/' + lang;
   // 解説記事がある言語では入門記事と記事一覧をメニューに出す。
   const guide = i18n.guide || null;
+  // 単機能ツール（/<lang>/tools/...）を公開した言語ではメニューに出す。
+  const tools = (i18n.tools && i18n.tools.items && i18n.tools.items.length) ? i18n.tools : null;
 
   const LINKS = [
     { href: home, label: t.top },
@@ -59,6 +61,10 @@
     );
   } else {
     LINKS.splice(3, 0, { href: home + '#about', label: t.about });
+  }
+  if (tools) {
+    LINKS.push({ divider: true, label: tools.groupLabel });
+    for (const tool of tools.items) LINKS.push({ href: tool.href, label: tool.label });
   }
   LINKS.push(
     { divider: true },

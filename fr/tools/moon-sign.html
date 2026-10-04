@@ -39,7 +39,49 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Calculer votre signe lunaire","url":"https://www.libertas-jyotish.com/fr/tools/moon-sign","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"fr","description":"Calculez gratuitement votre signe lunaire en astrologie védique (zodiaque sidéral) à partir de vos date, heure et lieu de naissance. Découvrez également les différences avec le signe solaire de l'astrologie occidentale.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://www.libertas-jyotish.com/fr"},{"@type":"ListItem","position":2,"name":"Calculer votre signe lunaire","item":"https://www.libertas-jyotish.com/fr/tools/moon-sign"}]}]}</script>
 </head>
 <body>
-{{>i18n-globals}}
+<script>
+// 共通スクリプト（site-menu.js / checkout-links.js）へページ言語と文言を渡す。
+window.LJ_I18N = {
+  lang: 'fr',
+  menu: {
+    top: 'Accueil',
+    free: 'Lecture gratuite',
+    daily: 'Lecture quotidienne (Premium)',
+    about: 'À propos de Libertas Jyotish',
+    products: 'Rapports',
+    report: 'Rapport à vie',
+    yearly: 'Rapport de l’année',
+    compat: 'Rapport de compatibilité',
+    career: 'Rapport carrière, argent et vocation',
+    palm: 'Kar-Kundali (paume × thème natal)',
+    karma: 'Karma et Dharma — votre mission de vie',
+    calendar: 'Calendrier annuel de la destinée',
+    calendarNote: 'bientôt disponible',
+    mypage: 'Espace membre',
+    legal: 'Mentions légales et conditions',
+    contact: 'Nous contacter',
+    toggleLabel: 'Menu',
+    navLabel: 'Menu du site'
+  },
+  price: {
+    premium: '{price} / mois (USD ; taxes locales éventuellement ajoutées au paiement)',
+    pdf: '{price} paiement unique (USD ; taxes locales éventuellement ajoutées au paiement)',
+    premiumApprox: 'Environ {price} / mois — facturé en USD, montant final affiché lors du paiement',
+    pdfApprox: 'Environ {price} en paiement unique — facturé en USD, montant final affiché lors du paiement',
+    checkoutOnly: 'Le montant dans votre devise locale sera affiché lors du paiement',
+    unavailable: 'Le paiement en ligne est temporairement indisponible. Veuillez réessayer plus tard.'
+  },
+  playError: 'L\'achat sur Google Play n\'a pas pu aboutir. Veuillez réessayer.',
+  playManage: 'Les abonnements souscrits dans l\'application sont gérés (annulation, mode de paiement) dans Google Play → Abonnements. L\'ouvrir maintenant ?',
+  guide: {
+    hub: '/fr/guide',
+    hubLabel: "Tous les guides",
+    intro: '/fr/guide/indian-astrology',
+    introLabel: "Qu'est-ce que l'astrologie védique ?",
+    groupLabel: ""
+  }
+};
+</script>
 <script>window.LJ_TOOLS = {
   tool: 'tools/moon-sign',
   labels: {
@@ -133,7 +175,11 @@
 </section>
 </main>
 <footer class="guide-footer">
-{{>legal-links}}
+<a href="/fr/legal">Mentions légales</a>
+<a href="/fr/legal#terms">Conditions générales d'utilisation</a>
+<a href="/fr/legal#privacy">Politique de confidentialité</a>
+<a href="/fr/legal#refund">Politique de remboursement</a>
+<a href="/fr/contact">Contact</a>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
 </body>
