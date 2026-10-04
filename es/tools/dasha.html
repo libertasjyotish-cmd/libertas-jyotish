@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calcula tu periodo Dasha actual gratis | Cálculo de Vimshottari Dasha</title>
+<meta name="description" content="Calcula gratis qué periodo planetario (Mahadasha) del ciclo de 120 años de Vimshottari Dasha estás transitando actualmente y cuándo ocurrirá la próxima transición, a partir de tu fecha, hora y lugar de nacimiento.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Libertas Jyotish">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Calcula tu periodo Dasha actual gratis | Cálculo de Vimshottari Dasha">
+<meta property="og:description" content="Calcula gratis qué periodo planetario (Mahadasha) del ciclo de 120 años de Vimshottari Dasha estás transitando actualmente y cuándo ocurrirá la próxima transición, a partir de tu fecha, hora y lugar de nacimiento.">
+<meta property="og:url" content="https://www.libertas-jyotish.com/es/tools/dasha">
+<meta property="og:image" content="https://www.libertas-jyotish.com/img/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://www.libertas-jyotish.com/es/tools/dasha">
+<link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/tools/dasha">
+<link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/tools/dasha">
+<link rel="alternate" hreflang="es" href="https://www.libertas-jyotish.com/es/tools/dasha">
+<link rel="alternate" hreflang="pt" href="https://www.libertas-jyotish.com/pt/tools/dasha">
+<link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar/tools/dasha">
+<link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id/tools/dasha">
+<link rel="alternate" hreflang="fr" href="https://www.libertas-jyotish.com/fr/tools/dasha">
+<link rel="alternate" hreflang="de" href="https://www.libertas-jyotish.com/de/tools/dasha">
+<link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/tools/dasha">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0c1a1f">
+<link rel="icon" type="image/png" href="/img/libertas-logo.png">
+<link rel="apple-touch-icon" href="/img/libertas-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/guide.css">
+<link rel="stylesheet" href="/css/tools.css">
+<style>body{font-family:'Noto Serif', serif;}</style>
+<script defer src="/js/site-menu.js"></script>
+<script defer src="/js/tools.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Calcular periodo Dasha actual","url":"https://www.libertas-jyotish.com/es/tools/dasha","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"es","description":"Calcula gratis qué periodo planetario (Mahadasha) del ciclo de 120 años de Vimshottari Dasha estás transitando actualmente y cuándo ocurrirá la próxima transición, a partir de tu fecha, hora y lugar de nacimiento.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://www.libertas-jyotish.com/es"},{"@type":"ListItem","position":2,"name":"Calcular periodo Dasha actual","item":"https://www.libertas-jyotish.com/es/tools/dasha"}]}]}</script>
+</head>
+<body>
+{{>i18n-globals}}
+<script>window.LJ_TOOLS = {
+  tool: 'tools/dasha',
+  labels: {
+    moonSign: 'Signo lunar',
+    sunSign: 'Signo solar (sideral)',
+    lagna: 'Lagna (Ascendente)',
+    nakshatra: 'Nakshatra',
+    pada: 'Pada',
+    nakshatraLord: 'Planeta regente',
+    dasha: 'Mahadasha actual',
+    nextDasha: 'Próximo Mahadasha'
+  },
+  padaValue: 'Pada {pada}',
+  period: '{start} - {end}',
+  guideLink: 'Leer la guía de {name}',
+  submit: 'Calcular gratis',
+  submitting: 'Calculando…',
+  errors: {
+    date: 'Por favor, introduce tu fecha de nacimiento.',
+    place: 'Por favor, introduce tu lugar de nacimiento.',
+    placeNotFound: 'No se pudo identificar el lugar de nacimiento. Prueba a añadir la ciudad o el país.',
+    generic: 'No se pudo realizar el cálculo. Por favor, inténtalo de nuevo más tarde.'
+  }
+};</script>
+<header class="site-header" data-site-header></header>
+<main class="guide tool-page">
+<nav class="breadcrumb" aria-label="Ubicación actual"><ol><li><a href="/es">Inicio</a></li><li aria-current="page">Calcular periodo Dasha actual</li></ol></nav>
+<article>
+<h1>Calcular periodo Dasha actual</h1>
+<p class="lead">A partir del Nakshatra lunar natal, calcula qué periodo planetario estás viviendo dentro del ciclo de Vimshottari Dasha (120 años en total) y en qué momento comenzará el siguiente periodo.</p>
+
+<form class="tool-form" id="tool-form" novalidate>
+<div class="tool-field">
+<label for="tool-date">Fecha de nacimiento</label>
+<input type="date" id="tool-date" name="date" required>
+</div>
+<div class="tool-field">
+<label for="tool-time">Hora de nacimiento <span class="tool-hint">(Si no la conoces, déjalo en blanco. Se calculará con las 12:00)</span></label>
+<input type="time" id="tool-time" name="time">
+</div>
+<div class="tool-field">
+<label for="tool-place">Lugar de nacimiento</label>
+<input type="text" id="tool-place" name="place" placeholder="Ej.: Shinjuku, Tokio" autocomplete="off" required>
+</div>
+<button type="submit" class="tool-submit" id="tool-submit">Calcular gratis</button>
+<p class="tool-status" id="tool-status" role="status" aria-live="polite" hidden></p>
+</form>
+
+<section class="tool-result" id="tool-result" hidden>
+<h2>Resultados del cálculo</h2>
+<dl class="tool-values" id="tool-values"></dl>
+<p class="tool-geo" id="tool-geo" hidden></p>
+<p class="tool-guide" id="tool-guide" hidden></p>
+</section>
+
+<section>
+<h2>¿Qué es el sistema Dasha?</h2>
+<p>El Dasha es el sistema temporal de la astrología védica que divide la vida en periodos regidos por distintos planetas. En el Vimshottari Dasha, el método más empleado, se contempla un ciclo de 120 años compuesto por: Ketu (7 años), Venus (20 años), Sol (6 años), Luna (10 años), Marte (7 años), Rahu (18 años), Júpiter (16 años), Saturno (19 años) y Mercurio (17 años), transcurriendo en esta secuencia a lo largo de la existencia.</p>
+</section>
+<section>
+<h2>Punto de partida del cálculo</h2>
+<p>El periodo planetario con el que inicia la vida depende del planeta regente del Nakshatra en el que se encontraba la Luna al momento del nacimiento. Asimismo, el grado exacto de avance de la Luna dentro de esa mansión determina el tiempo restante del primer periodo, por lo que es necesario contar no solo con la fecha, sino también con la hora y el lugar de nacimiento. Si se desconoce la hora, se calculará tomando las 12:00 como referencia.</p>
+</section>
+<section>
+<h2>Cómo interpretar los periodos planetarios</h2>
+<p>Un periodo planetario no es intrínsecamente favorable o desfavorable. Su manifestación dependerá de la posición del planeta en la carta natal y de las relaciones e influencias que mantenga con otros astros. Además, cada Mahadasha se divide internamente en subperiodos denominados Antardashas, lo que hace que los temas de vida vayan evolucionando a lo largo de un mismo gran ciclo.</p>
+</section>
+<p class="note">Esta herramienta muestra los resultados de cálculos astronómicos basados en reglas tradicionales. No garantiza acontecimientos futuros ni sustituye el asesoramiento médico, legal o financiero.</p>
+</article>
+<aside class="guide-cta">
+<p class="guide-cta-title">Si deseas una lectura en texto</p>
+<p>En la lectura gratuita, puedes descubrir en detalle tus tendencias y tu momento actual basándote en tu signo lunar, Nakshatra y Dasha calculados aquí.</p>
+<a class="guide-cta-btn" href="/es#form-area" data-tool-cta="free">Comenzar lectura gratuita</a>
+</aside>
+<aside class="guide-products">
+<p class="guide-cta-title">Para conocer más a fondo</p>
+<p>Informe astrológico en formato PDF estructurado por capítulos, basado en la totalidad de tu carta natal.</p>
+<ul>
+<li><a href="/es/yearly" data-tool-cta="yearly">Informe del año</a></li>
+<li><a href="/es/career" data-tool-cta="career">Informe de carrera, dinero y vocación</a></li>
+<li><a href="/es/pdf-purchase" data-tool-cta="report">Informe Vitalicio</a></li>
+</ul>
+</aside>
+<section class="related">
+<h2>Otras herramientas de cálculo</h2>
+<ul class="tool-links">
+<li><a href="/es/tools/moon-sign">Calcular signo lunar</a></li>
+<li><a href="/es/tools/nakshatra">Calcular Nakshatra</a></li>
+<li><a href="/es/tools/dasha">Calcular periodo Dasha actual</a></li>
+</ul>
+</section>
+</main>
+<footer class="guide-footer">
+{{>legal-links}}
+<p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+</footer>
+</body>
+</html>

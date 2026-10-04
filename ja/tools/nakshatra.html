@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ナクシャトラ（27宿）を無料で調べる｜インド占星術の計算ツール</title>
+<meta name="description" content="生年月日・出生時刻・出生地から、月のナクシャトラ（27宿）とパダ・支配星を無料計算します。結果から27宿それぞれの解説ページへ進めます。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Libertas Jyotish">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="ナクシャトラ（27宿）を無料で調べる｜インド占星術の計算ツール">
+<meta property="og:description" content="生年月日・出生時刻・出生地から、月のナクシャトラ（27宿）とパダ・支配星を無料計算します。結果から27宿それぞれの解説ページへ進めます。">
+<meta property="og:url" content="https://www.libertas-jyotish.com/ja/tools/nakshatra">
+<meta property="og:image" content="https://www.libertas-jyotish.com/img/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://www.libertas-jyotish.com/ja/tools/nakshatra">
+<link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/tools/nakshatra">
+<link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/tools/nakshatra">
+<link rel="alternate" hreflang="es" href="https://www.libertas-jyotish.com/es/tools/nakshatra">
+<link rel="alternate" hreflang="pt" href="https://www.libertas-jyotish.com/pt/tools/nakshatra">
+<link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar/tools/nakshatra">
+<link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id/tools/nakshatra">
+<link rel="alternate" hreflang="fr" href="https://www.libertas-jyotish.com/fr/tools/nakshatra">
+<link rel="alternate" hreflang="de" href="https://www.libertas-jyotish.com/de/tools/nakshatra">
+<link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/tools/nakshatra">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0c1a1f">
+<link rel="icon" type="image/png" href="/img/libertas-logo.png">
+<link rel="apple-touch-icon" href="/img/libertas-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/guide.css">
+<link rel="stylesheet" href="/css/tools.css">
+<style>body{font-family:'Noto Serif JP', serif;}</style>
+<script defer src="/js/site-menu.js"></script>
+<script defer src="/js/tools.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"ナクシャトラを調べる","url":"https://www.libertas-jyotish.com/ja/tools/nakshatra","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ja","description":"生年月日・出生時刻・出生地から、月のナクシャトラ（27宿）とパダ・支配星を無料計算します。結果から27宿それぞれの解説ページへ進めます。","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"トップ","item":"https://www.libertas-jyotish.com/ja"},{"@type":"ListItem","position":2,"name":"ナクシャトラを調べる","item":"https://www.libertas-jyotish.com/ja/tools/nakshatra"}]}]}</script>
+</head>
+<body>
+{{>i18n-globals}}
+<script>window.LJ_TOOLS = {
+  tool: 'tools/nakshatra',
+  labels: {
+    moonSign: '月星座',
+    sunSign: '太陽星座（サイデリアル）',
+    lagna: 'ラグナ（上昇星座）',
+    nakshatra: 'ナクシャトラ',
+    pada: 'パダ',
+    nakshatraLord: '支配星',
+    dasha: '現在のマハーダシャー',
+    nextDasha: '次のマハーダシャー'
+  },
+  padaValue: '第{pada}パダ',
+  period: '{start}〜{end}',
+  guideLink: '{name}の解説を読む',
+  submit: '無料で計算する',
+  submitting: '計算しています…',
+  errors: {
+    date: '生年月日を入力してください。',
+    place: '出生地を入力してください。',
+    placeNotFound: '出生地を特定できませんでした。市区町村名や国名を加えてお試しください。',
+    generic: '計算できませんでした。しばらくしてからもう一度お試しください。'
+  }
+};</script>
+<header class="site-header" data-site-header></header>
+<main class="guide tool-page">
+<nav class="breadcrumb" aria-label="現在位置"><ol><li><a href="/ja">トップ</a></li><li aria-current="page">ナクシャトラを調べる</li></ol></nav>
+<article>
+<h1>ナクシャトラを調べる</h1>
+<p class="lead">生年月日・出生時刻・出生地から、生まれたときに月が位置していたナクシャトラ（27宿）と、そのパダ・支配星を計算します。結果から、その宿の解説へ進めます。</p>
+
+<form class="tool-form" id="tool-form" novalidate>
+<div class="tool-field">
+<label for="tool-date">生年月日</label>
+<input type="date" id="tool-date" name="date" required>
+</div>
+<div class="tool-field">
+<label for="tool-time">出生時刻 <span class="tool-hint">（不明なら空欄。12:00で計算します）</span></label>
+<input type="time" id="tool-time" name="time">
+</div>
+<div class="tool-field">
+<label for="tool-place">出生地</label>
+<input type="text" id="tool-place" name="place" placeholder="例：東京都新宿区" autocomplete="off" required>
+</div>
+<button type="submit" class="tool-submit" id="tool-submit">無料で計算する</button>
+<p class="tool-status" id="tool-status" role="status" aria-live="polite" hidden></p>
+</form>
+
+<section class="tool-result" id="tool-result" hidden>
+<h2>計算結果</h2>
+<dl class="tool-values" id="tool-values"></dl>
+<p class="tool-geo" id="tool-geo" hidden></p>
+<p class="tool-guide" id="tool-guide" hidden></p>
+</section>
+
+<section>
+<h2>ナクシャトラとは</h2>
+<p>ナクシャトラは黄道を27に分けた区画で、月宿とも呼ばれます。12星座より細かい区分のため、同じ月星座の人でも性質の読み分けができます。インド占星術では、生まれたときに月があった宿を「自分のナクシャトラ」として扱い、性質の傾向や結婚の相性、時期の判断に用います。</p>
+</section>
+<section>
+<h2>パダと支配星</h2>
+<p>各ナクシャトラは4つのパダ（各3度20分）に分かれ、どのパダかによって読み方が変わります。また、27宿にはそれぞれ支配星（ケートゥ・金星・太陽・月・火星・ラーフ・木星・土星・水星の9惑星が3巡する並び）が割り当てられ、この支配星がヴィムショッタリ・ダシャーの起点になります。</p>
+</section>
+<section>
+<h2>計算に必要な情報</h2>
+<p>月は1つの宿を約1日で通り過ぎ、パダは約6時間で切り替わります。そのため、宿を確かめるだけなら生年月日でも足りることが多いものの、パダまで正確に出すには出生時刻が必要です。出生時刻が分からないときは12:00として計算します。</p>
+</section>
+<p class="note">このツールは伝統的な計算規則にもとづく天文計算の結果を表示するものです。将来の出来事を保証するものではなく、医療・法律・投資の助言に代わるものでもありません。</p>
+</article>
+<aside class="guide-cta">
+<p class="guide-cta-title">文章で読みたい場合</p>
+<p>無料鑑定では、ここで計算した月星座・ナクシャトラ・ダシャーをもとに、性質と現在の流れを文章でお読みいただけます。</p>
+<a class="guide-cta-btn" href="/ja#form-area" data-tool-cta="free">無料鑑定をはじめる</a>
+</aside>
+<aside class="guide-products">
+<p class="guide-cta-title">さらに詳しく知るには</p>
+<p>出生図の全体をもとに、章立てで読める鑑定書（PDF）です。</p>
+<ul>
+<li><a href="/ja/yearly" data-tool-cta="yearly">年間運勢 鑑定書</a></li>
+<li><a href="/ja/career" data-tool-cta="career">仕事運・金運・天職 鑑定書</a></li>
+<li><a href="/ja/pdf-purchase" data-tool-cta="report">生涯完全鑑定書</a></li>
+</ul>
+</aside>
+<section class="related">
+<h2>ほかの計算ツール</h2>
+<ul class="tool-links">
+<li><a href="/ja/tools/moon-sign">月星座を調べる</a></li>
+<li><a href="/ja/tools/nakshatra">ナクシャトラを調べる</a></li>
+<li><a href="/ja/tools/dasha">現在のダシャー期を調べる</a></li>
+</ul>
+</section>
+</main>
+<footer class="guide-footer">
+{{>legal-links}}
+<p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+</footer>
+</body>
+</html>

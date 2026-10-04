@@ -1,0 +1,103 @@
+/* 単機能ツール（月星座・ナクシャトラ・ダシャー）のフォームと計算結果。
+   配色・余白は guide.css の変数に合わせる。 */
+
+.tool-form {
+  margin: 20px 0 8px;
+  padding: 18px;
+  background: var(--guide-paper);
+  border: 1px solid var(--guide-gold);
+  border-radius: 10px;
+}
+
+.tool-field { margin-bottom: 14px; }
+
+.tool-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #6b4f10;
+  font-size: 0.95rem;
+}
+
+.tool-hint { font-weight: 400; color: #8a7f70; font-size: 0.85rem; }
+
+.tool-field input {
+  width: 100%;
+  padding: 11px 12px;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--guide-text);
+  background: #fffdf7;
+  border: 1px solid rgba(139, 107, 27, 0.45);
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.tool-field input:focus {
+  outline: 2px solid var(--guide-gold);
+  outline-offset: 1px;
+}
+
+.tool-submit {
+  display: block;
+  width: 100%;
+  padding: 13px 18px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c221e;
+  background: linear-gradient(135deg, #b8912a, var(--guide-gold));
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.tool-submit[disabled] { opacity: 0.6; cursor: default; }
+
+.tool-status { margin-top: 12px; font-size: 0.92rem; color: #6b4f10; }
+.tool-status.is-error { color: #a3341f; }
+
+.tool-result {
+  margin: 18px 0 10px;
+  padding: 18px;
+  background: var(--guide-paper);
+  border: 1px solid var(--guide-gold);
+  border-radius: 10px;
+}
+
+.tool-result h2 { margin-top: 0; }
+
+.tool-values { margin: 0; }
+
+.tool-values div {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  padding: 9px 0;
+  border-top: 1px solid rgba(184, 145, 42, 0.3);
+}
+
+.tool-values div:first-child { border-top: 0; }
+.tool-values dt { min-width: 9em; font-weight: 600; color: #6b4f10; font-size: 0.92rem; }
+.tool-values dd { margin: 0; font-size: 1.05rem; font-weight: 600; }
+.tool-values .tool-period { display: block; font-size: 0.88rem; font-weight: 400; color: #6b5a44; }
+
+.tool-geo { margin-top: 12px; font-size: 0.85rem; color: #8a7f70; }
+
+.tool-guide { margin-top: 14px; font-size: 0.95rem; }
+.tool-guide a { color: #8b5a1b; font-weight: 600; }
+
+.tool-links { list-style: none; padding: 0; margin: 12px 0 0; }
+
+.tool-links li {
+  padding: 8px 0;
+  border-top: 1px solid rgba(184, 145, 42, 0.3);
+  font-size: 0.95rem;
+}
+
+.tool-links a { color: #8b5a1b; }
+
+@media (min-width: 640px) {
+  .tool-form { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+  .tool-field:nth-child(3), .tool-submit, .tool-status { grid-column: 1 / -1; }
+}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>現在のダシャー期を無料で調べる｜ヴィムショッタリ・ダシャー計算</title>
+<meta name="description" content="生年月日・出生時刻・出生地から、ヴィムショッタリ・ダシャー（120年周期）のうち現在どの惑星期（マハーダシャー）にいるかを無料計算し、次の期への切り替わり年も表示します。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Libertas Jyotish">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="現在のダシャー期を無料で調べる｜ヴィムショッタリ・ダシャー計算">
+<meta property="og:description" content="生年月日・出生時刻・出生地から、ヴィムショッタリ・ダシャー（120年周期）のうち現在どの惑星期（マハーダシャー）にいるかを無料計算し、次の期への切り替わり年も表示します。">
+<meta property="og:url" content="https://www.libertas-jyotish.com/ja/tools/dasha">
+<meta property="og:image" content="https://www.libertas-jyotish.com/img/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://www.libertas-jyotish.com/ja/tools/dasha">
+<link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/tools/dasha">
+<link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/tools/dasha">
+<link rel="alternate" hreflang="es" href="https://www.libertas-jyotish.com/es/tools/dasha">
+<link rel="alternate" hreflang="pt" href="https://www.libertas-jyotish.com/pt/tools/dasha">
+<link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar/tools/dasha">
+<link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id/tools/dasha">
+<link rel="alternate" hreflang="fr" href="https://www.libertas-jyotish.com/fr/tools/dasha">
+<link rel="alternate" hreflang="de" href="https://www.libertas-jyotish.com/de/tools/dasha">
+<link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/tools/dasha">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0c1a1f">
+<link rel="icon" type="image/png" href="/img/libertas-logo.png">
+<link rel="apple-touch-icon" href="/img/libertas-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/guide.css">
+<link rel="stylesheet" href="/css/tools.css">
+<style>body{font-family:'Noto Serif JP', serif;}</style>
+<script defer src="/js/site-menu.js"></script>
+<script defer src="/js/tools.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"現在のダシャー期を調べる","url":"https://www.libertas-jyotish.com/ja/tools/dasha","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ja","description":"生年月日・出生時刻・出生地から、ヴィムショッタリ・ダシャー（120年周期）のうち現在どの惑星期（マハーダシャー）にいるかを無料計算し、次の期への切り替わり年も表示します。","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"トップ","item":"https://www.libertas-jyotish.com/ja"},{"@type":"ListItem","position":2,"name":"現在のダシャー期を調べる","item":"https://www.libertas-jyotish.com/ja/tools/dasha"}]}]}</script>
+</head>
+<body>
+{{>i18n-globals}}
+<script>window.LJ_TOOLS = {
+  tool: 'tools/dasha',
+  labels: {
+    moonSign: '月星座',
+    sunSign: '太陽星座（サイデリアル）',
+    lagna: 'ラグナ（上昇星座）',
+    nakshatra: 'ナクシャトラ',
+    pada: 'パダ',
+    nakshatraLord: '支配星',
+    dasha: '現在のマハーダシャー',
+    nextDasha: '次のマハーダシャー'
+  },
+  padaValue: '第{pada}パダ',
+  period: '{start}〜{end}',
+  guideLink: '{name}の解説を読む',
+  submit: '無料で計算する',
+  submitting: '計算しています…',
+  errors: {
+    date: '生年月日を入力してください。',
+    place: '出生地を入力してください。',
+    placeNotFound: '出生地を特定できませんでした。市区町村名や国名を加えてお試しください。',
+    generic: '計算できませんでした。しばらくしてからもう一度お試しください。'
+  }
+};</script>
+<header class="site-header" data-site-header></header>
+<main class="guide tool-page">
+<nav class="breadcrumb" aria-label="現在位置"><ol><li><a href="/ja">トップ</a></li><li aria-current="page">現在のダシャー期を調べる</li></ol></nav>
+<article>
+<h1>現在のダシャー期を調べる</h1>
+<p class="lead">出生時の月のナクシャトラを起点に、ヴィムショッタリ・ダシャー（合計120年）のうち現在どの惑星期にいるかと、次の期に切り替わる時期を計算します。</p>
+
+<form class="tool-form" id="tool-form" novalidate>
+<div class="tool-field">
+<label for="tool-date">生年月日</label>
+<input type="date" id="tool-date" name="date" required>
+</div>
+<div class="tool-field">
+<label for="tool-time">出生時刻 <span class="tool-hint">（不明なら空欄。12:00で計算します）</span></label>
+<input type="time" id="tool-time" name="time">
+</div>
+<div class="tool-field">
+<label for="tool-place">出生地</label>
+<input type="text" id="tool-place" name="place" placeholder="例：東京都新宿区" autocomplete="off" required>
+</div>
+<button type="submit" class="tool-submit" id="tool-submit">無料で計算する</button>
+<p class="tool-status" id="tool-status" role="status" aria-live="polite" hidden></p>
+</form>
+
+<section class="tool-result" id="tool-result" hidden>
+<h2>計算結果</h2>
+<dl class="tool-values" id="tool-values"></dl>
+<p class="tool-geo" id="tool-geo" hidden></p>
+<p class="tool-guide" id="tool-guide" hidden></p>
+</section>
+
+<section>
+<h2>ダシャーとは</h2>
+<p>ダシャーは、人生を惑星ごとの期間に区切って読むインド占星術の時間の体系です。最も広く使われるヴィムショッタリ・ダシャーでは、ケートゥ7年、金星20年、太陽6年、月10年、火星7年、ラーフ18年、木星16年、土星19年、水星17年の合計120年を1周期とし、この順番で生涯が進みます。</p>
+</section>
+<section>
+<h2>計算の起点</h2>
+<p>どの惑星期から人生が始まるかは、生まれたときに月があったナクシャトラの支配星で決まります。さらに、その宿をどこまで進んでいたかによって最初の期の残り年数が決まるため、生年月日だけでなく出生時刻と出生地が必要になります。出生時刻が分からないときは12:00として計算します。</p>
+</section>
+<section>
+<h2>惑星期の読み方</h2>
+<p>ある惑星期そのものが良い、悪いと決まっているわけではありません。その惑星が出生図でどの位置にあり、どの星と関係しているかによって現れ方が変わります。また、マハーダシャーの内側にはアンタルダシャーという小区分があり、同じ大きな期間の中でも時期ごとに主題が移っていきます。</p>
+</section>
+<p class="note">このツールは伝統的な計算規則にもとづく天文計算の結果を表示するものです。将来の出来事を保証するものではなく、医療・法律・投資の助言に代わるものでもありません。</p>
+</article>
+<aside class="guide-cta">
+<p class="guide-cta-title">文章で読みたい場合</p>
+<p>無料鑑定では、ここで計算した月星座・ナクシャトラ・ダシャーをもとに、性質と現在の流れを文章でお読みいただけます。</p>
+<a class="guide-cta-btn" href="/ja#form-area" data-tool-cta="free">無料鑑定をはじめる</a>
+</aside>
+<aside class="guide-products">
+<p class="guide-cta-title">さらに詳しく知るには</p>
+<p>出生図の全体をもとに、章立てで読める鑑定書（PDF）です。</p>
+<ul>
+<li><a href="/ja/yearly" data-tool-cta="yearly">年間運勢 鑑定書</a></li>
+<li><a href="/ja/career" data-tool-cta="career">仕事運・金運・天職 鑑定書</a></li>
+<li><a href="/ja/pdf-purchase" data-tool-cta="report">生涯完全鑑定書</a></li>
+</ul>
+</aside>
+<section class="related">
+<h2>ほかの計算ツール</h2>
+<ul class="tool-links">
+<li><a href="/ja/tools/moon-sign">月星座を調べる</a></li>
+<li><a href="/ja/tools/nakshatra">ナクシャトラを調べる</a></li>
+<li><a href="/ja/tools/dasha">現在のダシャー期を調べる</a></li>
+</ul>
+</section>
+</main>
+<footer class="guide-footer">
+{{>legal-links}}
+<p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+</footer>
+</body>
+</html>

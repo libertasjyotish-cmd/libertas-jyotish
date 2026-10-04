@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculateur gratuit de signe lunaire | Astrologie védique (sidérale)</title>
+<meta name="description" content="Calculez gratuitement votre signe lunaire en astrologie védique (zodiaque sidéral) à partir de vos date, heure et lieu de naissance. Découvrez également les différences avec le signe solaire de l'astrologie occidentale.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Libertas Jyotish">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Calculateur gratuit de signe lunaire | Astrologie védique (sidérale)">
+<meta property="og:description" content="Calculez gratuitement votre signe lunaire en astrologie védique (zodiaque sidéral) à partir de vos date, heure et lieu de naissance. Découvrez également les différences avec le signe solaire de l'astrologie occidentale.">
+<meta property="og:url" content="https://www.libertas-jyotish.com/fr/tools/moon-sign">
+<meta property="og:image" content="https://www.libertas-jyotish.com/img/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://www.libertas-jyotish.com/fr/tools/moon-sign">
+<link rel="alternate" hreflang="ja" href="https://www.libertas-jyotish.com/ja/tools/moon-sign">
+<link rel="alternate" hreflang="en" href="https://www.libertas-jyotish.com/en/tools/moon-sign">
+<link rel="alternate" hreflang="es" href="https://www.libertas-jyotish.com/es/tools/moon-sign">
+<link rel="alternate" hreflang="pt" href="https://www.libertas-jyotish.com/pt/tools/moon-sign">
+<link rel="alternate" hreflang="ar" href="https://www.libertas-jyotish.com/ar/tools/moon-sign">
+<link rel="alternate" hreflang="id" href="https://www.libertas-jyotish.com/id/tools/moon-sign">
+<link rel="alternate" hreflang="fr" href="https://www.libertas-jyotish.com/fr/tools/moon-sign">
+<link rel="alternate" hreflang="de" href="https://www.libertas-jyotish.com/de/tools/moon-sign">
+<link rel="alternate" hreflang="x-default" href="https://www.libertas-jyotish.com/tools/moon-sign">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0c1a1f">
+<link rel="icon" type="image/png" href="/img/libertas-logo.png">
+<link rel="apple-touch-icon" href="/img/libertas-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/guide.css">
+<link rel="stylesheet" href="/css/tools.css">
+<style>body{font-family:'Noto Serif', serif;}</style>
+<script defer src="/js/site-menu.js"></script>
+<script defer src="/js/tools.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Calculer votre signe lunaire","url":"https://www.libertas-jyotish.com/fr/tools/moon-sign","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"fr","description":"Calculez gratuitement votre signe lunaire en astrologie védique (zodiaque sidéral) à partir de vos date, heure et lieu de naissance. Découvrez également les différences avec le signe solaire de l'astrologie occidentale.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://www.libertas-jyotish.com/fr"},{"@type":"ListItem","position":2,"name":"Calculer votre signe lunaire","item":"https://www.libertas-jyotish.com/fr/tools/moon-sign"}]}]}</script>
+</head>
+<body>
+{{>i18n-globals}}
+<script>window.LJ_TOOLS = {
+  tool: 'tools/moon-sign',
+  labels: {
+    moonSign: 'Signe lunaire (Chandra Rashi)',
+    sunSign: 'Signe solaire (sidéral)',
+    lagna: 'Lagna (Ascendant)',
+    nakshatra: 'Nakshatra',
+    pada: 'Pada',
+    nakshatraLord: 'Planète maîtresse',
+    dasha: 'Mahadasha actuelle',
+    nextDasha: 'Prochaine Mahadasha'
+  },
+  padaValue: 'Pada {pada}',
+  period: 'De {start} à {end}',
+  guideLink: 'Lire l\'interprétation de {name}',
+  submit: 'Calculer gratuitement',
+  submitting: 'Calcul en cours…',
+  errors: {
+    date: 'Veuillez saisir votre date de naissance.',
+    place: 'Veuillez saisir votre lieu de naissance.',
+    placeNotFound: 'Impossible de localiser le lieu de naissance. Veuillez préciser la ville ou le pays et réessayer.',
+    generic: 'Une erreur est survenue lors du calcul. Veuillez réessayer ultérieurement.'
+  }
+};</script>
+<header class="site-header" data-site-header></header>
+<main class="guide tool-page">
+<nav class="breadcrumb" aria-label="Vous êtes ici"><ol><li><a href="/fr">Accueil</a></li><li aria-current="page">Calculer votre signe lunaire</li></ol></nav>
+<article>
+<h1>Calculer votre signe lunaire</h1>
+<p class="lead">En astrologie védique (Jyotish), la position de la Lune est considérée comme bien plus fondamentale que celle du Soleil. Indiquez votre date, heure et lieu de naissance pour calculer votre signe lunaire selon le zodiaque sidéral (Lahiri Ayanamsha).</p>
+
+<form class="tool-form" id="tool-form" novalidate>
+<div class="tool-field">
+<label for="tool-date">Date de naissance</label>
+<input type="date" id="tool-date" name="date" required>
+</div>
+<div class="tool-field">
+<label for="tool-time">Heure de naissance <span class="tool-hint">(Laisser vide si inconnue. Calculé à 12h00)</span></label>
+<input type="time" id="tool-time" name="time">
+</div>
+<div class="tool-field">
+<label for="tool-place">Lieu de naissance</label>
+<input type="text" id="tool-place" name="place" placeholder="Ex. : Paris, France" autocomplete="off" required>
+</div>
+<button type="submit" class="tool-submit" id="tool-submit">Calculer gratuitement</button>
+<p class="tool-status" id="tool-status" role="status" aria-live="polite" hidden></p>
+</form>
+
+<section class="tool-result" id="tool-result" hidden>
+<h2>Résultats du calcul</h2>
+<dl class="tool-values" id="tool-values"></dl>
+<p class="tool-geo" id="tool-geo" hidden></p>
+<p class="tool-guide" id="tool-guide" hidden></p>
+</section>
+
+<section>
+<h2>Qu'est-ce que le signe lunaire ?</h2>
+<p>Le signe lunaire (Chandra Rashi) correspond à la constellation dans laquelle se trouvait la Lune au moment précis de votre naissance. En astrologie védique, il constitue le point de départ pour analyser le fonctionnement de l'esprit, les fondations émotionnelles et les réactions instinctives quotidiennes, et revêt une importance plus grande que le signe solaire. Les compatibilités relationnelles ainsi que les cycles temporels s'appuyant sur la position de la Lune, connaître son signe lunaire est la première étape essentielle.</p>
+</section>
+<section>
+<h2>Pourquoi diffère-t-il de l'astrologie occidentale ?</h2>
+<p>Tandis que l'astrologie occidentale utilise le zodiaque tropical basé sur l'équinoxe de printemps, l'astrologie védique utilise le zodiaque sidéral, fondé sur les positions réelles des étoiles fixes. Le décalage entre les deux systèmes (appelé Ayanamsha) est aujourd'hui d'environ 24 degrés, ce qui fait que votre signe sidéral est souvent décalé d'un signe en arrière par rapport à votre signe tropical habituel. Une différence avec le signe que vous avez l'habitude de lire dans les horoscopes classiques est donc tout à fait normale, car la méthode de calcul n'est pas la même.</p>
+</section>
+<section>
+<h2>Informations requises pour le calcul</h2>
+<p>La Lune traversant un signe du zodiaque en deux jours et demi environ, la date de naissance suffit généralement à identifier le signe. Toutefois, en cas de naissance à la limite entre deux signes, l'heure exacte peut faire basculer le résultat. Si vous ne connaissez pas votre heure de naissance, le calcul s'effectuera à 12h00 par défaut. Le lieu de naissance permettant d'établir le fuseau horaire et les coordonnées géographiques, préciser la ville améliore la précision du calcul.</p>
+</section>
+<p class="note">Cet outil affiche les résultats de calculs astronomiques fondés sur les règles traditionnelles. Il ne garantit en aucun cas des événements futurs et ne constitue pas un conseil médical, juridique ou financier.</p>
+</article>
+<aside class="guide-cta">
+<p class="guide-cta-title">Pour une lecture détaillée</p>
+<p>Notre analyse gratuite vous permet de découvrir en détail vos tendances de personnalité et vos cycles actuels à partir de votre signe lunaire, nakshatra et dasha calculés ici.</p>
+<a class="guide-cta-btn" href="/fr#form-area" data-tool-cta="free">Commencer l'analyse gratuite</a>
+</aside>
+<aside class="guide-products">
+<p class="guide-cta-title">Pour aller plus loin</p>
+<p>Un thème astral complet rédigé sous forme de rapport détaillé (PDF), basé sur l'ensemble de votre carte du ciel.</p>
+<ul>
+<li><a href="/fr/yearly" data-tool-cta="yearly">Rapport de l’année</a></li>
+<li><a href="/fr/career" data-tool-cta="career">Rapport carrière, argent et vocation</a></li>
+<li><a href="/fr/pdf-purchase" data-tool-cta="report">Rapport à vie</a></li>
+</ul>
+</aside>
+<section class="related">
+<h2>Autres outils de calcul</h2>
+<ul class="tool-links">
+<li><a href="/fr/tools/moon-sign">Calculer votre signe lunaire</a></li>
+<li><a href="/fr/tools/nakshatra">Calculer votre Nakshatra</a></li>
+<li><a href="/fr/tools/dasha">Calculer votre période de Dasha actuelle</a></li>
+</ul>
+</section>
+</main>
+<footer class="guide-footer">
+{{>legal-links}}
+<p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+</footer>
+</body>
+</html>

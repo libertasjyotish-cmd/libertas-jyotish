@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html {{htmlAttrs}}>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{tool.title}}</title>
+<meta name="description" content="{{tool.description|attr}}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Libertas Jyotish">
+<meta property="og:locale" content="{{ogLocale}}">
+<meta property="og:title" content="{{tool.title|attr}}">
+<meta property="og:description" content="{{tool.description|attr}}">
+<meta property="og:url" content="{{canonical}}">
+<meta property="og:image" content="https://www.libertas-jyotish.com/img/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="{{canonical}}">
+{{hreflang}}
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0c1a1f">
+<link rel="icon" type="image/png" href="/img/libertas-logo.png">
+<link rel="apple-touch-icon" href="/img/libertas-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="{{fontHref}}" rel="stylesheet">
+<link rel="stylesheet" href="/css/site-menu.css">
+<link rel="stylesheet" href="/css/guide.css">
+<link rel="stylesheet" href="/css/tools.css">
+<style>body{font-family:{{fontFamily}};}</style>
+<script defer src="/js/site-menu.js"></script>
+<script defer src="/js/tools.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"{{tool.h1|json}}","url":"{{canonical}}","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"{{lang}}","description":"{{tool.description|json}}","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"{{t.menu.top|json}}","item":"https://www.libertas-jyotish.com/{{lang}}"},{"@type":"ListItem","position":2,"name":"{{tool.h1|json}}","item":"{{canonical}}"}]}]}</script>
+</head>
+<body>
+{{>i18n-globals}}
+<script>window.LJ_TOOLS = {
+  tool: '{{page|js}}',
+  labels: {
+    moonSign: '{{t.tools.common.labelMoonSign|js}}',
+    sunSign: '{{t.tools.common.labelSunSign|js}}',
+    lagna: '{{t.tools.common.labelLagna|js}}',
+    nakshatra: '{{t.tools.common.labelNakshatra|js}}',
+    pada: '{{t.tools.common.labelPada|js}}',
+    nakshatraLord: '{{t.tools.common.labelNakshatraLord|js}}',
+    dasha: '{{t.tools.common.labelDasha|js}}',
+    nextDasha: '{{t.tools.common.labelNextDasha|js}}'
+  },
+  padaValue: '{{t.tools.common.padaValue|js}}',
+  period: '{{t.tools.common.period|js}}',
+  guideLink: '{{t.tools.common.guideLink|js}}',
+  submit: '{{t.tools.common.submit|js}}',
+  submitting: '{{t.tools.common.submitting|js}}',
+  errors: {
+    date: '{{t.tools.common.errorDate|js}}',
+    place: '{{t.tools.common.errorPlace|js}}',
+    placeNotFound: '{{t.tools.common.errorPlaceNotFound|js}}',
+    generic: '{{t.tools.common.errorGeneric|js}}'
+  }
+};</script>
+<header class="site-header" data-site-header></header>
+<main class="guide tool-page">
+<nav class="breadcrumb" aria-label="{{t.tools.common.breadcrumbLabel|attr}}"><ol><li><a href="/{{lang}}">{{t.menu.top}}</a></li><li aria-current="page">{{tool.h1}}</li></ol></nav>
+<article>
+<h1>{{tool.h1}}</h1>
+<p class="lead">{{tool.lead}}</p>
+
+<form class="tool-form" id="tool-form" novalidate>
+<div class="tool-field">
+<label for="tool-date">{{t.tools.common.date}}</label>
+<input type="date" id="tool-date" name="date" required>
+</div>
+<div class="tool-field">
+<label for="tool-time">{{t.tools.common.time}} <span class="tool-hint">{{t.tools.common.timeNote}}</span></label>
+<input type="time" id="tool-time" name="time">
+</div>
+<div class="tool-field">
+<label for="tool-place">{{t.tools.common.place}}</label>
+<input type="text" id="tool-place" name="place" placeholder="{{t.tools.common.placePlaceholder|attr}}" autocomplete="off" required>
+</div>
+<button type="submit" class="tool-submit" id="tool-submit">{{t.tools.common.submit}}</button>
+<p class="tool-status" id="tool-status" role="status" aria-live="polite" hidden></p>
+</form>
+
+<section class="tool-result" id="tool-result" hidden>
+<h2>{{t.tools.common.resultHeading}}</h2>
+<dl class="tool-values" id="tool-values"></dl>
+<p class="tool-geo" id="tool-geo" hidden></p>
+<p class="tool-guide" id="tool-guide" hidden></p>
+</section>
+
+<section>
+<h2>{{tool.sectionTitle01}}</h2>
+<p>{{tool.sectionBody01}}</p>
+</section>
+<section>
+<h2>{{tool.sectionTitle02}}</h2>
+<p>{{tool.sectionBody02}}</p>
+</section>
+<section>
+<h2>{{tool.sectionTitle03}}</h2>
+<p>{{tool.sectionBody03}}</p>
+</section>
+<p class="note">{{t.tools.common.disclaimer}}</p>
+</article>
+<aside class="guide-cta">
+<p class="guide-cta-title">{{t.tools.common.ctaTitle}}</p>
+<p>{{t.tools.common.ctaBody}}</p>
+<a class="guide-cta-btn" href="/{{lang}}#form-area" data-tool-cta="free">{{t.tools.common.ctaBtn}}</a>
+</aside>
+<aside class="guide-products">
+<p class="guide-cta-title">{{t.tools.common.productsTitle}}</p>
+<p>{{t.tools.common.productsBody}}</p>
+<ul>
+<li><a href="/{{lang}}/yearly" data-tool-cta="yearly">{{t.menu.yearly}}</a></li>
+<li><a href="/{{lang}}/career" data-tool-cta="career">{{t.menu.career}}</a></li>
+<li><a href="/{{lang}}/pdf-purchase" data-tool-cta="report">{{t.menu.report}}</a></li>
+</ul>
+</aside>
+<section class="related">
+<h2>{{t.tools.common.otherTools}}</h2>
+<ul class="tool-links">
+<li><a href="/{{lang}}/tools/moon-sign">{{t.tools.moonSign.h1}}</a></li>
+<li><a href="/{{lang}}/tools/nakshatra">{{t.tools.nakshatra.h1}}</a></li>
+<li><a href="/{{lang}}/tools/dasha">{{t.tools.dasha.h1}}</a></li>
+</ul>
+</section>
+</main>
+<footer class="guide-footer">
+{{>legal-links}}
+<p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
+</footer>
+</body>
+</html>
