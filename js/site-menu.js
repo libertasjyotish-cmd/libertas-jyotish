@@ -37,8 +37,15 @@
     { href: home, label: t.top },
     { href: home + '#form-area', label: t.free },
     { href: home + '/mypage#premium', label: t.daily },
-    // 個別の鑑定書は /products の一覧ページに集約（販売中・準備中の表示もそちら）。
-    { href: home + '/products', label: t.products }
+    // 鑑定書は見出し（/products 一覧）＋サブ項目。販売中はリンク、準備中は薄字＋注記。
+    { divider: true },
+    { href: home + '/products', label: t.products },
+    { href: home + '/pdf-purchase', label: t.report, sub: true },
+    { href: home + '/yearly', label: t.calendar, sub: true },
+    { href: home + '/career', label: t.career, sub: true },
+    { href: home + '/palm-chart', label: t.palm, sub: true },
+    { label: t.compat, soon: true, sub: true, note: t.calendarNote },
+    { label: t.karma, soon: true, sub: true, note: t.calendarNote }
   ];
   if (guide) {
     LINKS.push(
@@ -108,6 +115,7 @@
       }
       const a = document.createElement(item.soon ? 'span' : 'a');
       if (item.soon) a.className = 'lj-menu-soon'; else a.href = item.href;
+      if (item.sub) a.classList.add('lj-menu-sub');
       a.textContent = item.label;
       if (item.note) {
         const note = document.createElement('span');
