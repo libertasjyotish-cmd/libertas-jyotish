@@ -161,7 +161,7 @@ function buildLangSwitcher(current) {
     const cls = entry.lang === current ? 'lang-link is-current' : 'lang-link';
     return `<a class="${cls}" href="/${entry.lang}" hreflang="${entry.lang}" lang="${entry.lang}" title="${entry.title}" aria-label="${entry.title}"><img class="lang-globe" src="/img/globe.svg" alt="" width="20" height="20"><span class="lang-code">${entry.label}</span></a>`;
   });
-  return `<nav class="lang-switch" aria-label="Language">\n${links.join('\n')}\n</nav>`;
+  return `<nav class="lang-switch" aria-label="Language">\n${links.join('\n')}\n</nav>\n<script>document.querySelectorAll('.lang-switch a').forEach(function(a){a.addEventListener('click',function(){document.cookie='lj_lang='+a.getAttribute('hreflang')+';path=/;max-age=31536000;samesite=lax';});});</script>`;
 }
 
 function readJson(path) {
