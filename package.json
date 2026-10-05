@@ -16,7 +16,8 @@
     "gen:dasha": "node scripts/gen-dasha-pages.mjs",
     "check:tools": "node scripts/check-tools-live.mjs",
     "build:faq": "node scripts/build-faq-ld.mjs",
-    "check:faq": "node scripts/build-faq-ld.mjs --check"
+    "check:faq": "node scripts/build-faq-ld.mjs --check",
+    "indexnow": "node scripts/indexnow-submit.mjs"
   },
   "dependencies": {
     "@sparticuz/chromium": "^149.0.0",
