@@ -24,7 +24,7 @@ function extractFaq(html) {
   const re = /<dt>([\s\S]*?)<\/dt>\s*<dd>([\s\S]*?)<\/dd>/g;
   let m;
   while ((m = re.exec(dl[1]))) {
-    const q = stripTags(m[1]).replace(/^(Q\.|Q:|Q)\s*/i, '');
+    const q = stripTags(m[1]).replace(/^(Q\.|Q:|Q|س\.|P\.|F\.|T\.)\s*/i, "");
     const a = stripTags(m[2]);
     if (q && a) items.push({ q, a });
   }
