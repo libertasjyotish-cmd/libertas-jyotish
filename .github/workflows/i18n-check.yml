@@ -24,3 +24,4 @@ jobs:
           node-version: '20'
       - run: npm run check:i18n
       - run: npm run check:guide
+      - run: npm run check:faq

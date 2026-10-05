@@ -14,7 +14,9 @@
     "report:gsc": "node scripts/gsc-report.mjs",
     "gen:nakshatra": "node scripts/gen-nakshatra-pages.mjs",
     "gen:dasha": "node scripts/gen-dasha-pages.mjs",
-    "check:tools": "node scripts/check-tools-live.mjs"
+    "check:tools": "node scripts/check-tools-live.mjs",
+    "build:faq": "node scripts/build-faq-ld.mjs",
+    "check:faq": "node scripts/build-faq-ld.mjs --check"
   },
   "dependencies": {
     "@sparticuz/chromium": "^149.0.0",
