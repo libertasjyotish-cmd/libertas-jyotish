@@ -83,7 +83,14 @@ async function geminiProbe() {
       body: JSON.stringify({ contents: [{ parts: [{ text: 'ok と1語だけ返してください' }] }] })
     }
   );
-  if (!res.ok) throw new Error(`${models[0]} ${res.status}`);
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    // 前払い残高切れは入金しない限り明けないため、原因を名指しして通知する。
+    if (/\b402\b/.test(String(res.status)) || /prepayment credits|billing account/i.test(body)) {
+      throw new Error(`前払い残高切れ: https://aistudio.google.com/usage で入金が必要（${models[0]} ${res.status}）`);
+    }
+    throw new Error(`${models[0]} ${res.status}`);
+  }
   return models[0];
 }
 
