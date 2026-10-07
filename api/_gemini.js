@@ -113,7 +113,7 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             contents: [{ role: 'user', parts }],
-            generationConfig: { responseMimeType: 'application/json', temperature: 1.0, ...extraConfig }
+            generationConfig: { responseMimeType: 'application/json', ...extraConfig }
           })
         }, attemptTimeoutMs);
         if (res.status !== 400) break;
