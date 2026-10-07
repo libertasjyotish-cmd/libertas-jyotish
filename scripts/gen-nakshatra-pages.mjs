@@ -108,7 +108,7 @@ async function gemini(prompt) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.7, responseMimeType: 'application/json' }
+        generationConfig: { responseMimeType: 'application/json' }
       })
     });
     if (res.ok) {
