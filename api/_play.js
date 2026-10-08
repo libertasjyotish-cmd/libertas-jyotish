@@ -13,7 +13,12 @@ const SCOPE = 'https://www.googleapis.com/auth/androidpublisher';
 // Play Console に登録する商品 ID。checkout の product（pdf/premium）と対応させる。
 const PLAY_PRODUCTS = {
   pdf: { id: 'report_pdf', kind: 'inapp' },
-  premium: { id: 'premium_monthly', kind: 'subs' }
+  premium: { id: 'premium_monthly', kind: 'subs' },
+  // 個別鑑定書（台帳注文に紐づく）。report-order が awaiting_payment で登録し、play-verify で確定する。
+  yearly: { id: 'report_yearly', kind: 'inapp', order: true },
+  career: { id: 'report_career', kind: 'inapp', order: true },
+  palm: { id: 'report_palm', kind: 'inapp', order: true },
+  compat: { id: 'report_compat', kind: 'inapp', order: true }
 };
 
 function packageName() {

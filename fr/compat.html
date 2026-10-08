@@ -160,6 +160,7 @@ window.LJ_I18N = {
 };
 </script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/fr/compat#faq","inLanguage":"fr","mainEntity":[{"@type":"Question","name":"Je ne connais pas l'heure de naissance de mon partenaire / l'autre personne.","acceptedAnswer":{"@type":"Answer","text":"Veuillez passer commande avec uniquement la date et le lieu de naissance. La précision des éléments liés à la house (ascendant/Lagna) de votre partenaire / l'autre personne sera réduite, mais nous nous concentrerons sur sa Moon, son Nakshatra et ses Dasha, et cela sera clairement précisé dans le rapport."}},{"@type":"Question","name":"Puis-je commander sans que mon partenaire / l'autre personne le sache ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Le rapport sera envoyé uniquement à l'adresse e-mail que vous fournirez. Votre partenaire / l'autre personne ne sera pas contacté."}},{"@type":"Question","name":"Est-ce possible pour un partenaire du même sexe ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Le genre n'est pas requis. Les termes seront « vous » et « votre partenaire / l'autre personne », avec la même structure et la même qualité d'analyse, peu importe le sexe."}},{"@type":"Question","name":"Quelle est la différence entre « Lire comme romance / mariage » et « Ne pas définir la relation et lire le type de lien » ?","acceptedAnswer":{"@type":"Answer","text":"Les 10 chapitres de base sont communs. « Lire comme romance / mariage » ajoute un chapitre sur la romance/le mariage et un chapitre sur la 36-point (Ashtakoota) method traditionnelle. « Ne pas définir la relation et lire le type de lien » interprète la forme de votre lien telle que révélée par vos configurations sans restreindre la relation."}},{"@type":"Question","name":"Sera-t-il écrit que notre compatibilité est mauvaise ?","acceptedAnswer":{"@type":"Answer","text":"Nous n'évaluons pas comme « mauvais » avec un score. S'il existe des configurations créant des frictions, nous en expliquons la cause et la manière d'y faire face, en mettant l'accent sur le sens de votre lien et la façon de le cultiver."}},{"@type":"Question","name":"Quel est le délai de livraison ?","acceptedAnswer":{"@type":"Answer","text":"Le lien de téléchargement vous sera envoyé par e-mail dans les 24 heures suivant la confirmation du paiement."}}]}</script>
 </head>
 <body>
@@ -305,6 +306,7 @@ window.LJ_I18N = {
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('compat', btn, document.querySelector('.pc-btn-sub'));
   var ERR = { email: 'Veuillez saisir une adresse e-mail valide.', fields: 'Veuillez indiquer les dates, heures (cochez la case si inconnue) et lieux de naissance des deux personnes.', server: 'L\'envoi a échoué. Veuillez réessayer ultérieurement.', unavailable: 'Le paiement en ligne est en cours de préparation pour votre région. Veuillez nous contacter via le formulaire de contact.' };
   btn.addEventListener('click', function () {
     var data = { product: 'compat', lang: 'fr' };
@@ -317,6 +319,15 @@ window.LJ_I18N = {
     if (!data.dob_b || !data.place_b || (!data.tob_unknown_b && !data.tob_b)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {

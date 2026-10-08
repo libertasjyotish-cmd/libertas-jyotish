@@ -150,6 +150,7 @@ window.LJ_I18N = {
 };
 </script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/id/career#faq","inLanguage":"id","mainEntity":[{"@type":"Question","name":"Apa bedanya dengan bab \"Karier\" di Lifetime Report (one-off purchase)?","acceptedAnswer":{"@type":"Answer","text":"Lifetime Report (one-off purchase) adalah buku yang membaca keseluruhan hidup dalam 13 bab, dan karier adalah salah satu babnya. Laporan ini mendedikasikan sekitar 35 halaman hanya untuk karier dan uang, menggali lebih dalam hingga nama profesi, kondisi bersinar, cara penilaian, pola uang, dan waktu perubahan."}},{"@type":"Question","name":"Bagaimana jika pekerjaan saya saat ini termasuk dalam \"profesi yang kurang cocok\"?","acceptedAnswer":{"@type":"Answer","text":"Itu bukan berarti \"tidak bisa dilakukan\". Setelah menunjukkan alasan mengapa mudah menguras energi berdasarkan posisi planet, kami akan menuliskan lingkungan dan cara bersinar yang menciptakan keselarasan diri dalam pekerjaan yang sama, serta kondisi yang harus dipenuhi jika Anda ingin mengubah cara kerja."}},{"@type":"Question","name":"Saya ragu apakah harus bekerja mandiri.","acceptedAnswer":{"@type":"Answer","text":"Di Bab 6, kami menuliskan cara kerja jika Anda memilih masing-masing dari \"bekerja sebagai karyawan, mandiri, atau bermitra\", serta kondisi yang harus dipenuhi sebelum mengubahnya. Bulan untuk bertindak akan disebutkan di Bab 9 (12 bulan ke depan)."}},{"@type":"Question","name":"Saya tidak tahu waktu kelahiran saya.","acceptedAnswer":{"@type":"Answer","text":"Silakan pesan hanya dengan tanggal lahir dan tempat kelahiran. Akurasi bab yang berkaitan dengan penentuan house akan menurun, tetapi laporan akan dibuat berpusat pada Moon, Nakshatra, Dasha, dan kekuatan planet, dan hal tersebut akan dinyatakan dengan jelas di dalam laporan."}},{"@type":"Question","name":"Apakah ada saran investasi?","acceptedAnswer":{"@type":"Answer","text":"Tidak ada. Kami menuliskan pola penghasilan, jalur masuk, kebiasaan pengeluaran, dan cara melindungi, tetapi kami tidak membahas produk keuangan tertentu, waktu jual beli, atau imbal hasil."}},{"@type":"Question","name":"Berapa lama waktu pengirimannya?","acceptedAnswer":{"@type":"Answer","text":"Dalam waktu 24 jam setelah pembayaran dikonfirmasi, kami akan mengirimkan tautan unduhan melalui email."}}]}</script>
 </head>
 <body>
@@ -333,6 +334,7 @@ window.LJ_I18N = {
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('career', btn, document.querySelector('.pc-btn-sub'));
   var ERR = { email: 'Harap masukkan alamat email yang valid.', fields: 'Harap masukkan tanggal lahir, waktu lahir (centang jika tidak diketahui), dan tempat lahir.', server: 'Pengiriman gagal. Silakan tunggu beberapa saat dan coba lagi.', unavailable: 'Sistem pembayaran untuk wilayah Anda sedang dalam persiapan. Silakan hubungi kami melalui formulir kontak.' };
   btn.addEventListener('click', function () {
     var data = { product: 'career', lang: 'id' };
@@ -343,6 +345,15 @@ window.LJ_I18N = {
     if (!data.dob || !data.place || (!data.tob_unknown && !data.tob)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {

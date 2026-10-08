@@ -151,6 +151,7 @@ window.LJ_I18N = {
 };
 </script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/ar/career#faq","inLanguage":"ar","mainEntity":[{"@type":"Question","name":"ما الفرق بين هذا التقرير وفصل \"العمل\" في Lifetime Report (one-off purchase)؟","acceptedAnswer":{"@type":"Answer","text":"ج. Lifetime Report (one-off purchase) هو كتاب يقرأ حياتك بأكملها في 13 فصلاً، والعمل هو أحد هذه الفصول. أما هذا التقرير فيخصص حوالي 35 صفحة للعمل والمال فقط، ويتعمق في أسماء المهن، وظروف إبراز القدرات، وكيفية التقييم، ونمط المال، وفترات التغيير."}},{"@type":"Question","name":"ماذا لو كان عملي الحالي ضمن \"المهن غير المناسبة\"؟","acceptedAnswer":{"@type":"Answer","text":"ج. هذا لا يعني أنك \"لا تستطيع القيام به\". سنوضح سبب استنزافه لطاقتك بناءً على المواقع الفلكية، ثم نذكر البيئة وكيفية إبراز قدراتك لتحقيق التوافق الذاتي في نفس العمل، والشروط التي يجب استيفاؤها إذا كنت ترغب في تغيير طريقة عملك."}},{"@type":"Question","name":"أنا متردد بشأن ما إذا كان يجب علي الاستقلال بعملي.","acceptedAnswer":{"@type":"Answer","text":"ج. في الفصل السادس، نوضح طريقة العمل إذا اخترت \"العمل كموظف، أو الاستقلال، أو الشراكة\"، والشروط التي يجب استيفاؤها قبل التغيير. وسيتم تحديد شهر التنفيذ في الفصل التاسع (الـ 12 شهرًا القادمة)."}},{"@type":"Question","name":"لا أعرف وقت ميلادي.","acceptedAnswer":{"@type":"Answer","text":"ج. يرجى الطلب باستخدام تاريخ الميلاد ومكان الميلاد فقط. ستنخفض دقة الفصول المتعلقة بتحديد البيوت، ولكن سيتم إعداد التقرير بالتركيز على القمر، وناكشاترا (Nakshatra)، وداشا (Dasha)، وقوة الكواكب، وسيتم توضيح ذلك بوضوح في التقرير."}},{"@type":"Question","name":"هل يتضمن التقرير نصائح استثمارية؟","acceptedAnswer":{"@type":"Answer","text":"ج. لا يتضمن ذلك. نوضح أنماط كسب المال، ومسارات الدخل، وعادات التسرب، وطرق الحماية، لكننا لا نتناول منتجات مالية محددة، أو أوقات البيع والشراء، أو العوائد."}},{"@type":"Question","name":"كم من الوقت يستغرق استلام التقرير؟","acceptedAnswer":{"@type":"Answer","text":"ج. سنرسل رابط التنزيل عبر البريد الإلكتروني خلال 24 ساعة من تأكيد الدفع."}}]}</script>
 </head>
 <body>
@@ -334,6 +335,7 @@ window.LJ_I18N = {
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('career', btn, document.querySelector('.pc-btn-sub'));
   var ERR = { email: 'يرجى إدخال عنوان البريد الإلكتروني بشكل صحيح.', fields: 'يرجى إدخال تاريخ الميلاد، ووقت الميلاد (حدد المربع إذا كان غير معروف)، ومكان الميلاد.', server: 'فشل الإرسال. يرجى الانتظار قليلاً ثم المحاولة مرة أخرى.', unavailable: 'نظام الدفع عبر الموقع قيد التجهيز لمنطقتك حالياً. يرجى التواصل معنا عبر نموذج الاتصال.' };
   btn.addEventListener('click', function () {
     var data = { product: 'career', lang: 'ar' };
@@ -344,6 +346,15 @@ window.LJ_I18N = {
     if (!data.dob || !data.place || (!data.tob_unknown && !data.tob)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {

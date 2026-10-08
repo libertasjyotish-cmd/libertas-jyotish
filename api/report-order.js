@@ -1,6 +1,7 @@
 // 個別鑑定書（相性・年間運勢・仕事）のサイト直販: POST /api/report-order
 // 入力を台帳（Etsy と共通）に awaiting_payment で登録し、決済先の URL を返す。
 //   日本かつ KOMOJU 有効 … KOMOJU ホストページ（metadata.order_id で台帳行に紐づく）
+//   Android アプリ内    … provider:'play' で Play 課金（SKU を返し、play-verify で確定）
 //   それ以外           … Gumroad 商品ページ（?order_id= で台帳行に紐づく。Gumroad 未公開の商品は 503 unavailable）
 // 決済確定（komoju-return / komoju-webhook / gumroad-webhook）で status を new に進めると etsy-cron が生成・納品する。
 // オーナー検証用: Authorization: Bearer <CRON_SECRET> ＋ test:true で決済を飛ばし、確定済み（new / awaiting_photos）で登録する。
@@ -9,6 +10,7 @@ const { AMOUNTS, GUMROAD_REPORT_LINKS, saleAvailable, resolveTier, resolveProvid
 const { createSession } = require('./_komoju');
 const { normalizeLang } = require('./_terms');
 const ledger = require('./_etsy-ledger');
+const { PLAY_PRODUCTS } = require('./_play');
 const storage = require('./_etsy-storage');
 
 const PRODUCTS = new Set(['compat', 'yearly', 'career', 'palm']);
@@ -85,9 +87,11 @@ module.exports = async (req, res) => {
   if (errors.length) return res.status(400).json({ error: 'invalid_fields', fields: errors });
 
   const ownerTest = isOwnerTest(req, body);
+  // Android アプリ内は Google Play 課金（地域・価格は Play 側）。台帳行だけ作り、確定は play-verify が行う。
+  const viaPlay = body.provider === 'play';
   const country = countryFrom(req);
-  const provider = resolveProvider(country);
-  if (!ownerTest && !saleAvailable(product, provider)) {
+  const provider = viaPlay ? 'play' : resolveProvider(country);
+  if (!ownerTest && !viaPlay && !saleAvailable(product, provider)) {
     return res.status(503).json({ error: 'unavailable' });
   }
 
@@ -125,7 +129,7 @@ module.exports = async (req, res) => {
       delivery: 'email',
       buyer_email: email,
       buyer_name: name,
-      personalization: `web:${product}`,
+      personalization: `web:${product}${viaPlay ? ':play' : ''}`,
       dob: a.dob,
       tob: a.tob,
       tob_unknown: a.tobUnknown ? 'true' : 'false',
@@ -137,6 +141,9 @@ module.exports = async (req, res) => {
       language: lang,
       status: ledger.STATUS.AWAITING_PAYMENT
     });
+    if (viaPlay) {
+      return res.status(200).json({ provider: 'play', sku: PLAY_PRODUCTS[product].id, order: orderId });
+    }
     if (provider === 'gumroad') {
       const link = new URL(GUMROAD_REPORT_LINKS[product][tier]);
       link.searchParams.set('wanted', 'true');

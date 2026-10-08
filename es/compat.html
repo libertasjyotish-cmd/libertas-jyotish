@@ -160,6 +160,7 @@ window.LJ_I18N = {
 };
 </script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/es/compat#faq","inLanguage":"es","mainEntity":[{"@type":"Question","name":"No sé la hora de nacimiento de la otra persona.","acceptedAnswer":{"@type":"Answer","text":"Por favor, envíe su solicitud solo con la fecha y el lugar de nacimiento. La precisión disminuirá en las partes relacionadas con la casa (Lagna) de la otra persona, pero centraremos la lectura en la Luna, el Nakshatra y el Dasha, y lo indicaremos claramente en el Informe de Compatibilidad."}},{"@type":"Question","name":"¿Puedo solicitarlo sin que la otra persona se entere?","acceptedAnswer":{"@type":"Answer","text":"Sí. El Informe de Compatibilidad se enviará únicamente a la dirección de correo electrónico que introduzca. No nos pondremos en contacto con la otra persona en ningún caso."}},{"@type":"Question","name":"¿Es válido para una pareja del mismo sexo?","acceptedAnswer":{"@type":"Answer","text":"Sí. No es necesario introducir el género. En el texto utilizaremos términos neutros como \"usted\" y \"la otra persona\", ofreciendo la misma estructura y la misma calidad en la lectura independientemente de si son del mismo o de distinto sexo."}},{"@type":"Question","name":"¿Cuál es la diferencia entre \"Leer como romance / matrimonio\" y \"No definir la relación y leer el tipo de vínculo\"?","acceptedAnswer":{"@type":"Answer","text":"Los 10 capítulos básicos son comunes. En \"Leer como romance / matrimonio\" se añaden el capítulo de romance / matrimonio y el del indicador tradicional (Método de 36 puntos (Ashtakoota)), mientras que en \"No definir la relación y leer el tipo de vínculo\" leemos la forma de vínculo que indica la configuración de ambos tal y como es, sin presuponer un tipo de relación."}},{"@type":"Question","name":"¿Escribirán si la compatibilidad es mala?","acceptedAnswer":{"@type":"Answer","text":"No sacaremos conclusiones de que es \"mala\" basándonos en una puntuación. Si hay una configuración que genera fricción, explicaremos su origen y cómo afrontarla, poniendo el foco en el significado del vínculo y en cómo cultivarlo."}},{"@type":"Question","name":"¿Cuánto tardará en llegar?","acceptedAnswer":{"@type":"Answer","text":"Le enviaremos un enlace de descarga por correo electrónico en un plazo de 24 horas a partir de la confirmación del pago."}}]}</script>
 </head>
 <body>
@@ -305,6 +306,7 @@ window.LJ_I18N = {
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('compat', btn, document.querySelector('.pc-btn-sub'));
   var ERR = { email: 'Proporciona un correo electrónico válido.', fields: 'Proporciona la fecha, hora (marca la casilla si se desconoce) y lugar de nacimiento de ambos.', server: 'Error al enviar. Por favor, espera un momento e inténtalo de nuevo.', unavailable: 'Los pagos en el sitio web aún no están disponibles en tu región. Por favor, contáctanos a través del formulario de contacto.' };
   btn.addEventListener('click', function () {
     var data = { product: 'compat', lang: 'es' };
@@ -317,6 +319,15 @@ window.LJ_I18N = {
     if (!data.dob_b || !data.place_b || (!data.tob_unknown_b && !data.tob_b)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {

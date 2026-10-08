@@ -161,6 +161,7 @@ window.LJ_I18N = {
 };
 </script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/ar/compat#faq","inLanguage":"ar","mainEntity":[{"@type":"Question","name":"س: لا أعرف وقت ولادة الشريك / الشخص الآخر.","acceptedAnswer":{"@type":"Answer","text":"ج: يرجى تقديم الطلب باستخدام تاريخ ومكان الولادة فقط. ستنخفض دقة الأجزاء المتعلقة بـ البيت (الطالع (Lagna)) للشريك / الشخص الآخر، لكننا سنركز في التحليل على القمر، وناكشاترا (Nakshatra)، وداشا (Dasha)، وسنوضح ذلك صراحة في التقرير."}},{"@type":"Question","name":"س: هل يمكنني طلب التقرير دون أن يعلم الشريك / الشخص الآخر بذلك؟","acceptedAnswer":{"@type":"Answer","text":"ج: نعم. سيتم إرسال التقرير إلى عنوان البريد الإلكتروني الذي تدخله فقط. لن يتم التواصل مع الشريك / الشخص الآخر بأي شكل من الأشكال."}},{"@type":"Question","name":"س: هل يمكن طلب التقرير لشريك من نفس الجنس؟","acceptedAnswer":{"@type":"Answer","text":"ج: نعم. لا يُطلب إدخال الجنس. يتم توحيد المصطلحات المستخدمة في التقرير إلى \"أنت\" و\"الشريك / الشخص الآخر\"، ونقدم نفس الهيكل والجودة في التحليل بغض النظر عما إذا كان الشريكان من نفس الجنس أو من جنسين مختلفين."}},{"@type":"Question","name":"س: ما الفرق بين \"القراءة من منظور الرومانسية / الزواج\" و\"ترك العلاقة مفتوحة وقراءة نوع الرابطة\"؟","acceptedAnswer":{"@type":"Answer","text":"ج: الفصول الـ 10 الأساسية مشتركة. في \"القراءة من منظور الرومانسية / الزواج\"، تتم إضافة فصول تتعلق بالرومانسية والزواج وطريقة الـ 36 نقطة (Ashtakoota) التقليدية، بينما في \"ترك العلاقة مفتوحة وقراءة نوع الرابطة\"، سنقرأ طبيعة الارتباط الذي يظهره التوزيع الفلكي لكليكما دون افتراض طبيعة العلاقة مسبقًا."}},{"@type":"Question","name":"س: هل سيتم ذكر أن التوافق سيئ؟","acceptedAnswer":{"@type":"Answer","text":"ج: نحن لا نحكم على العلاقة بأنها \"سيئة\" بناءً على النقاط. إذا كان هناك توزيع فلكي يسبب الاحتكاك، فسنوضح طبيعته وكيفية التعامل معه، مع التركيز على معنى الرابطة وكيفية تعزيزها."}},{"@type":"Question","name":"س: كم من الوقت يستغرق استلام التقرير؟","acceptedAnswer":{"@type":"Answer","text":"ج: سيتم إرسال رابط التنزيل عبر البريد الإلكتروني في غضون 24 ساعة من تأكيد عملية الدفع."}}]}</script>
 </head>
 <body>
@@ -306,6 +307,7 @@ window.LJ_I18N = {
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('compat', btn, document.querySelector('.pc-btn-sub'));
   var ERR = { email: 'يرجى إدخال عنوان بريد إلكتروني صحيح.', fields: 'يرجى إدخال تاريخ الميلاد، ووقت الميلاد (ضع علامة إذا كان غير معروف)، ومكان الميلاد لكليكما.', server: 'فشل الإرسال. يرجى المحاولة مرة أخرى بعد قليل.', unavailable: 'الدفع عبر الموقع قيد الإعداد لمنطقتك حالياً. يرجى التواصل معنا عبر نموذج الاتصال.' };
   btn.addEventListener('click', function () {
     var data = { product: 'compat', lang: 'ar' };
@@ -318,6 +320,15 @@ window.LJ_I18N = {
     if (!data.dob_b || !data.place_b || (!data.tob_unknown_b && !data.tob_b)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {

@@ -150,6 +150,7 @@ window.LJ_I18N = {
 };
 </script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/pt/career#faq","inLanguage":"pt","mainEntity":[{"@type":"Question","name":"Qual é a diferença em relação ao capítulo \"Trabalho\" do Lifetime Report (one-off purchase)?","acceptedAnswer":{"@type":"Answer","text":"R. O Lifetime Report (one-off purchase) é um documento que lê toda a sua vida em 13 capítulos, e o trabalho é apenas um deles. Este relatório dedica cerca de 35 páginas exclusivamente ao trabalho e ao dinheiro, aprofundando-se em nomes de profissões, condições para expressar sua força, como você é avaliado, padrões de dinheiro e períodos de mudança."}},{"@type":"Question","name":"E se o meu trabalho atual estiver entre as \"profissões menos adequadas\"?","acceptedAnswer":{"@type":"Answer","text":"R. Isso não significa que você \"não pode\" fazê-lo. Mostramos os motivos pelos quais ele causa desgaste através dos posicionamentos e, em seguida, descrevemos o ambiente e a forma de expressar sua força para alcançar o alinhamento consigo mesmo no mesmo trabalho, bem como as condições a serem preenchidas caso decida mudar a forma de trabalhar."}},{"@type":"Question","name":"Estou em dúvida se devo me tornar independente.","acceptedAnswer":{"@type":"Answer","text":"R. No Capítulo 6, descrevemos a forma de trabalhar caso você escolha \"ser empregado, independente ou trabalhar em parceria\", e as condições a serem preenchidas antes de mudar. Os meses para agir são nomeados no Capítulo 9 (próximos 12 meses)."}},{"@type":"Question","name":"Não sei a minha hora de nascimento.","acceptedAnswer":{"@type":"Answer","text":"R. Faça o pedido apenas com a data e o local de nascimento. A precisão dos capítulos relacionados à determinação das houses será reduzida, mas o relatório será criado com foco na Moon, Nakshatra, Dasha e na força dos planetas, e isso será claramente indicado no relatório."}},{"@type":"Question","name":"O relatório inclui conselhos sobre investimentos?","acceptedAnswer":{"@type":"Answer","text":"R. Não inclui. Descrevemos os padrões de ganhos, rotas de entrada, hábitos de perda e como proteger, mas não abordamos produtos financeiros específicos, períodos de compra e venda ou rendimentos."}},{"@type":"Question","name":"Em quanto tempo receberei o relatório?","acceptedAnswer":{"@type":"Answer","text":"R. Enviaremos um link de download por e-mail em até 24 horas após a confirmação do pagamento."}}]}</script>
 </head>
 <body>
@@ -333,6 +334,7 @@ window.LJ_I18N = {
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('career', btn, document.querySelector('.pc-btn-sub'));
   var ERR = { email: 'Por favor, insira um endereço de e-mail válido.', fields: 'Informe a data, o horário (marque a opção se desconhecido) e o local de nascimento.', server: 'Falha no envio. Aguarde um momento e tente novamente.', unavailable: 'O pagamento pelo site está sendo preparado para a sua região. Entre em contato através do formulário.' };
   btn.addEventListener('click', function () {
     var data = { product: 'career', lang: 'pt' };
@@ -343,6 +345,15 @@ window.LJ_I18N = {
     if (!data.dob || !data.place || (!data.tob_unknown && !data.tob)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {

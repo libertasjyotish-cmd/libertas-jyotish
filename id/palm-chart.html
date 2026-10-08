@@ -103,6 +103,7 @@ body { font-family: 'Noto Serif', serif; }
 </style>
 <script>window.LJ_I18N = { lang: 'id', menu: { top: 'Beranda', free: 'Pembacaan gratis', about: 'Tentang Libertas Jyotish', report: 'Laporan Seumur Hidup (sekali beli)', calendar: 'Kalender Peruntungan Tahunan', calendarNote: 'segera hadir', mypage: 'Halaman anggota', legal: 'Informasi hukum dan ketentuan', contact: 'Hubungi kami', toggleLabel: 'Menu', navLabel: 'Menu situs' }, price: { premium: '{price} / bulan (termasuk pajak)', pdf: '{price} sekali bayar (termasuk pajak)', premiumApprox: 'Sekitar {price} / bulan (termasuk pajak) — jumlah akhir ditampilkan saat checkout', pdfApprox: 'Sekitar {price} sekali bayar (termasuk pajak) — jumlah akhir ditampilkan saat checkout', checkoutOnly: 'Jumlah dalam mata uang lokal Anda ditampilkan saat checkout', unavailable: 'Paket Premium bulanan belum dijual — pembayaran online sedang disiapkan. Laporan PDF sudah tersedia.' }, playError: 'Pembelian Google Play tidak dapat diselesaikan. Silakan coba lagi.', playManage: 'Langganan yang dibeli di aplikasi dikelola (batalkan, metode pembayaran) di Google Play → Langganan. Buka sekarang?', guide: { hub: '/id/guide', hubLabel: "Semua panduan", intro: '/id/guide/indian-astrology', introLabel: "Apa itu astrologi Veda?", groupLabel: "" } };</script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/id/palm-chart#faq","inLanguage":"id","mainEntity":[{"@type":"Question","name":"Apa bedanya dengan aplikasi baca garis tangan?","acceptedAnswer":{"@type":"Answer","text":"Aplikasi mengembalikan teks umum dari satu foto. Laporan ini membandingkan peta kelahiran dan kedua tangan Anda dalam bahasa sembilan planet yang sama, dan menulis selisih cetak biru dengan saat ini, arah yang diambil, tiga lapisan karma, tanda keberuntungan, dan waktu dasha sebagai satu kisah. Sejauh yang kami tahu, tidak ada laporan lain yang memadukan garis tangan dan peta kelahiran dalam satu jilid yang ditulis sepersonal ini. Dan Anda dapat mengikuti perubahannya dengan memotret ulang."}},{"@type":"Question","name":"Bagaimana jika telapak dan peta mengatakan hal berbeda?","acceptedAnswer":{"@type":"Answer","text":"Itulah inti pembacaan ini. Peta adalah cetak biru yang Anda terima; tangan adalah tempat Anda berdiri kini. Perbedaan bukan cacat: ia dibaca sebagai kekuatan yang belum terpakai habis, atau pintu yang Anda buka sendiri, dan darinya kami menurunkan arah yang diambil (Bab 4)."}},{"@type":"Question","name":"Bagaimana jika saya tidak punya tanda keberuntungan?","acceptedAnswer":{"@type":"Answer","text":"Nilai tidak ditentukan oleh tanda. Persilangan yang sedang terbentuk dan garis khas dibaca dengan metode yang sama, bersama resonansinya dengan peta Anda."}},{"@type":"Question","name":"Saya tidak tahu waktu lahir saya.","acceptedAnswer":{"@type":"Answer","text":"Pesan dengan tanggal dan tempat lahir saja. Lampiran mempersempit kandidat dari penanggalan garis dan titik balik masa lalu."}},{"@type":"Question","name":"Mengapa kedua tangan?","acceptedAnswer":{"@type":"Answer","text":"Tangan non-dominan menunjukkan yang Anda bawa; tangan dominan menunjukkan yang Anda mainkan kini. Satu tangan tidak dapat memperlihatkan tiga lapisan karma."}},{"@type":"Question","name":"Apakah akan mengatakan hal buruk?","acceptedAnswer":{"@type":"Answer","text":"Kesehatan dan usia tidak dibahas. Masa sulit selalu disertai alasannya dan apa yang menunggu di baliknya."}},{"@type":"Question","name":"Berapa lama foto disimpan?","acceptedAnswer":{"@type":"Answer","text":"Berkas asli dihapus otomatis setelah 30 hari. Hanya data analisis dan gambar pembanding beresolusi rendah yang disimpan."}}]}</script>
 </head>
 <body>
@@ -367,6 +368,7 @@ body { font-family: 'Noto Serif', serif; }
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('palm', btn, document.querySelector('.pc-btn-sub'));
   var ERR = {"email": "Masukkan alamat email yang valid.", "fields": "Masukkan tanggal lahir, waktu lahir (atau centang “tidak tahu”), dan tempat lahir.", "server": "Pengiriman gagal. Silakan coba lagi nanti.", "unavailable": "Pembayaran di situs belum tersedia di wilayah Anda. Silakan hubungi kami lewat formulir kontak."};
   btn.addEventListener('click', function () {
     var data = { product: 'palm', lang: 'id' };
@@ -377,6 +379,15 @@ body { font-family: 'Noto Serif', serif; }
     if (!data.dob || !data.place || (!data.tob_unknown && !data.tob)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {

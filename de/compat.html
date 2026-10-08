@@ -160,6 +160,7 @@ window.LJ_I18N = {
 };
 </script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/de/compat#faq","inLanguage":"de","mainEntity":[{"@type":"Question","name":"Ich kenne die Geburtszeit der anderen Person nicht.","acceptedAnswer":{"@type":"Answer","text":"Bitte melden Sie sich nur mit Geburtsdatum und Geburtsort an. Die Genauigkeit in den Bereichen, die sich auf die Häuser (Lagna) der anderen Person beziehen, wird geringer sein, aber das Gutachten konzentriert sich auf Mond, Nakshatra sowie Dasha und weist deutlich auf diesen Umstand hin."}},{"@type":"Question","name":"Kann ich das Gutachten beantragen, ohne dass die andere Person davon erfährt?","acceptedAnswer":{"@type":"Answer","text":"Ja. Das Gutachten wird ausschließlich an die von Ihnen eingegebene E-Mail-Adresse gesendet. Es erfolgt keinerlei Kontaktaufnahme mit der anderen Person."}},{"@type":"Question","name":"Ist es auch für Personen gleichen Geschlechts geeignet?","acceptedAnswer":{"@type":"Answer","text":"Ja. Es wird kein Geschlecht eingegeben. Im Text werden „Sie“ und „die andere Person“ verwendet. Das Gutachten hat die gleiche Struktur und Qualität, unabhängig davon, ob es sich um dasselbe oder das andere Geschlecht handelt."}},{"@type":"Question","name":"Was ist der Unterschied zwischen „Als Liebe / Ehe lesen“ und „Die Beziehung offen lassen und die Art der Bindung lesen“?","acceptedAnswer":{"@type":"Answer","text":"Die 10 Grundkapitel sind identisch. Bei „Als Liebe / Ehe lesen“ kommen das Kapitel über Liebe und Ehe sowie das traditionelle Kapitel zur 36-Punkte-Methode (Ashtakoota) hinzu. Bei „Die Beziehung offen lassen und die Art der Bindung lesen“ wird die Form der Verbindung, wie sie in Ihren Konstellationen steht, gelesen, ohne sich auf eine bestimmte Beziehung festzulegen."}},{"@type":"Question","name":"Wird geschrieben, dass die Kompatibilität schlecht ist?","acceptedAnswer":{"@type":"Answer","text":"Ich lege mich nicht auf eine „schlechte“ Punktzahl fest. Sollte es Konstellationen geben, die zu Reibungen führen, schreibe ich über deren Ursache und wie man damit umgeht. Der Schwerpunkt liegt auf der Bedeutung der Bindung und darauf, wie man sie pflegt."}},{"@type":"Question","name":"Wie lange dauert die Lieferung?","acceptedAnswer":{"@type":"Answer","text":"Innerhalb von 24 Stunden nach der Zahlungsbestätigung sende ich Ihnen den Download-Link per E-Mail."}}]}</script>
 </head>
 <body>
@@ -305,6 +306,7 @@ window.LJ_I18N = {
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('compat', btn, document.querySelector('.pc-btn-sub'));
   var ERR = { email: 'Bitte geben Sie eine gültige E-Mail-Adresse ein.', fields: 'Bitte geben Sie für beide Personen Geburtsdatum, Geburtszeit (falls unbekannt, bitte ankreuzen) und Geburtsort ein.', server: 'Senden fehlgeschlagen. Bitte versuchen Sie es später erneut.', unavailable: 'Die Zahlung über die Website wird für Ihre Region derzeit eingerichtet. Bitte kontaktieren Sie uns über das Kontaktformular.' };
   btn.addEventListener('click', function () {
     var data = { product: 'compat', lang: 'de' };
@@ -317,6 +319,15 @@ window.LJ_I18N = {
     if (!data.dob_b || !data.place_b || (!data.tob_unknown_b && !data.tob_b)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {

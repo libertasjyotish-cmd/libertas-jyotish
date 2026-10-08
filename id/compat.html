@@ -160,6 +160,7 @@ window.LJ_I18N = {
 };
 </script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/id/compat#faq","inLanguage":"id","mainEntity":[{"@type":"Question","name":"Saya tidak mengetahui waktu kelahiran pasangan.","acceptedAnswer":{"@type":"Answer","text":"Silakan pesan hanya dengan tanggal dan tempat kelahiran. Akurasi pada bagian yang berkaitan dengan rumah (Lagna) pasangan akan menurun, namun kami akan berfokus pada Bulan, Nakshatra, dan Dasha, serta mencantumkan hal tersebut dengan jelas di dalam laporan."}},{"@type":"Question","name":"Bisakah memesan tanpa sepengetahuan pasangan?","acceptedAnswer":{"@type":"Answer","text":"Ya. Laporan hanya dikirim ke alamat email yang Anda berikan. Tidak akan ada kontak apa pun ke pasangan Anda."}},{"@type":"Question","name":"Apakah bisa untuk pasangan sesama jenis?","acceptedAnswer":{"@type":"Answer","text":"Ya. Jenis kelamin tidak perlu diisi. Sebutan di dalam teks menggunakan \"Anda\" dan \"pasangan Anda / orang tersebut\", disusun dengan struktur dan kualitas yang sama baik untuk pasangan sesama maupun lawan jenis."}},{"@type":"Question","name":"Apa bedanya \"Baca sebagai asmara / pernikahan\" dengan \"Biarkan hubungan terbuka dan baca jenis ikatannya\"?","acceptedAnswer":{"@type":"Answer","text":"Kesepuluh bab dasar adalah sama. \"Baca sebagai asmara / pernikahan\" ditambahkan bab asmara / pernikahan dan bab metode 36 poin (Ashtakoota) tradisional. \"Biarkan hubungan terbuka dan baca jenis ikatannya\" tidak memberikan batasan dan membaca bentuk ikatan sesuai dengan yang ditunjukkan oleh konfigurasi Anda berdua."}},{"@type":"Question","name":"Apakah akan tertulis jika kecocokannya buruk?","acceptedAnswer":{"@type":"Answer","text":"Kami tidak memberikan penghakiman \"buruk\" menggunakan skor. Jika ada konfigurasi yang menimbulkan gesekan, kami akan menuliskan sifat aslinya dan cara menghadapinya, serta menitikberatkan pada makna dan cara memelihara ikatan."}},{"@type":"Question","name":"Berapa lama laporan akan tiba?","acceptedAnswer":{"@type":"Answer","text":"Kami akan mengirimkan tautan unduhan melalui email dalam waktu 24 jam setelah pembayaran dikonfirmasi."}}]}</script>
 </head>
 <body>
@@ -305,6 +306,7 @@ window.LJ_I18N = {
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('compat', btn, document.querySelector('.pc-btn-sub'));
   var ERR = { email: 'Harap masukkan alamat email yang valid.', fields: 'Harap masukkan tanggal lahir, waktu lahir (centang jika tidak diketahui), dan tempat lahir Anda berdua.', server: 'Pengiriman gagal. Harap coba lagi beberapa saat lagi.', unavailable: 'Sistem pembayaran di situs untuk wilayah Anda sedang dalam persiapan. Harap hubungi kami melalui formulir kontak.' };
   btn.addEventListener('click', function () {
     var data = { product: 'compat', lang: 'id' };
@@ -317,6 +319,15 @@ window.LJ_I18N = {
     if (!data.dob_b || !data.place_b || (!data.tob_unknown_b && !data.tob_b)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {

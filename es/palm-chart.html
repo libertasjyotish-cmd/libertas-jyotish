@@ -103,6 +103,7 @@ body { font-family: 'Noto Serif', serif; }
 </style>
 <script>window.LJ_I18N = { lang: 'es', menu: { top: 'Inicio', free: 'Lectura gratuita', about: 'Sobre Libertas Jyotish', report: 'Informe Vitalicio (pago único)', calendar: 'Calendario Anual de la Fortuna', calendarNote: 'próximamente', mypage: 'Página de miembro', legal: 'Información legal y términos', contact: 'Contacto', toggleLabel: 'Menú', navLabel: 'Menú del sitio' }, price: { premium: '{price} al mes (impuestos incl.)', pdf: '{price} pago único (impuestos incl.)', premiumApprox: 'Unos {price} al mes (impuestos incl.); el importe final se muestra al pagar', pdfApprox: 'Unos {price} en pago único (impuestos incl.); el importe final se muestra al pagar', checkoutOnly: 'El importe en tu moneda local se muestra al pagar', unavailable: 'El plan Premium mensual aún no está a la venta: el pago en línea está en preparación. El informe PDF ya está disponible.' }, playError: 'No se pudo completar la compra en Google Play. Inténtalo de nuevo.', playManage: 'Las suscripciones compradas en la app se gestionan (cancelar, método de pago) en Google Play → Suscripciones. ¿Abrir ahora?', guide: { hub: '/es/guide', hubLabel: "Todas las guías", intro: '/es/guide/indian-astrology', introLabel: "¿Qué es la astrología védica?", groupLabel: "" } };</script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/es/palm-chart#faq","inLanguage":"es","mainEntity":[{"@type":"Question","name":"¿En qué se diferencia de una app de quiromancia?","acceptedAnswer":{"@type":"Answer","text":"Una app devuelve texto genérico a partir de una sola foto. Este informe coteja tu carta natal y tus dos manos en el lenguaje de los mismos nueve planetas y escribe como una sola historia la diferencia entre plano y presente, la dirección a tomar, las tres capas del karma, las marcas auspiciosas y los tiempos del dasha. Hasta donde sabemos, ningún otro informe integra palma y carta natal en un solo volumen escrito de forma tan individual. Y puedes seguir los cambios con nuevas fotos."}},{"@type":"Question","name":"¿Y si la palma y la carta dicen cosas distintas?","acceptedAnswer":{"@type":"Answer","text":"Ese es el corazón de esta lectura. La carta es el plano que recibiste; la mano, donde estás ahora. La diferencia no es un defecto: se lee como un poder aún no agotado o una puerta que abriste tú, y de ahí derivamos la dirección a tomar (capítulo 4)."}},{"@type":"Question","name":"¿Y si no tengo marcas auspiciosas?","acceptedAnswer":{"@type":"Answer","text":"El valor no lo deciden las marcas. Los cruces en formación y las líneas características se leen con el mismo método, junto con su resonancia con tu carta."}},{"@type":"Question","name":"No sé mi hora de nacimiento.","acceptedAnswer":{"@type":"Answer","text":"Pide solo con fecha y lugar de nacimiento. El apéndice acota candidatas a partir de la edad en las líneas y los giros pasados."}},{"@type":"Question","name":"¿Por qué ambas manos?","acceptedAnswer":{"@type":"Answer","text":"La mano no dominante muestra lo que traías; la dominante, lo que actúas ahora. Con una sola mano no se leen las tres capas del karma."}},{"@type":"Question","name":"¿Dirá cosas malas?","acceptedAnswer":{"@type":"Answer","text":"No tratamos salud ni longevidad. Los periodos difíciles siempre van con su razón y con lo que espera más allá."}},{"@type":"Question","name":"¿Cuánto tiempo se guardan las fotos?","acceptedAnswer":{"@type":"Answer","text":"Los originales se eliminan automáticamente a los 30 días. Solo se conservan datos de análisis e imágenes comparativas de baja resolución."}}]}</script>
 </head>
 <body>
@@ -367,6 +368,7 @@ body { font-family: 'Noto Serif', serif; }
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('palm', btn, document.querySelector('.pc-btn-sub'));
   var ERR = {"email": "Introduce una dirección de correo válida.", "fields": "Introduce fecha de nacimiento, hora (o marca «no la sé») y lugar de nacimiento.", "server": "El envío falló. Inténtalo de nuevo más tarde.", "unavailable": "El pago en el sitio aún no está disponible en tu región. Escríbenos desde el formulario de contacto."};
   btn.addEventListener('click', function () {
     var data = { product: 'palm', lang: 'es' };
@@ -377,6 +379,15 @@ body { font-family: 'Noto Serif', serif; }
     if (!data.dob || !data.place || (!data.tob_unknown && !data.tob)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {
