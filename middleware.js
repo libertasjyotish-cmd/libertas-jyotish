@@ -19,7 +19,7 @@ const COUNTRY_LANG = {
 export const config = {
   matcher: [
     '/',
-    '/(calendar|career|contact|legal|mypage|palm-chart|palm-upload|pdf-purchase|pdf-report|pdf-success|products|reissue|reports|result|success|yearly)',
+    '/(calendar|career|compat|contact|legal|mypage|palm-chart|palm-upload|pdf-purchase|pdf-report|pdf-success|products|reissue|reports|result|success|yearly)',
     '/tools/(moon-sign|nakshatra|dasha)'
   ]
 };

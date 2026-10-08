@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://www.libertas-jyotish.com';
-const PAGES = ['yearly', 'career', 'palm-chart'];
+const PAGES = ['yearly', 'career', 'palm-chart', 'compat'];
 const LANGS = readdirSync(join(ROOT, 'locales')).filter((n) => n.endsWith('.json')).map((n) => n.replace(/\.json$/, ''));
 const MARK = 'data-faq-ld';
 const BLOCK = new RegExp(`<script type="application/ld\\+json" ${MARK}>[\\s\\S]*?</script>\\n`);
