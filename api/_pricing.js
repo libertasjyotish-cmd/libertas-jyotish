@@ -10,7 +10,7 @@ const CURRENCY = { komoju: 'JPY', gumroad: 'USD' };
 const AMOUNTS = {
   premium: { T1: 980, T2: 550, T3: 380 },
   pdf: { T1: 8800, T2: 5980, T3: 3480 },
-  // 個別鑑定書（相性・年間運勢・仕事）。Etsy の米ドル価格（$69 / $49 / $49）と概ね揃える。
+  // 個別鑑定書（相性・年間運勢・仕事）。Etsy の米ドル価格（値引き後 $69 / $49 / $49）と概ね揃える。
   compat: { T1: 9800, T2: 6800, T3: 3980 },
   yearly: { T1: 6800, T2: 4800, T3: 2980 },
   career: { T1: 6800, T2: 4800, T3: 2980 },
@@ -23,6 +23,7 @@ const USD_AMOUNTS = {
   premium: { T1: 6.99, T2: 3.99, T3: 2.49 },
   pdf: { T1: 59, T2: 39, T3: 23 },
   // 個別鑑定書のうち Gumroad 側で公開済みの商品だけ（未公開の商品はここに載せない＝海外は 503）。
+  compat: { T1: 69, T2: 46, T3: 27 },
   yearly: { T1: 49, T2: 33, T3: 19 },
   career: { T1: 49, T2: 33, T3: 19 },
   palm: { T1: 89, T2: 59, T3: 33 }
@@ -30,6 +31,11 @@ const USD_AMOUNTS = {
 
 // Gumroad の商品ページ（個別鑑定書）。注文 ID は URL パラメータで渡し、Ping の url_params で受け取る。
 const GUMROAD_REPORT_LINKS = {
+  compat: {
+    T1: 'https://libertajyoti.gumroad.com/l/compat-tier1',
+    T2: 'https://libertajyoti.gumroad.com/l/compat-tier2',
+    T3: 'https://libertajyoti.gumroad.com/l/compat-t3'
+  },
   yearly: {
     T1: 'https://libertajyoti.gumroad.com/l/yearly-t1',
     T2: 'https://libertajyoti.gumroad.com/l/yearly-t2',
