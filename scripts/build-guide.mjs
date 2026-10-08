@@ -27,13 +27,13 @@ const COLLECTION_DIRS = ['nakshatra', 'dasha'];
 
 const LANGS = readdirSync(GUIDE_DIR).filter((n) => n.endsWith('.json')).map((n) => n.replace(/\.json$/, '')).sort();
 // 鑑定書（有料）への導線。ラベルは共通メニュー（locales/<lang>.json の menu.* 文言）と揃える。
-// 販売中の商品だけ載せる（karma は準備中のため載せない。compat は ja のみ公開）。
+// 販売中の商品だけ載せる（karma は準備中のため載せない。compat は全言語公開）。
 const PRODUCTS = [
   { key: 'calendar', path: 'yearly' },
   { key: 'career', path: 'career' },
   { key: 'report', path: 'pdf-purchase' },
   { key: 'palm', path: 'palm-chart' },
-  { key: 'compat', path: 'compat', langs: ['ja'] }
+  { key: 'compat', path: 'compat' }
 ];
 // 記事テーマに最も近い鑑定書（先頭に「この記事に関連」付きで出す）。
 const RECOMMENDED = { career: 'career', marriage: 'calendar', dasha: 'calendar', nakshatra: 'report', horoscope: 'report', 'indian-astrology': 'report', 'free-reading': 'report', palmistry: 'palm' };
