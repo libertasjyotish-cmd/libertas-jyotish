@@ -110,6 +110,7 @@ body { font-family: 'Noto Serif JP', serif; }
 </style>
 <script>window.LJ_I18N = {"lang":"ja","menu":{"top":"トップ","free":"無料診断","about":"Libertas Jyotishとは","report":"生涯完全鑑定書（買い切り）","calendar":"年間運勢カレンダー","calendarNote":"準備中","mypage":"会員マイページ","legal":"特定商取引法・利用規約","toggleLabel":"メニュー","navLabel":"サイトメニュー"},"guide":{"hub":"/ja/guide","hubLabel":"解説記事一覧","intro":"/ja/guide/indian-astrology","introLabel":"インド占星術とは","groupLabel":""}};</script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/ja/compat#faq","inLanguage":"ja","mainEntity":[{"@type":"Question","name":"相手の出生時刻が分かりません。","acceptedAnswer":{"@type":"Answer","text":"生年月日と出生地だけでお申し込みください。相手側の室（ラグナ）に関わる部分は精度が下がりますが、月・ナクシャトラ・ダシャーを中心に鑑定し、その旨を鑑定書に明記します。"}},{"@type":"Question","name":"相手に知られずに申し込めますか？","acceptedAnswer":{"@type":"Answer","text":"はい。鑑定書はご入力のメールアドレスにのみお送りします。お相手への連絡は一切ありません。"}},{"@type":"Question","name":"同性の相手でも大丈夫ですか？","acceptedAnswer":{"@type":"Answer","text":"はい。性別は入力しません。文中は「あなた」「お相手」で統一し、同性・異性を問わず同じ構成・同じ品質で鑑定します。"}},{"@type":"Question","name":"「恋愛・結婚として見る」と「縁の種類から見る」はどう違いますか？","acceptedAnswer":{"@type":"Answer","text":"基本の 10 章は共通です。「恋愛・結婚として見る」は恋愛・結婚の章と伝統的な 36 点法の章が加わり、「縁の種類から見る」は関係を決めつけずに二人の配置が示す結び付きの形をそのまま読みます。"}},{"@type":"Question","name":"相性が悪いと書かれますか？","acceptedAnswer":{"@type":"Answer","text":"点数で「悪い」と決めつけることはしません。摩擦が起きる配置があればその正体と向き合い方を書き、縁が持つ意味と育て方に重心を置きます。"}},{"@type":"Question","name":"どのくらいで届きますか？","acceptedAnswer":{"@type":"Answer","text":"決済確定から 24 時間以内に、ダウンロードリンクをメールでお送りします。"}}]}</script>
 </head>
 <body>
@@ -254,6 +255,7 @@ body { font-family: 'Noto Serif JP', serif; }
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('compat', btn, document.querySelector('.pc-btn-sub'));
   var ERR = { email: 'メールアドレスを正しく入力してください。', fields: 'お二人の生年月日・出生時刻（不明の場合はチェック）・出生地を入力してください。', server: '送信に失敗しました。時間をおいて再度お試しください。', unavailable: 'お住まいの地域ではサイト内決済を準備中です。お問い合わせフォームからご連絡ください。' };
   btn.addEventListener('click', function () {
     var data = { product: 'compat', lang: 'ja' };
@@ -266,6 +268,15 @@ body { font-family: 'Noto Serif JP', serif; }
     if (!data.dob_b || !data.place_b || (!data.tob_unknown_b && !data.tob_b)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {

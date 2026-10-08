@@ -150,6 +150,7 @@ window.LJ_I18N = {
 };
 </script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/en/career#faq","inLanguage":"en","mainEntity":[{"@type":"Question","name":"What is the difference from the \"Career\" chapter in the Lifetime Report (one-off purchase)?","acceptedAnswer":{"@type":"Answer","text":"The Lifetime Report (one-off purchase) is a single volume that reads your entire life in 13 chapters, and career is just one of those chapters. This report dedicates approximately 35 pages solely to career and money, delving into profession names, conditions for strength, evaluation by others, money patterns, and timing of movements."}},{"@type":"Question","name":"What if my current job is listed under \"unsuitable professions\"?","acceptedAnswer":{"@type":"Answer","text":"It does not mean you \"cannot do it.\" After showing the reasons why it easily exhausts you through your placements, we write about the environments and ways to exert strength where self-alignment occurs within the same job, and the conditions to meet if you were to change your working style."}},{"@type":"Question","name":"I am unsure whether I should become independent.","acceptedAnswer":{"@type":"Answer","text":"In Chapter 6, we write about how to work if you choose to be \"employed, independent, or partner up,\" and the conditions to meet before changing. The months to execute this are specified in Chapter 9 (next 12 months)."}},{"@type":"Question","name":"I don't know my birth time.","acceptedAnswer":{"@type":"Answer","text":"Please order with just your date and place of birth. The accuracy of chapters involving house determination will decrease, but we will create it focusing on the Moon, Nakshatras, Dasha, and planetary strengths, and clearly state this in the report."}},{"@type":"Question","name":"Does it include investment advice?","acceptedAnswer":{"@type":"Answer","text":"No, it does not. We write about earning patterns, income routes, spending habits, and how to protect wealth, but we do not cover specific financial products, timing for buying/selling, or yields."}},{"@type":"Question","name":"How long does it take to arrive?","acceptedAnswer":{"@type":"Answer","text":"We will email you a download link within 24 hours after payment is confirmed."}}]}</script>
 </head>
 <body>
@@ -333,6 +334,7 @@ window.LJ_I18N = {
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('career', btn, document.querySelector('.pc-btn-sub'));
   var ERR = { email: 'Please enter a valid email address.', fields: 'Please enter your date of birth, time of birth (check if unknown), and place of birth.', server: 'Submission failed. Please try again later.', unavailable: 'Online payments are currently unavailable in your region. Please contact us via the contact form.' };
   btn.addEventListener('click', function () {
     var data = { product: 'career', lang: 'en' };
@@ -343,6 +345,15 @@ window.LJ_I18N = {
     if (!data.dob || !data.place || (!data.tob_unknown && !data.tob)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {

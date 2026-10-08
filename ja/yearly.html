@@ -110,6 +110,7 @@ body { font-family: 'Noto Serif JP', serif; }
 </style>
 <script>window.LJ_I18N = {"lang":"ja","menu":{"top":"トップ","free":"無料診断","about":"Libertas Jyotishとは","report":"生涯完全鑑定書（買い切り）","calendar":"年間運勢カレンダー","calendarNote":"準備中","mypage":"会員マイページ","legal":"特定商取引法・利用規約","toggleLabel":"メニュー","navLabel":"サイトメニュー"},"guide":{"hub":"/ja/guide","hubLabel":"解説記事一覧","intro":"/ja/guide/indian-astrology","introLabel":"インド占星術とは","groupLabel":""}};</script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/ja/yearly#faq","inLanguage":"ja","mainEntity":[{"@type":"Question","name":"生涯完全鑑定書との違いは？","acceptedAnswer":{"@type":"Answer","text":"生涯完全鑑定書は、変わらない出生図そのもの（性質・才能・縁・仕事・人生の周期）を読む一冊です。年間運勢カレンダーは、その出生図に「今年の惑星」がどう触れるかを 12 か月分読み、決断を実行する月を名指しします。設計図と、今年の時計です。"}},{"@type":"Question","name":"「実行する月」と出ても、まだ心が決まっていません。","acceptedAnswer":{"@type":"Answer","text":"実行する月は「その月に動くなら星が押している」という意味で、動くことを強いるものではありません。決めるのはあなたで、星は時期を示します。"}},{"@type":"Question","name":"期間はいつからいつまで？","acceptedAnswer":{"@type":"Answer","text":"お申し込みの翌月を 1 か月目として 12 か月分です（例: 10 月にお申し込み → 11 月〜翌年 10 月）。暦年ではありません。"}},{"@type":"Question","name":"出生時刻が分かりません。","acceptedAnswer":{"@type":"Answer","text":"生年月日と出生地だけでお申し込みください。月を基準に読むため作成できますが、室の判定に関わる一部の章は精度が下がります。"}},{"@type":"Question","name":"悪い月ばかりだったら？","acceptedAnswer":{"@type":"Answer","text":"実行しない月には、なぜ避けるかの根拠を書きます。避ける月があることは、動く月が明確になることでもあります。"}},{"@type":"Question","name":"どのくらいで届きますか？","acceptedAnswer":{"@type":"Answer","text":"決済確定から 24 時間以内に、ダウンロードリンクをメールでお送りします。"}}]}</script>
 </head>
 <body>
@@ -288,6 +289,7 @@ body { font-family: 'Noto Serif JP', serif; }
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('yearly', btn, document.querySelector('.pc-btn-sub'));
   var ERR = { email: 'メールアドレスを正しく入力してください。', fields: '生年月日・出生時刻（不明の場合はチェック）・出生地を入力してください。', server: '送信に失敗しました。時間をおいて再度お試しください。', unavailable: 'お住まいの地域ではサイト内決済を準備中です。お問い合わせフォームからご連絡ください。' };
   btn.addEventListener('click', function () {
     var data = { product: 'yearly', lang: 'ja' };
@@ -298,6 +300,15 @@ body { font-family: 'Noto Serif JP', serif; }
     if (!data.dob || !data.place || (!data.tob_unknown && !data.tob)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {

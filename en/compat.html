@@ -160,6 +160,7 @@ window.LJ_I18N = {
 };
 </script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/en/compat#faq","inLanguage":"en","mainEntity":[{"@type":"Question","name":"I don't know the other person's birth time.","acceptedAnswer":{"@type":"Answer","text":"Please order using only their date and place of birth. While the accuracy of parts related to the other person's house (Lagna) will be lower, we will focus the reading on their Moon, Nakshatra, and Dasha, and note this clearly in the report."}},{"@type":"Question","name":"Can I order without the other person knowing?","acceptedAnswer":{"@type":"Answer","text":"Yes. The report will only be sent to the email address you provide. We will never contact the other person."}},{"@type":"Question","name":"Is it okay if the other person is of the same sex?","acceptedAnswer":{"@type":"Answer","text":"Yes. No gender input is required. The text uses \"you\" and \"your partner / the other person\" throughout, offering the same structure and quality of reading regardless of whether you are of the same or opposite sex."}},{"@type":"Question","name":"What is the difference between \"Read as romance / marriage\" and \"Leave the relationship open and read the kind of bond\"?","acceptedAnswer":{"@type":"Answer","text":"The basic 10 chapters are the same. \"Read as romance / marriage\" adds a romance / marriage chapter and a traditional 36-point (Ashtakoota) method chapter, while \"Leave the relationship open and read the kind of bond\" reads the form of connection your alignments indicate exactly as it is, without assuming a relationship."}},{"@type":"Question","name":"Will it say we have bad compatibility?","acceptedAnswer":{"@type":"Answer","text":"We do not use scores to declare compatibility \"bad.\" If there are alignments that cause friction, we will write about their true nature and how to face them, focusing on the meaning of the bond and how to nurture it."}},{"@type":"Question","name":"How soon will I receive it?","acceptedAnswer":{"@type":"Answer","text":"We will email you a download link within 24 hours of payment confirmation."}}]}</script>
 </head>
 <body>
@@ -305,6 +306,7 @@ window.LJ_I18N = {
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('compat', btn, document.querySelector('.pc-btn-sub'));
   var ERR = { email: 'Please enter a valid email address.', fields: 'Please enter the birth date, birth time (check if unknown), and birth place for both of you.', server: 'Submission failed. Please try again later.', unavailable: 'On-site payments are currently unavailable in your region. Please contact us via the contact form.' };
   btn.addEventListener('click', function () {
     var data = { product: 'compat', lang: 'en' };
@@ -317,6 +319,15 @@ window.LJ_I18N = {
     if (!data.dob_b || !data.place_b || (!data.tob_unknown_b && !data.tob_b)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {

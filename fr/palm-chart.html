@@ -143,6 +143,7 @@ window.LJ_I18N = {
 };
 </script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/fr/palm-chart#faq","inLanguage":"fr","mainEntity":[{"@type":"Question","name":"Quelle est la différence avec une application de chiromancie ?","acceptedAnswer":{"@type":"Answer","text":"Les applications renvoient des généralités à partir d'une seule photo de la main. Ce rapport croise votre thème natal (Janma Kundali) et vos deux mains à travers le langage des « neuf mêmes planètes », et rédige comme une histoire unique l'écart entre votre plan de vie et votre position actuelle, la direction à prendre, les trois couches du karma, les signes sacrés et les périodes de Dasha. À notre connaissance, il n'existe aucun autre rapport qui intègre à la fois la chiromancie et le thème natal (Janma Kundali) en un seul document et qui soit rédigé de manière aussi personnalisée. De plus, vous pouvez suivre les changements grâce à de nouvelles prises de vue."}},{"@type":"Question","name":"Que se passe-t-il si la chiromancie et le thème natal (Janma Kundali) indiquent des choses différentes ?","acceptedAnswer":{"@type":"Answer","text":"C'est précisément le cœur de cette lecture. Le thème natal (Janma Kundali) est le plan de vie donné, la main est la position actuelle. Les écarts ne sont pas lus comme des « défauts », mais comme des forces non encore pleinement utilisées ou des portes ouvertes par vous-même, à partir desquelles nous déduisons la direction à prendre (Chapitre 4)."}},{"@type":"Question","name":"Et si je n'ai pas de signes sacrés ?","acceptedAnswer":{"@type":"Answer","text":"La valeur ne se détermine pas par la présence ou l'absence de signes. Nous lisons les intersections en voie de devenir des signes ou les lignes caractéristiques selon la même méthode, et décrivons leur résonance avec le thème natal (Janma Kundali)."}},{"@type":"Question","name":"Je ne connais pas mon heure de naissance.","acceptedAnswer":{"@type":"Answer","text":"Veuillez passer commande uniquement avec votre date et lieu de naissance. Dans l'annexe, nous affinerons les candidats à partir de la datation des lignes de la main et de vos tournants passés."}},{"@type":"Question","name":"Pourquoi avez-vous besoin des deux mains ?","acceptedAnswer":{"@type":"Answer","text":"Pour montrer ce que la main non dominante a apporté et ce que la main dominante joue actuellement. Les « trois couches du karma » ne peuvent pas être lues avec une seule main."}},{"@type":"Question","name":"Y a-t-il des choses négatives d'écrites ?","acceptedAnswer":{"@type":"Answer","text":"Nous ne traitons pas de la santé ni de la durée de vie. Même pour les périodes difficiles, nous écrivons toujours la raison et ce qui vous attend au-delà."}},{"@type":"Question","name":"Quelle est la durée de conservation des photos ?","acceptedAnswer":{"@type":"Answer","text":"Les images originales sont automatiquement supprimées après 30 jours. Seules les données d'analyse et les images comparatives en basse résolution sont conservées."}}]}</script>
 </head>
 <body>
@@ -406,6 +407,7 @@ window.LJ_I18N = {
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('palm', btn, document.querySelector('.pc-btn-sub'));
   var ERR = { email: 'Veuillez saisir une adresse e-mail valide.', fields: 'Veuillez indiquer votre date, heure (cochez la case si inconnue) et lieu de naissance.', server: 'Échec de l\'envoi. Veuillez réessayer ultérieurement.', unavailable: 'Le paiement en ligne est en cours de préparation pour votre région. Veuillez nous contacter via le formulaire de contact.' };
   btn.addEventListener('click', function () {
     var data = { product: 'palm', lang: 'fr' };
@@ -416,6 +418,15 @@ window.LJ_I18N = {
     if (!data.dob || !data.place || (!data.tob_unknown && !data.tob)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {

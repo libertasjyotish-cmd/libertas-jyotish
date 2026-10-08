@@ -4,7 +4,7 @@
 (function () {
   var METHOD = 'https://play.google.com/billing';
   // Play Console に登録した商品 ID（api/_play.js の PLAY_PRODUCTS と揃える）
-  var SKUS = { pdf: 'report_pdf', premium: 'premium_monthly' };
+  var SKUS = { pdf: 'report_pdf', premium: 'premium_monthly', yearly: 'report_yearly', career: 'report_career', palm: 'report_palm', compat: 'report_compat' };
   var servicePromise = null;
 
   function supported() {
@@ -38,8 +38,54 @@
     });
   }
 
+  function pay(sku) {
+    var request = new PaymentRequest(
+      [{ supportedMethods: METHOD, data: { sku: sku } }],
+      { total: { label: 'Total', amount: { currency: 'JPY', value: '0' } } }
+    );
+    return request.show();
+  }
+
   window.LJPlayBilling = {
     supported: supported,
+    // 個別鑑定書: 台帳に注文を作る → Play で支払う → サーバーで検証・確定。解決値は /api/play-verify の応答。
+    reportCheckout: function (data) {
+      var body = Object.assign({}, data, { provider: 'play' });
+      if (window.LJTrack) window.LJTrack('begin_checkout', { product: data.product, provider: 'play' });
+      return fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+        .then(function (res) {
+          return res.json().catch(function () { return null; }).then(function (j) {
+            if (!res.ok || !j || j.provider !== 'play') { var e = new Error((j && j.error) || 'order_failed'); e.code = j && j.error; throw e; }
+            return j;
+          });
+        })
+        .then(function (order) {
+          return pay(order.sku).then(function (response) {
+            var token = response.details && response.details.purchaseToken;
+            return fetch('/api/play-verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ product: data.product, order: order.order, purchaseToken: token, lang: data.lang })
+            }).then(function (res) {
+              return res.json().catch(function () { return null; }).then(function (v) {
+                if (!res.ok || !v || !v.ok) throw new Error((v && v.error) || 'verify_failed');
+                if (window.LJTrack) window.LJTrack('purchase_completed', { product: data.product, provider: 'play' });
+                return response.complete('success').then(function () { return v; });
+              });
+            }, function (err) {
+              return response.complete('fail').then(function () { throw err; });
+            });
+          });
+        });
+    },
+    // 商品ページの注文フォームを Play 課金表示に（ボタンの価格を Play の現地価格に、決済事業者の注記を Google Play に）。
+    decorateOrderForm: function (product, btn, sub) {
+      if (!supported()) return;
+      window.LJPlayBilling.price(product).then(function (price) {
+        if (price && btn) btn.textContent = btn.textContent.replace(/[（(][^）)]*[）)]\s*$/, '') + '（' + price + '）';
+        if (sub) sub.textContent = 'Google Play';
+      });
+    },
     // 利用可能なら true。TWA でも Play 課金が初期化できない端末では false。
     available: function () {
       if (!supported()) return Promise.resolve(false);
@@ -68,11 +114,7 @@
       var sku = SKUS[product];
       if (!sku) return Promise.reject(new Error('invalid_product'));
       if (window.LJTrack) window.LJTrack('begin_checkout', { product: product, provider: 'play' });
-      var request = new PaymentRequest(
-        [{ supportedMethods: METHOD, data: { sku: sku } }],
-        { total: { label: 'Total', amount: { currency: 'JPY', value: '0' } } }
-      );
-      return request.show().then(function (response) {
+      return pay(sku).then(function (response) {
         var token = response.details && response.details.purchaseToken;
         return verify(product, token, email).then(function (data) {
           if (window.LJTrack) {

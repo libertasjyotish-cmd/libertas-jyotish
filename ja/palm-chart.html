@@ -103,6 +103,7 @@ body { font-family: 'Noto Serif JP', serif; }
 </style>
 <script>window.LJ_I18N = {"lang":"ja","menu":{"top":"トップ","free":"無料診断","about":"Libertas Jyotishとは","report":"完全鑑定書（買い切り）","calendar":"年間運勢カレンダー","calendarNote":"準備中","mypage":"会員マイページ","legal":"特定商取引法・利用規約","toggleLabel":"メニュー","navLabel":"サイトメニュー"},"guide":{"hub":"/ja/guide","hubLabel":"解説記事一覧","intro":"/ja/guide/indian-astrology","introLabel":"インド占星術とは","groupLabel":""}};</script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/ja/palm-chart#faq","inLanguage":"ja","mainEntity":[{"@type":"Question","name":"手相アプリと何が違いますか？","acceptedAnswer":{"@type":"Answer","text":"アプリは手の写真 1 枚から一般論を返します。本鑑定書は、あなたの出生図と両手を「同じ九つの惑星」の言葉で照合し、設計図と現在地の差・進むべき方向・カルマの三層・吉祥紋・ダシャーの時期まで一つの物語として書きます。手相と出生図の両方を一冊に統合し、ここまで個別に書く鑑定書は、私たちの知る限り他にありません。そして再撮影で変化を追えます。"}},{"@type":"Question","name":"手相と出生図で違うことが書かれていたら？","acceptedAnswer":{"@type":"Answer","text":"それこそがこの鑑定の核心です。出生図は与えられた設計図、手はいまの現在地。差は「欠点」ではなく、まだ使い切っていない力、または自力で開いた扉として読み、そこから目指すべき方向を導きます（第 4 章）。"}},{"@type":"Question","name":"吉祥紋が無かったら？","acceptedAnswer":{"@type":"Answer","text":"紋の有無で価値が決まるわけではありません。紋になりかけている交差や特徴的な線を同じ作法で読み、出生図との響き合いを書きます。"}},{"@type":"Question","name":"出生時刻が分かりません。","acceptedAnswer":{"@type":"Answer","text":"生年月日と出生地だけでお申し込みください。付章で手相の流年と過去の転機から候補を絞ります。"}},{"@type":"Question","name":"両手が必要なのはなぜ？","acceptedAnswer":{"@type":"Answer","text":"非利き手が携えてきたもの、利き手が今演じているものを示すため。片手では「カルマの三層」が読めません。"}},{"@type":"Question","name":"悪いことが書かれていませんか？","acceptedAnswer":{"@type":"Answer","text":"健康・寿命は扱いません。厳しい時期にも理由と、その先に待っているものを必ず書きます。"}},{"@type":"Question","name":"写真の保存期間は？","acceptedAnswer":{"@type":"Answer","text":"原画像は 30 日で自動削除。解析データと低解像度の比較画像のみ保持します。"}}]}</script>
 </head>
 <body>
@@ -365,6 +366,7 @@ body { font-family: 'Noto Serif JP', serif; }
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('palm', btn, document.querySelector('.pc-btn-sub'));
   var ERR = { email: 'メールアドレスを正しく入力してください。', fields: '生年月日・出生時刻（不明の場合はチェック）・出生地を入力してください。', server: '送信に失敗しました。時間をおいて再度お試しください。', unavailable: 'お住まいの地域ではサイト内決済を準備中です。お問い合わせフォームからご連絡ください。' };
   btn.addEventListener('click', function () {
     var data = { product: 'palm', lang: 'ja' };
@@ -375,6 +377,15 @@ body { font-family: 'Noto Serif JP', serif; }
     if (!data.dob || !data.place || (!data.tob_unknown && !data.tob)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {

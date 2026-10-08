@@ -150,6 +150,7 @@ window.LJ_I18N = {
 };
 </script>
 <script defer src="/js/site-menu.js"></script>
+<script src="/js/play-billing.js"></script>
 <script type="application/ld+json" data-faq-ld>{"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.libertas-jyotish.com/fr/yearly#faq","inLanguage":"fr","mainEntity":[{"@type":"Question","name":"Quelle est la différence avec le Lifetime Report (one-off purchase) ?","acceptedAnswer":{"@type":"Answer","text":"Le Lifetime Report (one-off purchase) est un document qui lit votre Janma Kundali immuable (nature, talents, relations, travail, cycles de vie). L'Annual Fortune Calendar analyse comment les « planètes de cette année » influencent ce Janma Kundali sur 12 mois, et désigne les mois pour exécuter vos décisions. C'est votre plan de vie et l'horloge de cette année."}},{"@type":"Question","name":"Même si un « mois pour agir » est indiqué, je n'ai pas encore pris ma décision.","acceptedAnswer":{"@type":"Answer","text":"Le mois pour agir signifie que « si vous agissez ce mois-là, les astres vous soutiennent », cela ne vous oblige pas à agir. C'est vous qui décidez, les astres ne font qu'indiquer la période."}},{"@type":"Question","name":"Quelle est la période couverte ?","acceptedAnswer":{"@type":"Answer","text":"Elle couvre 12 mois, le premier mois étant celui qui suit votre commande (ex. : commande en octobre → de novembre à octobre de l'année suivante). Il ne s'agit pas d'une année civile."}},{"@type":"Question","name":"Je ne connais pas mon heure de naissance.","acceptedAnswer":{"@type":"Answer","text":"Vous pouvez commander avec seulement votre date et lieu de naissance. Le rapport peut être créé car nous lisons en fonction de la Lune, mais la précision de certains chapitres liés à la détermination des maisons sera réduite."}},{"@type":"Question","name":"Et s'il n'y a que de mauvais mois ?","acceptedAnswer":{"@type":"Answer","text":"Pour les mois où il ne faut pas agir, nous écrivons les raisons pour lesquelles il faut les éviter. Le fait d'avoir des mois à éviter permet également de clarifier les mois où il faut agir."}},{"@type":"Question","name":"En combien de temps vais-je le recevoir ?","acceptedAnswer":{"@type":"Answer","text":"Nous vous enverrons un lien de téléchargement par e-mail dans les 24 heures suivant la confirmation de votre paiement."}}]}</script>
 </head>
 <body>
@@ -329,6 +330,7 @@ window.LJ_I18N = {
   if (t) tob.value = t;
   if (city) document.getElementById('f-place').value = city;
   var btn = document.getElementById('btn-order'), errBox = document.getElementById('form-error');
+  if (window.LJPlayBilling) window.LJPlayBilling.decorateOrderForm('yearly', btn, document.querySelector('.pc-btn-sub'));
   var ERR = { email: 'Veuillez saisir une adresse e-mail valide.', fields: 'Veuillez indiquer votre date de naissance, votre heure de naissance (cochez la case si inconnue) et votre lieu de naissance.', server: 'Échec de l\'envoi. Veuillez réessayer ultérieurement.', unavailable: 'Le paiement en ligne est en cours de préparation pour votre région. Veuillez nous contacter via le formulaire de contact.' };
   btn.addEventListener('click', function () {
     var data = { product: 'yearly', lang: 'fr' };
@@ -339,6 +341,15 @@ window.LJ_I18N = {
     if (!data.dob || !data.place || (!data.tob_unknown && !data.tob)) { errBox.textContent = ERR.fields; return; }
     localStorage.setItem('lj_user_email', data.email);
     btn.disabled = true;
+    if (window.LJPlayBilling && window.LJPlayBilling.supported()) {
+      window.LJPlayBilling.reportCheckout(data).then(function (v) {
+        location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
+      }).catch(function (err) {
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        btn.disabled = false;
+      });
+      return;
+    }
     fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {
