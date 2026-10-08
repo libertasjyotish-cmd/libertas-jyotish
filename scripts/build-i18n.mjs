@@ -162,8 +162,21 @@ function buildGuideLinks(lang) {
   return `<div class="about-block guide-links">\n<h3 class="about-h3">${escapeAttr(guide.index.h1)}</h3>\n<ul>\n${items}\n</ul>\n<p class="guide-links-more"><a href="/${lang}/${GUIDE_SECTION}">${escapeAttr(guide.index.more)}</a></p>\n</div>`;
 }
 
+// 一部の言語でだけ公開しているページ（他言語は準備中）。
+const SITEMAP_LANG_PAGES = { compat: ['ja'] };
+const COMPAT_LANGS = new Set(SITEMAP_LANG_PAGES.compat);
+
+function buildCompatProductItem(lang, strings) {
+  const label = escapeAttr(lookup(strings, 'menu.compat'));
+  if (COMPAT_LANGS.has(lang)) return `<li><a href="/${lang}/compat">${label}</a></li>`;
+  return `<li><span class="soon">${label}<span class="tag">${escapeAttr(lookup(strings, 'menu.calendarNote'))}</span></span></li>`;
+}
+
 function buildSitemap() {
   const urls = [];
+  for (const [page, langs] of Object.entries(SITEMAP_LANG_PAGES)) {
+    for (const lang of langs) urls.push(`  <url>\n    <loc>${pageUrl(lang, page)}</loc>\n  </url>`);
+  }
   for (const page of SITEMAP_PAGES) {
     for (const entry of LANG_SWITCH) {
       const alternates = LANG_SWITCH.map((alt) => `    <xhtml:link rel="alternate" hreflang="${alt.lang}" href="${pageUrl(alt.lang, page)}"/>`);
@@ -277,6 +290,8 @@ function render(template, locale, base, context) {
     } else if (path === 'pdfIntroJa') {
       // 生涯完全鑑定書の商品説明（言語別 partial）。
       value = expandPartials(`{{>pdf-intro-${locale.meta.lang}}}`);
+    } else if (path === 'compatProductItem') {
+      value = buildCompatProductItem(locale.meta.lang, locale.strings);
     } else if (path === 'robotsSaleJa') {
       value = buildRobotsSaleJa(locale.meta.lang);
     } else if (path === 'page') {

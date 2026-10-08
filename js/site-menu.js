@@ -53,7 +53,7 @@
     { href: home + '/yearly', label: t.calendar, sub: true },
     { href: home + '/career', label: t.career, sub: true },
     { href: home + '/palm-chart', label: t.palm, sub: true },
-    { label: t.compat, soon: true, sub: true, note: t.calendarNote },
+    (lang === 'ja' ? { href: home + '/compat', label: t.compat, sub: true } : { label: t.compat, soon: true, sub: true, note: t.calendarNote }),
     { label: t.karma, soon: true, sub: true, note: t.calendarNote }
   ];
   if (guide) {
