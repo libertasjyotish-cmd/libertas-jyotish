@@ -266,7 +266,7 @@
 
       html.push(cover(a));
       html.push(toc());
-      if (c.summary) html.push(summaryPage(c.summary, a));
+      if (c.summary) html.push(a.product === 'compat' ? genericPage({ title: c.summary.title || 'Tu manual de instrucciones, en una página', ...c.summary }) : summaryPage(c.summary, a));
       if (c.ch1) html.push(page(`<h2 class="chapter-title">${esc(c.ch1.title)}</h2>
         <h3>Lagna: el tú que ven los demás</h3>${para(c.ch1.lagna)}
         <h3>Luna: el tú de dentro</h3>${para(c.ch1.moon)}
