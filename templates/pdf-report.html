@@ -258,7 +258,7 @@
 
       html.push(cover(a));
       html.push(toc());
-      if (c.summary) html.push(summaryPage(c.summary, a));
+      if (c.summary) html.push(a.product === 'compat' ? genericPage({ title: c.summary.title || '{{t.pdf-report.tpl10|tpl}}', ...c.summary }) : summaryPage(c.summary, a));
       if (c.ch1) html.push(page(`<h2 class="chapter-title">${esc(c.ch1.title)}</h2>
         <h3>{{t.pdf-report.tpl01|tpl}}</h3>${para(c.ch1.lagna)}
         <h3>{{t.pdf-report.tpl02|tpl}}</h3>${para(c.ch1.moon)}
@@ -670,7 +670,11 @@ const CAREER_LABELS = {
       const kootas = (m.kootas || []).length && a.relation === 'romance'
         ? `<h3>{{t.pdf-report.prodScore|tpl}} ${esc(m.total)} / ${esc(m.max)}</h3><table><tbody>${m.kootas.map((k) => `<tr><td>${esc(k.name)}</td><td>${esc(k.points)} / ${esc(k.max)}</td></tr>`).join('')}</tbody></table>`
         : '';
-      return page(`<h2 class="chapter-title">{{t.pdf-report.tpl50|tpl}}</h2>${table(a.personA || {}, 'A')}${table(a.personB || {}, 'B')}${kootas}`);
+      const yrs = (a.longTerm || []);
+      const yHead = yrs[0] ? yrs[0].planets.map((p) => `<th>${esc(p.planet)}</th>`).join('') : '';
+      const yRows = yrs.map((y) => `<tr><td>${esc(y.year)}</td><td>${esc(y.dashaA.maha || '')}／${esc(y.dashaA.antar || '')}</td><td>${esc(y.dashaB.maha || '')}／${esc(y.dashaB.antar || '')}</td>${y.planets.map((p) => `<td>${esc(p.sign)} (${esc(p.houseFromMoonA)}/${esc(p.houseFromMoonB)})</td>`).join('')}</tr>`).join('');
+      const longTerm = yrs.length ? `<h3>{{t.pdf-report.compatYears|tpl}}</h3><table><thead><tr><th>{{t.pdf-report.compatYear|tpl}}</th><th>{{t.pdf-report.compatYou|tpl}}</th><th>{{t.pdf-report.compatPartner|tpl}}</th>${yHead}</tr></thead><tbody>${yRows}</tbody></table><p class="disclaimer">{{t.pdf-report.compatYearsNote|tpl}}</p>` : '';
+      return page(`<h2 class="chapter-title">{{t.pdf-report.tpl50|tpl}}</h2>${table(a.personA || {}, '{{t.pdf-report.compatYou|tpl}}')}${table(a.personB || {}, '{{t.pdf-report.compatPartner|tpl}}')}${kootas}${longTerm}`);
     }
 
     function careerDataPage(a) {

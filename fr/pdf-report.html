@@ -266,7 +266,7 @@
 
       html.push(cover(a));
       html.push(toc());
-      if (c.summary) html.push(summaryPage(c.summary, a));
+      if (c.summary) html.push(a.product === 'compat' ? genericPage({ title: c.summary.title || 'Votre mode d'emploi, en un coup d'œil', ...c.summary }) : summaryPage(c.summary, a));
       if (c.ch1) html.push(page(`<h2 class="chapter-title">${esc(c.ch1.title)}</h2>
         <h3>Lagna — le vous que les autres perçoivent</h3>${para(c.ch1.lagna)}
         <h3>Lune — le vous intérieur</h3>${para(c.ch1.moon)}
@@ -678,7 +678,11 @@ const CAREER_LABELS = {
       const kootas = (m.kootas || []).length && a.relation === 'romance'
         ? `<h3>Total Ashtakoota ${esc(m.total)} / ${esc(m.max)}</h3><table><tbody>${m.kootas.map((k) => `<tr><td>${esc(k.name)}</td><td>${esc(k.points)} / ${esc(k.max)}</td></tr>`).join('')}</tbody></table>`
         : '';
-      return page(`<h2 class="chapter-title">Annexe : Données planétaires</h2>${table(a.personA || {}, 'A')}${table(a.personB || {}, 'B')}${kootas}`);
+      const yrs = (a.longTerm || []);
+      const yHead = yrs[0] ? yrs[0].planets.map((p) => `<th>${esc(p.planet)}</th>`).join('') : '';
+      const yRows = yrs.map((y) => `<tr><td>${esc(y.year)}</td><td>${esc(y.dashaA.maha || '')}／${esc(y.dashaA.antar || '')}</td><td>${esc(y.dashaB.maha || '')}／${esc(y.dashaB.antar || '')}</td>${y.planets.map((p) => `<td>${esc(p.sign)} (${esc(p.houseFromMoonA)}/${esc(p.houseFromMoonB)})</td>`).join('')}</tr>`).join('');
+      const longTerm = yrs.length ? `<h3>Perspective à long terme (périodes dasha et planètes lentes par année)</h3><table><thead><tr><th>Année</th><th>Vous</th><th>Votre partenaire</th>${yHead}</tr></thead><tbody>${yRows}</tbody></table><p class="disclaimer">Dasha indiqué comme « période majeure / sous-période ». Entre parenthèses : maison de cette planète comptée depuis votre Lune / la Lune de votre partenaire.</p>` : '';
+      return page(`<h2 class="chapter-title">Annexe : Données planétaires</h2>${table(a.personA || {}, 'Vous')}${table(a.personB || {}, 'Votre partenaire')}${kootas}${longTerm}`);
     }
 
     function careerDataPage(a) {

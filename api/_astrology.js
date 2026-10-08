@@ -575,6 +575,12 @@ async function fetchReportData({ dob, tob, lat, lon, lang }, { withRaw = false }
 const TRANSIT_PLANETS = ['Sun', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu'];
 const SLOW_PLANETS = ['Jupiter', 'Saturn', 'Rahu', 'Ketu'];
 
+const COMPAT_YEARS = 10;
+function yearStartsFrom(now, count) {
+  const y = now.getUTCFullYear();
+  return Array.from({ length: count }, (_, i) => String(y + i));
+}
+
 function monthStartsFrom(now, count) {
   const out = [];
   const y = now.getUTCFullYear();
@@ -1057,8 +1063,9 @@ async function fetchCompatData({ a, b, lang, relation = 'general' }) {
   const dt = (p) => localDateTimeToIso(p.dob, p.tob, zoneForCoordinates(p.lat, p.lon));
   const baseOf = (p) => ({ datetime: dt(p), coordinates: `${p.lat},${p.lon}`, ayanamsa: 1 });
 
-  const months = monthStartsFrom(new Date(), 12);
-  const [posA, kundliA, posB, kundliB, matching, ...monthly] = await Promise.all([
+  // 長期視点: 今年から 10 年分、各年初の遅い惑星（木星・土星・ラーフ・ケートゥ）の位置を取る（月別は取らない。縁は月単位では動かない）
+  const years = yearStartsFrom(new Date(), COMPAT_YEARS);
+  const [posA, kundliA, posB, kundliB, matching, ...yearly] = await Promise.all([
     callEndpoint(token, 'astrology/planet-position', baseOf(a)),
     callEndpoint(token, 'astrology/kundli/advanced', baseOf(a)),
     callEndpoint(token, 'astrology/planet-position', baseOf(b)),
@@ -1067,7 +1074,7 @@ async function fetchCompatData({ a, b, lang, relation = 'general' }) {
       girl_dob: dt(a), girl_coordinates: `${a.lat},${a.lon}`,
       boy_dob: dt(b), boy_coordinates: `${b.lat},${b.lon}`, ayanamsa: 1
     }),
-    ...months.map((ym) => callEndpoint(token, 'astrology/planet-position', { datetime: `${ym}-01T12:00:00+09:00`, coordinates: `${a.lat},${a.lon}`, ayanamsa: 1 }))
+    ...years.map((y) => callEndpoint(token, 'astrology/planet-position', { datetime: `${y}-07-01T12:00:00+09:00`, coordinates: `${a.lat},${a.lon}`, ayanamsa: 1 }))
   ]);
   if (!posA || !posB) throw new Error('prokerala_position_failed');
   if (!matching) throw new Error('prokerala_matching_failed');
@@ -1087,24 +1094,37 @@ async function fetchCompatData({ a, b, lang, relation = 'general' }) {
     return { planet: p.name, planetKey: key, sign: p.sign, house: h, houseLabel: houseLabel(h, terms) };
   }).filter(Boolean);
 
-  // 関係が動く時期: 木星・土星・ラーフ・ケートゥ・金星が二人それぞれの月から何室を通るか（月初値）と、二人のダシャー切替
-  const TIMING_PLANETS = ['Jupiter', 'Saturn', 'Rahu', 'Ketu', 'Venus'];
-  const timeline = months.map((ym, i) => {
-    const transit = normalizePlanets(monthly[i] || { data: {} }, terms).filter((p) => TIMING_PLANETS.includes(p.key));
+  // 長期の流れ: 年ごとに、二人それぞれの大周期・中周期と、遅い惑星が二人の月から何室にあるかを並べる
+  const SLOW = ['Jupiter', 'Saturn', 'Rahu', 'Ketu'];
+  const dashaA = normalizeDasha(kundliA, terms);
+  const dashaB = normalizeDasha(kundliB, terms);
+  const dashaAt = (kundli, ymd) => {
+    const t = new Date(`${ymd}T00:00:00Z`).getTime();
+    const periods = kundli?.data?.dasha_periods || [];
+    const maha = periods.find((p) => new Date(p.start).getTime() <= t && t < new Date(p.end).getTime());
+    const antar = maha ? (maha.antardasha || []).find((x) => new Date(x.start).getTime() <= t && t < new Date(x.end).getTime()) : null;
+    const name = (k) => terms.planet(k, PLANET_JA[k] || k);
+    return { maha: maha ? name(maha.name) : null, mahaKey: maha?.name || null, antar: antar ? name(antar.name) : null, antarKey: antar?.name || null };
+  };
+  const longTerm = years.map((y, i) => {
+    const transit = normalizePlanets(yearly[i] || { data: {} }, terms).filter((p) => SLOW.includes(p.key));
     return {
-      month: ym,
+      year: y,
+      dashaA: dashaAt(kundliA, `${y}-07-01`),
+      dashaB: dashaAt(kundliB, `${y}-07-01`),
       planets: transit.map((p) => ({
-        planet: p.name, planetKey: p.key, sign: p.sign, retrograde: p.retrograde,
+        planet: p.name, planetKey: p.key, sign: p.sign,
         houseFromMoonA: moonA ? houseFrom(moonA.signKey, p.signKey) : null,
         houseFromMoonB: moonB ? houseFrom(moonB.signKey, p.signKey) : null
       }))
     };
   });
-  const first = months[0];
-  const last = months[months.length - 1];
+  const first = years[0];
+  const last = years[years.length - 1];
+  // 期間内の大周期・中周期の切り替わり（年月）
   const dashaChanges = [
-    ...dashaChangesWithin(kundliA, first, last, terms).map((c) => ({ ...c, person: 'A' })),
-    ...dashaChangesWithin(kundliB, first, last, terms).map((c) => ({ ...c, person: 'B' }))
+    ...dashaChangesWithin(kundliA, `${first}-01`, `${last}-12`, terms).map((c) => ({ ...c, person: 'A' })),
+    ...dashaChangesWithin(kundliB, `${first}-01`, `${last}-12`, terms).map((c) => ({ ...c, person: 'B' }))
   ].sort((x, y) => x.month.localeCompare(y.month));
 
   // 縁の要素: 相手の月・太陽・金星が自分の月から見て 1/5/7/9/11 室（縦・結び目のハウス）にあるか、ラーフ・ケートゥ軸が相手の月・太陽に重なるか
@@ -1126,6 +1146,9 @@ async function fetchCompatData({ a, b, lang, relation = 'general' }) {
       ...nodeAxis([planetsB.find((p) => p.key === 'Rahu'), planetsB.find((p) => p.key === 'Ketu')], planetsA, 'B')
     ],
     sameNakshatra: Boolean(moonA && moonB && moonA.nakshatraKey && moonA.nakshatraKey === moonB.nakshatraKey),
+    // 7室（月から）に入る相手の惑星 — 性別に依らない「伴侶・相手」の室
+    seventhOfA: moonB ? planetsA.filter((p) => p.key !== 'Ascendant' && houseFrom(moonB.signKey, p.signKey) === 7).map((p) => p.name) : [],
+    seventhOfB: moonA ? planetsB.filter((p) => p.key !== 'Ascendant' && houseFrom(moonA.signKey, p.signKey) === 7).map((p) => p.name) : [],
     saturnOnMoon: [
       ...(moonB && planetsA.find((p) => p.key === 'Saturn' && p.signKey === moonB.signKey) ? ['A_saturn_on_B_moon'] : []),
       ...(moonA && planetsB.find((p) => p.key === 'Saturn' && p.signKey === moonA.signKey) ? ['B_saturn_on_A_moon'] : [])
@@ -1138,11 +1161,11 @@ async function fetchCompatData({ a, b, lang, relation = 'general' }) {
     product: 'compat',
     relation,
     period: { start: first, end: last },
-    timeline,
+    longTerm,
     dashaChanges,
     karmic,
-    personA: { label: a.label || 'A', birth: { dob: a.dob, tob: a.tob || '12:00' }, ...personSummary(planetsA, kundliA, terms) },
-    personB: { label: b.label || 'B', birth: { dob: b.dob, tob: b.tob || '12:00' }, ...personSummary(planetsB, kundliB, terms) },
+    personA: { label: a.label || 'A', birth: { dob: a.dob, tob: a.tob || '12:00' }, ...personSummary(planetsA, kundliA, terms), dasha: dashaA ? { timeline: dashaA.timeline, upcoming: dashaA.upcoming } : null },
+    personB: { label: b.label || 'B', birth: { dob: b.dob, tob: b.tob || '12:00' }, ...personSummary(planetsB, kundliB, terms), dasha: dashaB ? { timeline: dashaB.timeline, upcoming: dashaB.upcoming } : null },
     matching: normalizeMatching(matching, terms),
     moonDistance: moonA && moonB ? houseFrom(moonA.signKey, moonB.signKey) : null,
     lagnaDistance: ascA && ascB ? houseFrom(ascA.signKey, ascB.signKey) : null,

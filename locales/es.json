@@ -782,6 +782,11 @@
     "tools.dasha.sectionTitle02": "Punto de partida del cálculo",
     "tools.dasha.sectionBody02": "El periodo planetario con el que inicia la vida depende del planeta regente del Nakshatra en el que se encontraba la Luna al momento del nacimiento. Asimismo, el grado exacto de avance de la Luna dentro de esa mansión determina el tiempo restante del primer periodo, por lo que es necesario contar no solo con la fecha, sino también con la hora y el lugar de nacimiento. Si se desconoce la hora, se calculará tomando las 12:00 como referencia.",
     "tools.dasha.sectionTitle03": "Cómo interpretar los periodos planetarios",
-    "tools.dasha.sectionBody03": "Un periodo planetario no es intrínsecamente favorable o desfavorable. Su manifestación dependerá de la posición del planeta en la carta natal y de las relaciones e influencias que mantenga con otros astros. Además, cada Mahadasha se divide internamente en subperiodos denominados Antardashas, lo que hace que los temas de vida vayan evolucionando a lo largo de un mismo gran ciclo."
+    "tools.dasha.sectionBody03": "Un periodo planetario no es intrínsecamente favorable o desfavorable. Su manifestación dependerá de la posición del planeta en la carta natal y de las relaciones e influencias que mantenga con otros astros. Además, cada Mahadasha se divide internamente en subperiodos denominados Antardashas, lo que hace que los temas de vida vayan evolucionando a lo largo de un mismo gran ciclo.",
+    "pdf-report.compatYears": "Perspectiva a largo plazo (periodos dasha y planetas lentos por año)",
+    "pdf-report.compatYear": "Año",
+    "pdf-report.compatYou": "Tú",
+    "pdf-report.compatPartner": "Tu pareja",
+    "pdf-report.compatYearsNote": "Dasha mostrado como «periodo mayor / subperiodo». Entre paréntesis: casa de ese planeta contada desde tu Luna / la Luna de tu pareja."
   }
 }

@@ -782,6 +782,11 @@
     "tools.dasha.sectionTitle02": "O ponto de partida do cálculo",
     "tools.dasha.sectionBody02": "O período planetário com o qual a pessoa inicia sua vida depende do planeta regente do Nakshatra onde a Lua natal se situava. Além disso, a fração já percorrida pela Lua dentro desse Nakshatra no instante exato do nascimento define quantos anos restavam no primeiro ciclo. Por isso, são necessários a data, a hora e o local exatos de nascimento. Se o horário for ignorado, adota-se 12:00 como estimativa.",
     "tools.dasha.sectionTitle03": "Como interpretar os períodos planetários",
-    "tools.dasha.sectionBody03": "Nenhum período planetário deve ser rotulado simplistamente como 'bom' ou 'ruim'. Os temas e a forma como cada ciclo se expressa decorrem da posição desse planeta no mapa natal e de suas interações com outros corpos celestes. Ademais, cada Mahadasha abriga subperíodos chamados Antardashas, fazendo com que as ênfases e os temas centrais se transformem dinamicamente ao longo de uma mesma fase maior."
+    "tools.dasha.sectionBody03": "Nenhum período planetário deve ser rotulado simplistamente como 'bom' ou 'ruim'. Os temas e a forma como cada ciclo se expressa decorrem da posição desse planeta no mapa natal e de suas interações com outros corpos celestes. Ademais, cada Mahadasha abriga subperíodos chamados Antardashas, fazendo com que as ênfases e os temas centrais se transformem dinamicamente ao longo de uma mesma fase maior.",
+    "pdf-report.compatYears": "Perspectiva de longo prazo (períodos dasha e planetas lentos por ano)",
+    "pdf-report.compatYear": "Ano",
+    "pdf-report.compatYou": "Você",
+    "pdf-report.compatPartner": "Seu par",
+    "pdf-report.compatYearsNote": "Dasha mostrado como \"período maior / subperíodo\". Entre parênteses: casa desse planeta contada a partir da sua Lua / da Lua do seu par."
   }
 }
