@@ -782,6 +782,11 @@
     "tools.dasha.sectionTitle02": "Titik Tolak Perhitungan",
     "tools.dasha.sectionBody02": "Periode planet awal kehidupan seseorang dipengaruhi oleh penguasa Nakshatra tempat Bulan singgah saat dilahirkan. Sejauh mana Bulan telah menempuh Nakshatra tersebut menentukan sisa durasi pada periode pertama, sehingga ketepatan tanggal, waktu, serta tempat lahir menjadi penting. Bila waktu lahir tidak diketahui secara pasti, kalkulasi dilakukan dengan waktu default 12:00.",
     "tools.dasha.sectionTitle03": "Cara Menafsirkan Periode Planet",
-    "tools.dasha.sectionBody03": "Suatu periode planet tidak dipandang semata-mata 'baik' atau 'buruk' secara umum. Pengaruhnya ditinjau dari kedudukan, kekuatan, dan interaksi planet tersebut di dalam keseluruhan bagan kelahiran. Selain itu, di dalam Mahadasha terdapat sub-periode yang disebut Antardasha, di mana dinamika dan fokus pengalaman hidup terus berkembang secara bertahap di bawah naungan periode utama."
+    "tools.dasha.sectionBody03": "Suatu periode planet tidak dipandang semata-mata 'baik' atau 'buruk' secara umum. Pengaruhnya ditinjau dari kedudukan, kekuatan, dan interaksi planet tersebut di dalam keseluruhan bagan kelahiran. Selain itu, di dalam Mahadasha terdapat sub-periode yang disebut Antardasha, di mana dinamika dan fokus pengalaman hidup terus berkembang secara bertahap di bawah naungan periode utama.",
+    "pdf-report.compatYears": "Pandangan jangka panjang (periode dasha dan planet lambat per tahun)",
+    "pdf-report.compatYear": "Tahun",
+    "pdf-report.compatYou": "Anda",
+    "pdf-report.compatPartner": "Pasangan Anda",
+    "pdf-report.compatYearsNote": "Dasha ditampilkan sebagai \"periode utama / sub-periode\". Dalam kurung: rumah planet tersebut dihitung dari Bulan Anda / Bulan pasangan Anda."
   }
 }

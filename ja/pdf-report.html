@@ -678,7 +678,11 @@ const CAREER_LABELS = {
       const kootas = (m.kootas || []).length && a.relation === 'romance'
         ? `<h3>36 点法 合計 ${esc(m.total)} / ${esc(m.max)}</h3><table><tbody>${m.kootas.map((k) => `<tr><td>${esc(k.name)}</td><td>${esc(k.points)} / ${esc(k.max)}</td></tr>`).join('')}</tbody></table>`
         : '';
-      return page(`<h2 class="chapter-title">巻末 惑星データ</h2>${table(a.personA || {}, 'A')}${table(a.personB || {}, 'B')}${kootas}`);
+      const yrs = (a.longTerm || []);
+      const yHead = yrs[0] ? yrs[0].planets.map((p) => `<th>${esc(p.planet)}</th>`).join('') : '';
+      const yRows = yrs.map((y) => `<tr><td>${esc(y.year)}</td><td>${esc(y.dashaA.maha || '')}／${esc(y.dashaA.antar || '')}</td><td>${esc(y.dashaB.maha || '')}／${esc(y.dashaB.antar || '')}</td>${y.planets.map((p) => `<td>${esc(p.sign)} (${esc(p.houseFromMoonA)}/${esc(p.houseFromMoonB)})</td>`).join('')}</tr>`).join('');
+      const longTerm = yrs.length ? `<h3>二人の長期の流れ（年ごとの惑星期と遅い惑星）</h3><table><thead><tr><th>年</th><th>あなた</th><th>お相手</th>${yHead}</tr></thead><tbody>${yRows}</tbody></table><p class="disclaimer">惑星期は「大周期／中周期」。括弧内は、その惑星があなたの月／お相手の月から数えて何室にあるか。</p>` : '';
+      return page(`<h2 class="chapter-title">巻末 惑星データ</h2>${table(a.personA || {}, 'あなた')}${table(a.personB || {}, 'お相手')}${kootas}${longTerm}`);
     }
 
     function careerDataPage(a) {

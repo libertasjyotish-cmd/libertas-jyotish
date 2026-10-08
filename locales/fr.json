@@ -782,6 +782,11 @@
     "tools.dasha.sectionTitle02": "Point de départ du calcul",
     "tools.dasha.sectionBody02": "La période planétaire qui inaugure votre vie est déterminée par la planète maîtresse du Nakshatra dans lequel se trouvait la Lune à votre naissance. La progression exacte de la Lune au sein de cette demeure détermine la durée restante de cette première période, ce qui rend l'heure et le lieu de naissance essentiels en plus de la date. Si l'heure exacte est inconnue, le calcul se fait par défaut à 12h00.",
     "tools.dasha.sectionTitle03": "Comment interpréter les périodes planétaires ?",
-    "tools.dasha.sectionBody03": "Une période planétaire n'est pas intrinsèquement favorable ou défavorable. Ses effets dépendent de la position de la planète dans le thème natal et de ses interactions avec les autres astres. De plus, chaque Mahadasha est subdivisée en périodes secondaires appelées Antardashas, faisant évoluer les thématiques vécues au fil des cycles."
+    "tools.dasha.sectionBody03": "Une période planétaire n'est pas intrinsèquement favorable ou défavorable. Ses effets dépendent de la position de la planète dans le thème natal et de ses interactions avec les autres astres. De plus, chaque Mahadasha est subdivisée en périodes secondaires appelées Antardashas, faisant évoluer les thématiques vécues au fil des cycles.",
+    "pdf-report.compatYears": "Perspective à long terme (périodes dasha et planètes lentes par année)",
+    "pdf-report.compatYear": "Année",
+    "pdf-report.compatYou": "Vous",
+    "pdf-report.compatPartner": "Votre partenaire",
+    "pdf-report.compatYearsNote": "Dasha indiqué comme « période majeure / sous-période ». Entre parenthèses : maison de cette planète comptée depuis votre Lune / la Lune de votre partenaire."
   }
 }

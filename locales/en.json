@@ -782,6 +782,11 @@
     "tools.dasha.sectionTitle02": "Starting Point of the Calculation",
     "tools.dasha.sectionBody02": "The planetary period that marks the beginning of life is determined by the ruling planet of the Nakshatra where the Moon was positioned at birth. Furthermore, the remaining duration of that initial period depends on how far the Moon had progressed through that Nakshatra, making both your birth time and place necessary alongside the date. If your birth time is unknown, 12:00 PM will be used.",
     "tools.dasha.sectionTitle03": "How to Interpret Planetary Periods",
-    "tools.dasha.sectionBody03": "A planetary period is not inherently all positive or all negative on its own. How it manifests depends on the planet's placement, strength, and relationships within your natal birth chart. Additionally, each Mahadasha contains smaller subdivisions called Antardashas, through which life themes shift even within the same major cycle."
+    "tools.dasha.sectionBody03": "A planetary period is not inherently all positive or all negative on its own. How it manifests depends on the planet's placement, strength, and relationships within your natal birth chart. Additionally, each Mahadasha contains smaller subdivisions called Antardashas, through which life themes shift even within the same major cycle.",
+    "pdf-report.compatYears": "Long-range outlook (dasha periods and slow planets by year)",
+    "pdf-report.compatYear": "Year",
+    "pdf-report.compatYou": "You",
+    "pdf-report.compatPartner": "Your partner",
+    "pdf-report.compatYearsNote": "Dasha shown as \"major / sub period\". Numbers in brackets: house of that planet counted from your Moon / your partner's Moon."
   }
 }

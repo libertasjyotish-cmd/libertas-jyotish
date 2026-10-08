@@ -678,7 +678,11 @@ const CAREER_LABELS = {
       const kootas = (m.kootas || []).length && a.relation === 'romance'
         ? `<h3>Ashtakoota total ${esc(m.total)} / ${esc(m.max)}</h3><table><tbody>${m.kootas.map((k) => `<tr><td>${esc(k.name)}</td><td>${esc(k.points)} / ${esc(k.max)}</td></tr>`).join('')}</tbody></table>`
         : '';
-      return page(`<h2 class="chapter-title">Appendix Planetary data</h2>${table(a.personA || {}, 'A')}${table(a.personB || {}, 'B')}${kootas}`);
+      const yrs = (a.longTerm || []);
+      const yHead = yrs[0] ? yrs[0].planets.map((p) => `<th>${esc(p.planet)}</th>`).join('') : '';
+      const yRows = yrs.map((y) => `<tr><td>${esc(y.year)}</td><td>${esc(y.dashaA.maha || '')}／${esc(y.dashaA.antar || '')}</td><td>${esc(y.dashaB.maha || '')}／${esc(y.dashaB.antar || '')}</td>${y.planets.map((p) => `<td>${esc(p.sign)} (${esc(p.houseFromMoonA)}/${esc(p.houseFromMoonB)})</td>`).join('')}</tr>`).join('');
+      const longTerm = yrs.length ? `<h3>Long-range outlook (dasha periods and slow planets by year)</h3><table><thead><tr><th>Year</th><th>You</th><th>Your partner</th>${yHead}</tr></thead><tbody>${yRows}</tbody></table><p class="disclaimer">Dasha shown as "major / sub period". Numbers in brackets: house of that planet counted from your Moon / your partner's Moon.</p>` : '';
+      return page(`<h2 class="chapter-title">Appendix Planetary data</h2>${table(a.personA || {}, 'You')}${table(a.personB || {}, 'Your partner')}${kootas}${longTerm}`);
     }
 
     function careerDataPage(a) {

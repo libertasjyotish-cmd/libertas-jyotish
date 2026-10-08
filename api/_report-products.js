@@ -300,145 +300,206 @@ const YEARLY_CHAPTERS = [
 const relationOf = (a) => RELATION_JA[a.relation] || RELATION_JA.general;
 const person = (p) => ({ label: p.label, ascendant: p.ascendant, moon: p.moon, sun: p.sun, nakshatra: p.nakshatra, strength: p.strength });
 
+// 相性鑑定書。中心の問いは「なぜ、この相手と伴になるために出逢ったのか」。
+// 2 カテゴリ: romance（恋愛・結婚として見る）／general（関係は決めず、縁の種類から見る）。friend/business は general として扱う。
+const who = (a) => (a.relation === 'romance' ? '恋愛・結婚として見る' : '関係は決めず、縁の種類から見る');
+const dashaOf = (p) => ({ current: p.currentDasha, upcoming: p.dasha?.upcoming?.slice(0, 8), maha: p.dasha?.timeline?.filter((t) => t.end >= String(new Date().getUTCFullYear())).slice(0, 3) });
+const longTermOf = (a) => (a.longTerm || []).map((y) => ({
+  year: y.year,
+  dashaA: `${y.dashaA.maha || ''}期／${y.dashaA.antar || ''}`, dashaB: `${y.dashaB.maha || ''}期／${y.dashaB.antar || ''}`,
+  ...Object.fromEntries(y.planets.map((p) => [p.planet, `${p.sign}（A の月から ${p.houseFromMoonA} 室・B の月から ${p.houseFromMoonB} 室）`]))
+}));
+
 const COMPAT_CHAPTERS = [
   {
     id: 'summary',
-    title: '二人の関係の見取り図',
+    title: '二人の縁の見取り図',
     pick: (a) => ({
-      relation: relationOf(a), personA: person(a.personA), personB: person(a.personB),
-      moonDistance: a.moonDistance, lagnaDistance: a.lagnaDistance,
+      category: who(a), personA: person(a.personA), personB: person(a.personB),
+      moonDistance: a.moonDistance, lagnaDistance: a.lagnaDistance, karmic: a.karmic,
+      dashaA: a.personA.currentDasha, dashaB: a.personB.currentDasha,
       matching: a.relation === 'romance' ? { total: a.matching.total, max: a.matching.max, band: a.matching.band } : undefined
     }),
     schema: `{
-      "catchphrase": "この二人の関係を一文で表す見出し（30文字以内）",
-      "essence": "関係の本質（250文字程度。関係の種類に沿って書く。性別には触れない）",
-      "strengths": ["二人の強み（各30文字以内）", "", ""],
-      "growth": ["育てていける領域（各30文字以内）", ""],
-      "stance": "この関係を良くする基本姿勢（150文字程度）"
+      "catchphrase": "この縁を一文で言い切る見出し（30文字以内。例:「生涯の伴走者として結ばれた縁」「仕事で互いを完成させる縁」「学び合うために交わった縁」）",
+      "destiny": "冒頭のフック。この出逢いが偶然ではなく星廻りが結び付けたものだと、読者が相手に感じている運命の感覚を肯定しながら言い切る（350文字以上）。必ず確定データの配置を根拠として続け、配置の無い運命論は書かない",
+      "evidence": ["偶然ではない根拠となる配置（各70文字以内。例:「お相手の月はあなたの月から7室——向かい合う位置で生まれている」。確定データにあるものだけ。3〜5件）", "", ""],
+      "bondType": "この縁の種類を一つに絞って言い切る（400文字以上）。恋愛／生涯のパートナー・家族になる縁／同志・仕事の縁／師弟・学びの縁／短く深い転機の縁 のどれに最も近いか、根拠（お相手の月・太陽・金星があなたの月から何室か、7室に入る惑星、ラーフ・ケートゥの重なり、月同士の距離）を名指しして述べる。カテゴリが恋愛・結婚なら、恋愛としてどこまで進む縁かを言い切る",
+      "whyNow": "なぜ今の時期にこの相手と出逢った（関わっている）のか——二人それぞれの現在の惑星期（ダシャー）から（350文字以上）",
+      "strengths": ["この縁が持つ強み（各40文字以内）", "", "", ""],
+      "tests": ["この縁が試される点（各40文字以内）", "", ""],
+      "stance": "この縁を活かす基本姿勢（300文字以上）"
     }`
   },
   {
     id: 'ch1',
-    title: '第1章 それぞれの設計図',
-    pick: (a) => ({ relation: relationOf(a), personA: person(a.personA), personB: person(a.personB) }),
+    title: '第1章 なぜ二人は出逢ったのか',
+    pick: (a) => ({ category: who(a), karmic: a.karmic, moonDistance: a.moonDistance, lagnaDistance: a.lagnaDistance, nakshatraA: a.personA.nakshatra, nakshatraB: a.personB.nakshatra, rahuA: a.personA.rahu?.sign, ketuA: a.personA.ketu?.sign, rahuB: a.personB.rahu?.sign, ketuB: a.personB.ketu?.sign }),
     schema: `{
-      "personA": "A の本質（ラグナ・月・太陽から。300文字程度）",
-      "personB": "B の本質（ラグナ・月・太陽から。300文字程度）",
-      "contrast": "二人の気質の似ている点と異なる点（300文字程度）"
+      "intro": "出逢いの意味を出生図のどこから読むか（お相手の月・太陽・金星があなたの月から何室か、7室、ラーフ・ケートゥ軸の重なり）の説明（250文字以上）",
+      "whyMet": "この二人が出逢った理由を言い切る（600文字以上）。この出逢いが偶然ではなく星廻りが用意したものであることを、確定データの配置を一つずつ名指しして示し、それぞれが『何のために相手を必要としたか』を具体的な生活の場面（仕事・家庭・学び・回復・挑戦）で書く。前世の出来事は書かない",
+      "whatYouBring": "あなたがお相手の人生に持ち込むもの（350文字以上。根拠の配置つき）",
+      "whatTheyBring": "お相手があなたの人生に持ち込むもの（350文字以上。根拠の配置つき）",
+      "bonds": [{ "name": "縁を結ぶ配置（確定データにあるものだけ。例: お相手の月があなたの月から7室）", "text": "その配置が二人に起こすこと（150文字以上）" }],
+      "deeperThanLove": "この結び付きは恋愛という枠より深いか、恋愛そのものか、恋愛とは別の形か——を言い切る（350文字以上。カテゴリが恋愛・結婚なら、恋愛としての深さの到達点を書く）"
     }`
   },
   {
     id: 'ch2',
-    title: '第2章 心の噛み合わせ（月と月）',
-    pick: (a) => ({ relation: relationOf(a), moonA: a.personA.moon, moonB: a.personB.moon, moonDistance: a.moonDistance, nakshatraA: a.personA.nakshatra, nakshatraB: a.personB.nakshatra }),
+    title: '第2章 それぞれの設計図',
+    pick: (a) => ({ category: who(a), personA: person(a.personA), personB: person(a.personB) }),
     schema: `{
-      "intro": "月同士の位置関係（何番目のサインか）が感情の相性を示すという説明（200文字程度）",
-      "text": "二人の月の関係から見た、安心の与え方・受け取り方（400文字程度）",
-      "care": "感情がすれ違いやすい場面と、その整え方（250文字程度）"
+      "personA": "あなたの本質（ラグナ・月・太陽・ナクシャトラから。500文字以上。生まれつきの気質、求めているもの、他人には見えにくい内側）",
+      "personB": "お相手の本質（同じ観点で 500文字以上）",
+      "contrast": "二人の気質の重なりと違い、違いが関係のどこで効くか（450文字以上。具体的な場面で）",
+      "mirror": "お相手があなたに映し出すもの——相手を通して初めて見える自分の一面（300文字以上）"
     }`
   },
   {
     id: 'ch3',
-    title: '第3章 相手が自分にもたらすもの',
-    pick: (a) => ({ relation: relationOf(a), overlayAonB: a.overlayAonB, overlayBonA: a.overlayBonA }),
+    title: '第3章 心の噛み合わせ（月と月）',
+    pick: (a) => ({ category: who(a), moonA: a.personA.moon, moonB: a.personB.moon, moonDistance: a.moonDistance, nakshatraA: a.personA.nakshatra, nakshatraB: a.personB.nakshatra, sameNakshatra: a.karmic.sameNakshatra }),
     schema: `{
-      "intro": "相手の惑星が自分のどのハウス（領域）に入るかを見るという説明（200文字程度）",
-      "aToB": "A の主要な惑星が B の生活のどの領域を動かすか（350文字程度。惑星名・領域は確定データのものだけ）",
-      "bToA": "B の主要な惑星が A の生活のどの領域を動かすか（350文字程度）",
-      "balance": "与えるものと受け取るものの釣り合い（200文字程度）"
+      "intro": "月同士の距離（何番目のサインか）とナクシャトラが感情の相性を示すという説明（250文字以上）",
+      "text": "二人の月の距離から見た、安心の与え方・受け取り方、黙っていても通じる領域と通じない領域（600文字以上。具体的な日常場面で）",
+      "care": "感情がすれ違う典型的な場面と、その場でどうするか（400文字以上）",
+      "home": "同じ空間・同じ時間を過ごすとき二人に起こること（300文字以上。同居・旅行・食事・沈黙など）"
     }`
   },
   {
     id: 'ch4',
-    title: '第4章 会話と価値観（水星・太陽・木星）',
-    pick: (a) => ({ relation: relationOf(a), A: { sun: a.personA.sun, mercury: a.personA.mercury, jupiter: a.personA.planets?.find((p) => p.key === 'Jupiter') }, B: { sun: a.personB.sun, mercury: a.personB.mercury, jupiter: a.personB.planets?.find((p) => p.key === 'Jupiter') } }),
+    title: '第4章 相手が自分の人生のどこを動かすか',
+    pick: (a) => ({ category: who(a), overlayAonB: a.overlayAonB, overlayBonA: a.overlayBonA }),
     schema: `{
-      "communication": "話し方・考え方の型の違いと、伝わりやすい伝え方（350文字程度）",
-      "values": "大切にしているもの・判断基準の重なりと差（300文字程度）",
-      "tips": ["すれ違いを防ぐ具体的な工夫（各40文字以内）", "", ""]
+      "intro": "相手の惑星が自分の月から見てどの室（領域）に入るかを見るという説明（250文字以上）",
+      "aToB": "あなたの主要な惑星がお相手の生活のどの領域を動かすか（550文字以上。惑星名・室の領域は確定データのものだけ。領域ごとに実際に起こる出来事で書く）",
+      "bToA": "お相手の主要な惑星があなたの生活のどの領域を動かすか（550文字以上）",
+      "balance": "与えるものと受け取るものの釣り合い、どちらが先に変わるか（350文字以上）"
     }`
   },
   {
     id: 'ch5',
-    title: '第5章 行動と情熱（火星・金星）',
-    pick: (a) => ({ relation: relationOf(a), A: { mars: a.personA.mars, venus: a.personA.venus }, B: { mars: a.personB.mars, venus: a.personB.venus } }),
+    title: '第5章 会話と価値観（水星・太陽・木星）',
+    pick: (a) => ({ category: who(a), A: { sun: a.personA.sun, mercury: a.personA.mercury, jupiter: a.personA.planets?.find((p) => p.key === 'Jupiter') }, B: { sun: a.personB.sun, mercury: a.personB.mercury, jupiter: a.personB.planets?.find((p) => p.key === 'Jupiter') } }),
     schema: `{
-      "energy": "行動のテンポ・決断の仕方の相性（300文字程度）",
-      "affection": "関係の種類に沿った「好意・信頼の示し方」の相性（300文字程度。恋愛以外では友情・協働の温度感として書く）",
-      "friction": "衝突しやすいパターンと、その収め方（250文字程度）"
+      "communication": "話し方・考え方の型の違い、伝わる伝え方と伝わらない伝え方（500文字以上。具体的な会話場面で）",
+      "values": "大切にしているもの・判断基準の重なりと差、意見が割れたとき誰が折れるか（450文字以上）",
+      "beliefs": "人生観・信じているものの相性（木星から。350文字以上）",
+      "tips": ["すれ違いを防ぐ具体的な工夫（各50文字以内）", "", "", ""]
     }`
   },
   {
     id: 'ch6',
-    title: '第6章 責任と長続きの条件（土星）',
-    pick: (a) => ({ relation: relationOf(a), saturnA: a.personA.saturn, saturnB: a.personB.saturn, mangalA: a.personA.mangalDosha, mangalB: a.personB.mangalDosha, dashaA: a.personA.currentDasha, dashaB: a.personB.currentDasha }),
+    title: '第6章 情熱と行動（火星・金星）',
+    pick: (a) => ({ category: who(a), A: { mars: a.personA.mars, venus: a.personA.venus, mangal: a.personA.mangalDosha }, B: { mars: a.personB.mars, venus: a.personB.venus, mangal: a.personB.mangalDosha } }),
     schema: `{
-      "commitment": "責任の引き受け方・約束への姿勢の相性（300文字程度）",
-      "timing": "二人が今それぞれどの周期にいて、関係にどう影響するか（300文字程度）",
-      "longevity": "関係を長く続けるための土台（250文字程度）"
+      "energy": "行動のテンポ・決断の仕方・怒り方の相性（450文字以上）",
+      "affection": "好意・信頼・親密さの示し方の相性（450文字以上。カテゴリが恋愛・結婚なら恋愛感情と身体的な親密さの温度感まで、そうでなければ友情・協働・家族的な親しみの温度感として書く）",
+      "friction": "衝突しやすいパターン、火種になる言葉・行動、その収め方（400文字以上）",
+      "mars": "火星の傷（マンガラ・ドーシャ）の有無を二人同じ重みで扱い、関係にどう出るか（250文字以上。恐れを煽らない）"
     }`
   },
   {
     id: 'ch7',
-    title: '第7章 この縁の意味（二人が出会った理由）',
-    pick: (a) => ({
-      relation: relationOf(a), karmic: a.karmic, moonDistance: a.moonDistance, lagnaDistance: a.lagnaDistance,
-      nakshatraA: a.personA.nakshatra, nakshatraB: a.personB.nakshatra,
-      rahuA: a.personA.rahu?.sign, ketuA: a.personA.ketu?.sign, rahuB: a.personB.rahu?.sign, ketuB: a.personB.ketu?.sign
-    }),
+    title: '第7章 責任と長続きの条件（土星）',
+    pick: (a) => ({ category: who(a), saturnA: a.personA.saturn, saturnB: a.personB.saturn, saturnOnMoon: a.karmic.saturnOnMoon, dashaA: a.personA.currentDasha, dashaB: a.personB.currentDasha }),
     schema: `{
-      "whyMet": "確定データ（相手の月・太陽・金星が自分の月から何室か、ラーフ・ケートゥ軸の重なり）から読む、この二人が出会った意味（350文字程度。前世の断定はしない。関係の種類に沿って書く）",
-      "lesson": "この関係がそれぞれに教えてくれること（AとBそれぞれについて、合計300文字程度）",
-      "bonds": ["この縁を結ぶ具体的な配置とその意味（各 60 文字以内。確定データにあるものだけ）", "", ""],
-      "destiny": "この縁を活かしたときに二人が到達できる場所（250文字程度。希望を持てる語調で、断定はしない）"
+      "commitment": "責任の引き受け方・約束への姿勢の相性（450文字以上）",
+      "weight": "どちらがこの関係の重さを背負いやすいか、土星が相手の月に重なっていればその意味（350文字以上）",
+      "longevity": "関係を長く続ける土台になるもの、逆に長続きを妨げるもの（450文字以上）",
+      "endurance": "この縁は時間に耐える縁か、季節の縁か——を言い切る（300文字以上）"
     }`
   },
   {
     id: 'ch8',
-    title: '第8章 関係が動く時期（今後 12 か月）',
-    pick: (a) => ({
-      relation: relationOf(a), period: a.period, dashaChanges: a.dashaChanges,
-      currentDashaA: a.personA.currentDasha, currentDashaB: a.personB.currentDasha,
-      timeline: a.timeline.map((m) => ({
-        month: m.month,
-        ...Object.fromEntries(m.planets.map((p) => [p.planetKey, `A:${p.houseFromMoonA}室 B:${p.houseFromMoonB}室${p.retrograde ? ' R' : ''}`]))
-      }))
-    }),
+    title: '第8章 この縁はどこまで深められるか',
+    pick: (a) => ({ category: who(a), karmic: a.karmic, moonDistance: a.moonDistance, lagnaDistance: a.lagnaDistance, overlayAonB: a.overlayAonB, overlayBonA: a.overlayBonA, matching: a.relation === 'romance' ? { total: a.matching.total, max: a.matching.max, band: a.matching.band } : undefined }),
     schema: `{
-      "overview": "今後 12 か月の二人の関係の大きな流れ（250文字程度。二人のダシャーと木星・土星の位置から）",
-      "phases": [{ "month": "確定データの YYYY-MM をそのまま", "phase": "局面の名前（15文字以内。例: 近づく時期、試される時期、決める時期）", "text": "その月に何が起こりやすく、二人がどう動くと良いか（120文字以内。金星・木星・土星のハウスやダシャー切替を根拠に）" }],
-      "bestWindow": "関係を一歩進める（深める・始める・決める）のに最も向く月とその理由（150文字程度。YYYY-MM を明記）",
-      "careWindow": "話し合いを急がず、距離を整えたい月とその理由（150文字程度。YYYY-MM を明記。恐れを煽る表現は使わない）"
+      "now": "今この縁がどの段階にあるか（300文字以上）",
+      "potential": "この縁が到達しうる最も深い形を言い切る（600文字以上。カテゴリが恋愛・結婚なら『結婚・家庭を築く縁か、恋愛で完結する縁か、恋愛では収まらない縁か』を、そうでなければ『生涯の伴走者か、人生の一章を共にする同志か、家族になる縁か、学びを渡して離れる縁か』を、根拠の配置つきで）",
+      "conditions": "その深さに至るために必要な条件（400文字以上。二人それぞれが手放すもの・引き受けるもの）",
+      "limits": "この縁に無理に求めない方がよいもの（300文字以上。欠点ではなく縁の形として）",
+      "sign": "この縁が次の段階へ進んだと分かる具体的な出来事・変化（250文字以上）"
     }`
   },
   {
     id: 'ch9',
-    title: '第9章 この関係を育てるために',
-    pick: (a) => ({ relation: relationOf(a), moonDistance: a.moonDistance, overlayAonB: a.overlayAonB.slice(0, 3), overlayBonA: a.overlayBonA.slice(0, 3), band: a.matching.band }),
+    title: '第9章 二人の縁の長期の流れ（今後 10 年）',
+    pick: (a) => ({ category: who(a), period: a.period, dashaA: dashaOf(a.personA), dashaB: dashaOf(a.personB), dashaChanges: a.dashaChanges, longTerm: longTermOf(a) }),
     schema: `{
-      "roles": "二人の自然な役割分担（300文字程度。関係の種類に沿って書く）",
-      "rituals": ["関係を良く保つ習慣・約束ごと（各40文字以内）", "", ""],
-      "whenHard": "うまくいかない時期の乗り越え方（250文字程度）",
-      "closing": "二人へのメッセージ（200文字程度）"
+      "intro": "縁は月単位では動かず、二人それぞれの惑星期（ダシャー）の重なりと、土星・木星の数年単位の移動で動くという説明（250文字以上）",
+      "overview": "今後 10 年の二人の縁の大きな流れ（500文字以上。二人のダシャーの組み合わせがいつ変わり、関係の性格がどう変わるか）",
+      "phases": [{ "name": "確定データの年を使った期間（例: 2026〜2028 年）", "phase": "局面の名前（15文字以内。例: 縁が形になる数年、試される数年、役割が入れ替わる数年、静かに深まる数年）", "text": "その数年に二人の間で起こること、根拠（どちらの何の期か、土星・木星が月から何室か）、その期間の過ごし方（350文字以上）" }],
+      "turningPoints": [{ "name": "確定データにある切り替わりの年月（YYYY-MM または YYYY 年）", "text": "何が切り替わり、関係にどう出るか（150文字以上）" }],
+      "best": "この縁を一段深める（決める・始める・形にする）のに最も向く年と理由（250文字以上。年を明記）",
+      "care": "距離感を整えたい年と理由（250文字以上。年を明記。恐れを煽らない）"
     }`
   },
   {
     id: 'ch10',
-    title: '第10章 伝統的な相性指標（36 点法）',
-    pick: (a) => ({ relation: relationOf(a), matching: a.matching }),
+    title: '第10章 これからどうすればよいか',
+    pick: (a) => ({ category: who(a), karmic: a.karmic, moonDistance: a.moonDistance, overlayAonB: a.overlayAonB.slice(0, 4), overlayBonA: a.overlayBonA.slice(0, 4), dashaA: a.personA.currentDasha, dashaB: a.personB.currentDasha }),
     schema: `{
-      "intro": "36 点法（アシュタクータ）とは何か、結婚向けの伝統指標であり関係の種類によっては参考程度に読むこと（200文字程度）",
-      "total": "合計点の読み方（150文字程度。点数は確定データのものだけ）",
-      "items": [{ "name": "確定データの項目名をそのまま", "text": "その項目の点数が示すこと（120文字程度）" }],
-      "closing": "点数に振り回されないための視点（150文字程度）"
+      "roles": "二人の自然な役割分担（450文字以上。誰が始め、誰が守り、誰が決め、誰が癒すか）",
+      "doNow": ["今すぐできる具体的な行動（各60文字以内。『いつ・何を』まで）", "", "", ""],
+      "avoid": ["この縁で避けること（各50文字以内）", "", ""],
+      "whenHard": "うまくいかない時期の乗り越え方（400文字以上）",
+      "promise": "この縁のために、あなたが一つだけ約束すること（250文字以上。根拠の配置つき）",
+      "closing": "二人へのメッセージ——この相手との出逢いが偶然ではなく星廻りが結び付けたものであることを、確定データの配置を根拠にもう一度言い切って締める（400文字以上。保証や断定の予言はしない）"
+    }`
+  },
+  {
+    id: 'ch11',
+    title: '第11章 恋愛・結婚として見る',
+    pick: (a) => ({ A: { venus: a.personA.venus, mars: a.personA.mars, jupiter: a.personA.planets?.find((p) => p.key === 'Jupiter'), moon: a.personA.moon, seventh: a.karmic.seventhOfB }, B: { venus: a.personB.venus, mars: a.personB.mars, jupiter: a.personB.planets?.find((p) => p.key === 'Jupiter'), moon: a.personB.moon, seventh: a.karmic.seventhOfA }, moonDistance: a.moonDistance, matching: { total: a.matching.total, max: a.matching.max, band: a.matching.band }, dashaA: dashaOf(a.personA), dashaB: dashaOf(a.personB) }),
+    schema: `{
+      "attraction": "惹かれ合いの正体と、その持続性（450文字以上。金星・火星・7室に入る相手の惑星から）",
+      "marriage": "結婚（生涯の約束）に向く縁かどうかを言い切る（500文字以上。7室に入る惑星・月の距離・金星と木星の状態から。性別による夫・妻の区別はせず、二人を対等に『パートナー』として書く）",
+      "family": "家庭を築いたときの形——家の空気、役割、子ども・親との関わり方（400文字以上。子どもの有無は断定しない）",
+      "timing": "恋愛・結婚が進む時期（350文字以上。二人のダシャーから年を明記）",
+      "advice": "恋愛・結婚として育てるための具体的な助言（350文字以上）"
+    }`
+  },
+  {
+    id: 'ch12',
+    title: '第12章 伝統的な相性指標（36 点法）',
+    pick: (a) => ({ matching: a.matching }),
+    schema: `{
+      "intro": "36 点法（アシュタクータ）とは何か、結婚向けの伝統指標であること、古典は男女の婚姻を前提に組まれているため参考値として読むこと（250文字以上）",
+      "total": "合計点の読み方（200文字以上。点数は確定データのものだけ）",
+      "items": [{ "name": "確定データの項目名をそのまま", "text": "その項目の点数が示すこと（150文字以上）" }],
+      "closing": "点数に振り回されないための視点（200文字以上）"
     }`
   }
 ];
 
-// 36 点法（第10章）は結婚向けの伝統指標なので、恋愛・結婚以外の関係では省く
+// 恋愛・結婚として見る（romance）: 第11・12章を含む。それ以外（general。friend/business も同じ）: 縁の種類から見る 11 章構成
 function compatChapterIdsFor(relation) {
-  return COMPAT_CHAPTERS.filter((c) => c.id !== 'ch10' || relation === 'romance').map((c) => c.id);
+  return COMPAT_CHAPTERS.filter((c) => (c.id !== 'ch11' && c.id !== 'ch12') || relation === 'romance').map((c) => c.id);
 }
+
+const COMPAT_VOICE = {
+  ja: `【語り口】
+これは「相性が良いか悪いか」を採点する書ではなく、目の前の一人に「なぜ、この相手と伴になるために出逢ったのか」を言い切る鑑定書です。読者はこの相手に何らかの運命を感じてここに来ています。その直感を、出生図の配置で裏づけ、縁の種類と行き先を名指しすることが仕事です。次を徹底してください。
+1. 呼称は「あなた」（A）と「お相手」（B）に固定する。A・B・A様・B様・彼・彼女・夫・妻・旦那・奥さん・男性・女性 など、記号や性別に基づく呼び方は一切使わない。二人の性別は不明として扱い、同性でも異性でも成り立つ文にする。配偶者の象徴は「7室に入る惑星」で読み、金星＝妻・木星＝夫 の男女別の読み方はしない。
+2. 縁の種類を言い切る。「恋愛」「生涯のパートナー・家族になる縁」「同志・仕事の縁」「師弟・学びの縁」「短く深い転機の縁」のどれに最も近いかを、各章で曖昧にせず断定する。「〜かもしれません」「〜でしょう」「人それぞれです」で逃げない。断定を避けるのは成否・健康・法律・金銭の保証、前世の出来事、子どもの有無、別れの予告だけ。
+3. 具体で書く。抽象語（絆・信頼・成長・尊重）だけの文を禁止し、必ず生活の場面（食卓・移動・仕事の相談・金銭・病気のとき・沈黙・再会・家族の行事）に落として、二人の間に実際に起こる出来事として書く。
+4. 根拠を毎段落に添える。「お相手の月があなたの月から7室」「あなたの土星がお相手の月に重なる」のように配置名を名指しし、【確定データ】にない惑星・室・年・点数は書かない。内部名（overlayAonB・karmic・band・houseFromMoonA 等）や英字キーは本文に出さない。
+5. 厚く書く。各項目の文字数は下限であり、要約で埋めない。章をまたいで同じ内容を繰り返さず、章ごとに新しい具体を足す。
+6. 時期は長期で見る。縁は月単位で近づいたり離れたりしない。二人の惑星期（ダシャー）の重なりと、土星・木星の数年単位の移動だけを根拠に、年単位で「形になる数年／試される数年／深まる数年」と区切る。
+7. 語りは古い寺院の占星術師が二人のうちの一人に語りかけるように、品格とです・ます調を保つ。命令形は使わない。締めは読者が「だからこの人と出逢ったのか」と腑に落ちる文で終える。
+8. この出逢いが偶然ではなく、星廻りが結び付けたものだと伝える。読者がこの相手に感じている「運命」を肯定し、その感覚の正体を配置で名指しする（例:「お相手の月があなたの月から7室——二人の心は向かい合う位置に置かれて生まれています」「あなたの土星期にお相手の金星期が、お相手の土星期にあなたの金星期が重なる——互いの時を鏡のように持って出逢っています」）。ただし星廻りに無いことは一切書かない。運命を語ってよいのは【確定データ】にある配置・年月の意味としてだけで、前世の物語・魂の約束・「必ず結ばれる」「離れられない」といった断定、成否や幸不幸の保証は書かない。偶然でないことは言い切り、未来は配置の意味として示す。`,
+  en: `[Voice]
+This is not a scorecard of "good or bad compatibility" but a reading addressed to one person, answering one question: why did you meet this particular person to walk beside them? The reader already senses destiny in this person; your work is to confirm that intuition from the chart and to name the kind of bond and where it leads.
+1. Call them "you" (A) and "your partner" (B) throughout. Never use A/B, he/she, husband/wife, man/woman or any gendered word; treat both genders as unknown so the text holds for same-sex and opposite-sex pairs alike. Read the significator of a partner from planets in the 7th house, never from "Venus = wife / Jupiter = husband".
+2. Name the kind of bond. State plainly in every chapter whether this is closest to romance, a lifelong partner / family bond, a comrade / work bond, a teacher-student / learning bond, or a brief, deep turning-point bond. Do not hedge with "perhaps", "might", "it depends". Avoid certainty only on guarantees of outcome, health, law, money, past-life events, children, or predictions of separation.
+3. Write concretely. Forbid sentences made only of abstractions (bond, trust, growth, respect); anchor everything in scenes — meals, travel, asking for advice at work, money, illness, silence, reunions, family occasions — as events that actually happen between the two.
+4. Cite the placement in every paragraph ("your partner's Moon falls in your 7th from the Moon", "your Saturn sits on your partner's Moon"). Never invent planets, houses, years or points absent from the fixed data; never print internal keys.
+5. Write thickly: each length guide is a minimum. Never repeat a chapter's content elsewhere; add new concrete detail each chapter.
+6. Timing is long-range. A bond does not approach and recede month by month; divide the years only by the overlap of the two people's dasha periods and the multi-year moves of Saturn and Jupiter.
+7. Speak as an old temple astrologer addressing one of the two, with dignity and warmth, never in the imperative. End so the reader thinks: so that is why I met this person.
+8. Tell the reader this meeting was not chance but arranged by the sky. Affirm the sense of destiny they already feel and name its source in the chart ("your partner's Moon stands in your 7th from the Moon — your hearts were placed facing each other at birth"; "your Saturn period carries their Venus, their Saturn period carries your Venus — you met holding each other's time like a mirror"). But never write what the sky does not show: speak of destiny only as the meaning of placements and dates in the fixed data — no past-life stories, soul contracts, "you will surely be united", "you cannot part", or guarantees of outcome or happiness. State plainly that it is not chance; show the future only as what the placements mean.`
+};
 
 const careerHouse = (a, n) => (a.careerHouses || []).find((h) => h.house === n) || null;
 const planetOf = (a, k) => a.planets?.find((p) => p.key === k) || null;
@@ -626,4 +687,4 @@ const CAREER_CHAPTERS = [
     }`
   }
 ];
-module.exports = { YEARLY_CHAPTERS, YEARLY_VOICE, COMPAT_CHAPTERS, CAREER_CHAPTERS, CAREER_VOICE, compatChapterIdsFor, RELATION_JA };
+module.exports = { YEARLY_CHAPTERS, YEARLY_VOICE, COMPAT_CHAPTERS, COMPAT_VOICE, CAREER_CHAPTERS, CAREER_VOICE, compatChapterIdsFor, RELATION_JA };

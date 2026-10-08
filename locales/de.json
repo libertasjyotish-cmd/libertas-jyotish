@@ -782,6 +782,11 @@
     "tools.dasha.sectionTitle02": "Ausgangspunkt der Berechnung",
     "tools.dasha.sectionBody02": "Mit welcher Planetenphase das Leben beginnt, richtet sich nach dem Herrscherplaneten des Geburts-Nakshatras. Wie weit der Mond in diesem Nakshatra bereits vorangeschritten war, bestimmt zudem die verbleibende Dauer der ersten Phase. Daher sind neben dem Geburtsdatum auch die Geburtszeit und der Geburtsort erforderlich. Falls die Geburtszeit nicht bekannt ist, wird 12:00 Uhr als Standard herangezogen.",
     "tools.dasha.sectionTitle03": "Interpretation der Planetenphasen",
-    "tools.dasha.sectionBody03": "Eine Planetenphase ist nicht von vornherein pauschal positiv oder negativ. Ihre Wirkung hängt davon ab, wie der jeweilige Planet im individuellen Geburtshoroskop positioniert und mit anderen Faktoren vernetzt ist. Zudem ist jede Mahadasha in Unterphasen (Antardashas) gegliedert, sodass sich auch innerhalb einer übergeordneten Phase die thematischen Schwerpunkte verändern."
+    "tools.dasha.sectionBody03": "Eine Planetenphase ist nicht von vornherein pauschal positiv oder negativ. Ihre Wirkung hängt davon ab, wie der jeweilige Planet im individuellen Geburtshoroskop positioniert und mit anderen Faktoren vernetzt ist. Zudem ist jede Mahadasha in Unterphasen (Antardashas) gegliedert, sodass sich auch innerhalb einer übergeordneten Phase die thematischen Schwerpunkte verändern.",
+    "pdf-report.compatYears": "Langfristiger Ausblick (Dasha-Perioden und langsame Planeten pro Jahr)",
+    "pdf-report.compatYear": "Jahr",
+    "pdf-report.compatYou": "Sie",
+    "pdf-report.compatPartner": "Ihr Partner",
+    "pdf-report.compatYearsNote": "Dasha als „Hauptperiode / Unterperiode“. In Klammern: Haus des Planeten, gezählt von Ihrem Mond / dem Mond Ihres Partners."
   }
 }
