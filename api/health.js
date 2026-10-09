@@ -175,15 +175,23 @@ async function memberStats() {
   const sheet = await getMemberSheet();
   const rows = await sheet.getRows();
   const byLanguage = {};
+  const seen = new Set();
+  let duplicates = 0;
   for (const row of rows) {
+    const email = String(row.get('email') || '').trim().toLowerCase();
+    if (seen.has(email)) { duplicates += 1; continue; }
+    seen.add(email);
     const lang = String(row.get('language') || '(none)').trim();
     const status = String(row.get('status') || '').trim();
-    const bucket = byLanguage[lang] || (byLanguage[lang] = { total: 0, paid: 0, free: 0 });
+    const domain = email.includes('@') ? email.split('@')[1] : '(none)';
+    const bucket = byLanguage[lang] || (byLanguage[lang] = { total: 0, paid: 0, free: 0, owner: 0, domains: {} });
     bucket.total += 1;
     if (status === 'paid') bucket.paid += 1;
     else bucket.free += 1;
+    if (/libertas|jyotish/.test(email)) bucket.owner += 1;
+    bucket.domains[domain] = (bucket.domains[domain] || 0) + 1;
   }
-  return { rows: rows.length, byLanguage };
+  return { rows: rows.length, distinct: seen.size, duplicates, byLanguage };
 }
 
 module.exports = async function handler(req, res) {
