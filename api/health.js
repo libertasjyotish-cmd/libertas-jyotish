@@ -1,6 +1,7 @@
 // 外部APIと注文台帳の健全性をまとめて確認する（GET /api/health）。
 // 認証: Authorization: Bearer <CRON_SECRET> もしくは ?key=<CRON_SECRET>
 // ?alert=1 を付けると、異常があるときだけ運営者へメールを送る（日次の監視から呼ぶ）。
+// ?stats=1 を付けると、会員シートの言語別人数（無料／有料）だけを返す。
 const { listOrders, STATUS } = require('./_etsy-ledger');
 const { getMemberSheet, getLastSheetIssue } = require('./_sheets');
 const { listGeminiModels } = require('./_gemini');
@@ -170,10 +171,33 @@ async function notifyOwnerOfFailures(failed) {
   return true;
 }
 
+async function memberStats() {
+  const sheet = await getMemberSheet();
+  const rows = await sheet.getRows();
+  const byLanguage = {};
+  for (const row of rows) {
+    const lang = String(row.get('language') || '(none)').trim();
+    const status = String(row.get('status') || '').trim();
+    const bucket = byLanguage[lang] || (byLanguage[lang] = { total: 0, paid: 0, free: 0 });
+    bucket.total += 1;
+    if (status === 'paid') bucket.paid += 1;
+    else bucket.free += 1;
+  }
+  return { rows: rows.length, byLanguage };
+}
+
 module.exports = async function handler(req, res) {
   const secret = process.env.CRON_SECRET || '';
   const supplied = String(req.headers.authorization || '').replace(/^Bearer\s+/i, '') || (req.query && req.query.key) || '';
   if (!secret || supplied !== secret) return res.status(401).json({ error: 'unauthorized' });
+
+  if (req.query && req.query.stats) {
+    try {
+      return res.status(200).json(await memberStats());
+    } catch (err) {
+      return res.status(503).json({ error: 'sheet_unavailable', detail: err.message });
+    }
+  }
 
   const checks = await Promise.all([
     probe('env', envProbe),
