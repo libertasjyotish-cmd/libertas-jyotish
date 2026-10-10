@@ -54,7 +54,7 @@
     { href: home + '/career', label: t.career, sub: true },
     { href: home + '/palm-chart', label: t.palm, sub: true },
     { href: home + '/compat', label: t.compat, sub: true },
-    { label: t.karma, soon: true, sub: true, note: t.calendarNote }
+    lang === 'ja' ? { href: home + '/karma', label: t.karma, sub: true } : { label: t.karma, soon: true, sub: true, note: t.calendarNote }
   ];
   if (guide) {
     LINKS.push(

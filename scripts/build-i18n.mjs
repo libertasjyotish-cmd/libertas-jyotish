@@ -163,12 +163,19 @@ function buildGuideLinks(lang) {
 }
 
 // 一部の言語でだけ公開しているページ（他言語は準備中）。
-const SITEMAP_LANG_PAGES = { compat: ['ja', 'en', 'es', 'pt', 'ar', 'id', 'fr', 'de'] };
+const SITEMAP_LANG_PAGES = { compat: ['ja', 'en', 'es', 'pt', 'ar', 'id', 'fr', 'de'], karma: ['ja'] };
 const COMPAT_LANGS = new Set(SITEMAP_LANG_PAGES.compat);
+const KARMA_LANGS = new Set(SITEMAP_LANG_PAGES.karma);
 
 function buildCompatProductItem(lang, strings) {
   const label = escapeAttr(lookup(strings, 'menu.compat'));
   if (COMPAT_LANGS.has(lang)) return `<li><a href="/${lang}/compat">${label}</a></li>`;
+  return `<li><span class="soon">${label}<span class="tag">${escapeAttr(lookup(strings, 'menu.calendarNote'))}</span></span></li>`;
+}
+
+function buildKarmaProductItem(lang, strings) {
+  const label = escapeAttr(lookup(strings, 'menu.karma'));
+  if (KARMA_LANGS.has(lang)) return `<li><a href="/${lang}/karma">${label}</a></li>`;
   return `<li><span class="soon">${label}<span class="tag">${escapeAttr(lookup(strings, 'menu.calendarNote'))}</span></span></li>`;
 }
 
@@ -292,6 +299,8 @@ function render(template, locale, base, context) {
       value = expandPartials(`{{>pdf-intro-${locale.meta.lang}}}`);
     } else if (path === 'compatProductItem') {
       value = buildCompatProductItem(locale.meta.lang, locale.strings);
+    } else if (path === 'karmaProductItem') {
+      value = buildKarmaProductItem(locale.meta.lang, locale.strings);
     } else if (path === 'robotsSaleJa') {
       value = buildRobotsSaleJa(locale.meta.lang);
     } else if (path === 'page') {

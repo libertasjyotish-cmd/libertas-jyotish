@@ -15,7 +15,9 @@ const AMOUNTS = {
   yearly: { T1: 6800, T2: 4800, T3: 2980 },
   career: { T1: 6800, T2: 4800, T3: 2980 },
   // 手相×出生図 統合鑑定「カル・クンダリ」。Etsy の米ドル価格 $89 と揃える。
-  palm: { T1: 12800, T2: 8900, T3: 4980 }
+  palm: { T1: 12800, T2: 8900, T3: 4980 },
+  // Karma & Dharma（今世の天命）。生涯完全鑑定書と同額。
+  karma: { T1: 8800, T2: 5980, T3: 3480 }
 };
 
 // Gumroad（日本以外）の金額（米ドル）。Gumroad 側の商品価格（plan-t*/report-t*）と必ず揃える。
@@ -26,7 +28,8 @@ const USD_AMOUNTS = {
   compat: { T1: 69, T2: 46, T3: 27 },
   yearly: { T1: 49, T2: 33, T3: 19 },
   career: { T1: 49, T2: 33, T3: 19 },
-  palm: { T1: 89, T2: 59, T3: 33 }
+  palm: { T1: 89, T2: 59, T3: 33 },
+  karma: { T1: 59, T2: 39, T3: 23 }
 };
 
 // Gumroad の商品ページ（個別鑑定書）。注文 ID は URL パラメータで渡し、Ping の url_params で受け取る。
@@ -50,6 +53,11 @@ const GUMROAD_REPORT_LINKS = {
     T1: 'https://libertajyoti.gumroad.com/l/palm-t1',
     T2: 'https://libertajyoti.gumroad.com/l/palm-t2',
     T3: 'https://libertajyoti.gumroad.com/l/palm-t3'
+  },
+  karma: {
+    T1: 'https://libertajyoti.gumroad.com/l/karma-t1',
+    T2: 'https://libertajyoti.gumroad.com/l/karma-t2',
+    T3: 'https://libertajyoti.gumroad.com/l/karma-t3'
   }
 };
 

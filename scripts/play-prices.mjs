@@ -17,7 +17,8 @@ const LISTINGS = {
   yearly: { title: '年間運勢カレンダー', description: 'お申し込みの翌月から12か月の運勢と、行動ごとに実行する月・避ける月を示す鑑定書PDF。' },
   career: { title: '仕事運・金運・天職 鑑定書', description: '向く仕事・力が出る条件・評価のされ方・金運を出生図から読み解く鑑定書PDF（約55ページ）。' },
   palm: { title: 'カル・クンダリ（手相×出生図）', description: '両手の手相写真と出生図を照合する統合鑑定書PDF（約55ページ）。' },
-  compat: { title: '相性鑑定書（二人分）', description: '二人の出生図から、なぜ出逢ったのか・縁の種類・今後10年の流れを読み解く鑑定書PDF（55ページ以上）。' }
+  compat: { title: '相性鑑定書（二人分）', description: '二人の出生図から、なぜ出逢ったのか・縁の種類・今後10年の流れを読み解く鑑定書PDF（55ページ以上）。' },
+  karma: { title: 'Karma & Dharma ― 今世の天命', description: '出生図から生まれ持った設計・繰り返す課題・今生の使命を読み解く鑑定書PDF（約55ページ）。' }
 };
 
 function token() {
@@ -105,7 +106,7 @@ async function syncSubscription(existing) {
 }
 
 const otp = (await call('GET', '/oneTimeProducts')).oneTimeProducts || [];
-for (const product of ['pdf', 'yearly', 'career', 'palm', 'compat']) {
+for (const product of ['pdf', 'yearly', 'career', 'palm', 'compat', 'karma']) {
   await syncOneTime(product, otp.find(p => p.productId === PLAY_PRODUCTS[product].id));
 }
 const subs = (await call('GET', '/subscriptions')).subscriptions || [];

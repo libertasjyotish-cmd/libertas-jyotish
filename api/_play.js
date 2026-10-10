@@ -18,7 +18,8 @@ const PLAY_PRODUCTS = {
   yearly: { id: 'report_yearly', kind: 'inapp', order: true },
   career: { id: 'report_career', kind: 'inapp', order: true },
   palm: { id: 'report_palm', kind: 'inapp', order: true },
-  compat: { id: 'report_compat', kind: 'inapp', order: true }
+  compat: { id: 'report_compat', kind: 'inapp', order: true },
+  karma: { id: 'report_karma', kind: 'inapp', order: true }
 };
 
 function packageName() {

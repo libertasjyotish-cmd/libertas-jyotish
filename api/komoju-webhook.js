@@ -14,7 +14,7 @@ const {
 } = require('./_sheets');
 const { confirmWebOrder, refundWebOrder } = require('./_etsy-ledger');
 
-const REPORT_PRODUCTS = new Set(['compat', 'yearly', 'career', 'palm']);
+const REPORT_PRODUCTS = new Set(['compat', 'yearly', 'career', 'palm', 'karma']);
 
 module.exports.config = { api: { bodyParser: false } };
 
