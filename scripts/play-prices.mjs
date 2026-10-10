@@ -13,11 +13,11 @@ const PACKAGE = 'com.libertas_jyotish.app';
 const API = `https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${PACKAGE}`;
 const APPLY = process.argv.includes('--apply');
 const LISTINGS = {
-  pdf: { title: '生涯完全鑑定書', description: '出生図にもとづく完全版の個人鑑定書PDF（約30ページ）。性格・仕事・恋愛・金運・健康・ダシャー（運勢の時期）を網羅。' },
+  pdf: { title: '生涯完全鑑定書', description: '出生図にもとづく完全版の個人鑑定書PDF（約55ページ）。性格・仕事・恋愛・金運・健康・ダシャー（運勢の時期）を網羅。' },
   yearly: { title: '年間運勢カレンダー', description: 'お申し込みの翌月から12か月の運勢と、行動ごとに実行する月・避ける月を示す鑑定書PDF。' },
-  career: { title: '仕事運・金運・天職 鑑定書', description: '向く仕事・力が出る条件・評価のされ方・金運を出生図から読み解く鑑定書PDF（約30ページ）。' },
-  palm: { title: 'カル・クンダリ（手相×出生図）', description: '両手の手相写真と出生図を照合する統合鑑定書PDF（約30ページ）。' },
-  compat: { title: '相性鑑定書（二人分）', description: '二人の出生図から、なぜ出逢ったのか・縁の種類・今後10年の流れを読み解く鑑定書PDF（30ページ以上）。' }
+  career: { title: '仕事運・金運・天職 鑑定書', description: '向く仕事・力が出る条件・評価のされ方・金運を出生図から読み解く鑑定書PDF（約55ページ）。' },
+  palm: { title: 'カル・クンダリ（手相×出生図）', description: '両手の手相写真と出生図を照合する統合鑑定書PDF（約55ページ）。' },
+  compat: { title: '相性鑑定書（二人分）', description: '二人の出生図から、なぜ出逢ったのか・縁の種類・今後10年の流れを読み解く鑑定書PDF（55ページ以上）。' }
 };
 
 function token() {
