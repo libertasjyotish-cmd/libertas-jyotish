@@ -34,7 +34,7 @@ const PRODUCTS = [
   { key: 'report', path: 'pdf-purchase' },
   { key: 'palm', path: 'palm-chart' },
   { key: 'compat', path: 'compat' },
-  { key: 'karma', path: 'karma', langs: ['ja'] }
+  { key: 'karma', path: 'karma' }
 ];
 // 記事テーマに最も近い鑑定書（先頭に「この記事に関連」付きで出す）。
 const RECOMMENDED = { career: 'career', marriage: 'calendar', dasha: 'calendar', nakshatra: 'report', horoscope: 'report', 'indian-astrology': 'report', 'free-reading': 'report', palmistry: 'palm' };

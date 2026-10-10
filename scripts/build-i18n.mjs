@@ -163,7 +163,7 @@ function buildGuideLinks(lang) {
 }
 
 // 一部の言語でだけ公開しているページ（他言語は準備中）。
-const SITEMAP_LANG_PAGES = { compat: ['ja', 'en', 'es', 'pt', 'ar', 'id', 'fr', 'de'], karma: ['ja'] };
+const SITEMAP_LANG_PAGES = { compat: ['ja', 'en', 'es', 'pt', 'ar', 'id', 'fr', 'de'], karma: ['ja', 'en', 'es', 'pt', 'ar', 'id', 'fr', 'de'] };
 const COMPAT_LANGS = new Set(SITEMAP_LANG_PAGES.compat);
 const KARMA_LANGS = new Set(SITEMAP_LANG_PAGES.karma);
 
