@@ -13,7 +13,7 @@ const ledger = require('./_etsy-ledger');
 const { PLAY_PRODUCTS } = require('./_play');
 const storage = require('./_etsy-storage');
 
-const PRODUCTS = new Set(['compat', 'yearly', 'career', 'palm']);
+const PRODUCTS = new Set(['compat', 'yearly', 'career', 'palm', 'karma']);
 const HANDS = new Set(['right', 'left']);
 const RELATIONS = new Set(['romance', 'friend', 'business', 'general']);
 

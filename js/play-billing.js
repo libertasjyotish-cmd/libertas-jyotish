@@ -4,7 +4,7 @@
 (function () {
   var METHOD = 'https://play.google.com/billing';
   // Play Console に登録した商品 ID（api/_play.js の PLAY_PRODUCTS と揃える）
-  var SKUS = { pdf: 'report_pdf', premium: 'premium_monthly', yearly: 'report_yearly', career: 'report_career', palm: 'report_palm', compat: 'report_compat' };
+  var SKUS = { pdf: 'report_pdf', premium: 'premium_monthly', yearly: 'report_yearly', career: 'report_career', palm: 'report_palm', compat: 'report_compat', karma: 'report_karma' };
   var servicePromise = null;
 
   function supported() {
