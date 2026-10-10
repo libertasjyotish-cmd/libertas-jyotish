@@ -95,10 +95,10 @@ async function renderReportPdf({ lang, report, extraHtml = '' }) {
     ));
     await page.emulateMediaType('print');
     const pdf = await page.pdf({
-      format: 'A4',
+      format: 'A5',
       printBackground: true,
       preferCSSPageSize: true,
-      margin: { top: '14mm', right: '14mm', bottom: '14mm', left: '14mm' }
+      margin: { top: '11mm', right: '11mm', bottom: '11mm', left: '11mm' }
     });
     return Buffer.from(pdf);
   } finally {
