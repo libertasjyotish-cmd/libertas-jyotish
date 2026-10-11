@@ -63,30 +63,55 @@
       });
   }
 
+  // Play の支払いシートは「クリック直後」に開かないと拒否される（ユーザー操作の有効期限）ため、
+  // 台帳への注文作成（数秒かかる）を待たずに PaymentRequest.show() を先に呼び、注文の完了を details の Promise で待たせる。
   function playOrder(data) {
     var body = Object.assign({}, data, { provider: 'play' });
     if (window.LJTrack) window.LJTrack('begin_checkout', { product: data.product, provider: 'play' });
-    return fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+    var orderError = null;
+    var orderPromise = fetch('/api/report-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
       .then(orderJson)
       .then(function (order) {
         if (order.provider !== 'play') { var e = new Error('order_failed'); e.code = order.error; throw e; }
-        return pay(order.sku).then(function (response) {
-          var token = response.details && response.details.purchaseToken;
-          return fetch('/api/play-verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ product: data.product, order: order.order, purchaseToken: token, lang: data.lang })
-          }).then(function (res) {
-            return res.json().catch(function () { return null; }).then(function (v) {
-              if (!res.ok || !v || !v.ok) throw new Error((v && v.error) || 'verify_failed');
-              if (window.LJTrack) window.LJTrack('purchase_completed', { product: data.product, provider: 'play' });
-              return response.complete('success').then(function () { return v; });
-            });
-          }, function (err) {
-            return response.complete('fail').then(function () { throw err; });
+        return order;
+      });
+    var request = new PaymentRequest(
+      [{ supportedMethods: METHOD, data: { sku: SKUS[data.product] } }],
+      { total: { label: 'Total', amount: { currency: 'JPY', value: '0' } } }
+    );
+    var details = orderPromise.then(function () {
+      return { total: { label: 'Total', amount: { currency: 'JPY', value: '0' } } };
+    }, function (err) {
+      orderError = err;
+      request.abort().catch(function () {});
+      throw err;
+    });
+    return request.show(details).then(function (response) {
+      return orderPromise.then(function (order) {
+        var token = response.details && response.details.purchaseToken;
+        return fetch('/api/play-verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product: data.product, order: order.order, purchaseToken: token, lang: data.lang })
+        }).then(function (res) {
+          return res.json().catch(function () { return null; }).then(function (v) {
+            if (!res.ok || !v || !v.ok) throw new Error((v && v.error) || 'verify_failed');
+            if (window.LJTrack) window.LJTrack('purchase_completed', { product: data.product, provider: 'play' });
+            return response.complete('success').then(function () { return v; });
           });
+        }, function (err) {
+          return response.complete('fail').then(function () { throw err; });
         });
       });
+    }, function (err) {
+      if (orderError) throw orderError;
+      // 支払いシートが開けなかった／閉じられた。無反応に見えないよう、ページ側で表示できる形にする。
+      var e = new Error('play_' + ((err && err.name) || 'failed'));
+      e.code = e.message;
+      e.name = (err && err.name) || 'Error';
+      if (window.LJTrack) window.LJTrack('checkout_error', { product: data.product, provider: 'play', reason: e.code });
+      throw e;
+    });
   }
 
   window.LJPlayBilling = {
@@ -97,6 +122,7 @@
         if (!s) return webOrder(data);
         return playOrder(data).catch(function (err) {
           if (err && (err.name === 'NotSupportedError' || err.name === 'SecurityError')) return webOrder(data);
+          if (err && err.name === 'AbortError') err.name = 'PlayAbortError';
           throw err;
         });
       });
