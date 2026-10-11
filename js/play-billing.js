@@ -106,7 +106,7 @@
     }, function (err) {
       if (orderError) throw orderError;
       // 支払いシートが開けなかった／閉じられた。無反応に見えないよう、ページ側で表示できる形にする。
-      var e = new Error('play_' + ((err && err.name) || 'failed'));
+      var e = new Error('play_' + ((err && err.name) || 'failed') + (err && err.message ? ': ' + String(err.message).slice(0, 120) : ''));
       e.code = e.message;
       e.name = (err && err.name) || 'Error';
       if (window.LJTrack) window.LJTrack('checkout_error', { product: data.product, provider: 'play', reason: e.code });
