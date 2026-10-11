@@ -45,6 +45,8 @@ async function convert(usd) {
 function money(p) { return `${p.currencyCode} ${p.units || 0}${p.nanos ? '.' + String(p.nanos).padStart(9, '0').replace(/0+$/, '') : ''}`; }
 
 // 地域ごとの価格: JP は円の価格帯どおり、他は price-tiers の価格帯の USD を換算
+function usd(v) { return { currencyCode: 'USD', units: String(Math.floor(v)), nanos: Math.round((v % 1) * 1e9) }; }
+
 async function regionalPrices(product) {
   const regions = Object.keys((await convert(USD_AMOUNTS[product].T2)).convertedRegionPrices);
   const out = {};
@@ -52,7 +54,8 @@ async function regionalPrices(product) {
     const tier = resolveTier(region);
     if (region === 'JP') { out.JP = { currencyCode: 'JPY', units: String(AMOUNTS[product][tier]) }; continue; }
     const conv = (await convert(USD_AMOUNTS[product][tier])).convertedRegionPrices[region];
-    out[region] = conv.price;
+    // 米ドル建ての地域は Play の換算（$59→$59.99 など）を使わず PWA の金額そのまま
+    out[region] = conv.price.currencyCode === 'USD' ? usd(USD_AMOUNTS[product][tier]) : conv.price;
   }
   return out;
 }
@@ -83,6 +86,13 @@ async function syncOneTime(product, existing) {
   const ver = (existing && existing.regionsVersion && existing.regionsVersion.version) || usdT2.regionVersion.version;
   await call('PATCH', `/onetimeproducts/${id}?allowMissing=true&updateMask=listings,purchaseOptions,taxAndComplianceSettings&regionsVersion.version=${encodeURIComponent(ver)}`, body);
   console.log(`${id}: written`);
+  // 新規作成・更新後の購入オプションは DRAFT のままだと PaymentRequest が無反応で終わるので必ず有効化する
+  const after = await call('GET', `/oneTimeProducts/${id}`);
+  for (const opt of after.purchaseOptions || []) {
+    if (opt.state === 'ACTIVE') continue;
+    await call('POST', `/oneTimeProducts/${id}/purchaseOptions:batchUpdateStates`, { requests: [{ activatePurchaseOptionRequest: { packageName: PACKAGE, productId: id, purchaseOptionId: opt.purchaseOptionId, latencyTolerance: 'PRODUCT_UPDATE_LATENCY_TOLERANCE_LATENCY_SENSITIVE' } }] });
+    console.log(`${id}/${opt.purchaseOptionId}: activated`);
+  }
 }
 
 async function syncSubscription(existing) {
