@@ -11,7 +11,8 @@ const PAYMENT_TYPES = {
   compat: ['credit_card', 'konbini', 'paypay'],
   yearly: ['credit_card', 'konbini', 'paypay'],
   career: ['credit_card', 'konbini', 'paypay'],
-  palm: ['credit_card', 'konbini', 'paypay']
+  palm: ['credit_card', 'konbini', 'paypay'],
+  karma: ['credit_card', 'konbini', 'paypay']
 };
 
 const PRODUCT_NAMES = {
@@ -20,7 +21,8 @@ const PRODUCT_NAMES = {
   compat: { ja: '相性鑑定書（PDF）', en: 'Compatibility Report (PDF)' },
   yearly: { ja: '年間運勢鑑定書（PDF）', en: 'Year-Ahead Forecast (PDF)' },
   palm: { ja: '手相×出生図 統合鑑定「カル・クンダリ」（PDF）', en: 'Kar-Kundali: Vedic Palm & Birth Chart Report (PDF)' },
-  career: { ja: '仕事運・金運・天職 鑑定書（PDF）', en: 'Career, Wealth & Calling Report (PDF)' }
+  career: { ja: '仕事運・金運・天職 鑑定書（PDF）', en: 'Career, Wealth & Calling Report (PDF)' },
+  karma: { ja: 'Karma & Dharma ― 今世の天命 鑑定書（PDF）', en: 'Karma & Dharma — Your Life Purpose (PDF)' }
 };
 
 function productName(product, lang) {
