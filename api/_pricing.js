@@ -68,6 +68,7 @@ function amountsFor(provider) {
 const KOMOJU_COUNTRIES = new Set(['JP']);
 
 function resolveTier(country) {
+  if (KOMOJU_COUNTRIES.has(country)) return 'T1';
   const entry = country && priceTiers.countries[country];
   return (entry && entry.tier) || priceTiers.defaultTier;
 }
