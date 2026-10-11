@@ -106,11 +106,17 @@
     }, function (err) {
       if (orderError) throw orderError;
       // 支払いシートが開けなかった／閉じられた。無反応に見えないよう、ページ側で表示できる形にする。
-      var e = new Error('play_' + ((err && err.name) || 'failed') + (err && err.message ? ': ' + String(err.message).slice(0, 120) : ''));
-      e.code = e.message;
-      e.name = (err && err.name) || 'Error';
-      if (window.LJTrack) window.LJTrack('checkout_error', { product: data.product, provider: 'play', reason: e.code });
-      throw e;
+      var msg = 'play_' + ((err && err.name) || 'failed') + (err && err.message ? ': ' + String(err.message).slice(0, 120) : '');
+      return service().then(function (s) {
+        return s ? s.getDetails([SKUS[data.product]]) : [];
+      }).catch(function () { return null; }).then(function (items) {
+        var tag = items === null ? 'sku=unknown' : (items && items[0] ? 'sku=ok ' + (items[0].price ? items[0].price.value + items[0].price.currency : '') : 'sku=not_found');
+        var e = new Error(msg + ' [' + tag + ']');
+        e.code = e.message;
+        e.name = (err && err.name) || 'Error';
+        if (window.LJTrack) window.LJTrack('checkout_error', { product: data.product, provider: 'play', reason: e.code });
+        throw e;
+      });
     });
   }
 
