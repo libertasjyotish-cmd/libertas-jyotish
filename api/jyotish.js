@@ -262,6 +262,16 @@ module.exports = async function handler(req, res) {
     // ②-2 買い切り（完全鑑定書）の購入状態の照会 (action: purchase_status)
     // 購入ページで「購入済みの人に購入フォームを見せない」ためだけに使う。
     // 返すのは真偽値のみで、出生データなどの個人情報は返さない。
+    // 無料診断の結果画面に置いた任意アンケート（関心テーマ・お知らせ受信可否）を会員行に保存する
+    if (action === 'survey') {
+      const picks = String(req.body.interest || '').toUpperCase().split(',').map(v => v.trim()).filter(Boolean);
+      const optIn = req.body.newsletter ? 'yes' : 'no';
+      if (!email || !email.includes('@')) return res.status(400).json({ error: 'Invalid email address' });
+      if (picks.some(v => !['A', 'B', 'C', 'D'].includes(v))) return res.status(400).json({ error: 'Invalid interest' });
+      const ok = await saveSurveyToSheets(email, picks, optIn);
+      return res.status(ok ? 200 : 503).json({ ok });
+    }
+
     if (action === 'purchase_status') {
       if (!email || !email.includes('@')) {
         return res.status(400).json({ error: 'Invalid email address' });
@@ -1067,6 +1077,41 @@ async function fetchProfileFromSheets(email) {
     console.error("Google Sheets fetch error:", err);
   }
   return null;
+}
+
+const INTEREST_KEYS = ['A', 'B', 'C', 'D'];
+const SURVEY_HEADERS = [...INTEREST_KEYS.map(k => `interest_${k}`), 'newsletter_opt_in', 'survey_at'];
+
+async function saveSurveyToSheets(email, picks, optIn) {
+  try {
+    const sheet = await getMemberSheet();
+    if (!sheet) return false;
+    await sheet.loadHeaderRow().catch(() => null);
+    const current = sheet.headerValues || [];
+    const missing = SURVEY_HEADERS.filter(h => !current.includes(h));
+    if (missing.length) {
+      const next = [...current, ...missing];
+      if ((sheet.columnCount || 0) < next.length) await sheet.resize({ rowCount: sheet.rowCount, columnCount: next.length });
+      await sheet.setHeaderRow(next);
+    }
+    const rows = await sheet.getRows();
+    const matched = findMemberRows(rows, email);
+    const nowStr = new Date().toISOString();
+    const values = { newsletter_opt_in: optIn, survey_at: nowStr };
+    for (const k of INTEREST_KEYS) values[`interest_${k}`] = picks.includes(k) ? 'yes' : '';
+    if (!matched.length) {
+      await sheet.addRow({ email, status: 'free', created_at: nowStr, updated_at: nowStr, ...values });
+      return true;
+    }
+    for (const row of matched) {
+      for (const [k, v] of Object.entries(values)) row.set(k, v);
+      await row.save();
+    }
+    return true;
+  } catch (err) {
+    console.error('Survey save error:', err);
+    return false;
+  }
 }
 
 async function saveProfileToSheets(email, status, dob, tob, city, readingData, lang) {

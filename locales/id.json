@@ -787,6 +787,17 @@
     "pdf-report.compatYear": "Tahun",
     "pdf-report.compatYou": "Anda",
     "pdf-report.compatPartner": "Pasangan Anda",
-    "pdf-report.compatYearsNote": "Dasha ditampilkan sebagai \"periode utama / sub-periode\". Dalam kurung: rumah planet tersebut dihitung dari Bulan Anda / Bulan pasangan Anda."
+    "pdf-report.compatYearsNote": "Dasha ditampilkan sebagai \"periode utama / sub-periode\". Dalam kurung: rumah planet tersebut dihitung dari Bulan Anda / Bulan pasangan Anda.",
+    "result.surveyTitle": "Boleh tahu satu hal?",
+    "result.surveyLead": "Topik apa yang sedang ingin kamu tahu? (Bisa pilih beberapa・opsional)",
+    "result.surveyA": "Karier, kemandirian/pensiun dini & waktu tepat untuk FIRE",
+    "result.surveyB": "Karma jiwa kehidupan ini & misi tersembunyi (Rahu-Ketu)",
+    "result.surveyC": "Irama energi harian & harmoni hidup (Moon Sign・energi semesta)",
+    "result.surveyD": "Pasangan, relasi & kecocokan",
+    "result.surveyNews": "Dapatkan bacaan baru & info menarik via email (bisa berhenti kapan saja)",
+    "result.surveySend": "Kirim",
+    "result.surveyPick": "Pilih topiknya dulu ya.",
+    "result.surveyThanks": "Terima kasih banyak ya!",
+    "result.surveyError": "Gagal mengirim. Silakan coba lagi ya."
   }
 }

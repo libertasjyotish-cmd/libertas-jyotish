@@ -787,6 +787,17 @@
     "pdf-report.compatYear": "Year",
     "pdf-report.compatYou": "You",
     "pdf-report.compatPartner": "Your partner",
-    "pdf-report.compatYearsNote": "Dasha shown as \"major / sub period\". Numbers in brackets: house of that planet counted from your Moon / your partner's Moon."
+    "pdf-report.compatYearsNote": "Dasha shown as \"major / sub period\". Numbers in brackets: house of that planet counted from your Moon / your partner's Moon.",
+    "result.surveyTitle": "Just one quick question",
+    "result.surveyLead": "Which topics are on your mind? (Select any · Optional)",
+    "result.surveyA": "Career, independence & FIRE timing",
+    "result.surveyB": "Soul karma & hidden destiny (Rahu-Ketu)",
+    "result.surveyC": "Daily cosmic flow & life balance (Moon sign & trends)",
+    "result.surveyD": "Partnerships, relationships & compatibility",
+    "result.surveyNews": "Receive new readings and special offers by email (Unsubscribe anytime)",
+    "result.surveySend": "Send",
+    "result.surveyPick": "Please choose a topic.",
+    "result.surveyThanks": "Thank you so much!",
+    "result.surveyError": "Something went wrong. Please try again."
   }
 }
