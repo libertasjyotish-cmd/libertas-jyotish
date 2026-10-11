@@ -8,6 +8,14 @@
     return String(value || '').trim().toLowerCase();
   }
 
+  // ページ読み込み時に Play 課金の可否を先に判定しておく（クリック時に同期で判断し、ポップアップブロックを避ける）。
+  function preloadPlay() {
+    var play = window.LJPlayBilling;
+    if (!play || !play.supported()) return;
+    play.available().then(function (ok) { window.LJCheckoutGuard._playChecked = ok ? 'play' : 'web'; });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', preloadPlay); else preloadPlay();
+
   window.LJCheckoutGuard = {
     verifiedKey: VERIFIED_KEY,
     // 本人確認済みのメールアドレス。未確認なら空文字。
@@ -32,7 +40,15 @@
       var email = window.LJCheckoutGuard.verifiedEmail();
       // Android アプリ内は Play 課金（ストア規約）。購入を会員に紐づけるため認証済みメールが必要。
       var play = window.LJPlayBilling;
-      var viaPlay = !!(play && play.supported());
+      if (play && play.supported() && !window.LJCheckoutGuard._playChecked) {
+        // ブラウザでも API の存在だけは申告されるため、実際に初期化できた時だけ Play 課金を使う。
+        play.available().then(function (ok) {
+          window.LJCheckoutGuard._playChecked = ok ? 'play' : 'web';
+          window.LJCheckoutGuard.start(product, lang, hint);
+        });
+        return true;
+      }
+      var viaPlay = window.LJCheckoutGuard._playChecked === 'play';
       if (!email && !viaPlay && !window.LJCheckout.requiresVerifiedEmail()) {
         email = hint || localStorage.getItem('lj_user_email') || '';
         window.open(window.LJCheckout.checkoutUrlFor(product, email), '_blank');
