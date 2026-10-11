@@ -304,7 +304,7 @@ body { font-family: 'Noto Serif JP', serif; }
       window.LJPlayBilling.reportCheckout(data).then(function (v) {
         location.href = v.uploadUrl || (location.pathname + '?ordered=paid');
       }).catch(function (err) {
-        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server;
+        if (!(err && err.name === 'AbortError')) errBox.textContent = err && err.code === 'invalid_fields' ? ERR.fields : ERR.server + (err && err.code ? ' (' + err.code + ')' : '');
         btn.disabled = false;
       });
       return;
