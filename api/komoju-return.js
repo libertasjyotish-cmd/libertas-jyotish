@@ -8,7 +8,7 @@ const { normalizeLang } = require('./_terms');
 const { confirmWebOrder } = require('./_etsy-ledger');
 const { uploadUrl } = require('./_etsy-storage');
 
-const REPORT_PRODUCTS = new Set(['compat', 'yearly', 'career', 'palm']);
+const REPORT_PRODUCTS = new Set(['compat', 'yearly', 'career', 'palm', 'karma']);
 
 function redirect(res, location) {
   res.setHeader('Cache-Control', 'no-store');
