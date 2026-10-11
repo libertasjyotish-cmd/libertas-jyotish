@@ -787,6 +787,17 @@
     "pdf-report.compatYear": "年",
     "pdf-report.compatYou": "あなた",
     "pdf-report.compatPartner": "お相手",
-    "pdf-report.compatYearsNote": "惑星期は「大周期／中周期」。括弧内は、その惑星があなたの月／お相手の月から数えて何室にあるか。"
+    "pdf-report.compatYearsNote": "惑星期は「大周期／中周期」。括弧内は、その惑星があなたの月／お相手の月から数えて何室にあるか。",
+    "result.surveyTitle": "ひとつだけ教えてください",
+    "result.surveyLead": "いま気になっているテーマはどれですか？（複数選択可・任意）",
+    "result.surveyA": "キャリア・早期退職や独立・FIREのタイミング",
+    "result.surveyB": "今世の魂のカルマと隠された使命（ラフ・ケートゥ）",
+    "result.surveyC": "日々の運気の波とライフバランス（月星座・普遍的な運勢）",
+    "result.surveyD": "パートナーシップ・人間関係・相性",
+    "result.surveyNews": "新しい鑑定書やお得なお知らせをメールで受け取る（いつでも解除できます）",
+    "result.surveySend": "送信する",
+    "result.surveyPick": "テーマを選んでください。",
+    "result.surveyThanks": "ありがとうございました。",
+    "result.surveyError": "送信に失敗しました。もう一度お試しください。"
   }
 }

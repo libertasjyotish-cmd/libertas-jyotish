@@ -105,6 +105,12 @@ border-radius: 10px; padding: 18px 16px; text-align: center;
 }
 .lock-overlay .lock-icon { font-size: 1.8rem; margin-bottom: 6px; }
 .lock-overlay .lock-title { font-weight: 700; color: var(--color-gold-dark); margin-bottom: 8px; }
+.survey-card { text-align:left; background: rgba(255,255,255,0.75); border:1px solid rgba(139,107,27,0.35); border-radius:10px; padding:16px 18px; margin:24px 0; }
+.survey-title { font-weight:700; color:var(--color-gold-dark); margin-bottom:4px; }
+.survey-lead, .survey-note { font-size:0.8rem; color:#5A4E48; margin-bottom:10px; }
+.survey-opt { display:flex; gap:10px; align-items:flex-start; font-size:0.9rem; color:#4a3e36; padding:7px 0; line-height:1.5; cursor:pointer; }
+.survey-opt input { margin-top:4px; flex:none; }
+.survey-news { border-top:1px dashed rgba(139,107,27,0.35); margin-top:6px; padding-top:12px; }
 .lock-overlay .lock-note { font-size: 0.82rem; color: #5A4E48; margin-bottom: 15px; }
 
 .site-footer { width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3); padding: 24px 20px; text-align: center; position: relative; z-index: 10; }
@@ -420,6 +426,7 @@ ${input ? `<div class="meta-card">✉️ E-mail: ${input.email || 'Não informad
 <div class="result-body">${readingContent}</div>
 ${result.geo_notice ? `<p style="margin:12px 4px 0; font-size:0.78rem; color:#6b5b4a; line-height:1.6;">${result.geo_notice}</p>` : ''}
 ${result.status === 'paid' ? '' : buildLockedPreview()}
+${buildSurvey()}
 <div class="cta-card">
 <h3 style="color:var(--color-gold-dark); margin-bottom:8px;">✨ Veja a posição de todos os planetas na sua página de membro</h3>
 <p style="font-size:0.85rem; color:#5A4E48; margin-bottom:15px;">Na sua página de membro você pode consultar o seu mapa e o panorama de hoje quando quiser.</p>
@@ -429,6 +436,8 @@ ${result.status === 'paid' ? '' : buildLockedPreview()}
 
 window.LJCheckout.paint();
 if (window.LJTodaySky) window.LJTodaySky.mount();
+
+bindSurvey((input && input.email) || localStorage.getItem('lj_user_email') || '');
 
 const upgradeBtn = document.getElementById('btn-upgrade-preview');
 if (upgradeBtn) {
@@ -457,6 +466,39 @@ ${fr.premium_teaser ? `<p class="lock-note">${fr.premium_teaser}</p>` : `<p clas
 </div>
 </div>
 `;
+}
+
+function buildSurvey() {
+if (localStorage.getItem('lj_survey_done')) return '';
+const opts = [['A', 'Carreira, independência e o momento do FIRE'], ['B', 'Carma da alma e sua missão oculta (Rahu-Ketu)'], ['C', 'Energia do dia a dia e equilíbrio de vida (Signo Lunar e tendências)'], ['D', 'Relacionamentos, parcerias e compatibilidade']].map(([k, label]) => `<label class="survey-opt"><input type="checkbox" name="lj-interest" value="${k}"><span>${k}：${label}</span></label>`).join('');
+return `
+<div class="survey-card" id="lj-survey">
+<p class="survey-title">Só uma perguntinha:</p>
+<p class="survey-lead">Qual tema mais te chama a atenção agora? (Múltipla escolha • Opcional)</p>
+${opts}
+<label class="survey-opt survey-news"><input type="checkbox" id="lj-newsletter" checked><span>Receber novos mapas e novidades por e-mail (cancele quando quiser)</span></label>
+<button type="button" id="lj-survey-send" class="btn-secondary" style="width:auto; padding:9px 22px; margin-top:10px;">Enviar</button>
+<p class="survey-note" id="lj-survey-msg"></p>
+</div>`;
+}
+
+function bindSurvey(email) {
+const btn = document.getElementById('lj-survey-send');
+if (!btn) return;
+btn.addEventListener('click', async () => {
+const picked = Array.from(document.querySelectorAll('input[name="lj-interest"]:checked')).map(i => i.value);
+const msg = document.getElementById('lj-survey-msg');
+if (!picked.length) { msg.textContent = 'Por favor, escolha um tema.'; return; }
+btn.disabled = true;
+try {
+const r = await fetch(JYOTISH_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ action: 'survey', email, interest: picked.join(','), newsletter: document.getElementById('lj-newsletter').checked }) });
+if (!r.ok) throw new Error('survey_failed');
+localStorage.setItem('lj_survey_done', '1');
+if (window.LJTrack) window.LJTrack('survey_submit', { interest: picked.join(','), content_language: 'pt' });
+document.getElementById('lj-survey').innerHTML = '<p class="survey-title">Muito obrigado!</p>';
+} catch (e) { btn.disabled = false; msg.textContent = 'Não foi possível enviar. Tente novamente, por favor.'; }
+});
 }
 
 function buildLockedPreview() {

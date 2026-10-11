@@ -787,6 +787,17 @@
     "pdf-report.compatYear": "Ano",
     "pdf-report.compatYou": "Você",
     "pdf-report.compatPartner": "Seu par",
-    "pdf-report.compatYearsNote": "Dasha mostrado como \"período maior / subperíodo\". Entre parênteses: casa desse planeta contada a partir da sua Lua / da Lua do seu par."
+    "pdf-report.compatYearsNote": "Dasha mostrado como \"período maior / subperíodo\". Entre parênteses: casa desse planeta contada a partir da sua Lua / da Lua do seu par.",
+    "result.surveyTitle": "Só uma perguntinha:",
+    "result.surveyLead": "Qual tema mais te chama a atenção agora? (Múltipla escolha • Opcional)",
+    "result.surveyA": "Carreira, independência e o momento do FIRE",
+    "result.surveyB": "Carma da alma e sua missão oculta (Rahu-Ketu)",
+    "result.surveyC": "Energia do dia a dia e equilíbrio de vida (Signo Lunar e tendências)",
+    "result.surveyD": "Relacionamentos, parcerias e compatibilidade",
+    "result.surveyNews": "Receber novos mapas e novidades por e-mail (cancele quando quiser)",
+    "result.surveySend": "Enviar",
+    "result.surveyPick": "Por favor, escolha um tema.",
+    "result.surveyThanks": "Muito obrigado!",
+    "result.surveyError": "Não foi possível enviar. Tente novamente, por favor."
   }
 }

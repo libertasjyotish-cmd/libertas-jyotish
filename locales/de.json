@@ -787,6 +787,17 @@
     "pdf-report.compatYear": "Jahr",
     "pdf-report.compatYou": "Sie",
     "pdf-report.compatPartner": "Ihr Partner",
-    "pdf-report.compatYearsNote": "Dasha als „Hauptperiode / Unterperiode“. In Klammern: Haus des Planeten, gezählt von Ihrem Mond / dem Mond Ihres Partners."
+    "pdf-report.compatYearsNote": "Dasha als „Hauptperiode / Unterperiode“. In Klammern: Haus des Planeten, gezählt von Ihrem Mond / dem Mond Ihres Partners.",
+    "result.surveyTitle": "Eine kurze Frage an Sie",
+    "result.surveyLead": "Welche Themen beschäftigen Sie gerade? (Mehrfachauswahl möglich · freiwillig)",
+    "result.surveyA": "Karriere, Unabhängigkeit & Timing für FIRE",
+    "result.surveyB": "Seelenkarma & verborgene Lebensaufgabe (Rahu-Ketu)",
+    "result.surveyC": "Tägliche Energien & Life-Balance (Mondzeichen & Tendenzen)",
+    "result.surveyD": "Partnerschaft, Beziehungen & Kompatibilität",
+    "result.surveyNews": "Neue Deutungen & Angebote per E-Mail erhalten (jederzeit abmeldbar)",
+    "result.surveySend": "Absenden",
+    "result.surveyPick": "Bitte wählen Sie ein Thema aus.",
+    "result.surveyThanks": "Herzlichen Dank!",
+    "result.surveyError": "Fehler beim Senden. Bitte versuchen Sie es erneut."
   }
 }

@@ -175,6 +175,7 @@ async function memberStats() {
   const sheet = await getMemberSheet();
   const rows = await sheet.getRows();
   const byLanguage = {};
+  const survey = { answered: 0, newsletter: 0, A: 0, B: 0, C: 0, D: 0 };
   const seen = new Set();
   let duplicates = 0;
   for (const row of rows) {
@@ -190,8 +191,13 @@ async function memberStats() {
     else bucket.free += 1;
     if (/libertas|jyotish/.test(email)) bucket.owner += 1;
     bucket.domains[domain] = (bucket.domains[domain] || 0) + 1;
+    if (row.get('survey_at')) {
+      survey.answered += 1;
+      if (row.get('newsletter_opt_in') === 'yes') survey.newsletter += 1;
+      for (const k of ['A', 'B', 'C', 'D']) if (row.get(`interest_${k}`) === 'yes') survey[k] += 1;
+    }
   }
-  return { rows: rows.length, distinct: seen.size, duplicates, byLanguage };
+  return { rows: rows.length, distinct: seen.size, duplicates, byLanguage, survey };
 }
 
 module.exports = async function handler(req, res) {
