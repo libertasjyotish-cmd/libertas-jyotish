@@ -5,7 +5,7 @@
 const { listOrders, STATUS } = require('./_etsy-ledger');
 const { getMemberSheet, getLastSheetIssue } = require('./_sheets');
 const { listGeminiModels } = require('./_gemini');
-const { send } = require('./_etsy-mail');
+const { sendInternal } = require('./_owner-mail');
 
 const TIMEOUT_MS = 10000;
 // 決済済みなのに納品へ進んでいない注文を「滞留」とみなすまでの猶予。
@@ -163,7 +163,7 @@ async function notifyOwnerOfFailures(failed) {
   const to = process.env.ALERT_EMAIL_TO || process.env.CONTACT_TO || process.env.ETSY_OWNER_EMAIL;
   if (!to) return false;
   const lines = failed.map((c) => `- ${c.name}: ${c.detail}`);
-  await send({
+  await sendInternal({
     to,
     subject: `[Libertas Jyotish] アプリ側の異常 ${failed.length} 件`,
     html: `<p>日次ヘルスチェックで異常を検出しました。</p><pre>${lines.join('\n')}</pre>`

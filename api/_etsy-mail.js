@@ -219,7 +219,8 @@ async function sendNeedsInfo({ to, name, personalization, missing, notes }) {
 
 // 運営者向け通知。購入者情報の要約と結果だけを送る（鑑定書本文は添えない）。
 async function notifyOwner(subject, lines) {
-  return send({
+  const { sendInternal } = require('./_owner-mail');
+  return sendInternal({
     to: OWNER,
     subject: `[Etsy] ${subject}`,
     html: `<pre style="font-family:monospace; font-size:13px; white-space:pre-wrap;">${esc(lines.join('\n'))}</pre>`
