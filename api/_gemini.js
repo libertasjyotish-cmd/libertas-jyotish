@@ -11,6 +11,35 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
 
 // 応答が速いことを実測で確認できている世代を優先する。新しい世代ほど既定の思考時間が長く、
 // 鑑定文1本に1分近くかかることがあるため、名前の新しさでは並べない。
+// 前払い残高切れは待っても明けず、全モデルを試しても同じ結果になる。生成が止まると鑑定文・日次鑑定が
+// 返せなくなるため、日次ヘルスチェックを待たずにその場で運営者へ通知する。インスタンス内で間隔を空け、
+// アクセスのたびに送らないようにする。
+const CREDIT_ALERT_INTERVAL_MS = 6 * 60 * 60 * 1000;
+let creditAlertAt = 0;
+
+function isCreditDepleted(status, body) {
+  if (status === 402) return true;
+  return /prepayment credits|billing account/i.test(body || '');
+}
+
+async function alertCreditDepleted(detail) {
+  if (Date.now() - creditAlertAt < CREDIT_ALERT_INTERVAL_MS) return;
+  creditAlertAt = Date.now();
+  const text = [
+    'Gemini APIの前払い残高が切れ、鑑定文の生成が止まっています。',
+    'プロジェクト: libertas-jyotish-prod',
+    'チャージ: https://aistudio.google.com/projects',
+    '',
+    detail || ''
+  ].join('\n');
+  try {
+    const { sendInternal } = require('./_owner-mail');
+    await sendInternal({ subject: '[Libertas] Gemini APIの残高切れで鑑定文の生成が停止', text, html: `<pre>${text}</pre>` });
+  } catch (e) {
+    console.error('Gemini credit alert failed:', e?.message);
+  }
+}
+
 const PREFERRED = ['gemini-3.6-flash', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest'];
 const MODEL_CACHE_MS = 6 * 60 * 60 * 1000;
 let modelCache = { at: 0, models: null };
@@ -122,7 +151,14 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
 
       if (!res.ok) {
         reason = `gemini_${res.status}`;
+        const body = await res.text().catch(() => '');
         console.error(`Gemini model ${model} failed with status ${res.status}`);
+        if (isCreditDepleted(res.status, body)) {
+          reason = 'gemini_credit_depleted';
+          note('credit');
+          await alertCreditDepleted(`${model}: ${res.status} ${body.slice(0, 500)}`);
+          break;
+        }
         if (res.status === 404) dead.add(model);
         note(String(res.status));
         continue;
@@ -157,4 +193,4 @@ async function generateWithGemini(apiKey, models, promptText, timeoutMs, deadlin
   return { json: null, model: null, reason, meta: { candidates: models, attempts: log } };
 }
 
-module.exports = { listGeminiModels, generateWithGemini };
+module.exports = { listGeminiModels, generateWithGemini, isCreditDepleted };
