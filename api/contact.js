@@ -1,6 +1,7 @@
 // お問い合わせフォーム: POST /api/contact
 // 運営宛（CONTACT_TO / ETSY_OWNER_EMAIL）に Resend で転送し、送信者に自動返信を送る。
 const { send } = require('./_etsy-mail');
+const { sendInternal } = require('./_owner-mail');
 const { normalizeLang } = require('./_terms');
 
 const TO = process.env.CONTACT_TO || process.env.ETSY_OWNER_EMAIL || 'info@libertas-jyotish.com';
@@ -69,7 +70,7 @@ module.exports = async (req, res) => {
   </div>`;
 
   try {
-    await send({ to: TO, replyTo: email, subject: `[Contact/${topic}] ${name || email}`, html: ownerHtml });
+    await sendInternal({ to: TO, replyTo: email, subject: `[Contact/${topic}] ${name || email}`, html: ownerHtml });
   } catch (err) {
     console.error('contact: owner mail failed:', err.message);
     return res.status(502).json({ error: 'mail_failed' });
