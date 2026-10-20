@@ -11,14 +11,15 @@ const BASE_URL = (process.env.SITE_BASE_URL || 'https://www.libertas-jyotish.com
 const LOG_TAB = 'newsletter_log';
 const LOG_HEADERS = ['campaign_id', 'email', 'status', 'attempts', 'updated_at', 'error'];
 const OPT_HEADERS = ['newsletter_opt_in', 'newsletter_updated_at'];
-// Resend 無料枠（1日100通）は認証コード・鑑定書配送と共用なので、1回の実行で送るのは30通まで。残りは翌日の実行に回す。
-const MAX_PER_RUN = 30;
+// 送信は週1回（金曜20時 JST）。Resend 無料枠（1日100通）は認証コード・鑑定書配送と共用なので、1回の実行で送るのは50通まで。
+// 超えた分は翌週の実行で送る。
+const MAX_PER_RUN = 50;
 const MAX_ATTEMPTS = 3;
 const SEND_GAP_MS = 300;
-// 関数の上限60秒に届く前に打ち切る（残りは翌日）
-const RUN_DEADLINE_MS = 40 * 1000;
-// 予定日から7日を過ぎたキャンペーンは送らない（古いお知らせが遅れて届くのを防ぐ）
-const CAMPAIGN_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+// 関数の上限300秒に届く前に打ち切る（残りは翌週）
+const RUN_DEADLINE_MS = 240 * 1000;
+// 予定日から8日を過ぎたキャンペーンは送らない（週1回の実行で、直後の回と上限超えの残りを送る翌週の回だけが拾う）
+const CAMPAIGN_WINDOW_MS = 8 * 24 * 60 * 60 * 1000;
 const TEST_DOMAINS = /(^|\.)(example\.(com|org|net)|test\.com|test|invalid|localhost)$/i;
 
 function normalizeEmail(email) {
@@ -171,7 +172,7 @@ async function getLogSheet(memberSheet) {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // 期日の来たキャンペーンを同意者へ送る。1回あたり MAX_PER_RUN 通・1宛先 MAX_ATTEMPTS 回まで。
-// Resend の上限（429）に当たったらその回は打ち切り、翌日の実行で続きから送る。
+// Resend の上限（429）に当たったらその回は打ち切り、翌週の実行で続きから送る。
 async function runCampaigns({ now = Date.now(), campaigns = loadCampaigns(), mailer = send, gap = SEND_GAP_MS, deadline = Date.now() + RUN_DEADLINE_MS, memberSheet: givenSheet } = {}) {
   const due = dueCampaigns(campaigns, now);
   const summary = { due: due.map((c) => c.id), sent: 0, failed: 0, gaveUp: [], remaining: 0, stoppedBy: null };
