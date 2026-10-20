@@ -4,6 +4,7 @@ const { getMemberSheet, getLastSheetIssue, getMemberRecord } = require('./_sheet
 const { listGeminiModels, generateWithGemini } = require('./_gemini');
 const { findViolations } = require('./_report');
 const { issueSession, verifySession } = require('./_auth');
+const GOOGLE_CLIENT_ID = '789459066589-2tla7ubk127eic0g5aekql75ohdejnto.apps.googleusercontent.com';
 const { getOptIn, setOptIn } = require('./_newsletter');
 const { createTerms } = require('./_terms');
 const { nakshatraFromLongitude } = require('./_astrology');
@@ -148,7 +149,7 @@ module.exports = async function handler(req, res) {
   const viewerZone = isValidZone(tz) ? tz : DEFAULT_ZONE;
 
   // AUTH_SECRET はメール認証にのみ必要。診断系は未設定でも動作させる。
-  if ((action === 'send_code' || action === 'verify_code') && !AUTH_SECRET) {
+  if ((action === 'send_code' || action === 'verify_code' || action === 'google_login') && !AUTH_SECRET) {
     console.error('AUTH_SECRET is not configured.');
     return res.status(500).json({ error: 'Server is not configured.' });
   }
@@ -220,6 +221,21 @@ module.exports = async function handler(req, res) {
       }
 
       return res.status(200).json({ status: 'success', token: securityToken });
+    }
+
+    // Google ログイン: ID トークンを Google の公開鍵で検証し、メール認証と同じ本人確認セッションを発行する
+    if (action === 'google_login') {
+      let googleEmail = '';
+      try {
+        const { OAuth2Client } = require('google-auth-library');
+        const ticket = await new OAuth2Client().verifyIdToken({ idToken: String(req.body.credential || ''), audience: GOOGLE_CLIENT_ID });
+        const payload = ticket.getPayload() || {};
+        if (payload.email && payload.email_verified) googleEmail = String(payload.email).trim().toLowerCase();
+      } catch (e) {
+        console.warn('google_login verify failed:', e.message);
+      }
+      if (!googleEmail) return res.status(401).json({ error: 'unauthorized' });
+      return res.status(200).json({ email: googleEmail, session: issueSession(googleEmail) });
     }
 
     // ② 認証コード検証処理 (action: verify_code)

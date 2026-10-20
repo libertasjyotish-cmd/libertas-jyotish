@@ -18,6 +18,11 @@
 
   window.LJCheckoutGuard = {
     verifiedKey: VERIFIED_KEY,
+    // 有効期限内の本人確認セッション（Play 購入の紐づけ /api/play-verify に必須）があるか
+    hasSession: function () {
+      var expiry = parseInt(String(localStorage.getItem('lj_session') || '').split(':')[0], 10);
+      return Number.isFinite(expiry) && expiry > Date.now();
+    },
     // 本人確認済みのメールアドレス。未確認なら空文字。
     verifiedEmail: function () {
       var email = localStorage.getItem('lj_user_email') || '';
@@ -49,6 +54,8 @@
         return true;
       }
       var viaPlay = window.LJCheckoutGuard._playChecked === 'play';
+      // Play 購入はセッションが無いと会員に紐づけられない（支払いだけ済んで反映されない）ので、先にログインし直してもらう
+      if (viaPlay && !window.LJCheckoutGuard.hasSession()) email = '';
       if (!email && !viaPlay && !window.LJCheckout.requiresVerifiedEmail()) {
         email = hint || localStorage.getItem('lj_user_email') || '';
         window.open(window.LJCheckout.checkoutUrlFor(product, email), '_blank');
