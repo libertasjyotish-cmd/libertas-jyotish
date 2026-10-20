@@ -153,11 +153,16 @@ function currentCampaigns(now) {
   return list;
 }
 
+// 言語ごとの送信時刻（langs.<lang>.sendAfter）があればそれを、無ければキャンペーン全体の sendAfter を使う
+function langDue(campaign, lang, now) {
+  const content = campaign.langs && campaign.langs[lang];
+  if (!content) return false;
+  const at = Date.parse(content.sendAfter || campaign.sendAfter);
+  return Number.isFinite(at) && at <= now && now - at < CAMPAIGN_WINDOW_MS;
+}
+
 function dueCampaigns(campaigns, now) {
-  return campaigns.filter((c) => {
-    const at = Date.parse(c.sendAfter);
-    return c.id && c.langs && Number.isFinite(at) && at <= now && now - at < CAMPAIGN_WINDOW_MS;
-  });
+  return campaigns.filter((c) => c.id && c.langs && Object.keys(c.langs).some((l) => langDue(c, l, now)));
 }
 
 // 同意者（重複・テスト用アドレスを除く）を { email, lang, interests } で返す
@@ -175,8 +180,8 @@ function collectRecipients(rows) {
   return [...byEmail.values()].filter((r) => r.optIn && isSendable(r.email)).map((r) => ({ ...r, lang: r.lang || 'ja' }));
 }
 
-function matches(campaign, recipient) {
-  if (!campaign.langs[recipient.lang]) return false;
+function matches(campaign, recipient, now) {
+  if (!langDue(campaign, recipient.lang, now)) return false;
   const wanted = Array.isArray(campaign.interests) ? campaign.interests : [];
   return !wanted.length || wanted.some((k) => recipient.interests.has(k));
 }
@@ -208,7 +213,7 @@ async function runCampaigns({ now = Date.now(), campaigns, mailer = send, gap = 
   let budget = MAX_PER_RUN;
   for (const campaign of due) {
     const order = (x) => crypto.createHash('sha1').update(`${campaign.id}|${x.email}`).digest('hex');
-    for (const r of recipients.filter((x) => matches(campaign, x)).sort((a, b) => (order(a) < order(b) ? -1 : 1))) {
+    for (const r of recipients.filter((x) => matches(campaign, x, now)).sort((a, b) => (order(a) < order(b) ? -1 : 1))) {
       const key = `${campaign.id}|${r.email}`;
       const row = log.get(key);
       const attempts = row ? Number(row.get('attempts') || 0) : 0;
