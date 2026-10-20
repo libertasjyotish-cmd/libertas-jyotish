@@ -5,7 +5,7 @@
 // クライアントの申告は信用せず、Play Developer API でトークンを照会してから Sheets に書き、承認（acknowledge）する。
 const { verifySession } = require('./_auth');
 const { PLAY_PRODUCTS, playEnabled, getProductPurchase, acknowledgeProduct } = require('./_play');
-const { linkSubscription, savePending, isTransient } = require('./_play-link');
+const { linkSubscription, savePending, isTransient, notifyOwner } = require('./_play-link');
 const { setPdfPurchased } = require('./_sheets');
 const { normalizeLang } = require('./_terms');
 const ledger = require('./_etsy-ledger');
@@ -52,8 +52,11 @@ module.exports = async (req, res) => {
     if (kind === 'inapp') {
       const purchase = await getProductPurchase(productId, purchaseToken);
       if (purchase.purchaseState !== 0) return res.status(402).json({ error: 'not_purchased' });
-      if (!(await setPdfPurchased(email))) throw new Error('sheet_write_failed');
-      if (purchase.acknowledgementState === 0) await acknowledgeProduct(productId, purchaseToken);
+      if (!(await setPdfPurchased(email, { playToken: purchaseToken }))) throw new Error('sheet_write_failed');
+      if (purchase.acknowledgementState === 0) {
+        await acknowledgeProduct(productId, purchaseToken);
+        await notifyOwner('新しい生涯鑑定書の購入', [`email: ${email}`, `product: ${productId}`, `language: ${lang}`]);
+      }
       return res.status(200).json({ ok: true, product, granted: 'pdf' });
     }
 

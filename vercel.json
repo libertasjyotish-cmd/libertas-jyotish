@@ -16,7 +16,8 @@
     "api/health.js": { "maxDuration": 60 },
     "api/today.js": { "maxDuration": 30 },
     "api/chart-basics.js": { "maxDuration": 30 },
-    "api/newsletter.js": { "maxDuration": 300 }
+    "api/newsletter.js": { "maxDuration": 300 },
+    "api/komoju-cron.js": { "maxDuration": 60 }
   },
   "crons": [
     { "path": "/api/etsy-cron", "schedule": "*/10 * * * *" },
