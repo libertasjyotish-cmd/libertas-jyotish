@@ -148,30 +148,39 @@ async function retryPending({ deadline } = {}) {
   if (!playEnabled()) return { skipped: 'play_disabled' };
   const list = await listPlayPending();
   const result = { pending: list.length, linked: 0, dropped: 0, waiting: 0 };
-  for (const p of list.slice(0, MAX_PER_RUN)) {
+  // 失敗中の購入が上限件数を超えても全件に順番が回るよう、10分ごとの実行のたびに開始位置をずらす
+  const start = list.length > MAX_PER_RUN ? (Math.floor(Date.now() / 6e5) * MAX_PER_RUN) % list.length : 0;
+  const batch = [...list.slice(start), ...list.slice(0, start)].slice(0, MAX_PER_RUN);
+  for (const p of batch) {
     if (deadline && Date.now() > deadline) break;
-    const age = Date.now() - Date.parse(p.since || '');
-    if (!(age < MAX_AGE_MS) || p.attempts >= MAX_ATTEMPTS) {
-      await clearPlayPending(p.email);
-      result.dropped++;
-      continue;
-    }
+    // 1件の失敗（Sheets の書き込み失敗を含む）で残りを止めない
     try {
-      const r = p.product === 'pdf'
-        ? await linkPdf(p.email, p.token, { language: p.lang })
-        : await linkSubscription(p.email, p.token, { productId: 'premium_monthly', language: p.lang });
-      if (r.ok) result.linked++;
-      else result.dropped++;
-      await clearPlayPending(p.email);
-    } catch (err) {
-      if (isTransient(err)) {
-        await bumpPlayPending(p.email, p.attempts + 1);
-        result.waiting++;
-        result.lastError = String(err.message || err).slice(0, 120);
-      } else {
+      const age = Date.now() - Date.parse(p.since || '');
+      if (!(age < MAX_AGE_MS) || p.attempts >= MAX_ATTEMPTS) {
         await clearPlayPending(p.email);
         result.dropped++;
+        continue;
       }
+      try {
+        const r = p.product === 'pdf'
+          ? await linkPdf(p.email, p.token, { language: p.lang })
+          : await linkSubscription(p.email, p.token, { productId: 'premium_monthly', language: p.lang });
+        if (r.ok) result.linked++;
+        else result.dropped++;
+        await clearPlayPending(p.email);
+      } catch (err) {
+        if (isTransient(err)) {
+          await bumpPlayPending(p.email, p.attempts + 1);
+          result.waiting++;
+          result.lastError = String(err.message || err).slice(0, 120);
+        } else {
+          await clearPlayPending(p.email);
+          result.dropped++;
+        }
+      }
+    } catch (err) {
+      console.error('play pending item failed:', err.message);
+      result.errors = (result.errors || 0) + 1;
     }
   }
   return result;
