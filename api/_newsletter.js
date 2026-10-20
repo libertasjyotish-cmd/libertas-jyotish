@@ -2,8 +2,9 @@
 // 同意は会員シートの newsletter_opt_in = yes のみ。ログイン用メールアドレスの登録は同意とみなさない。
 // 送信済みは別タブ newsletter_log に 1 宛先 1 行で残し、同じキャンペーンを二重に送らない。
 const crypto = require('crypto');
-const { getMemberSheet } = require('./_sheets');
-const { send } = require('./_etsy-mail');
+// シート・Resend は使う時に読み込む（npm install 無しの CI でも検査できるように）
+const getMemberSheet = (...a) => require('./_sheets').getMemberSheet(...a);
+const send = (...a) => require('./_etsy-mail').send(...a);
 const { normalizeLang } = require('./_terms');
 
 const BASE_URL = (process.env.SITE_BASE_URL || 'https://www.libertas-jyotish.com').replace(/\/$/, '');
