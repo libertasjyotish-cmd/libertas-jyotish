@@ -418,6 +418,16 @@ window.LJ_I18N = {
         if (timePart) localStorage.setItem('tob', timePart.slice(0, 5));
         localStorage.setItem('city', birthplace);
 
+        // Android アプリ内はストア規約により Play 課金で買う（会員との紐づけは LJCheckoutGuard が行う）
+        const play = window.LJPlayBilling;
+        if (play && play.supported() && window.LJCheckoutGuard._playChecked !== 'web') {
+          play.available().then(function (ok) {
+            window.LJCheckoutGuard._playChecked = ok ? 'play' : 'web';
+            if (ok) window.LJCheckoutGuard.start('pdf', 'en', email);
+            else document.getElementById('btn-proceed-checkout').click();
+          });
+          return;
+        }
         if (!window.LJCheckout.available('pdf')) { alert(window.LJCheckout.unavailableMessage()); return; }
         // KOMOJU は購入と会員をメールで紐づけるため、未確認なら先にメール認証へ回す（Gumroad は不要）
         if (window.LJCheckout.requiresVerifiedEmail() && !window.LJCheckoutGuard.verifiedEmail()) {
