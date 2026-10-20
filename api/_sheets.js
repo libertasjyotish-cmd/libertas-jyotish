@@ -407,7 +407,11 @@ async function ensureColumns(sheet, columns) {
   await sheet.loadHeaderRow().catch(() => null);
   const headers = sheet.headerValues || [];
   const missing = columns.filter(c => !headers.includes(c));
-  if (missing.length) await sheet.setHeaderRow([...headers, ...missing]);
+  if (!missing.length) return;
+  // シートの列数が足りないと setHeaderRow が失敗する（Sheet is not large enough）ので先に広げる
+  const need = headers.length + missing.length;
+  if (sheet.columnCount < need) await sheet.resize({ rowCount: sheet.rowCount, columnCount: need });
+  await sheet.setHeaderRow([...headers, ...missing]);
 }
 
 // 買い切り（完全鑑定書）の返金・チャージバック時に閲覧権を外す。
