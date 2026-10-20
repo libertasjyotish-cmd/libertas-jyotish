@@ -1,6 +1,6 @@
 // Play 定期購入を会員に紐づける処理と、Google 側の一時的な失敗で紐づけられなかった購入の自動再試行。
 // 再試行は etsy-cron（10分ごと）から呼ばれる。1回あたり件数、1件あたり回数・期間に上限がある。
-const { playEnabled, getSubscription, acknowledgeSubscription, subscriptionSummary } = require('./_play');
+const { playEnabled, getSubscription, acknowledgeSubscription, subscriptionSummary, listVoidedPurchases } = require('./_play');
 const {
   setPlaySubscription,
   setPlayPending,
@@ -8,7 +8,8 @@ const {
   bumpPlayPending,
   clearPlayPending,
   listPlayMembers,
-  updatePlaySubscription
+  updatePlaySubscription,
+  revokePdfByPlayTokens
 } = require('./_sheets');
 
 const OWNER = process.env.ETSY_OWNER_EMAIL || 'info@libertas-jyotish.com';
@@ -60,21 +61,19 @@ async function notifyOwner(subject, lines) {
 // RTDN（Pub/Sub）の設定に頼らない。1件の失敗は次の会員を止めない。
 async function syncPlayMembers({ deadline } = {}) {
   if (!playEnabled()) return { skipped: 'play_disabled' };
-  const members = await listPlayMembers();
-  const result = { members: members.length, checked: 0, changed: 0, revoked: 0, errors: 0 };
+  const all = await listPlayMembers();
+  // 上限を超える人数でも全員に順番が回るよう、日ごとに開始位置をずらす
+  const start = all.length > SYNC_MAX_PER_RUN ? (Math.floor(Date.now() / 864e5) * SYNC_MAX_PER_RUN) % all.length : 0;
+  const members = [...all.slice(start), ...all.slice(0, start)].slice(0, SYNC_MAX_PER_RUN);
+  const result = { members: all.length, checked: 0, changed: 0, revoked: 0, errors: 0 };
   const revoked = [];
-  for (const m of members.slice(0, SYNC_MAX_PER_RUN)) {
+  const cache = new Map();
+  for (const m of members) {
     if (deadline && Date.now() > deadline) break;
     try {
-      let next;
-      try {
-        const s = subscriptionSummary(await getSubscription(m.token));
-        next = { entitled: s.entitled, renewing: s.renewing, paidUntil: s.expiryTime || m.paidUntil, state: s.state };
-      } catch (err) {
-        // 410: 期限切れから時間がたち Google 側で照会できなくなった購入
-        if (err.status !== 410) throw err;
-        next = { entitled: false, renewing: false, paidUntil: m.paidUntil, state: 'gone' };
-      }
+      if (!cache.has(m.token)) cache.set(m.token, querySubscription(m.token));
+      const q = await cache.get(m.token);
+      const next = { ...q, paidUntil: q.paidUntil || m.paidUntil };
       result.checked++;
       const wasPaid = m.status === 'paid';
       if (wasPaid === next.entitled && m.renewing === next.renewing && m.paidUntil === next.paidUntil) continue;
@@ -90,7 +89,34 @@ async function syncPlayMembers({ deadline } = {}) {
     }
   }
   if (revoked.length) await notifyOwner('会員が無料に戻りました（解約・返金・失効）', revoked);
+  result.pdfRevoked = await revokeVoidedPdf().catch((e) => {
+    result.errors++;
+    result.lastError = String(e.message || e).slice(0, 120);
+    return 0;
+  });
   return result;
+}
+
+async function querySubscription(token) {
+  try {
+    const s = subscriptionSummary(await getSubscription(token));
+    // 紐づけ時の承認が何かの理由で漏れていても、3日以内の自動返金を防ぐ
+    if (s.entitled && !s.acknowledged && s.productId) await acknowledgeSubscription(s.productId, token);
+    return { entitled: s.entitled, renewing: s.renewing, paidUntil: s.expiryTime, state: s.state };
+  } catch (err) {
+    // 410: 期限切れから時間がたち Google 側で照会できなくなった購入
+    if (err.status !== 410) throw err;
+    return { entitled: false, renewing: false, paidUntil: '', state: 'gone' };
+  }
+}
+
+// 生涯鑑定書（Play）の払い戻しを反映する（RTDN の代わりに過去30日の取り消し一覧を毎日照合）
+async function revokeVoidedPdf() {
+  const voided = await listVoidedPurchases();
+  if (!voided.length) return 0;
+  const emails = await revokePdfByPlayTokens(voided.map(v => v.purchaseToken));
+  if (emails.length) await notifyOwner('生涯鑑定書の払い戻しを反映しました', emails);
+  return emails.length;
 }
 
 async function savePending(email, purchaseToken, language) {
@@ -131,4 +157,4 @@ async function retryPending({ deadline } = {}) {
   return result;
 }
 
-module.exports = { linkSubscription, savePending, retryPending, syncPlayMembers, isTransient };
+module.exports = { linkSubscription, savePending, retryPending, syncPlayMembers, isTransient, notifyOwner };

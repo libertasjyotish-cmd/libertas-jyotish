@@ -286,20 +286,18 @@ async function listPlayPending() {
     }));
 }
 
-// Play で紐づいた会員（毎日の状態照会用）。同じトークンの重複行は1件にまとめる。
+// Play で紐づいた会員（毎日の状態照会用）。同じ購入を複数のメールで紐づけた場合も全員を返す。
 async function listPlayMembers() {
   const sheet = await getMemberSheet();
   if (!sheet) return [];
   await sheet.loadHeaderRow().catch(() => null);
   if (!(sheet.headerValues || []).includes('play_purchase_token')) return [];
   const rows = await sheet.getRows();
-  const seen = new Set();
   const out = [];
   for (const r of rows) {
     const token = String(r.get('play_purchase_token') || '').trim();
-    if (!token || seen.has(token)) continue;
+    if (!token) continue;
     if (String(r.get('billing') || '').trim().toLowerCase() !== 'play') continue;
-    seen.add(token);
     out.push({
       email: normalizeEmail(r.get('email')),
       token,
@@ -309,6 +307,27 @@ async function listPlayMembers() {
     });
   }
   return out;
+}
+
+// Play で買った生涯鑑定書のうち、払い戻された購入トークンに当たる会員の閲覧権を外す。
+async function revokePdfByPlayTokens(tokens) {
+  const set = new Set((tokens || []).map(t => String(t || '').trim()).filter(Boolean));
+  if (!set.size) return [];
+  const sheet = await getMemberSheet();
+  if (!sheet) return [];
+  await sheet.loadHeaderRow().catch(() => null);
+  if (!(sheet.headerValues || []).includes('pdf_play_token')) return [];
+  const rows = await sheet.getRows();
+  const revoked = [];
+  for (const r of rows) {
+    if (!set.has(String(r.get('pdf_play_token') || '').trim())) continue;
+    if (String(r.get('pdf_purchased') || '').trim().toLowerCase() !== 'true') continue;
+    r.set('pdf_purchased', 'false');
+    r.set('updated_at', new Date().toISOString());
+    await r.save();
+    revoked.push(normalizeEmail(r.get('email')));
+  }
+  return revoked;
 }
 
 async function bumpPlayPending(email, attempts) {
@@ -455,17 +474,18 @@ async function revokePdfPurchase(email) {
 }
 
 // 買い切り決済の完了を記録する。会員行が無ければ最小限の行を作る。
-async function setPdfPurchased(email) {
+async function setPdfPurchased(email, { playToken } = {}) {
   if (!email) return false;
   const sheet = await getMemberSheet();
   if (!sheet) return false;
-  await ensureColumns(sheet, ['pdf_purchased', 'pdf_purchased_at']);
+  await ensureColumns(sheet, ['pdf_purchased', 'pdf_purchased_at', ...(playToken ? ['pdf_play_token'] : [])]);
 
   const nowStr = new Date().toISOString();
   const row = await findMemberRow(email);
   if (row) {
     row.set('pdf_purchased', 'true');
     row.set('pdf_purchased_at', nowStr);
+    if (playToken) row.set('pdf_play_token', playToken);
     row.set('updated_at', nowStr);
     await row.save();
   } else {
@@ -475,6 +495,7 @@ async function setPdfPurchased(email) {
       auth_provider: 'gumroad',
       pdf_purchased: 'true',
       pdf_purchased_at: nowStr,
+      ...(playToken ? { pdf_play_token: playToken } : {}),
       created_at: nowStr,
       updated_at: nowStr,
       language: 'ja'
@@ -612,6 +633,7 @@ module.exports = {
   setPlayPending,
   listPlayPending,
   listPlayMembers,
+  revokePdfByPlayTokens,
   bumpPlayPending,
   clearPlayPending,
   updatePlaySubscription,

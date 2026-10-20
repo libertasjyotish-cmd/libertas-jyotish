@@ -78,6 +78,20 @@ async function acknowledgeSubscription(productId, token) {
   return request('POST', `/purchases/subscriptions/${encodeURIComponent(productId)}/tokens/${encodeURIComponent(token)}:acknowledge`, {});
 }
 
+// 払い戻し・チャージバックで取り消された購入（既定で過去30日）。type=1 は定期購入も含む。
+async function listVoidedPurchases() {
+  const out = [];
+  let pageToken = '';
+  for (let i = 0; i < 10; i++) {
+    const q = `?type=1&maxResults=1000${pageToken ? `&token=${encodeURIComponent(pageToken)}` : ''}`;
+    const d = await request('GET', `/purchases/voidedpurchases${q}`);
+    out.push(...(d.voidedPurchases || []));
+    pageToken = d.tokenPagination && d.tokenPagination.nextPageToken;
+    if (!pageToken) break;
+  }
+  return out;
+}
+
 const ACTIVE_SUB_STATES = new Set([
   'SUBSCRIPTION_STATE_ACTIVE',
   'SUBSCRIPTION_STATE_IN_GRACE_PERIOD',
@@ -109,5 +123,6 @@ module.exports = {
   acknowledgeProduct,
   getSubscription,
   acknowledgeSubscription,
-  subscriptionSummary
+  subscriptionSummary,
+  listVoidedPurchases
 };
