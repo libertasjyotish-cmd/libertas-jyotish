@@ -12,7 +12,8 @@ const LOG_TAB = 'newsletter_log';
 const LOG_HEADERS = ['campaign_id', 'email', 'status', 'attempts', 'updated_at', 'error'];
 const OPT_HEADERS = ['newsletter_opt_in', 'newsletter_updated_at'];
 // 送信は週1回（金曜20時 JST）。Resend 無料枠（1日100通）は認証コード・鑑定書配送と共用なので、1回の実行で送るのは50通まで。
-// 超えた分は翌週の実行で送る。
+// 超えた分は翌週の実行で送る（毎週作る「今週の空」は週ごとに別のメールなので、残りの人には翌週の号が届く）。
+// 上限で止まる人が毎週同じにならないよう、宛先の順番はキャンペーンごとに入れ替える。
 const MAX_PER_RUN = 50;
 const MAX_ATTEMPTS = 3;
 const SEND_GAP_MS = 300;
@@ -52,14 +53,14 @@ function unsubscribeUrl(email, lang) {
 
 // 特定電子メール法の表示事項（送信者・配信停止の方法・運営者情報への案内・連絡先）
 const FOOTER = {
-  ja: { why: 'このメールは、Libertas Jyotish のお知らせ受信に同意いただいた方にお送りしています。', stop: '配信停止はこちら', info: '運営者情報（所在地・連絡先）' },
-  en: { why: 'You are receiving this because you agreed to receive news from Libertas Jyotish.', stop: 'Unsubscribe', info: 'Operator information (address and contact)' },
-  es: { why: 'Recibes este correo porque aceptaste recibir novedades de Libertas Jyotish.', stop: 'Darse de baja', info: 'Información del operador (dirección y contacto)' },
-  pt: { why: 'Você recebe este e-mail porque aceitou receber novidades da Libertas Jyotish.', stop: 'Cancelar inscrição', info: 'Informações do operador (endereço e contato)' },
-  ar: { why: 'تصلك هذه الرسالة لأنك وافقت على تلقي أخبار Libertas Jyotish.', stop: 'إلغاء الاشتراك', info: 'معلومات المشغّل (العنوان ووسيلة التواصل)' },
-  fr: { why: 'Vous recevez cet e-mail car vous avez accepté de recevoir les actualités de Libertas Jyotish.', stop: 'Se désabonner', info: "Informations sur l'exploitant (adresse et contact)" },
-  de: { why: 'Sie erhalten diese E-Mail, weil Sie dem Empfang von Neuigkeiten von Libertas Jyotish zugestimmt haben.', stop: 'Abmelden', info: 'Angaben zum Betreiber (Anschrift und Kontakt)' },
-  id: { why: 'Anda menerima email ini karena telah setuju menerima kabar dari Libertas Jyotish.', stop: 'Berhenti berlangganan', info: 'Informasi pengelola (alamat dan kontak)' }
+  ja: { why: 'このメールは、インド占星術 Libertas Jyotish（リベルタス ジョーティシュ）でお知らせの受信に同意された方にお送りしています。', top: 'サイトトップ', stop: '配信停止', info: '運営者情報', brand: 'Libertas Jyotish（リベルタス ジョーティシュ）', sub: 'リベルタス ジョーティシュ ・ インド占星術' },
+  en: { why: 'You are receiving this because you agreed to receive news from Libertas Jyotish.', top: 'Home', stop: 'Unsubscribe', info: 'Operator information (address and contact)' },
+  es: { why: 'Recibes este correo porque aceptaste recibir novedades de Libertas Jyotish.', top: 'Inicio', stop: 'Darse de baja', info: 'Información del operador (dirección y contacto)' },
+  pt: { why: 'Você recebe este e-mail porque aceitou receber novidades da Libertas Jyotish.', top: 'Início', stop: 'Cancelar inscrição', info: 'Informações do operador (endereço e contato)' },
+  ar: { why: 'تصلك هذه الرسالة لأنك وافقت على تلقي أخبار Libertas Jyotish.', top: 'الصفحة الرئيسية', stop: 'إلغاء الاشتراك', info: 'معلومات المشغّل (العنوان ووسيلة التواصل)' },
+  fr: { why: 'Vous recevez cet e-mail car vous avez accepté de recevoir les actualités de Libertas Jyotish.', top: 'Accueil', stop: 'Se désabonner', info: "Informations sur l'exploitant (adresse et contact)" },
+  de: { why: 'Sie erhalten diese E-Mail, weil Sie dem Empfang von Neuigkeiten von Libertas Jyotish zugestimmt haben.', top: 'Startseite', stop: 'Abmelden', info: 'Angaben zum Betreiber (Anschrift und Kontakt)' },
+  id: { why: 'Anda menerima email ini karena telah setuju menerima kabar dari Libertas Jyotish.', top: 'Beranda', stop: 'Berhenti berlangganan', info: 'Informasi pengelola (alamat dan kontak)' }
 };
 
 function esc(v) {
@@ -72,16 +73,24 @@ function buildMail({ email, lang, content }) {
   const unsub = unsubscribeUrl(email, l);
   const legal = `${BASE_URL}/${l}/legal`;
   const dir = l === 'ar' ? ' dir="rtl"' : '';
-  const html = `<div${dir} style="font-family:Georgia,'Noto Serif',serif; max-width:560px; margin:0 auto; padding:24px; border:1px solid rgba(139,107,27,0.35); border-radius:10px; background:#fffdf9; color:#2C221E; line-height:1.7;">
-    <h2 style="color:#8B6B1B; text-align:center; border-bottom:1px dashed rgba(139,107,27,0.3); padding-bottom:10px; font-weight:600;">Libertas Jyotish</h2>
+  const top = `${BASE_URL}/${l}/`;
+  const brand = f.brand || 'Libertas Jyotish';
+  const banner = content.banner ? `\n        <div style="color:#d9cbb0; font-size:13px; margin-top:4px;">${esc(content.banner)}</div>` : '';
+  const html = `<div${dir} style="font-family:Georgia,'Noto Serif JP','Noto Serif',serif; max-width:560px; margin:0 auto; border:1px solid rgba(139,107,27,0.35); border-radius:10px; overflow:hidden; background:#fffdf9; color:#2C221E; line-height:1.8;">
+    <a href="${esc(top)}" style="display:block; text-decoration:none;">
+      <div style="background:#2C221E; text-align:center; padding:22px 16px 18px;">
+        <img src="${BASE_URL}/img/libertas-logo.png" width="110" height="110" alt="Libertas Jyotish" style="display:block; margin:0 auto 8px;">
+        <div style="color:#E8C766; font-size:20px; letter-spacing:2px;">Libertas Jyotish</div>${f.sub ? `\n        <div style="color:#E8C766; font-size:13px; letter-spacing:1px; margin-top:2px;">${esc(f.sub)}</div>` : ''}${banner}
+      </div>
+    </a>
     ${content.html}
-    <p style="font-size:12px; color:#7a6a58; border-top:1px dashed rgba(139,107,27,0.3); padding-top:10px; margin-top:24px;">
+    <p style="font-size:12px; color:#7a6a58; border-top:1px dashed rgba(139,107,27,0.3); padding:12px 22px 18px; margin:24px 0 0;">
       ${esc(f.why)}<br>
-      <a href="${esc(unsub)}" style="color:#7a6a58;">${esc(f.stop)}</a> ・ <a href="${esc(legal)}" style="color:#7a6a58;">${esc(f.info)}</a><br>
-      Libertas Jyotish ・ info@libertas-jyotish.com
+      <a href="${esc(top)}" style="color:#7a6a58;">${esc(f.top)}</a> ・ <a href="${esc(unsub)}" style="color:#7a6a58;">${esc(f.stop)}</a> ・ <a href="${esc(legal)}" style="color:#7a6a58;">${esc(f.info)}</a><br>
+      ${esc(brand)} ・ info@libertas-jyotish.com
     </p>
   </div>`;
-  const text = `${content.text || ''}\n\n--\n${f.why}\n${f.stop}: ${unsub}\n${f.info}: ${legal}\nLibertas Jyotish / info@libertas-jyotish.com\n`;
+  const text = `${content.text || ''}\n\n--\n${f.why}\n${f.top}: ${top}\n${f.stop}: ${unsub}\n${f.info}: ${legal}\n${brand} / info@libertas-jyotish.com\n`;
   return {
     subject: content.subject,
     html,
@@ -133,6 +142,17 @@ function loadCampaigns() {
   }
 }
 
+// 決まった原稿（campaigns.json）と、その週の「今週の空」（星の計算から自動で作る）
+function currentCampaigns(now) {
+  const list = [...loadCampaigns()];
+  try {
+    list.push(require('./_newsletter-weekly').weeklyCampaign(now));
+  } catch (err) {
+    console.error('[newsletter] weekly build failed', err.message);
+  }
+  return list;
+}
+
 function dueCampaigns(campaigns, now) {
   return campaigns.filter((c) => {
     const at = Date.parse(c.sendAfter);
@@ -173,8 +193,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // 期日の来たキャンペーンを同意者へ送る。1回あたり MAX_PER_RUN 通・1宛先 MAX_ATTEMPTS 回まで。
 // Resend の上限（429）に当たったらその回は打ち切り、翌週の実行で続きから送る。
-async function runCampaigns({ now = Date.now(), campaigns = loadCampaigns(), mailer = send, gap = SEND_GAP_MS, deadline = Date.now() + RUN_DEADLINE_MS, memberSheet: givenSheet } = {}) {
-  const due = dueCampaigns(campaigns, now);
+async function runCampaigns({ now = Date.now(), campaigns, mailer = send, gap = SEND_GAP_MS, deadline = Date.now() + RUN_DEADLINE_MS, memberSheet: givenSheet } = {}) {
+  const due = dueCampaigns(campaigns || currentCampaigns(now), now);
   const summary = { due: due.map((c) => c.id), sent: 0, failed: 0, gaveUp: [], remaining: 0, stoppedBy: null };
   if (!due.length) return summary;
 
@@ -187,7 +207,8 @@ async function runCampaigns({ now = Date.now(), campaigns = loadCampaigns(), mai
 
   let budget = MAX_PER_RUN;
   for (const campaign of due) {
-    for (const r of recipients.filter((x) => matches(campaign, x))) {
+    const order = (x) => crypto.createHash('sha1').update(`${campaign.id}|${x.email}`).digest('hex');
+    for (const r of recipients.filter((x) => matches(campaign, x)).sort((a, b) => (order(a) < order(b) ? -1 : 1))) {
       const key = `${campaign.id}|${r.email}`;
       const row = log.get(key);
       const attempts = row ? Number(row.get('attempts') || 0) : 0;
@@ -233,6 +254,7 @@ module.exports = {
   collectRecipients,
   dueCampaigns,
   runCampaigns,
+  currentCampaigns,
   MAX_PER_RUN,
   MAX_ATTEMPTS
 };

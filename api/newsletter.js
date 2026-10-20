@@ -47,10 +47,10 @@ async function handleRun(req, res) {
   }
   if (summary.sent || summary.failed) {
     const lines = [
-      `送信: ${summary.sent}通 / 失敗: ${summary.failed}件 / 翌週に送る残り: ${summary.remaining}件`,
+      `送信: ${summary.sent}通 / 失敗: ${summary.failed}件 / 上限で今回送れなかった: ${summary.remaining}件`,
       `対象キャンペーン: ${summary.due.join(', ')}`,
-      summary.stoppedBy === 'resend_rate_limit' ? 'Resend の送信上限に達したため、残りは翌週の実行で送ります。' : '',
-      summary.remaining && summary.stoppedBy !== 'resend_rate_limit' ? '1回の送信上限に達したため、残りは翌週の実行で送ります。' : '',
+      summary.stoppedBy === 'resend_rate_limit' ? 'Resend の送信上限に達したため、今回はここで止めました（決まった原稿の残りは翌週に送り、「今週の空」は翌週の号が届きます）。' : '',
+      summary.remaining && summary.stoppedBy !== 'resend_rate_limit' ? '1回の送信上限（50通）に達したため、今回はここで止めました（決まった原稿の残りは翌週に送り、「今週の空」は翌週の号が届きます）。' : '',
       ...summary.gaveUp.map((g) => `3回失敗したため送信を断念: ${g.campaign} / ${g.email} / ${g.error}`)
     ].filter(Boolean);
     await sendInternal({ subject: `【お知らせメール】送信 ${summary.sent}通${summary.gaveUp.length ? ` / 断念 ${summary.gaveUp.length}件` : ''}`, text: lines.join('\n') })

@@ -13,6 +13,10 @@ on:
       - 'data/guide/**'
       - 'api/_newsletter.js'
       - 'api/newsletter.js'
+      - 'api/_newsletter-weekly.js'
+      - 'api/_sky-events.js'
+      - 'package.json'
+      - 'package-lock.json'
       - 'data/newsletter/**'
       - 'scripts/check-newsletter.mjs'
       - '*/*.html'
@@ -29,4 +33,5 @@ jobs:
       - run: npm run check:i18n
       - run: npm run check:guide
       - run: npm run check:faq
+      - run: npm ci --ignore-scripts
       - run: npm run check:newsletter
