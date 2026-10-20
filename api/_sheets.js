@@ -286,6 +286,31 @@ async function listPlayPending() {
     }));
 }
 
+// Play で紐づいた会員（毎日の状態照会用）。同じトークンの重複行は1件にまとめる。
+async function listPlayMembers() {
+  const sheet = await getMemberSheet();
+  if (!sheet) return [];
+  await sheet.loadHeaderRow().catch(() => null);
+  if (!(sheet.headerValues || []).includes('play_purchase_token')) return [];
+  const rows = await sheet.getRows();
+  const seen = new Set();
+  const out = [];
+  for (const r of rows) {
+    const token = String(r.get('play_purchase_token') || '').trim();
+    if (!token || seen.has(token)) continue;
+    if (String(r.get('billing') || '').trim().toLowerCase() !== 'play') continue;
+    seen.add(token);
+    out.push({
+      email: normalizeEmail(r.get('email')),
+      token,
+      status: String(r.get('status') || '').trim().toLowerCase(),
+      renewing: String(r.get('play_renewing') || '').trim().toLowerCase() === 'true',
+      paidUntil: r.get('paid_until') || ''
+    });
+  }
+  return out;
+}
+
 async function bumpPlayPending(email, attempts) {
   const row = await findMemberRow(email);
   if (!row) return false;
@@ -586,6 +611,7 @@ module.exports = {
   setPlaySubscription,
   setPlayPending,
   listPlayPending,
+  listPlayMembers,
   bumpPlayPending,
   clearPlayPending,
   updatePlaySubscription,
