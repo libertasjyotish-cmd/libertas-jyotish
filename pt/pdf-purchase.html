@@ -319,7 +319,7 @@ window.LJ_I18N = {
         </div>
 
         <div id="price-label" style="font-size:1.3rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:15px;"></div>
-        <p style="font-size:0.78rem; color:#5A4E48; margin-bottom:12px;">Não altere o e-mail na página de pagamento: é a chave que usamos para vincular a compra à sua conta.</p>
+        <p id="checkout-email-notice" style="font-size:0.78rem; color:#5A4E48; margin-bottom:12px;">Não altere o e-mail na página de pagamento: é a chave que usamos para vincular a compra à sua conta.</p>
         <button id="btn-proceed-checkout" class="btn-purchase">💳 Ir para o pagamento (Gumroad)</button>
         <p id="checkout-note" style="font-size:0.8rem; color:#6A5E58; margin-top:12px;">Após a compra, você pode lê-lo quando quiser na página do relatório deste site (também é possível salvá-lo em PDF pela função de impressão do navegador).</p>
       </div>
@@ -379,6 +379,17 @@ window.LJ_I18N = {
           const btn = document.getElementById('btn-proceed-checkout');
           btn.disabled = true;
           btn.textContent = window.LJCheckout.unavailableMessage();
+        }
+        // アプリ内で Play 課金が使える人にだけ、支払い方法と価格を Google Play の表示に切り替える
+        const play = window.LJPlayBilling;
+        if (play && play.supported() && window.LJCheckout.available('pdf')) {
+          play.available().then((ok) => {
+            window.LJCheckoutGuard._playChecked = ok ? 'play' : 'web';
+            if (!ok) return;
+            document.getElementById('btn-proceed-checkout').textContent = '💳 Comprar com o Google Play';
+            document.getElementById('checkout-email-notice').style.display = 'none';
+            play.price('pdf').then((price) => { if (price) document.getElementById('price-label').textContent = price; }).catch(() => {});
+          });
         }
       });
       // 本人確認済みのアドレスは会員の紐づけキーなので、ここで変更させない
