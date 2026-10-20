@@ -1,7 +1,7 @@
 // お知らせメール
 //   GET  /api/newsletter?e=&t=&l=   … 配信停止の確認画面（リンク先読みで解除されないよう、解除はボタンの POST で行う）
 //   POST /api/newsletter?e=&t=&l=   … 配信停止（メールソフトのワンクリック解除 List-Unsubscribe-Post もここに来る）
-//   GET  /api/newsletter?run=1      … 期日の来たキャンペーンを送る（Vercel Cron。CRON_SECRET 必須）
+//   GET  /api/newsletter?run=1      … 期日の来たキャンペーンを送る（Vercel Cron 毎週金曜20時 JST。CRON_SECRET 必須）
 const { verifyUnsubToken, setOptIn, runCampaigns } = require('./_newsletter');
 const { sendInternal } = require('./_owner-mail');
 const { normalizeLang } = require('./_terms');
@@ -47,10 +47,10 @@ async function handleRun(req, res) {
   }
   if (summary.sent || summary.failed) {
     const lines = [
-      `送信: ${summary.sent}通 / 失敗: ${summary.failed}件 / 次回以降に送る残り: ${summary.remaining}件`,
+      `送信: ${summary.sent}通 / 失敗: ${summary.failed}件 / 翌週に送る残り: ${summary.remaining}件`,
       `対象キャンペーン: ${summary.due.join(', ')}`,
-      summary.stoppedBy === 'resend_rate_limit' ? 'Resend の送信上限に達したため、残りは翌日の実行で送ります。' : '',
-      summary.remaining && summary.stoppedBy !== 'resend_rate_limit' ? '1回の送信上限に達したため、残りは翌日の実行で送ります。' : '',
+      summary.stoppedBy === 'resend_rate_limit' ? 'Resend の送信上限に達したため、残りは翌週の実行で送ります。' : '',
+      summary.remaining && summary.stoppedBy !== 'resend_rate_limit' ? '1回の送信上限に達したため、残りは翌週の実行で送ります。' : '',
       ...summary.gaveUp.map((g) => `3回失敗したため送信を断念: ${g.campaign} / ${g.email} / ${g.error}`)
     ].filter(Boolean);
     await sendInternal({ subject: `【お知らせメール】送信 ${summary.sent}通${summary.gaveUp.length ? ` / 断念 ${summary.gaveUp.length}件` : ''}`, text: lines.join('\n') })

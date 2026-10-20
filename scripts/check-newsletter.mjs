@@ -55,7 +55,7 @@ assert.equal(mail.headers['List-Unsubscribe-Post'], 'List-Unsubscribe=One-Click'
 assert.ok(nl.verifyUnsubToken('A@gmail.com', nl.unsubToken('a@gmail.com')));
 assert.ok(!nl.verifyUnsubToken('b@gmail.com', nl.unsubToken('a@gmail.com')));
 
-// 期日: 予定前・7日以上過ぎたものは送らない
+// 期日: 予定前・8日以上過ぎたものは送らない
 const now = Date.parse('2026-11-01T12:00:00Z');
 const camp = (id, sendAfter, extra = {}) => ({ id, sendAfter, langs: { ja: { subject: 'S', html: '<p>x</p>', text: 'x' } }, ...extra });
 assert.deepEqual(nl.dueCampaigns([camp('future', '2026-11-02T00:00:00Z'), camp('old', '2026-10-20T00:00:00Z'), camp('now', '2026-11-01T00:00:00Z')], now).map((c) => c.id), ['now']);
