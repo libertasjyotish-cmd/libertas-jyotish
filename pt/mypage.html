@@ -310,6 +310,7 @@ window.LJ_I18N = {
     unavailable: 'O pagamento online está temporariamente indisponível. Tente novamente mais tarde.'
   },
   playError: 'Não foi possível concluir a compra no Google Play. Tente novamente.',
+  playPending: 'Recebemos sua compra. Sua assinatura será ativada automaticamente assim que o Google confirmar (pode levar de alguns minutos a algumas horas).',
   playManage: 'As assinaturas compradas no app são gerenciadas (cancelar, forma de pagamento) em Google Play → Assinaturas. Abrir agora?',
   guide: {
     hub: '/pt/guide',
@@ -706,7 +707,9 @@ play.pending().then((list) => {
 if (!list.length) return;
 if (!window.LJCheckoutGuard.hasSession()) { requestReauth('play-restore', email); return; }
 return play.restore(email).then((done) => {
-if (done.length) { fetchUserDataAndRender(email, true); return; }
+if (done.some((d) => d.pending)) alert(window.LJ_I18N.playPending);
+if (done.some((d) => d.ok)) { fetchUserDataAndRender(email, true); return; }
+if (done.length) return;
 const errors = play.lastErrors || [];
 if (errors.indexOf('unauthorized') !== -1) { requestReauth('play-restore', email); return; }
 if (errors.length) alert('Google Play: ' + errors.join(', '));

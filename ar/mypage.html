@@ -310,6 +310,7 @@ window.LJ_I18N = {
     unavailable: 'الدفع عبر الإنترنت غير متاح مؤقتًا. يرجى المحاولة لاحقًا.'
   },
   playError: 'تعذّر إتمام عملية الشراء عبر Google Play. يرجى المحاولة مرة أخرى.',
+  playPending: 'لقد استلمنا عملية الشراء. سيتم تفعيل عضويتك تلقائيًا بمجرد تأكيد Google لها (قد يستغرق ذلك من بضع دقائق إلى بضع ساعات).',
   playManage: 'تُدار الاشتراكات المشتراة داخل التطبيق (الإلغاء وطريقة الدفع) من Google Play ← الاشتراكات. هل تريد الفتح الآن؟',
   guide: {
     hub: '/ar/guide',
@@ -706,7 +707,9 @@ play.pending().then((list) => {
 if (!list.length) return;
 if (!window.LJCheckoutGuard.hasSession()) { requestReauth('play-restore', email); return; }
 return play.restore(email).then((done) => {
-if (done.length) { fetchUserDataAndRender(email, true); return; }
+if (done.some((d) => d.pending)) alert(window.LJ_I18N.playPending);
+if (done.some((d) => d.ok)) { fetchUserDataAndRender(email, true); return; }
+if (done.length) return;
 const errors = play.lastErrors || [];
 if (errors.indexOf('unauthorized') !== -1) { requestReauth('play-restore', email); return; }
 if (errors.length) alert('Google Play: ' + errors.join(', '));

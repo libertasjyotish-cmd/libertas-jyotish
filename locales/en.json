@@ -503,6 +503,7 @@
     "price.premiumApprox": "About {price} / month — billed in USD, final amount shown at checkout",
     "price.pdfApprox": "About {price} one-off — billed in USD, final amount shown at checkout",
     "price.playError": "The Google Play purchase could not be completed. Please try again.",
+    "price.playPending": "We've received your purchase. Your membership will activate automatically once Google confirms it (this can take from a few minutes to a few hours).",
     "price.playManage": "Subscriptions bought in the app are managed (cancel, payment method) in Google Play → Subscriptions. Open it now?",
     "price.checkoutOnly": "The amount in your local currency is shown at checkout",
     "mypage.jsCachedAt": "Showing the reading retrieved at {time}.",

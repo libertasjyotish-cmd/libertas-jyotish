@@ -310,6 +310,7 @@ window.LJ_I18N = {
     unavailable: 'Die Online-Zahlung ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.'
   },
   playError: 'Der Kauf über Google Play konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.',
+  playPending: 'Wir haben Ihren Kauf erhalten. Ihre Mitgliedschaft wird automatisch aktiviert, sobald Google ihn bestätigt (das kann einige Minuten bis einige Stunden dauern).',
   playManage: 'In der App gekaufte Abonnements werden in Google Play → Abonnements verwaltet (Kündigung, Zahlungsmethode). Jetzt öffnen?',
   guide: {
     hub: '/de/guide',
@@ -706,7 +707,9 @@ play.pending().then((list) => {
 if (!list.length) return;
 if (!window.LJCheckoutGuard.hasSession()) { requestReauth('play-restore', email); return; }
 return play.restore(email).then((done) => {
-if (done.length) { fetchUserDataAndRender(email, true); return; }
+if (done.some((d) => d.pending)) alert(window.LJ_I18N.playPending);
+if (done.some((d) => d.ok)) { fetchUserDataAndRender(email, true); return; }
+if (done.length) return;
 const errors = play.lastErrors || [];
 if (errors.indexOf('unauthorized') !== -1) { requestReauth('play-restore', email); return; }
 if (errors.length) alert('Google Play: ' + errors.join(', '));

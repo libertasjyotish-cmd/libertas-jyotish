@@ -310,6 +310,7 @@ window.LJ_I18N = {
     unavailable: 'サイト内決済は準備中です。公開までお待ちください。'
   },
   playError: 'Google Play での購入を完了できませんでした。もう一度お試しください。',
+  playPending: '購入を受け付けました。Google の確認が済みしだい、自動で会員になります（数分〜数時間かかることがあります）。',
   playManage: '定期購入の管理（解約・支払い方法）は Google Play の「定期購入」画面で行います。開きますか？',
   guide: {
     hub: '/ja/guide',
@@ -706,7 +707,9 @@ play.pending().then((list) => {
 if (!list.length) return;
 if (!window.LJCheckoutGuard.hasSession()) { requestReauth('play-restore', email); return; }
 return play.restore(email).then((done) => {
-if (done.length) { fetchUserDataAndRender(email, true); return; }
+if (done.some((d) => d.pending)) alert(window.LJ_I18N.playPending);
+if (done.some((d) => d.ok)) { fetchUserDataAndRender(email, true); return; }
+if (done.length) return;
 const errors = play.lastErrors || [];
 if (errors.indexOf('unauthorized') !== -1) { requestReauth('play-restore', email); return; }
 if (errors.length) alert('Google Play: ' + errors.join(', '));
