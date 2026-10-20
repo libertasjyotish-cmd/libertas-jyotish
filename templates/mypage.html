@@ -643,7 +643,12 @@ playSyncTried = true;
 play.pending().then((list) => {
 if (!list.length) return;
 if (!window.LJCheckoutGuard.hasSession()) { requestReauth('play-restore', email); return; }
-return play.restore(email).then((done) => { if (done.length) fetchUserDataAndRender(email, true); });
+return play.restore(email).then((done) => {
+if (done.length) { fetchUserDataAndRender(email, true); return; }
+const errors = play.lastErrors || [];
+if (errors.indexOf('unauthorized') !== -1) { requestReauth('play-restore', email); return; }
+if (errors.length) alert('Google Play: ' + errors.join(', '));
+});
 }).catch(() => {});
 }
 
@@ -952,6 +957,7 @@ fetchUserDataAndRender(email);
 }
 
 function setLoggedInState(email) {
+syncPlayPurchases(email);
 document.getElementById('user-display-email').textContent = email;
 document.getElementById('btn-logout').style.display = 'inline';
 document.getElementById('auth-box').style.display = 'none';

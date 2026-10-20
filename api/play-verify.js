@@ -32,6 +32,7 @@ module.exports = async (req, res) => {
   if (!purchaseToken) return res.status(400).json({ error: 'invalid_token' });
   const { id: productId, kind, order: needsOrder } = PLAY_PRODUCTS[product];
   if (!needsOrder && (!email.includes('@') || !verifySession(email, body.session))) {
+    console.warn('play-verify unauthorized', { product, hasEmail: email.includes('@'), hasSession: Boolean(body.session) });
     return res.status(401).json({ error: 'unauthorized' });
   }
   res.setHeader('Cache-Control', 'no-store');
@@ -64,7 +65,10 @@ module.exports = async (req, res) => {
     }
 
     const summary = subscriptionSummary(await getSubscription(purchaseToken));
-    if (!summary.entitled) return res.status(402).json({ error: 'not_entitled', state: summary.state });
+    if (!summary.entitled) {
+      console.warn('play-verify not_entitled', { product, state: summary.state });
+      return res.status(402).json({ error: 'not_entitled', state: summary.state });
+    }
     const ok = await setPlaySubscription(email, {
       purchaseToken,
       paidUntil: summary.expiryTime,
