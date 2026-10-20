@@ -364,6 +364,22 @@ window.LJ_I18N = {
         }
       }
       formView.style.display = 'block';
+      restorePlayPdf(email);
+    }
+
+    // アプリ内で支払い済みなのに確認が失敗していた生涯鑑定書を、ページを開いた時に自動で紐づける（1回のみ）
+    function restorePlayPdf(email) {
+      const play = window.LJPlayBilling;
+      if (!email || !play || !play.supported() || !window.LJCheckoutGuard.hasSession()) return;
+      if (sessionStorage.getItem('lj_pdf_restore_tried')) return;
+      sessionStorage.setItem('lj_pdf_restore_tried', '1');
+      play.pending().then((list) => {
+        if (!list.some((p) => p.itemId === 'report_pdf')) return;
+        return play.restore(email).then((done) => {
+          if (done.some((d) => d.granted === 'pdf')) location.reload();
+          else if (done.some((d) => d.pending)) alert(window.LJ_I18N.playPending);
+        });
+      }).catch(() => {});
     }
 
     document.addEventListener('DOMContentLoaded', () => {

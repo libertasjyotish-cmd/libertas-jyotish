@@ -18,18 +18,32 @@
     return servicePromise;
   }
 
+  // 通信断や一時的な 5xx は最大3回まで（1.5秒・3秒あけて）送り直す。検証は同じ購入なら何度呼んでも結果が同じ。
+  function postVerify(body) {
+    var attempt = 0;
+    function send() {
+      attempt++;
+      return fetch('/api/play-verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+        .then(function (res) {
+          if (res.status >= 500 && attempt < 3) return wait(attempt).then(send);
+          return res;
+        }, function (err) {
+          if (attempt < 3) return wait(attempt).then(send);
+          throw err;
+        });
+    }
+    function wait(n) { return new Promise(function (r) { setTimeout(r, 1500 * n); }); }
+    return send();
+  }
+
   function verify(product, purchaseToken, email) {
     var lang = (window.LJ_I18N && window.LJ_I18N.lang) || 'ja';
-    return fetch('/api/play-verify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: email,
-        session: localStorage.getItem('lj_session'),
-        product: product,
-        purchaseToken: purchaseToken,
-        lang: lang
-      })
+    return postVerify({
+      email: email,
+      session: localStorage.getItem('lj_session'),
+      product: product,
+      purchaseToken: purchaseToken,
+      lang: lang
     }).then(function (res) {
       return res.json().catch(function () { return null; }).then(function (data) {
         if (data && data.pending) return data;
@@ -90,11 +104,7 @@
     return request.show(details).then(function (response) {
       return orderPromise.then(function (order) {
         var token = response.details && response.details.purchaseToken;
-        return fetch('/api/play-verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ product: data.product, order: order.order, purchaseToken: token, lang: data.lang })
-        }).then(function (res) {
+        return postVerify({ product: data.product, order: order.order, purchaseToken: token, lang: data.lang }).then(function (res) {
           return res.json().catch(function () { return null; }).then(function (v) {
             if (!res.ok || !v || !v.ok) throw new Error((v && v.error) || 'verify_failed');
             if (window.LJTrack) window.LJTrack('purchase_completed', { product: data.product, provider: 'play' });
