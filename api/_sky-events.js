@@ -1,4 +1,4 @@
-// 星の出来事（逆行・順行・入宮・高揚・減衰・会合・日食・月食）を暦から計算し、日本語の決まった文に組み立てる。
+// 星の出来事（逆行・順行・入宮・高揚・減衰・会合・日食・月食）を暦から計算し、日本語・英語の決まった文に組み立てる。
 // Gemini は使わない。計算と文は SNS 動画（Jyotish_SNS_ShortMovie の sky-events / event-calendar / event-template-ja）と同じ。
 const { Body, Ecliptic, GeoVector, SearchLunarEclipse, NextLunarEclipse, SearchGlobalSolarEclipse, NextGlobalSolarEclipse } = require('astronomy-engine');
 
@@ -210,6 +210,93 @@ function buildEventTemplateJa(event, around) {
   }
 }
 
+// 英語（SNS 動画の event-template-intl.ts の EN と同じ文）。日付は UTC の暦日
+const EN = {
+  area: { Mercury: 'words and thinking', Venus: 'love and money', Mars: 'drive and action', Jupiter: 'growth and luck', Saturn: 'duty and effort', Rahu: 'strong desires', Ketu: 'letting go' },
+  retroQ: {
+    Mercury: 'are you rereading important messages before sending them?', Venus: 'do you want to rethink how you handle people and money?',
+    Mars: 'are you rushing and getting nowhere?', Jupiter: 'are you unsure your goal is the right one?', Saturn: 'do your responsibilities feel heavy?'
+  },
+  retroDo: {
+    Mercury: 'reread before sending and confirm promises', Venus: 'choose again the people and spending that matter', Mars: 'set up your method before you start',
+    Jupiter: 'review your plans and choose where to grow', Saturn: 'review what you took on and reinforce it'
+  },
+  ingressQ: { Jupiter: 'can you see something new you want to grow?', Saturn: 'is there something you want to commit to for years?', Rahu: 'are you suddenly drawn to something new?' },
+  stay: { Jupiter: 'about a year', Saturn: 'about two and a half years', Rahu: 'about a year and a half' },
+  exaltQ: {
+    Mercury: 'are your thoughts falling clearly into place?', Venus: 'do your ties with people and money feel easy?', Mars: 'is your drive turning straight into results?',
+    Jupiter: 'can you see something new you want to grow?', Saturn: 'is there something you want to commit to for years?'
+  },
+  debilQ: {
+    Mercury: 'are you struggling to make up your mind?', Venus: 'do people or money leave you feeling unfulfilled?', Mars: 'is your drive spinning its wheels?',
+    Jupiter: 'do you feel your growth has stalled?', Saturn: 'do your responsibilities feel heavy?'
+  },
+  debilDo: {
+    Mercury: 'check again instead of rushing to conclusions', Venus: 'choose again what truly fulfils you', Mars: 'plan the steps instead of pushing',
+    Jupiter: 'choose steady progress over big expansion', Saturn: 'rebuild your foundations without hurrying'
+  }
+};
+const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+const STATIONS = ['Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn'];
+const SLOW = ['Jupiter', 'Saturn', 'Rahu'];
+
+function enDate(d, opts = { month: 'long', day: 'numeric' }) {
+  return new Intl.DateTimeFormat('en-US', { ...opts, timeZone: 'UTC' }).format(d);
+}
+
+function buildEventTemplateEn(event, around) {
+  const d = enDate(event.date);
+  const y = event.date.getUTCFullYear();
+  const prev = around.prev ? around.prev.date.getUTCFullYear() : undefined;
+  const next = around.next ? around.next.date.getUTCFullYear() : undefined;
+  const since = prev !== undefined && y - prev >= 8 ? `for the first time in ${y - prev} years, ` : '';
+  const parts = [prev !== undefined ? `Last time: ${prev}` : '', next !== undefined ? `next: ${next}` : ''].filter(Boolean);
+  const line = parts.length ? `${cap(parts.join(', '))}.` : '';
+  const s = event.sign;
+  const done = ([hook, body]) => ({ hook, body: line ? `${body} ${line}` : body });
+  const eclipse = /^(solar|lunar)-eclipse-(\w+)$/.exec(event.type);
+  if (eclipse) {
+    const kind = eclipse[2];
+    if (!['total', 'annular', 'partial'].includes(kind)) return null;
+    const solar = eclipse[1] === 'solar';
+    return done([
+      `On ${d}, ${since}a ${kind} ${solar ? 'solar' : 'lunar'} eclipse falls in ${s}. ${solar ? 'Do you want to let go of an old way of doing things?' : 'Is there something in your heart you want to close?'}`,
+      `In Vedic astrology, an eclipse is when the ${solar ? 'Sun' : 'Moon'} meets Rahu and Ketu. It closes a chapter of ${solar ? 'your goals' : 'your feelings and relationships'}.`
+    ]);
+  }
+  if (event.type === 'conjunction') {
+    const [a, b] = event.planet.split('-');
+    if (!EN.area[a] || !EN.area[b]) return null;
+    return done([
+      `On ${d}, ${since}${a} and ${b} meet in ${s}. Do you sense a big change of direction coming?`,
+      `${a} rules ${EN.area[a]}, ${b} rules ${EN.area[b]}. When they meet in one sign, the flow of those areas turns.`
+    ]);
+  }
+  const p = event.planet;
+  if (!EN.area[p]) return null;
+  switch (event.type) {
+    case 'retrograde':
+      if (!STATIONS.includes(p)) return null;
+      return done([`On ${d}, ${since}${p} turns retrograde in ${s}. ${cap(EN.retroQ[p])}`, `${p} rules ${EN.area[p]}. A retrograde is not a standstill but a time to rebuild: ${EN.retroDo[p]}.`]);
+    case 'direct':
+      if (!STATIONS.includes(p)) return null;
+      return done([`On ${d}, ${p} turns direct in ${s}. Is something that was stuck starting to move?`, `The ${EN.area[p]} you reviewed during the retrograde now move forward, step by step. Restart what you had put on hold.`]);
+    case 'ingress':
+      if (!SLOW.includes(p)) return null;
+      return done([`On ${d}, ${since}${p} enters ${s}. ${cap(EN.ingressQ[p])}`, `${p} rules ${EN.area[p]} and stays in ${s} for ${EN.stay[p]}. Where it acts depends on the house counted from your Moon sign.`]);
+    case 'exalted': {
+      if (!STATIONS.includes(p)) return null;
+      const stay = SLOW.includes(p) ? EN.stay[p] : '';
+      return done([`On ${d}, ${since}${p} enters ${s}, the sign where it is strongest. ${cap(EN.exaltQ[p])}`, `In Vedic astrology, ${p} is exalted in ${s}. ${stay ? `For ${stay}` : 'While it is there'}, the planet of ${EN.area[p]} gives its best.`]);
+    }
+    case 'debilitated':
+      if (!STATIONS.includes(p)) return null;
+      return done([`On ${d}, ${since}${p} enters ${s}, where it struggles to show its strength. ${cap(EN.debilQ[p])}`, `In Vedic astrology, ${p} is debilitated in ${s}. While it is there, ${EN.debilDo[p]}, and you come back stronger.`]);
+    default:
+      return null;
+  }
+}
+
 // 水星・金星・火星のただの入宮は数週間ごとに起きるので出来事にしない
 const FAST = new Set(['Mercury', 'Venus', 'Mars']);
 const inScope = (e) => !(FAST.has(e.planet) && e.type === 'ingress');
@@ -222,8 +309,10 @@ function calendarEvents(start, end, pool = poolFor(start)) {
   return events.filter((e) => !shadowed(e) && !isReentry(e, pool) && buildEventTemplateJa(e, {}) !== null);
 }
 
-function eventScriptJa(event) {
-  return buildEventTemplateJa(event, sameEventNeighbours(event, poolFor(event.date)));
+// { hook, body }（lang は ja / en）
+function eventScript(lang, event) {
+  const around = sameEventNeighbours(event, poolFor(event.date));
+  return lang === 'en' ? buildEventTemplateEn(event, around) : buildEventTemplateJa(event, around);
 }
 
-module.exports = { DAY, PLANET, SIGN_JA, ECLIPSE_KIND, jaDate, calendarEvents, eventScriptJa, scanSkyEvents };
+module.exports = { DAY, PLANET, SIGN_JA, ECLIPSE_KIND, jaDate, enDate, calendarEvents, eventScript, scanSkyEvents };
