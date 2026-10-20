@@ -181,6 +181,7 @@
       });
     },
     // 端末の Play アカウントにある、会員権に紐づける購入（プレミアム・生涯鑑定書）。注文台帳が要る個別鑑定書は除く。
+    lastErrors: [],
     pending: function () {
       return service().then(function (s) {
         if (!s || !s.listPurchases) return [];
@@ -191,10 +192,14 @@
     },
     // 端末で既に購入済み（再インストール・紐づけ失敗等）のものをサーバーに再登録する。
     restore: function (email) {
+      window.LJPlayBilling.lastErrors = [];
       return window.LJPlayBilling.pending().then(function (purchases) {
           var jobs = (purchases || []).map(function (p) {
             var product = p.itemId === SKUS.pdf ? 'pdf' : 'premium';
-            return verify(product, p.purchaseToken, email).catch(function () { return null; });
+            return verify(product, p.purchaseToken, email).catch(function (e) {
+              window.LJPlayBilling.lastErrors.push(String((e && e.message) || e));
+              return null;
+            });
           });
           return Promise.all(jobs).then(function (r) { return r.filter(Boolean); });
       }).catch(function () { return []; });
