@@ -20,9 +20,9 @@ const storage = require('./_etsy-storage');
 
 const CHAPTERS_PER_STEP = 3;
 const MAX_ATTEMPTS = 5;
-const IN_PROGRESS_LOCK_MS = 2 * 60 * 1000;
+const IN_PROGRESS_LOCK_MS = 6 * 60 * 1000;
 const MIN_MS_FOR_CHAPTERS = 25000;
-const MIN_MS_FOR_PDF = 30000;
+const MIN_MS_FOR_PDF = 150000;
 const MIN_MS_FOR_VISION = 45000;
 const PHOTO_RETENTION_DAYS = 30;
 const { STATUS } = ledger;
@@ -328,6 +328,7 @@ async function advanceOrder(order, ctx) {
       if (value) chapters[id] = value;
     }
     let missing = chapterIds.filter((id) => !chapters[id]);
+    const wroteChapters = missing.length > 0;
 
     while (missing.length && remaining() > MIN_MS_FOR_CHAPTERS) {
       const batch = missing.slice(0, CHAPTERS_PER_STEP);
@@ -348,7 +349,8 @@ async function advanceOrder(order, ctx) {
       await save({ status: STATUS.NEW, last_error: `pending:${missing.join(',')}` });
       return 'in_progress';
     }
-    if (remaining() < MIN_MS_FOR_PDF) {
+    // PDF は章を書いた回とは別の回で、時間をまるごと使って作る
+    if (wroteChapters || remaining() < MIN_MS_FOR_PDF) {
       await save({ status: STATUS.NEW, last_error: 'pending:pdf' });
       return 'in_progress';
     }
