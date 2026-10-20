@@ -120,6 +120,25 @@ assert.deepEqual(nl.dueCampaigns([camp('future', '2026-11-02T00:00:00Z'), camp('
   assert.equal(at('2026-10-29T23:00:00Z').id, 'weekly-2026-10-24');
   const w = at('2026-10-23T11:00:00Z');
   assert.equal(w.sendAfter, '2026-10-23T11:00:00.000Z');
+  // 言語ごとの送信時刻: 日本語は日本の金曜20時、英語はニューヨークの金曜20時（夏時間の前後）
+  assert.equal(w.langs.ja.sendAfter, '2026-10-23T11:00:00.000Z');
+  assert.equal(w.langs.en.sendAfter, '2026-10-24T00:00:00.000Z');
+  assert.equal(at('2026-11-06T11:00:00Z').langs.en.sendAfter, '2026-11-07T01:00:00.000Z');
+  assert.equal(at('2027-03-12T11:00:00Z').langs.en.sendAfter, '2027-03-13T01:00:00.000Z');
+  assert.equal(at('2027-03-19T11:00:00Z').langs.en.sendAfter, '2027-03-20T00:00:00.000Z');
+  assert.equal(at('2026-10-24T00:30:00Z').id, 'weekly-2026-10-24');
+  {
+    const { memberSheet } = fakeSheets(members);
+    const sent = [];
+    const mailer = async (m) => { sent.push(`${m.to}|${m.subject}`); };
+    const run = (iso) => nl.runCampaigns({ now: Date.parse(iso), mailer, gap: 0, memberSheet });
+    await run('2026-10-23T11:00:00Z');
+    assert.deepEqual(sent.map((x) => x.split('|')[0]), ['a@gmail.com']);
+    await run('2026-10-24T00:00:00Z');
+    await run('2026-10-24T01:00:00Z');
+    assert.deepEqual(sent.map((x) => x.split('|')[0]), ['a@gmail.com', 'b@gmail.com']);
+    assert.match(sent[1], /This Week's Sky/);
+  }
   const ja = w.langs.ja;
   assert.equal(ja.subject, '【今週の空】10月25日、水星が天秤座で逆行に入ります');
   assert.equal(ja.banner, '今週の空 ・ 10月24日（土）〜10月30日（金）');

@@ -9,6 +9,8 @@ const MAX_EVENTS = 2;
 const LOOKAHEAD_DAYS = 180;
 // 送信は金曜 11:00 UTC（20:00 JST）。対象は翌日の土曜から金曜までの7日間
 const SEND_HOUR_UTC = 11;
+// 言語ごとの配信時刻: その国・地域の金曜20時（夏時間は Intl で自動）
+const SEND_LOCAL = { ja: { tz: 'Asia/Tokyo', hour: 20 }, en: { tz: 'America/New_York', hour: 20 } };
 const REPORT_PATHS = ['/pdf-purchase', '/yearly', '/career', '/palm-chart', '/compat', '/karma'];
 
 const TEXT = {
@@ -135,6 +137,21 @@ function sendTimeFor(now) {
   return t;
 }
 
+// friday（その週の金曜を表す UTC 時刻）の暦日で、tz の現地 hour 時ちょうどの UTC 時刻
+function localFridayAt(friday, { tz, hour }) {
+  const d = new Date(friday);
+  const target = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), hour);
+  const fmt = new Intl.DateTimeFormat('en-US', { timeZone: tz, hourCycle: 'h23', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+  let t = target;
+  for (let i = 0; i < 3; i += 1) {
+    const p = Object.fromEntries(fmt.formatToParts(new Date(t)).map((x) => [x.type, Number(x.value)]));
+    const wall = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute);
+    if (wall === target) break;
+    t -= wall - target;
+  }
+  return t;
+}
+
 function buildIssue(lang, { events, nextEvent, first, last, reportIndex }) {
   const T = TEXT[lang];
   const card = (e) => {
@@ -209,8 +226,11 @@ function weeklyCampaign(now = Date.now()) {
     id: `weekly-${new Date(start.getTime() + 9 * 3600000).toISOString().slice(0, 10)}`,
     sendAfter: new Date(sendAt).toISOString(),
     weekly: true,
-    langs: Object.fromEntries(Object.keys(TEXT).map((l) => [l, buildIssue(l, week)]))
+    langs: Object.fromEntries(Object.keys(TEXT).map((l) => [l, {
+      ...buildIssue(l, week),
+      sendAfter: new Date(SEND_LOCAL[l] ? localFridayAt(sendAt, SEND_LOCAL[l]) : sendAt).toISOString()
+    }]))
   };
 }
 
-module.exports = { weeklyCampaign, sendTimeFor, REPORT_PATHS, TEXT };
+module.exports = { weeklyCampaign, sendTimeFor, localFridayAt, REPORT_PATHS, TEXT };
