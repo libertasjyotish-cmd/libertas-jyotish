@@ -20,6 +20,8 @@ const storage = require('./_etsy-storage');
 
 const CHAPTERS_PER_STEP = 3;
 const MAX_ATTEMPTS = 5;
+// Prokerala のレート制限で待つのは最大6回（10分おきで約1時間）まで
+const MAX_RATE_WAITS = 6;
 const IN_PROGRESS_LOCK_MS = 6 * 60 * 1000;
 const MIN_MS_FOR_CHAPTERS = 25000;
 const MIN_MS_FOR_PDF = 150000;
@@ -241,7 +243,15 @@ async function advanceOrder(order, ctx) {
   }
   const { defs, ids: chapterIds, voice = null, extraViolations = null } = chapterDefsFor(order);
 
-  const attempts = order.status === STATUS.ERROR ? order.attempts + 1 : Math.max(order.attempts, 1);
+  // generating のまま残っている＝前回の実行が時間切れで強制終了した。これも1回の失敗として数え、無限に繰り返さない
+  const staleRun = order.status === STATUS.GENERATING;
+  const attempts = order.status === STATUS.ERROR || staleRun ? order.attempts + 1 : Math.max(order.attempts, 1);
+  if (staleRun && attempts > MAX_ATTEMPTS) {
+    await save({ status: STATUS.ERROR, attempts: order.attempts, last_error: 'gave_up: run did not finish' });
+    if (ctx.mail) await mail.notifyOwner(`Etsy: gave up (receipt ${receiptId})`, [`buyer: ${order.buyer_name} <${order.buyer_email}>`, 'error: run did not finish']);
+    return 'error';
+  }
+  const rateWaits = Number((/^pending:rate(\d+):/.exec(order.last_error || '') || [])[1] || 0);
   await save({ status: STATUS.GENERATING, attempts, last_error: '' });
 
   // Prokerala のレスポンスは Blob に逐次保存し（astro_cache）、レート制限で途中終了しても次回は残りだけ取る。
@@ -395,11 +405,12 @@ async function advanceOrder(order, ctx) {
     const message = String(err.message || err).slice(0, 500);
     ctx.log(`  ${receiptId}: failed: ${message}`);
     useEndpointCache(null);
-    if (err.code === 'prokerala_rate_limited') {
+    if (err.code === 'prokerala_rate_limited' && rateWaits + 1 < MAX_RATE_WAITS) {
       await persistAstroCache();
-      await save({ status: STATUS.NEW, attempts: order.attempts, last_error: `pending:${message}` });
+      await save({ status: STATUS.NEW, attempts: order.attempts, last_error: `pending:rate${rateWaits + 1}:${message}` });
       return 'in_progress';
     }
+    if (err.code === 'prokerala_rate_limited') await persistAstroCache();
     await save({ status: STATUS.ERROR, last_error: message });
     if (ctx.mail && attempts >= MAX_ATTEMPTS) await mail.notifyOwner(`Etsy: gave up (receipt ${receiptId})`, [`buyer: ${order.buyer_name} <${order.buyer_email}>`, `error: ${message}`]);
     return 'error';
