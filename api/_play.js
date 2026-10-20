@@ -70,6 +70,11 @@ async function acknowledgeProduct(productId, token) {
 }
 
 // 定期購入（v2）。subscriptionState と lineItems[].expiryTime を使う。
+// 消費型として扱う個別鑑定書は、確定後に消費しないと同じ商品を二度と買えない（消費は承認も兼ねる）
+async function consumeProduct(productId, token) {
+  return request('POST', `/purchases/products/${encodeURIComponent(productId)}/tokens/${encodeURIComponent(token)}:consume`, {});
+}
+
 async function getSubscription(token) {
   return request('GET', `/purchases/subscriptionsv2/tokens/${encodeURIComponent(token)}`);
 }
@@ -124,5 +129,6 @@ module.exports = {
   getSubscription,
   acknowledgeSubscription,
   subscriptionSummary,
-  listVoidedPurchases
+  listVoidedPurchases,
+  consumeProduct
 };

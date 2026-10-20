@@ -1,6 +1,6 @@
 // Play 定期購入を会員に紐づける処理と、Google 側の一時的な失敗で紐づけられなかった購入の自動再試行。
 // 再試行は etsy-cron（10分ごと）から呼ばれる。1回あたり件数、1件あたり回数・期間に上限がある。
-const { playEnabled, getSubscription, acknowledgeSubscription, subscriptionSummary, listVoidedPurchases } = require('./_play');
+const { playEnabled, getSubscription, acknowledgeSubscription, subscriptionSummary, listVoidedPurchases, getProductPurchase, acknowledgeProduct } = require('./_play');
 const {
   setPlaySubscription,
   setPlayPending,
@@ -9,7 +9,8 @@ const {
   clearPlayPending,
   listPlayMembers,
   updatePlaySubscription,
-  revokePdfByPlayTokens
+  revokePdfByPlayTokens,
+  setPdfPurchased
 } = require('./_sheets');
 
 const OWNER = process.env.ETSY_OWNER_EMAIL || 'info@libertas-jyotish.com';
@@ -116,11 +117,28 @@ async function revokeVoidedPdf() {
   if (!voided.length) return 0;
   const emails = await revokePdfByPlayTokens(voided.map(v => v.purchaseToken));
   if (emails.length) await notifyOwner('生涯鑑定書の払い戻しを反映しました', emails);
+  // 個別鑑定書を含む全ての払い戻しを、毎日の実行で1回ずつ知らせる（直近24時間分）
+  const recent = voided.filter(v => Number(v.voidedTimeMillis) > Date.now() - 864e5);
+  if (recent.length) {
+    await notifyOwner('Google Play で払い戻しがありました', recent.map(v => `order: ${v.orderId || ''} (reason ${v.voidedReason ?? ''}, source ${v.voidedSource ?? ''})`));
+  }
   return emails.length;
 }
 
-async function savePending(email, purchaseToken, language) {
-  return setPlayPending(email, { purchaseToken, language }).catch((e) => {
+// 生涯鑑定書（買い切り）の購入を照会し、閲覧権を付けて承認する
+async function linkPdf(email, purchaseToken, { language } = {}) {
+  const purchase = await getProductPurchase('report_pdf', purchaseToken);
+  if (purchase.purchaseState !== 0) return { ok: false };
+  if (!(await setPdfPurchased(email, { playToken: purchaseToken }))) throw new Error('sheet_write_failed');
+  if (purchase.acknowledgementState === 0) {
+    await acknowledgeProduct('report_pdf', purchaseToken);
+    await notifyOwner('新しい生涯鑑定書の購入', [`email: ${email}`, 'product: report_pdf', `language: ${language || ''}`]);
+  }
+  return { ok: true };
+}
+
+async function savePending(email, purchaseToken, language, product = 'premium') {
+  return setPlayPending(email, { purchaseToken, language, product }).catch((e) => {
     console.error('play pending save failed:', e.message);
     return false;
   });
@@ -139,7 +157,9 @@ async function retryPending({ deadline } = {}) {
       continue;
     }
     try {
-      const r = await linkSubscription(p.email, p.token, { productId: 'premium_monthly', language: p.lang });
+      const r = p.product === 'pdf'
+        ? await linkPdf(p.email, p.token, { language: p.lang })
+        : await linkSubscription(p.email, p.token, { productId: 'premium_monthly', language: p.lang });
       if (r.ok) result.linked++;
       else result.dropped++;
       await clearPlayPending(p.email);
@@ -157,4 +177,4 @@ async function retryPending({ deadline } = {}) {
   return result;
 }
 
-module.exports = { linkSubscription, savePending, retryPending, syncPlayMembers, isTransient, notifyOwner };
+module.exports = { linkSubscription, linkPdf, savePending, retryPending, syncPlayMembers, isTransient, notifyOwner };

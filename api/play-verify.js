@@ -4,9 +4,8 @@
 // Android アプリ（TWA）内で PaymentRequest（https://play.google.com/billing）が完了した直後に呼ばれる。
 // クライアントの申告は信用せず、Play Developer API でトークンを照会してから Sheets に書き、承認（acknowledge）する。
 const { verifySession } = require('./_auth');
-const { PLAY_PRODUCTS, playEnabled, getProductPurchase, acknowledgeProduct } = require('./_play');
-const { linkSubscription, savePending, isTransient, notifyOwner } = require('./_play-link');
-const { setPdfPurchased } = require('./_sheets');
+const { PLAY_PRODUCTS, playEnabled, getProductPurchase, acknowledgeProduct, consumeProduct } = require('./_play');
+const { linkSubscription, linkPdf, savePending, isTransient } = require('./_play-link');
 const { normalizeLang } = require('./_terms');
 const ledger = require('./_etsy-ledger');
 const storage = require('./_etsy-storage');
@@ -45,18 +44,25 @@ module.exports = async (req, res) => {
       } else if (order.transaction_id !== ref) {
         return res.status(409).json({ error: 'order_already_paid' });
       }
-      if (purchase.acknowledgementState === 0) await acknowledgeProduct(productId, purchaseToken);
+      if (purchase.consumptionState !== 1) {
+        await consumeProduct(productId, purchaseToken).catch(async (e) => {
+          console.error('play consume failed:', product, e.message);
+          if (purchase.acknowledgementState === 0) await acknowledgeProduct(productId, purchaseToken);
+        });
+      }
       const uploadUrl = product === 'palm' ? storage.uploadUrl(orderId, order.language || lang) : null;
       return res.status(200).json({ ok: true, product, order: orderId, uploadUrl });
     }
     if (kind === 'inapp') {
-      const purchase = await getProductPurchase(productId, purchaseToken);
-      if (purchase.purchaseState !== 0) return res.status(402).json({ error: 'not_purchased' });
-      if (!(await setPdfPurchased(email, { playToken: purchaseToken }))) throw new Error('sheet_write_failed');
-      if (purchase.acknowledgementState === 0) {
-        await acknowledgeProduct(productId, purchaseToken);
-        await notifyOwner('新しい生涯鑑定書の購入', [`email: ${email}`, `product: ${productId}`, `language: ${lang}`]);
+      let r;
+      try {
+        r = await linkPdf(email, purchaseToken, { language: lang });
+      } catch (err) {
+        if (!isTransient(err) || !(await savePending(email, purchaseToken, lang, 'pdf'))) throw err;
+        console.warn('play-verify pending:', product, err.message);
+        return res.status(202).json({ ok: false, pending: true, product });
       }
+      if (!r.ok) return res.status(402).json({ error: 'not_purchased' });
       return res.status(200).json({ ok: true, product, granted: 'pdf' });
     }
 

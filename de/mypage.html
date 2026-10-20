@@ -831,7 +831,7 @@ if (nextTarget === 'checkout') {
   const verifiedEmail = window.LJCheckoutGuard.verifiedEmail();
   // Android アプリ（Play 課金）: 支払いシートはボタンを押した時にしか開けないので、ログイン済みならプラン欄を見せるだけ
   if (window.LJCheckoutGuard._playChecked === 'play' || (window.LJPlayBilling && window.LJPlayBilling.supported())) {
-    if (window.LJCheckoutGuard.hasSession()) { location.hash = 'premium'; return; }
+    if (window.LJCheckoutGuard.hasSession()) { if (product === 'pdf') { location.href = '/de/pdf-purchase'; return; } location.hash = 'premium'; return; }
     requestReauth('checkout:' + product, new URLSearchParams(window.location.search).get('hint') || savedEmail);
     return;
   }
@@ -990,7 +990,7 @@ window.location.href = '/de/pdf-report';
 if (String(window.ljPendingAfterAuth || '').indexOf('checkout:') === 0) {
 const product = window.ljPendingAfterAuth.slice('checkout:'.length);
 window.ljPendingAfterAuth = '';
-if (window.LJCheckoutGuard._playChecked === 'play' || (window.LJPlayBilling && window.LJPlayBilling.supported())) { location.hash = 'premium'; return; }
+if (window.LJCheckoutGuard._playChecked === 'play' || (window.LJPlayBilling && window.LJPlayBilling.supported())) { if (product === 'pdf') { location.href = '/de/pdf-purchase'; return; } location.hash = 'premium'; return; }
 window.LJCheckout.ready.then(() => {
 if (!window.LJCheckout.available(product)) { alert(window.LJCheckout.unavailableMessage()); return; }
 window.location.href = window.LJCheckout.checkoutUrlFor(product, email);
