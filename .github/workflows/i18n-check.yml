@@ -11,6 +11,10 @@ on:
       - 'scripts/build-i18n.mjs'
       - 'scripts/build-guide.mjs'
       - 'data/guide/**'
+      - 'api/_newsletter.js'
+      - 'api/newsletter.js'
+      - 'data/newsletter/**'
+      - 'scripts/check-newsletter.mjs'
       - '*/*.html'
   workflow_dispatch:
 
@@ -25,3 +29,4 @@ jobs:
       - run: npm run check:i18n
       - run: npm run check:guide
       - run: npm run check:faq
+      - run: npm run check:newsletter

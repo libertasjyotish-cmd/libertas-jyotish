@@ -6,6 +6,7 @@ const { listOrders, STATUS } = require('./_etsy-ledger');
 const { getMemberSheet, getLastSheetIssue } = require('./_sheets');
 const { listGeminiModels } = require('./_gemini');
 const { sendInternal } = require('./_owner-mail');
+const { collectRecipients } = require('./_newsletter');
 
 const TIMEOUT_MS = 10000;
 // 決済済みなのに納品へ進んでいない注文を「滞留」とみなすまでの猶予。
@@ -176,6 +177,9 @@ async function memberStats() {
   const rows = await sheet.getRows();
   const byLanguage = {};
   const survey = { answered: 0, newsletter: 0, A: 0, B: 0, C: 0, D: 0 };
+  const recipients = collectRecipients(rows);
+  const newsletter = { sendable: recipients.length, byLanguage: {} };
+  for (const r of recipients) newsletter.byLanguage[r.lang] = (newsletter.byLanguage[r.lang] || 0) + 1;
   const seen = new Set();
   let duplicates = 0;
   for (const row of rows) {
@@ -197,7 +201,7 @@ async function memberStats() {
       for (const k of ['A', 'B', 'C', 'D']) if (row.get(`interest_${k}`) === 'yes') survey[k] += 1;
     }
   }
-  return { rows: rows.length, distinct: seen.size, duplicates, byLanguage, survey };
+  return { rows: rows.length, distinct: seen.size, duplicates, byLanguage, survey, newsletter };
 }
 
 module.exports = async function handler(req, res) {

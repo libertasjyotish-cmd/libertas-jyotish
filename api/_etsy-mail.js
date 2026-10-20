@@ -20,7 +20,7 @@ function wrap(inner) {
   </div>`;
 }
 
-async function send({ to, subject, html, attachments, replyTo }) {
+async function send({ to, subject, html, text, attachments, replyTo, headers }) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) throw new Error('RESEND_API_KEY is not set');
   const res = await fetch('https://api.resend.com/emails', {
@@ -32,7 +32,9 @@ async function send({ to, subject, html, attachments, replyTo }) {
       reply_to: replyTo || OWNER,
       subject,
       html,
-      attachments
+      text,
+      attachments,
+      headers
     })
   });
   const data = await res.json().catch(() => ({}));

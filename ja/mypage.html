@@ -390,6 +390,13 @@ data-width="320">
 </div>
 </div>
 
+<!-- お知らせメールの受信設定。本人確認セッションがある時だけ表示する。 -->
+<div id="newsletter-box" class="card-box" style="display:none;">
+<div class="card-title">メールのお知らせ</div>
+<label style="display:flex; gap:10px; align-items:flex-start; font-size:0.9rem; color:#4a3e36; line-height:1.5; cursor:pointer;"><input type="checkbox" id="newsletter-opt-in" style="margin-top:4px; flex:none;"><span>新しい鑑定書やお得なお知らせをメールで受け取る（いつでも解除できます）</span></label>
+<p id="newsletter-msg" style="font-size:0.8rem; color:#5A4E48; margin-top:6px; min-height:1em;"></p>
+</div>
+
 <!-- ホーム画面への追加（PWA）。対応環境でのみ表示する。 -->
 <div id="pwa-install-box" class="card-box" style="display:none;">
 <div class="card-title">アプリとして使う</div>
@@ -983,6 +990,37 @@ function setLoggedInState(email) {
 document.getElementById('user-display-email').textContent = email;
 document.getElementById('btn-logout').style.display = 'inline';
 document.getElementById('auth-box').style.display = 'none';
+loadNewsletterSetting(email);
+}
+
+// お知らせメールの受信設定（会員シートの newsletter_opt_in）
+async function loadNewsletterSetting(email) {
+const box = document.getElementById('newsletter-box');
+const session = localStorage.getItem('lj_session');
+if (!box || !session || !email) return;
+const input = document.getElementById('newsletter-opt-in');
+const msg = document.getElementById('newsletter-msg');
+const call = (extra) => fetch(JYOTISH_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ action: 'newsletter', email, session, ...extra }) }).then(r => r.ok ? r.json() : Promise.reject(r.status));
+try {
+const data = await call({});
+input.checked = Boolean(data.opt_in);
+box.style.display = 'block';
+} catch (e) { return; }
+if (input.dataset.bound) return;
+input.dataset.bound = '1';
+input.addEventListener('change', async () => {
+const value = input.checked;
+input.disabled = true;
+msg.textContent = '';
+try {
+await call({ value });
+msg.textContent = '保存しました。';
+} catch (e) {
+input.checked = !value;
+msg.textContent = '送信に失敗しました。もう一度お試しください。';
+} finally { input.disabled = false; }
+});
 }
 
 function setLoggedOutState() {
@@ -991,6 +1029,8 @@ document.getElementById('btn-logout').style.display = 'none';
 const portalLink = document.getElementById('btn-billing-portal');
 if (portalLink) portalLink.style.display = 'none';
 document.getElementById('auth-box').style.display = 'block';
+const newsBox = document.getElementById('newsletter-box');
+if (newsBox) newsBox.style.display = 'none';
 document.getElementById('today-transit-text').textContent = 'ログインすると、あなたの出生データに基づいた本日の運勢が表示されます。';
 }
 

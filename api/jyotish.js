@@ -3,7 +3,8 @@ const crypto = require('crypto');
 const { getMemberSheet, getLastSheetIssue, getMemberRecord } = require('./_sheets');
 const { listGeminiModels, generateWithGemini } = require('./_gemini');
 const { findViolations } = require('./_report');
-const { issueSession } = require('./_auth');
+const { issueSession, verifySession } = require('./_auth');
+const { getOptIn, setOptIn } = require('./_newsletter');
 const { createTerms } = require('./_terms');
 const { nakshatraFromLongitude } = require('./_astrology');
 const { geocodeBirthPlace } = require('./_geocode');
@@ -270,6 +271,21 @@ module.exports = async function handler(req, res) {
       if (picks.some(v => !['A', 'B', 'C', 'D'].includes(v))) return res.status(400).json({ error: 'Invalid interest' });
       const ok = await saveSurveyToSheets(email, picks, optIn);
       return res.status(ok ? 200 : 503).json({ ok });
+    }
+
+    // マイページのお知らせメール受信設定（本人確認セッション必須）。value を送れば更新、無ければ現在値を返す。
+    if (action === 'newsletter') {
+      if (!email || !verifySession(email, req.body.session)) return res.status(401).json({ error: 'unauthorized' });
+      try {
+        if (typeof req.body.value === 'boolean') {
+          const ok = await setOptIn(email, req.body.value);
+          return res.status(ok ? 200 : 404).json({ ok, opt_in: req.body.value });
+        }
+        return res.status(200).json({ ok: true, opt_in: await getOptIn(email) });
+      } catch (err) {
+        console.error('Newsletter setting failed:', err?.message);
+        return res.status(503).json({ error: 'member_lookup_failed' });
+      }
     }
 
     if (action === 'purchase_status') {
