@@ -7,7 +7,7 @@ const { runCycle } = require('./_etsy-fulfill');
 const { parsePersonalization } = require('./_etsy-parse');
 const ledger = require('./_etsy-ledger');
 
-const MAX_DURATION_S = 60;
+const MAX_DURATION_S = 300;
 const SAFETY_MS = 8000;
 
 module.exports = async function handler(req, res) {

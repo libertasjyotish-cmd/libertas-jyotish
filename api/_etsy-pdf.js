@@ -1,10 +1,31 @@
 // 既存の鑑定書ページ（<lang>/pdf-report）を Chromium で開き、API 応答を差し込んで PDF 化する。
+// ページと同一オリジンの静的ファイルは関数に同梱したファイルから返し、サイトのファイアウォールや通信状況に左右されないようにする。
 // 描画ロジックはブラウザ版と共通なので、レイアウトや多言語・RTL の二重実装をしない。
 // Vercel 上では @sparticuz/chromium、ローカルでは CHROME_PATH などのシステム Chrome を使う。
 // puppeteer-core / @sparticuz/chromium は ESM のみなので import() で読み込む（Vercel の Node ランタイムは require(esm) 不可）。
 const fs = require('fs');
+const path = require('path');
 
 const BASE_URL = (process.env.ETSY_REPORT_BASE_URL || 'https://www.libertas-jyotish.com').replace(/\/$/, '');
+
+const ROOT = path.join(__dirname, '..');
+const PAGE_TIMEOUT_MS = 60000;
+const CONTENT_TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'application/javascript', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.ico': 'image/x-icon' };
+
+// BASE_URL 配下の URL を同梱ファイルに対応づける（cleanUrls なので拡張子なしは .html を探す）。無ければ null。
+function localFile(url) {
+  let parsed;
+  try { parsed = new URL(url); } catch (err) { return null; }
+  if (parsed.origin !== new URL(BASE_URL).origin) return null;
+  const rel = decodeURIComponent(parsed.pathname).replace(/^\/+/, '');
+  for (const candidate of [rel, `${rel}.html`]) {
+    const file = path.resolve(ROOT, candidate);
+    if (!file.startsWith(ROOT + path.sep)) continue;
+    const type = CONTENT_TYPES[path.extname(file).toLowerCase()];
+    if (type && fs.existsSync(file) && fs.statSync(file).isFile()) return { file, type };
+  }
+  return null;
+}
 
 const CHROME_CANDIDATES = [
   process.env.CHROME_PATH,
@@ -53,14 +74,25 @@ async function renderReportPdf({ lang, report, extraHtml = '' }) {
         });
         return;
       }
+      const local = localFile(req.url());
+      if (local) {
+        req.respond({ status: 200, contentType: local.type, body: fs.readFileSync(local.file) });
+        return;
+      }
       req.continue();
     });
 
-    await page.goto(`${BASE_URL}/${lang}/pdf-report`, { waitUntil: 'networkidle0', timeout: 40000 });
-    await page.waitForFunction(
-      () => { const b = document.getElementById('book'); return b && b.style.display !== 'none' && b.children.length > 5; },
-      { timeout: 20000 }
-    );
+    const response = await page.goto(`${BASE_URL}/${lang}/pdf-report`, { waitUntil: 'networkidle0', timeout: PAGE_TIMEOUT_MS });
+    if (!response || !response.ok()) throw new Error(`pdf page HTTP ${response ? response.status() : 'no response'}`);
+    try {
+      await page.waitForFunction(
+        () => { const b = document.getElementById('book'); return b && b.style.display !== 'none' && b.children.length > 5; },
+        { timeout: PAGE_TIMEOUT_MS }
+      );
+    } catch (err) {
+      const status = await page.evaluate(() => (document.getElementById('status') || {}).textContent || '').catch(() => '');
+      throw new Error(`pdf page not rendered: ${String(status).trim().slice(0, 200) || err.message}`);
+    }
     if (extraHtml) {
       await page.evaluate((html) => {
         const book = document.getElementById('book');
@@ -106,4 +138,4 @@ async function renderReportPdf({ lang, report, extraHtml = '' }) {
   }
 }
 
-module.exports = { renderReportPdf };
+module.exports = { renderReportPdf, localFile };
