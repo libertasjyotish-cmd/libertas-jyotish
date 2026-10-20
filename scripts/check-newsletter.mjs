@@ -130,12 +130,15 @@ assert.deepEqual(nl.dueCampaigns([camp('future', '2026-11-02T00:00:00Z'), camp('
   const quiet = at('2026-11-20T11:00:00Z').langs.ja;
   assert.equal(quiet.subject, '【今週の空】次の節目は12月6日、ラーフが山羊座へ');
   // おすすめ鑑定書は6週で6種類すべてが1回ずつ
-  const picked = [0, 1, 2, 3, 4, 5].map((i) => weekly.REPORTS_JA.find((r) => at(new Date(Date.parse('2026-10-23T11:00:00Z') + i * 7 * 86400000).toISOString()).langs.ja.html.includes(r.path)).path);
-  assert.equal(new Set(picked).size, weekly.REPORTS_JA.length);
+  const picked = [0, 1, 2, 3, 4, 5].map((i) => weekly.REPORT_PATHS.find((p) => at(new Date(Date.parse('2026-10-23T11:00:00Z') + i * 7 * 86400000).toISOString()).langs.ja.html.includes(`/ja${p}"`)));
+  assert.equal(new Set(picked).size, weekly.REPORT_PATHS.length);
   // 2年分の毎週が組み立てられること（件名・本文が空にならない）
   for (let i = 0; i < 104; i += 1) {
     const c = at(new Date(Date.parse('2026-10-23T11:00:00Z') + i * 7 * 86400000).toISOString());
     assert.ok(c.langs.ja.subject.startsWith('【今週の空】') && c.langs.ja.html && c.langs.ja.text, `${c.id} が組み立てられません`);
+    assert.ok(c.langs.en.subject.startsWith("[This Week's Sky] ") && c.langs.en.html && c.langs.en.text, `${c.id}/en が組み立てられません`);
+    // 価格は国で変わるので、英語には入れない
+    assert.ok(!/[$¥€]|\bUSD\b|円/.test(c.langs.en.html + c.langs.en.text), `${c.id}/en に価格があります`);
   }
   // 共通の枠: 公式ロゴ・バナー全体がサイトトップへのリンク・日本語名・配信停止
   const m = nl.buildMail({ email: 'a@gmail.com', lang: 'ja', content: ja });
@@ -143,6 +146,16 @@ assert.deepEqual(nl.dueCampaigns([camp('future', '2026-11-02T00:00:00Z'), camp('
   assert.ok(/<a href="https:\/\/www\.libertas-jyotish\.com\/ja\/" style="display:block;[^"]*">\s*<div style="background:#2C221E;/.test(m.html));
   assert.ok(m.html.includes('リベルタス ジョーティシュ ・ インド占星術') && m.html.includes('今週の空 ・ 10月24日（土）〜10月30日（金）'));
   assert.ok(m.html.includes(nl.unsubscribeUrl('a@gmail.com', 'ja').replace(/&/g, '&amp;')) && m.text.includes(nl.unsubscribeUrl('a@gmail.com', 'ja')));
+  // 英語版
+  const en = w.langs.en;
+  assert.equal(en.subject, "[This Week's Sky] On October 25, Mercury turns retrograde in Libra");
+  assert.equal(en.banner, "This Week's Sky · Sat, October 24 – Fri, October 30");
+  for (const s of ['Vedic astrology', 'Are you rereading important messages before sending them?', 'Which part of your life this retrograde touches', 'Join Premium', '/en/mypage#premium', 'Report of the week']) {
+    assert.ok(en.html.includes(s.replace(/'/g, '&#39;')) && en.text.includes(s), `en に「${s}」がありません`);
+  }
+  assert.equal(at('2026-11-20T11:00:00Z').langs.en.subject, "[This Week's Sky] Next turning point: December 6, Rahu enters Capricorn");
+  const me = nl.buildMail({ email: 'a@gmail.com', lang: 'en', content: en });
+  assert.ok(me.html.includes('href="https://www.libertas-jyotish.com/en/"') && me.html.includes('Vedic Astrology'));
   // 実行時: 決まった原稿に「今週の空」が加わる
   assert.ok(nl.currentCampaigns(Date.parse('2026-10-23T11:00:00Z')).some((c) => c.id === 'weekly-2026-10-24'));
 }
