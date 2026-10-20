@@ -15,11 +15,13 @@
     "api/komoju-webhook.js": { "maxDuration": 30 },
     "api/health.js": { "maxDuration": 60 },
     "api/today.js": { "maxDuration": 30 },
-    "api/chart-basics.js": { "maxDuration": 30 }
+    "api/chart-basics.js": { "maxDuration": 30 },
+    "api/newsletter.js": { "maxDuration": 60 }
   },
   "crons": [
     { "path": "/api/etsy-cron", "schedule": "*/10 * * * *" },
     { "path": "/api/komoju-cron", "schedule": "15 3 * * *" },
-    { "path": "/api/health?alert=1", "schedule": "30 3 * * *" }
+    { "path": "/api/health?alert=1", "schedule": "30 3 * * *" },
+    { "path": "/api/newsletter?run=1", "schedule": "0 11 * * *" }
   ]
 }

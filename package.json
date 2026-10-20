@@ -17,7 +17,8 @@
     "check:tools": "node scripts/check-tools-live.mjs",
     "build:faq": "node scripts/build-faq-ld.mjs",
     "check:faq": "node scripts/build-faq-ld.mjs --check",
-    "indexnow": "node scripts/indexnow-submit.mjs"
+    "indexnow": "node scripts/indexnow-submit.mjs",
+    "check:newsletter": "node scripts/check-newsletter.mjs"
   },
   "dependencies": {
     "@sparticuz/chromium": "^149.0.0",
