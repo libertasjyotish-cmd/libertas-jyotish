@@ -17,8 +17,11 @@ const OWNER = process.env.ETSY_OWNER_EMAIL || 'info@libertas-jyotish.com';
 const SYNC_MAX_PER_RUN = 200;
 
 const MAX_PER_RUN = 10;
-const MAX_ATTEMPTS = 600;
-const MAX_AGE_MS = 4 * 24 * 60 * 60 * 1000;
+// 未承認の購入は3日で Google が自動返金するので、保存から3日以内に最大12回だけ、間隔を広げて試す
+// （保存からの経過分: 10分, 30分, 1h, 2h, 4h, 7h, 11h, 17h, 25h, 37h, 49h, 61h）
+const RETRY_AFTER_MIN = [10, 30, 60, 120, 240, 420, 660, 1020, 1500, 2220, 2940, 3660];
+const MAX_ATTEMPTS = RETRY_AFTER_MIN.length;
+const MAX_AGE_MS = 3 * 24 * 60 * 60 * 1000;
 
 // 権限の反映待ち・Google 側の障害など、時間をおけば通る失敗か
 function isTransient(err) {
@@ -149,14 +152,17 @@ async function retryPending({ deadline } = {}) {
   const list = await listPlayPending();
   const result = { pending: list.length, linked: 0, dropped: 0, waiting: 0 };
   // 失敗中の購入が上限件数を超えても全件に順番が回るよう、10分ごとの実行のたびに開始位置をずらす
-  const start = list.length > MAX_PER_RUN ? (Math.floor(Date.now() / 6e5) * MAX_PER_RUN) % list.length : 0;
-  const batch = [...list.slice(start), ...list.slice(0, start)].slice(0, MAX_PER_RUN);
+  const ageOf = (p) => Date.now() - Date.parse(p.since || '');
+  const expired = (p) => !(ageOf(p) < MAX_AGE_MS) || p.attempts >= MAX_ATTEMPTS;
+  const due = list.filter(p => expired(p) || ageOf(p) >= RETRY_AFTER_MIN[p.attempts] * 6e4);
+  result.notDue = list.length - due.length;
+  const start = due.length > MAX_PER_RUN ? (Math.floor(Date.now() / 6e5) * MAX_PER_RUN) % due.length : 0;
+  const batch = [...due.slice(start), ...due.slice(0, start)].slice(0, MAX_PER_RUN);
   for (const p of batch) {
     if (deadline && Date.now() > deadline) break;
     // 1件の失敗（Sheets の書き込み失敗を含む）で残りを止めない
     try {
-      const age = Date.now() - Date.parse(p.since || '');
-      if (!(age < MAX_AGE_MS) || p.attempts >= MAX_ATTEMPTS) {
+      if (expired(p)) {
         await clearPlayPending(p.email);
         result.dropped++;
         continue;
