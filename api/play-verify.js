@@ -75,6 +75,8 @@ module.exports = async (req, res) => {
     console.error('play-verify failed:', product, err.message);
     // 400 系（トークン不正）は再試行しても直らないのでそのまま返す
     const status = err.status && err.status < 500 ? 400 : 502;
-    return res.status(status).json({ error: 'verify_failed' });
+    // 画面に出して原因を特定できるよう、短い理由だけ返す（トークン・メールは含めない）
+    const reason = err.status ? `play_${err.status}` : String(err.message || 'unknown').replace(/[^\w .:-]/g, '').slice(0, 60);
+    return res.status(status).json({ error: 'verify_failed', reason });
   }
 };

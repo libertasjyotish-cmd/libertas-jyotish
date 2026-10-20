@@ -33,7 +33,7 @@
     }).then(function (res) {
       return res.json().catch(function () { return null; }).then(function (data) {
         if (data && data.pending) return data;
-        if (!res.ok || !data || !data.ok) throw new Error((data && data.error) || 'verify_failed');
+        if (!res.ok || !data || !data.ok) throw new Error(((data && data.error) || 'verify_failed') + (data && data.reason ? ' (' + data.reason + ')' : ''));
         return data;
       });
     });
