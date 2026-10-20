@@ -681,13 +681,32 @@ return null;
 }
 
 // Google Sign-In 成功時の自動コールバック
-function handleCredentialResponse(response) {
+async function handleCredentialResponse(response) {
 const responsePayload = parseJwt(response.credential);
 if (responsePayload && responsePayload.email) {
-// Google 側で確認済みのアドレスなので、決済の紐づけにそのまま使える
+// サーバーで ID トークンを検証して本人確認セッションをもらう（Play 購入の紐づけ・鑑定書の閲覧に必要）
+try {
+const res = await fetch(JYOTISH_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ action: 'google_login', credential: response.credential }) });
+const data = res.ok ? await res.json() : {};
+if (data.session) localStorage.setItem('lj_session', data.session);
+} catch (e) {}
 window.LJCheckoutGuard.markVerified(responsePayload.email);
 completeLogin(responsePayload.email);
 }
+}
+
+// Android アプリで Play の購入が会員に紐づいていなければ、自動で紐づける（セッションが無ければログインを促す）
+let playSyncTried = false;
+function syncPlayPurchases(email) {
+const play = window.LJPlayBilling;
+if (playSyncTried || !email || !play || !play.supported()) return;
+playSyncTried = true;
+play.pending().then((list) => {
+if (!list.length) return;
+if (!window.LJCheckoutGuard.hasSession()) { requestReauth('play-restore', email); return; }
+return play.restore(email).then((done) => { if (done.length) fetchUserDataAndRender(email, true); });
+}).catch(() => {});
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -802,6 +821,12 @@ const nextTarget = new URLSearchParams(window.location.search).get('next');
 if (nextTarget === 'checkout') {
   const product = new URLSearchParams(window.location.search).get('product') === 'pdf' ? 'pdf' : 'premium';
   const verifiedEmail = window.LJCheckoutGuard.verifiedEmail();
+  // Android アプリ（Play 課金）: 支払いシートはボタンを押した時にしか開けないので、ログイン済みならプラン欄を見せるだけ
+  if (window.LJCheckoutGuard._playChecked === 'play' || (window.LJPlayBilling && window.LJPlayBilling.supported())) {
+    if (window.LJCheckoutGuard.hasSession()) { location.hash = 'premium'; return; }
+    requestReauth('checkout:' + product, new URLSearchParams(window.location.search).get('hint') || savedEmail);
+    return;
+  }
   if (verifiedEmail) {
     window.LJCheckout.ready.then(() => {
       if (!window.LJCheckout.available(product)) { alert(window.LJCheckout.unavailableMessage()); return; }
@@ -957,6 +982,7 @@ window.location.href = '/en/pdf-report';
 if (String(window.ljPendingAfterAuth || '').indexOf('checkout:') === 0) {
 const product = window.ljPendingAfterAuth.slice('checkout:'.length);
 window.ljPendingAfterAuth = '';
+if (window.LJCheckoutGuard._playChecked === 'play' || (window.LJPlayBilling && window.LJPlayBilling.supported())) { location.hash = 'premium'; return; }
 window.LJCheckout.ready.then(() => {
 if (!window.LJCheckout.available(product)) { alert(window.LJCheckout.unavailableMessage()); return; }
 window.location.href = window.LJCheckout.checkoutUrlFor(product, email);
@@ -975,6 +1001,7 @@ btnVerify.textContent = 'Verify';
 });
 
 function completeLogin(email) {
+playSyncTried = false;
 // jyotish_userキーの初期化
 const savedUserStr = localStorage.getItem('jyotish_user');
 let savedUser = savedUserStr ? JSON.parse(savedUserStr) : {};
@@ -1308,6 +1335,7 @@ if (notice) notice.style.display = 'block';
 
 // 描画ヘルパーを呼び出して最新データを画面に完全反映！
 renderUserData(data);
+if (data.status !== 'paid') syncPlayPurchases(email);
 
 // ★最新の鑑定データとステータスを `jyotish_user` キャッシュに安全にマージ保存（UX超高速化・呼びっぱなし防止）
 let savedUser = {};

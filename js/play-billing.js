@@ -180,18 +180,23 @@
         });
       });
     },
-    // 端末で既に購入済み（再インストール・別ブラウザ等）のものをサーバーに再登録する。
-    restore: function (email) {
+    // 端末の Play アカウントにある、会員権に紐づける購入（プレミアム・生涯鑑定書）。注文台帳が要る個別鑑定書は除く。
+    pending: function () {
       return service().then(function (s) {
         if (!s || !s.listPurchases) return [];
         return s.listPurchases().then(function (purchases) {
+          return (purchases || []).filter(function (p) { return p.itemId === SKUS.premium || p.itemId === SKUS.pdf; });
+        });
+      }).catch(function () { return []; });
+    },
+    // 端末で既に購入済み（再インストール・紐づけ失敗等）のものをサーバーに再登録する。
+    restore: function (email) {
+      return window.LJPlayBilling.pending().then(function (purchases) {
           var jobs = (purchases || []).map(function (p) {
-            var product = Object.keys(SKUS).filter(function (k) { return SKUS[k] === p.itemId; })[0];
-            if (!product) return Promise.resolve(null);
+            var product = p.itemId === SKUS.pdf ? 'pdf' : 'premium';
             return verify(product, p.purchaseToken, email).catch(function () { return null; });
           });
           return Promise.all(jobs).then(function (r) { return r.filter(Boolean); });
-        });
       }).catch(function () { return []; });
     },
     // 定期購入の管理（解約）は Play ストア側で行う
