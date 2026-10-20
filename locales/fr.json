@@ -503,6 +503,7 @@
     "price.premiumApprox": "Environ {price} / mois — facturé en USD, montant final affiché lors du paiement",
     "price.pdfApprox": "Environ {price} en paiement unique — facturé en USD, montant final affiché lors du paiement",
     "price.playError": "L'achat sur Google Play n'a pas pu aboutir. Veuillez réessayer.",
+    "price.playPending": "Nous avons bien reçu votre achat. Votre abonnement s'activera automatiquement dès que Google l'aura confirmé (de quelques minutes à quelques heures).",
     "price.playManage": "Les abonnements souscrits dans l'application sont gérés (annulation, mode de paiement) dans Google Play → Abonnements. L'ouvrir maintenant ?",
     "price.checkoutOnly": "Le montant dans votre devise locale sera affiché lors du paiement",
     "mypage.jsCachedAt": "Affichage de la lecture récupérée à {time}.",

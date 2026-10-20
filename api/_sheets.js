@@ -198,6 +198,7 @@ async function getMemberRecord(email) {
 }
 
 const PLAY_COLUMNS = ['billing', 'play_purchase_token', 'play_renewing', 'paid_until'];
+const PLAY_PENDING_COLUMNS = ['play_pending_token', 'play_pending_since', 'play_pending_attempts', 'play_pending_lang'];
 
 // Google Play の定期購入を会員行に紐づけ、有料化する。purchaseToken は RTDN（状態通知）から会員を逆引きする鍵。
 async function setPlaySubscription(email, { purchaseToken, paidUntil, renewing, language }) {
@@ -213,8 +214,13 @@ async function setPlaySubscription(email, { purchaseToken, paidUntil, renewing, 
     play_purchase_token: purchaseToken || '',
     play_renewing: renewing ? 'true' : 'false',
     paid_until: paidUntil || '',
+    play_pending_token: '',
+    play_pending_since: '',
+    play_pending_attempts: '',
+    play_pending_lang: '',
     updated_at: nowStr
   };
+  await ensureColumns(sheet, PLAY_PENDING_COLUMNS);
   const row = await findMemberRow(email);
   if (row) {
     Object.entries(fields).forEach(([k, v]) => row.set(k, v));
@@ -228,6 +234,71 @@ async function setPlaySubscription(email, { purchaseToken, paidUntil, renewing, 
       ...fields
     });
   }
+  return true;
+}
+
+// 本人確認済みだが Google 側の一時的な失敗で検証できなかった Play 購入を保存し、cron で再試行する。
+async function setPlayPending(email, { purchaseToken, language }) {
+  if (!email || !purchaseToken) return false;
+  const sheet = await getMemberSheet();
+  if (!sheet) return false;
+  await ensureColumns(sheet, [...PLAY_COLUMNS, ...PLAY_PENDING_COLUMNS]);
+  const nowStr = new Date().toISOString();
+  const row = await findMemberRow(email);
+  if (!row) {
+    await sheet.addRow({
+      email: normalizeEmail(email),
+      status: 'free',
+      auth_provider: 'play',
+      created_at: nowStr,
+      updated_at: nowStr,
+      language: language || 'ja',
+      play_pending_token: purchaseToken,
+      play_pending_since: nowStr,
+      play_pending_attempts: '0',
+      play_pending_lang: language || 'ja'
+    });
+    return true;
+  }
+  if (String(row.get('play_pending_token') || '') === purchaseToken) return true;
+  row.set('play_pending_token', purchaseToken);
+  row.set('play_pending_since', nowStr);
+  row.set('play_pending_attempts', '0');
+  row.set('play_pending_lang', language || row.get('language') || 'ja');
+  await row.save();
+  return true;
+}
+
+async function listPlayPending() {
+  const sheet = await getMemberSheet();
+  if (!sheet) return [];
+  await sheet.loadHeaderRow().catch(() => null);
+  if (!(sheet.headerValues || []).includes('play_pending_token')) return [];
+  const rows = await sheet.getRows();
+  return rows
+    .filter(r => String(r.get('play_pending_token') || '').trim())
+    .map(r => ({
+      email: normalizeEmail(r.get('email')),
+      token: String(r.get('play_pending_token')).trim(),
+      since: r.get('play_pending_since') || '',
+      attempts: parseInt(r.get('play_pending_attempts') || '0', 10) || 0,
+      lang: r.get('play_pending_lang') || r.get('language') || 'ja'
+    }));
+}
+
+async function bumpPlayPending(email, attempts) {
+  const row = await findMemberRow(email);
+  if (!row) return false;
+  row.set('play_pending_attempts', String(attempts));
+  await row.save();
+  return true;
+}
+
+async function clearPlayPending(email) {
+  const row = await findMemberRow(email);
+  if (!row || !String(row.get('play_pending_token') || '')) return false;
+  ['play_pending_token', 'play_pending_since', 'play_pending_attempts', 'play_pending_lang'].forEach(k => row.set(k, ''));
+  await row.save();
   return true;
 }
 
@@ -509,6 +580,10 @@ module.exports = {
   updateKomojuSubscription,
   expireKomojuMembers,
   setPlaySubscription,
+  setPlayPending,
+  listPlayPending,
+  bumpPlayPending,
+  clearPlayPending,
   updatePlaySubscription,
   findMemberByPlayToken,
   setPdfPurchased,

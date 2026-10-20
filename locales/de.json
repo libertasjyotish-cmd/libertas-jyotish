@@ -503,6 +503,7 @@
     "price.premiumApprox": "Etwa {price} / Monat — Abrechnung in USD, endgültiger Betrag an der Kasse",
     "price.pdfApprox": "Etwa {price} einmalig — Abrechnung in USD, endgültiger Betrag an der Kasse",
     "price.playError": "Der Kauf über Google Play konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.",
+    "price.playPending": "Wir haben Ihren Kauf erhalten. Ihre Mitgliedschaft wird automatisch aktiviert, sobald Google ihn bestätigt (das kann einige Minuten bis einige Stunden dauern).",
     "price.playManage": "In der App gekaufte Abonnements werden in Google Play → Abonnements verwaltet (Kündigung, Zahlungsmethode). Jetzt öffnen?",
     "price.checkoutOnly": "Der Betrag in Ihrer Landeswährung wird an der Kasse angezeigt",
     "mypage.jsCachedAt": "Es wird die um {time} abgerufene Deutung angezeigt.",

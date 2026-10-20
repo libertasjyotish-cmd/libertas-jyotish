@@ -4,16 +4,9 @@
 // Android アプリ（TWA）内で PaymentRequest（https://play.google.com/billing）が完了した直後に呼ばれる。
 // クライアントの申告は信用せず、Play Developer API でトークンを照会してから Sheets に書き、承認（acknowledge）する。
 const { verifySession } = require('./_auth');
-const {
-  PLAY_PRODUCTS,
-  playEnabled,
-  getProductPurchase,
-  acknowledgeProduct,
-  getSubscription,
-  acknowledgeSubscription,
-  subscriptionSummary
-} = require('./_play');
-const { setPdfPurchased, setPlaySubscription } = require('./_sheets');
+const { PLAY_PRODUCTS, playEnabled, getProductPurchase, acknowledgeProduct } = require('./_play');
+const { linkSubscription, savePending, isTransient } = require('./_play-link');
+const { setPdfPurchased } = require('./_sheets');
 const { normalizeLang } = require('./_terms');
 const ledger = require('./_etsy-ledger');
 const storage = require('./_etsy-storage');
@@ -64,20 +57,20 @@ module.exports = async (req, res) => {
       return res.status(200).json({ ok: true, product, granted: 'pdf' });
     }
 
-    const summary = subscriptionSummary(await getSubscription(purchaseToken));
-    if (!summary.entitled) {
-      console.warn('play-verify not_entitled', { product, state: summary.state });
-      return res.status(402).json({ error: 'not_entitled', state: summary.state });
+    let linked;
+    try {
+      linked = await linkSubscription(email, purchaseToken, { productId, language: lang });
+    } catch (err) {
+      // 本人確認は済んでいるので、Google 側の一時的な失敗なら購入を保存し、cron で自動的に紐づけ直す
+      if (!isTransient(err) || !(await savePending(email, purchaseToken, lang))) throw err;
+      console.warn('play-verify pending:', product, err.message);
+      return res.status(202).json({ ok: false, pending: true, product });
     }
-    const ok = await setPlaySubscription(email, {
-      purchaseToken,
-      paidUntil: summary.expiryTime,
-      renewing: summary.renewing,
-      language: lang
-    });
-    if (!ok) throw new Error('sheet_write_failed');
-    if (!summary.acknowledged) await acknowledgeSubscription(summary.productId || productId, purchaseToken);
-    return res.status(200).json({ ok: true, product, granted: 'premium', paid_until: summary.expiryTime });
+    if (!linked.ok) {
+      console.warn('play-verify not_entitled', { product, state: linked.state });
+      return res.status(402).json({ error: 'not_entitled', state: linked.state });
+    }
+    return res.status(200).json({ ok: true, product, granted: 'premium', paid_until: linked.summary.expiryTime });
   } catch (err) {
     console.error('play-verify failed:', product, err.message);
     // 400 系（トークン不正）は再試行しても直らないのでそのまま返す

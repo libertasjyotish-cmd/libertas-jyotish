@@ -503,6 +503,7 @@
     "price.premiumApprox": "Sekitar {price} / bulan — ditagih dalam USD, jumlah akhir ditampilkan saat checkout",
     "price.pdfApprox": "Sekitar {price} sekali bayar — ditagih dalam USD, jumlah akhir ditampilkan saat checkout",
     "price.playError": "Pembelian Google Play tidak dapat diselesaikan. Silakan coba lagi.",
+    "price.playPending": "Pembelian Anda sudah kami terima. Keanggotaan akan aktif otomatis setelah Google mengonfirmasinya (bisa memakan waktu beberapa menit hingga beberapa jam).",
     "price.playManage": "Langganan yang dibeli di aplikasi dikelola (batalkan, metode pembayaran) di Google Play → Langganan. Buka sekarang?",
     "price.checkoutOnly": "Jumlah dalam mata uang lokal Anda ditampilkan saat checkout",
     "mypage.jsCachedAt": "Menampilkan pembacaan yang diambil pukul {time}.",

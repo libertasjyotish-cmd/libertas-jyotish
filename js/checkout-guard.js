@@ -64,7 +64,8 @@
       if (email) {
         // 完了後はページを再読み込みして権限を反映する。
         if (viaPlay) {
-          play.buy(product, email).then(function () {
+          play.buy(product, email).then(function (data) {
+            if (data && data.pending) alert((window.LJ_I18N && window.LJ_I18N.playPending) || 'Purchase received.');
             window.location.reload();
           }).catch(function (err) {
             if (err && err.name === 'AbortError') return;

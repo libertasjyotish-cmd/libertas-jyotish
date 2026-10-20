@@ -6,6 +6,7 @@
 const { runCycle } = require('./_etsy-fulfill');
 const { parsePersonalization } = require('./_etsy-parse');
 const ledger = require('./_etsy-ledger');
+const { retryPending } = require('./_play-link');
 
 const MAX_DURATION_S = 300;
 const SAFETY_MS = 8000;
@@ -42,8 +43,11 @@ module.exports = async function handler(req, res) {
       if (req.query.astro) cleared.astro = '';
       await ledger.upsertOrder(regen, { ...cleared, status: ledger.STATUS.NEW, attempts: 0, last_error: '', pdf_url: '', download_url: '' });
     }
+    // Play 購入の紐づけ再試行（Etsy 処理とは独立。失敗しても Etsy 側は止めない）
+    const play = await retryPending({ deadline: Date.now() + 30000 }).catch((e) => ({ error: e.message }));
+    if (play.linked || play.dropped || play.error) console.log('play pending retry', play);
     const summary = await runCycle({ deadline });
-    res.status(200).json({ ok: true, ...summary });
+    res.status(200).json({ ok: true, ...summary, play });
   } catch (err) {
     console.error('etsy-cron failed:', err.message);
     res.status(500).json({ ok: false, error: String(err.message || err).slice(0, 300) });

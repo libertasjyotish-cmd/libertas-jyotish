@@ -503,6 +503,7 @@
     "price.premiumApprox": "Unos {price} al mes — se cobra en USD; el importe final se muestra al pagar",
     "price.pdfApprox": "Unos {price} en pago único — se cobra en USD; el importe final se muestra al pagar",
     "price.playError": "No se pudo completar la compra en Google Play. Inténtalo de nuevo.",
+    "price.playPending": "Hemos recibido tu compra. Tu membresía se activará automáticamente cuando Google la confirme (puede tardar desde unos minutos hasta unas horas).",
     "price.playManage": "Las suscripciones compradas en la app se gestionan (cancelar, método de pago) en Google Play → Suscripciones. ¿Abrir ahora?",
     "price.checkoutOnly": "El importe en tu moneda local se muestra al pagar",
     "mypage.jsCachedAt": "Mostrando la lectura obtenida a las {time}.",
