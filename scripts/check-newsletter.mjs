@@ -127,6 +127,19 @@ assert.deepEqual(nl.dueCampaigns([camp('future', '2026-11-02T00:00:00Z'), camp('
   assert.equal(at('2027-03-12T11:00:00Z').langs.en.sendAfter, '2027-03-13T01:00:00.000Z');
   assert.equal(at('2027-03-19T11:00:00Z').langs.en.sendAfter, '2027-03-20T00:00:00.000Z');
   assert.equal(at('2026-10-24T00:30:00Z').id, 'weekly-2026-10-24');
+  // ほかの6言語: メキシコシティ・サンパウロ・パリ・ベルリン・ジャカルタ・リヤドの金曜20時（パリ・ベルリンは夏時間の前後）
+  assert.deepEqual(['es', 'pt', 'fr', 'de', 'id', 'ar'].map((l) => w.langs[l].sendAfter), [
+    '2026-10-24T02:00:00.000Z', '2026-10-23T23:00:00.000Z', '2026-10-23T18:00:00.000Z', '2026-10-23T18:00:00.000Z', '2026-10-23T13:00:00.000Z', '2026-10-23T17:00:00.000Z'
+  ]);
+  assert.equal(at('2026-11-06T11:00:00Z').langs.fr.sendAfter, '2026-11-06T19:00:00.000Z');
+  // 送信時刻のすべてに Vercel Cron が動くこと
+  {
+    const crons = JSON.parse(readFileSync(new URL('../vercel.json', import.meta.url), 'utf8')).crons.filter((c) => c.path.startsWith('/api/newsletter?run=1'));
+    const fires = (d) => crons.some((c) => { const [min, hour, , , dow] = c.schedule.split(' '); return Number(min) === d.getUTCMinutes() && hour.split(',').map(Number).includes(d.getUTCHours()) && Number(dow) === d.getUTCDay(); });
+    for (const iso of ['2026-10-23T11:00:00Z', '2026-11-06T11:00:00Z', '2027-03-12T11:00:00Z', '2027-03-26T11:00:00Z']) {
+      for (const [l, v] of Object.entries(at(iso).langs)) assert.ok(fires(new Date(v.sendAfter)), `${iso} ${l} の送信時刻 ${v.sendAfter} に cron がありません`);
+    }
+  }
   {
     const { memberSheet } = fakeSheets(members);
     const sent = [];
@@ -158,6 +171,12 @@ assert.deepEqual(nl.dueCampaigns([camp('future', '2026-11-02T00:00:00Z'), camp('
     assert.ok(c.langs.en.subject.startsWith("[This Week's Sky] ") && c.langs.en.html && c.langs.en.text, `${c.id}/en が組み立てられません`);
     // 価格は国で変わるので、英語には入れない
     assert.ok(!/[$¥€]|\bUSD\b|円/.test(c.langs.en.html + c.langs.en.text), `${c.id}/en に価格があります`);
+    for (const [l, prefix] of Object.entries({ es: '[El cielo de esta semana] ', pt: '[O céu desta semana] ', id: '[Langit Minggu Ini] ', fr: '[Le ciel de la semaine] ', de: '[Der Himmel dieser Woche] ', ar: '[سماء هذا الأسبوع] ' })) {
+      const v = c.langs[l];
+      assert.ok(v.subject.startsWith(prefix) && v.html && v.text, `${c.id}/${l} が組み立てられません`);
+      assert.ok(!/[$¥€]|\bUSD\b|円|undefined|NaN|null/.test(v.subject + v.html + v.text), `${c.id}/${l} に価格か未定義の値があります`);
+      assert.ok(v.html.includes(`/${l}/mypage#premium`) && v.html.includes(`/${l}/`), `${c.id}/${l} のリンクが違います`);
+    }
   }
   // 共通の枠: 公式ロゴ・バナー全体がサイトトップへのリンク・日本語名・配信停止
   const m = nl.buildMail({ email: 'a@gmail.com', lang: 'ja', content: ja });
@@ -175,6 +194,17 @@ assert.deepEqual(nl.dueCampaigns([camp('future', '2026-11-02T00:00:00Z'), camp('
   assert.equal(at('2026-11-20T11:00:00Z').langs.en.subject, "[This Week's Sky] Next turning point: December 6, Rahu enters Capricorn");
   const me = nl.buildMail({ email: 'a@gmail.com', lang: 'en', content: en });
   assert.ok(me.html.includes('href="https://www.libertas-jyotish.com/en/"') && me.html.includes('Vedic Astrology'));
+  // ほかの6言語: 件名と本文の決まった文
+  assert.equal(w.langs.es.subject, '[El cielo de esta semana] El 25 de octubre, Mercurio entra en retrógrado en Libra');
+  assert.equal(w.langs.de.subject, '[Der Himmel dieser Woche] Am 25. Oktober wird Merkur im Zeichen Waage rückläufig');
+  assert.ok(w.langs.de.text.includes('\nLesen Sie wichtige Nachrichten vor dem Senden noch einmal?\n'));
+  assert.ok(w.langs.es.text.includes('\n¿Relees los mensajes importantes antes de enviarlos?\n'));
+  assert.equal(at('2026-11-20T11:00:00Z').langs.ar.subject, '[سماء هذا الأسبوع] المحطة التالية: 6 ديسمبر، دخول راهو برج الجدي');
+  for (const l of ['es', 'pt', 'fr', 'de', 'id', 'ar']) {
+    const mail = nl.buildMail({ email: 'a@gmail.com', lang: l, content: w.langs[l] });
+    assert.ok(mail.html.includes(`href="https://www.libertas-jyotish.com/${l}/"`) && mail.html.includes(nl.unsubscribeUrl('a@gmail.com', l).replace(/&/g, '&amp;')), `${l} の枠が違います`);
+  }
+  assert.ok(nl.buildMail({ email: 'a@gmail.com', lang: 'ar', content: w.langs.ar }).html.startsWith('<div dir="rtl"'));
   // 実行時: 決まった原稿に「今週の空」が加わる
   assert.ok(nl.currentCampaigns(Date.parse('2026-10-23T11:00:00Z')).some((c) => c.id === 'weekly-2026-10-24'));
 }

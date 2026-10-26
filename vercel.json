@@ -24,6 +24,8 @@
     { "path": "/api/komoju-cron", "schedule": "15 3 * * *" },
     { "path": "/api/health?alert=1", "schedule": "30 3 * * *" },
     { "path": "/api/newsletter?run=1", "schedule": "0 11 * * 5" },
-    { "path": "/api/newsletter?run=1&slot=us", "schedule": "0 0,1 * * 6" }
+    { "path": "/api/newsletter?run=1&slot=us", "schedule": "0 0,1 * * 6" },
+    { "path": "/api/newsletter?run=1&slot=intl", "schedule": "0 13,17,18,19,23 * * 5" },
+    { "path": "/api/newsletter?run=1&slot=mx", "schedule": "0 2 * * 6" }
   ]
 }

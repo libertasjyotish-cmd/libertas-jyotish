@@ -55,12 +55,12 @@ function unsubscribeUrl(email, lang) {
 const FOOTER = {
   ja: { why: 'このメールは、インド占星術 Libertas Jyotish（リベルタス ジョーティシュ）でお知らせの受信に同意された方にお送りしています。', top: 'サイトトップ', stop: '配信停止', info: '運営者情報', brand: 'Libertas Jyotish（リベルタス ジョーティシュ）', sub: 'リベルタス ジョーティシュ ・ インド占星術' },
   en: { why: 'You are receiving this because you agreed to receive news from Libertas Jyotish, Vedic astrology.', sub: 'Vedic Astrology', top: 'Home', stop: 'Unsubscribe', info: 'Operator information (address and contact)' },
-  es: { why: 'Recibes este correo porque aceptaste recibir novedades de Libertas Jyotish.', top: 'Inicio', stop: 'Darse de baja', info: 'Información del operador (dirección y contacto)' },
-  pt: { why: 'Você recebe este e-mail porque aceitou receber novidades da Libertas Jyotish.', top: 'Início', stop: 'Cancelar inscrição', info: 'Informações do operador (endereço e contato)' },
-  ar: { why: 'تصلك هذه الرسالة لأنك وافقت على تلقي أخبار Libertas Jyotish.', top: 'الصفحة الرئيسية', stop: 'إلغاء الاشتراك', info: 'معلومات المشغّل (العنوان ووسيلة التواصل)' },
-  fr: { why: 'Vous recevez cet e-mail car vous avez accepté de recevoir les actualités de Libertas Jyotish.', top: 'Accueil', stop: 'Se désabonner', info: "Informations sur l'exploitant (adresse et contact)" },
-  de: { why: 'Sie erhalten diese E-Mail, weil Sie dem Empfang von Neuigkeiten von Libertas Jyotish zugestimmt haben.', top: 'Startseite', stop: 'Abmelden', info: 'Angaben zum Betreiber (Anschrift und Kontakt)' },
-  id: { why: 'Anda menerima email ini karena telah setuju menerima kabar dari Libertas Jyotish.', top: 'Beranda', stop: 'Berhenti berlangganan', info: 'Informasi pengelola (alamat dan kontak)' }
+  es: { sub: 'Astrología védica', why: 'Recibes este correo porque aceptaste recibir novedades de Libertas Jyotish.', top: 'Inicio', stop: 'Darse de baja', info: 'Información del operador (dirección y contacto)' },
+  pt: { sub: 'Astrologia védica', why: 'Você recebe este e-mail porque aceitou receber novidades da Libertas Jyotish.', top: 'Início', stop: 'Cancelar inscrição', info: 'Informações do operador (endereço e contato)' },
+  ar: { sub: 'التنجيم الفيدي', why: 'تصلك هذه الرسالة لأنك وافقت على تلقي أخبار Libertas Jyotish.', top: 'الصفحة الرئيسية', stop: 'إلغاء الاشتراك', info: 'معلومات المشغّل (العنوان ووسيلة التواصل)' },
+  fr: { sub: 'Astrologie védique', why: 'Vous recevez cet e-mail car vous avez accepté de recevoir les actualités de Libertas Jyotish.', top: 'Accueil', stop: 'Se désabonner', info: "Informations sur l'exploitant (adresse et contact)" },
+  de: { sub: 'Vedische Astrologie', why: 'Sie erhalten diese E-Mail, weil Sie dem Empfang von Neuigkeiten von Libertas Jyotish zugestimmt haben.', top: 'Startseite', stop: 'Abmelden', info: 'Angaben zum Betreiber (Anschrift und Kontakt)' },
+  id: { sub: 'Astrologi Veda', why: 'Anda menerima email ini karena telah setuju menerima kabar dari Libertas Jyotish.', top: 'Beranda', stop: 'Berhenti berlangganan', info: 'Informasi pengelola (alamat dan kontak)' }
 };
 
 function esc(v) {
