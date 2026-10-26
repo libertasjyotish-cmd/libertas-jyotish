@@ -15,6 +15,7 @@ on:
       - 'api/newsletter.js'
       - 'api/_newsletter-weekly.js'
       - 'api/_sky-events.js'
+      - 'api/_sky-events-intl.js'
       - 'package.json'
       - 'package-lock.json'
       - 'data/newsletter/**'

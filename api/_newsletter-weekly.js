@@ -1,7 +1,8 @@
-// 毎週金曜20時（日本時間）に送る「今週の空」メール（日本語・英語）。
+// 毎週金曜20時（各言語の地域の現地時間）に送る「今週の空」メール（8言語）。
 // 星の出来事は api/_sky-events.js の計算と決まった文から作り、Gemini は使わない。
 // おすすめ鑑定書は6種類を週ごとに順番に入れ替える。価格は国で変わるので、日本語（日本向け）以外には入れない。
 const { DAY, PLANET, SIGN_JA, ECLIPSE_KIND, jaDate, enDate, calendarEvents, eventScript } = require('./_sky-events');
+const INTL = require('./_sky-events-intl');
 
 const BASE_URL = (process.env.SITE_BASE_URL || 'https://www.libertas-jyotish.com').replace(/\/$/, '');
 const MAX_EVENTS = 2;
@@ -10,8 +11,49 @@ const LOOKAHEAD_DAYS = 180;
 // 送信は金曜 11:00 UTC（20:00 JST）。対象は翌日の土曜から金曜までの7日間
 const SEND_HOUR_UTC = 11;
 // 言語ごとの配信時刻: その国・地域の金曜20時（夏時間は Intl で自動）
-const SEND_LOCAL = { ja: { tz: 'Asia/Tokyo', hour: 20 }, en: { tz: 'America/New_York', hour: 20 } };
+const SEND_LOCAL = {
+  ja: { tz: 'Asia/Tokyo', hour: 20 },
+  en: { tz: 'America/New_York', hour: 20 },
+  es: { tz: 'America/Mexico_City', hour: 20 },
+  pt: { tz: 'America/Sao_Paulo', hour: 20 },
+  fr: { tz: 'Europe/Paris', hour: 20 },
+  de: { tz: 'Europe/Berlin', hour: 20 },
+  id: { tz: 'Asia/Jakarta', hour: 20 },
+  ar: { tz: 'Asia/Riyadh', hour: 20 }
+};
 const REPORT_PATHS = ['/pdf-purchase', '/yearly', '/career', '/palm-chart', '/compat', '/karma'];
+
+// スペイン語・ポルトガル語・インドネシア語・フランス語・ドイツ語・アラビア語の共通部分（日付・星の名前・件名）
+function intlText(lang, t) {
+  const P = INTL.PACKS[lang].planet;
+  const date = (d) => ({ day: INTL.localDate(lang, d), full: INTL.localDate(lang, d, { weekday: 'short', month: 'long', day: 'numeric' }) });
+  return {
+    ...t,
+    date,
+    range: (a, b) => `${a.full} – ${b.full}`,
+    // 出来事の文は「日付と出来事。問いかけ？」。ドイツ語の日付「25. Oktober」にも「. 」があるので最後の区切りで分ける
+    sentence: (hook) => { const i = hook.lastIndexOf('. '); return [hook.slice(0, i), hook.slice(i + 2)]; },
+    describe(e) {
+      const s = INTL.signName(lang, e.sign);
+      const T = t.titles;
+      const eclipse = /^(solar|lunar)-eclipse-(\w+)$/.exec(e.type);
+      if (eclipse) return { title: T.eclipse(eclipse[1] === 'solar', eclipse[2], s) };
+      if (e.type === 'conjunction') {
+        const [a, b] = e.planet.split('-').map((x) => P[x] || x);
+        return { title: T.conjunction(a, b, s) };
+      }
+      const p = P[e.planet] || e.planet;
+      if (e.type === 'retrograde') return { title: T.retro(p, s) };
+      if (e.type === 'direct') return { title: T.direct(p, s) };
+      const note = e.type === 'exalted' ? T.exalted : e.type === 'debilitated' ? T.debilitated : '';
+      return { title: T.enter(p, s, note) };
+    },
+    subject: (lead) => `${t.label} ${lead}`,
+    subjectNext: (c) => `${t.label} ${t.next}: ${c.day}${t.comma || ', '}${c.title}`,
+    bullet: '- ',
+    colon: ': '
+  };
+}
 
 const TEXT = {
   ja: {
@@ -74,7 +116,7 @@ const TEXT = {
       ['Year Ahead Report', 'From dashas and transits: the arc of the next 12 months, turning points, and a month-by-month outlook for work, love, money and health.'],
       ['Career, Wealth & Calling Report', 'Discover your ideal vocation, talents, financial potential, and the timing for career transitions, independence, or early retirement (FIRE), interpreted through the 10th House, Artha Trikona, and Dashas.'],
       ['Kar-Kundali (Palm × Birth Chart)', 'Your birth chart (Heaven) and photos of both hands (Earth) read together by the classical Hasta Samudrika method — the complete form of a reading.'],
-      ['Compatibility Report', 'From two birth charts: why you met, strengths and frictions, and when the relationship shifts over the next 12 months.'],
+      ['Compatibility Report', 'From two birth charts: why you met, what kind of bond this is, how deep it can go, and how it unfolds over the next 10 years.'],
       ['Karma & Dharma — Your Life Purpose', 'A report that deciphers your innate Karma (challenges) and Dharma (mission) from your Vedic astrology birth chart (Janma Kundali).']
     ],
     points: [
@@ -121,7 +163,248 @@ const TEXT = {
     banner: (range) => `This Week's Sky · ${range}`,
     bullet: '- ',
     colon: ': '
-  }
+  },
+  es: intlText('es', {
+    reports: [
+      ["Informe Vitalicio", "Los temas de tu vida, tus ciclos de dasha y consejos para la buena fortuna, reunidos en un informe especial de decenas de páginas."],
+      ["Informe del año", "Desde dashas y tránsitos: el arco de los próximos 12 meses, puntos de giro y perspectiva mensual de trabajo, amor, dinero y salud."],
+      ["Informe de carrera, dinero y vocación", "Descifra tu vocación, talentos, capacidad financiera y los momentos clave para cambiar de empleo, independizarte o alcanzar el retiro temprano (FIRE) a través de la Casa 10, el Artha Trikona y los Dashas."],
+      ["Kar-Kundali (palma × carta natal)", "Tu carta natal (el Cielo) y las fotos de tus dos manos (la Tierra), leídas juntas con el método clásico del Hasta Samudrika: la lectura en su forma completa."],
+      ["Informe de compatibilidad", "A partir de dos cartas natales: por qué se encontraron, qué tipo de vínculo los une, hasta dónde puede llegar y cómo evoluciona en los próximos 10 años."],
+      ["Karma y Dharma — tu propósito de vida", "Un informe que descifra tu Karma (tus retos) y tu Dharma (tu misión) innatos a partir de tu carta natal védica."]
+    ],
+    points: [
+      "Lo que hacen los planetas del día en cada casa de tu carta (lectura completa)",
+      "Cómo vivir tu dasha actual (periodo planetario)",
+      "Tres acciones concretas para hoy y esta semana (con el día, la persona y la situación)",
+      "Tu protección de hoy (cómo actuar hoy, inspirada en la mitología india)",
+      "Los días de precaución y de viento a favor de esta semana, con fechas",
+      "Los nueve planetas en una tabla, cada uno con una breve nota"
+    ],
+    titles: {
+      retro: (p, s) => `${p} retrógrado en ${s}`,
+      direct: (p, s) => `${p} vuelve a ir directo en ${s}`,
+      enter: (p, s, note) => `${p} entra en ${s}${note}`,
+      exalted: ' (exaltado)', debilitated: ' (en caída)',
+      conjunction: (a, b, s) => `${a} y ${b} se unen en ${s}`,
+      eclipse: (solar, kind, s) => `Eclipse ${solar ? 'solar' : 'lunar'} ${{ total: 'total', annular: 'anular', partial: 'parcial' }[kind]} en ${s}`
+    },
+    label: "[El cielo de esta semana]",
+    next: "Próximo hito",
+    subjectNone: "[El cielo de esta semana] Una semana tranquila en el cielo",
+    intro: "Hola, te escribe Libertas Jyotish, astrología védica. Esto es lo que ocurre en el cielo esta semana.",
+    introNext: (range) => `Hola, te escribe Libertas Jyotish, astrología védica. Esta semana (${range}) no hay grandes movimientos en el cielo, así que te contamos el próximo hito.`,
+    introNone: (range) => `Hola, te escribe Libertas Jyotish, astrología védica. Esta semana (${range}) no hay grandes movimientos en el cielo.`,
+    heading: () => "Qué parte de tu vida toca este movimiento del cielo",
+    why: () => "Un mismo movimiento del cielo se nota en el trabajo para unas personas y en el dinero o el amor para otras. Dónde actúa depende de la casa contada desde tu signo lunar. Como miembro Premium, lo lees cada día a partir de tu propia carta natal.",
+    premiumTitle: "Lo que leen cada día los miembros Premium",
+    button: "Hazte miembro Premium",
+    refund: "Puedes cancelar cuando quieras desde tu página de miembro. Reembolsamos dentro de los 30 días posteriores al pago.",
+    reportTitle: "Informe de la semana",
+    more: "Ver detalles →",
+    banner: (range) => `El cielo de esta semana · ${range}`
+  }),
+  pt: intlText('pt', {
+    reports: [
+      ["Relatório Vitalício", "Os temas da sua vida, os seus ciclos de dasha e conselhos para a boa sorte, reunidos em um relatório especial de dezenas de páginas."],
+      ["Relatório do ano", "De dashas e trânsitos: o arco dos próximos 12 meses, pontos de virada e perspectiva mensal de trabalho, amor, dinheiro e saúde."],
+      ["Relatório de carreira, dinheiro e vocação", "Descubra sua vocação, talentos e potencial financeiro, além do momento certo para mudar de carreira, empreender ou antecipar a aposentadoria (FIRE), interpretados a partir da 10ª Casa, do Artha Trikona e dos Dashas."],
+      ["Kar-Kundali (palma × mapa natal)", "O seu mapa natal (o Céu) e as fotos das suas duas mãos (a Terra), lidos juntos pelo método clássico do Hasta Samudrika: a leitura na sua forma completa."],
+      ["Relatório de compatibilidade", "A partir de dois mapas natais: por que vocês se encontraram, que tipo de vínculo os une, até onde ele pode ir e como evolui nos próximos 10 anos."],
+      ["Karma e Dharma — seu propósito de vida", "Um relatório que decifra o seu Karma (desafios) e o seu Dharma (missão) de nascença a partir do seu mapa natal védico."]
+    ],
+    points: [
+      "O que os planetas do dia fazem em cada casa do seu mapa (leitura completa)",
+      "Como viver o seu dasha atual (período planetário)",
+      "Três ações concretas para hoje e esta semana (com o dia, a pessoa e a situação)",
+      "A sua proteção de hoje (como agir hoje, inspirada na mitologia indiana)",
+      "Os dias de cautela e de vento a favor desta semana, com datas",
+      "Os nove planetas em uma tabela, cada um com uma nota curta"
+    ],
+    titles: {
+      retro: (p, s) => `${p} retrógrado em ${s}`,
+      direct: (p, s) => `${p} volta ao movimento direto em ${s}`,
+      enter: (p, s, note) => `${p} entra em ${s}${note}`,
+      exalted: ' (exaltado)', debilitated: ' (em queda)',
+      conjunction: (a, b, s) => `${a} e ${b} se encontram em ${s}`,
+      eclipse: (solar, kind, s) => `Eclipse ${solar ? 'solar' : 'lunar'} ${{ total: 'total', annular: 'anular', partial: 'parcial' }[kind]} em ${s}`
+    },
+    label: "[O céu desta semana]",
+    next: "Próximo marco",
+    subjectNone: "[O céu desta semana] Uma semana tranquila no céu",
+    intro: "Olá, aqui é a Libertas Jyotish, astrologia védica. Veja o que acontece no céu esta semana.",
+    introNext: (range) => `Olá, aqui é a Libertas Jyotish, astrologia védica. Nesta semana (${range}) não há grandes movimentos no céu, então contamos qual é o próximo marco.`,
+    introNone: (range) => `Olá, aqui é a Libertas Jyotish, astrologia védica. Nesta semana (${range}) não há grandes movimentos no céu.`,
+    heading: () => "Que parte da sua vida este movimento do céu toca",
+    why: () => "Um mesmo movimento do céu aparece no trabalho para algumas pessoas e no dinheiro ou no amor para outras. Onde ele atua depende da casa contada a partir do seu signo lunar. Como membro Premium, você lê isso todos os dias a partir do seu próprio mapa natal.",
+    premiumTitle: "O que os membros Premium leem todos os dias",
+    button: "Torne-se membro Premium",
+    refund: "Cancele quando quiser na sua página de membro. Reembolsamos em até 30 dias após o pagamento.",
+    reportTitle: "Relatório da semana",
+    more: "Ver detalhes →",
+    banner: (range) => `O céu desta semana · ${range}`
+  }),
+  id: intlText('id', {
+    reports: [
+      ["Laporan Seumur Hidup", "Tema hidup, siklus dasha, dan saran untuk keberuntungan Anda, dirangkum dalam satu laporan istimewa setebal puluhan halaman."],
+      ["Laporan Tahun Depan", "Dari dasha dan transit: alur 12 bulan ke depan, titik balik, dan pandangan bulanan untuk kerja, cinta, uang, dan kesehatan."],
+      ["Laporan Karier, Keuangan & Panggilan Hidup", "Membaca karier yang cocok, bakat, kapasitas rezeki finansial, serta waktu untuk pindah kerja, mandiri, atau pensiun dini (FIRE) melalui Rumah ke-10, Artha Trikona, dan Dasha."],
+      ["Kar-Kundali (Telapak × Peta Kelahiran)", "Peta kelahiran Anda (Langit) dan foto kedua telapak tangan (Bumi) dibaca bersama dengan metode klasik Hasta Samudrika — bentuk pembacaan yang paling lengkap."],
+      ["Laporan Kecocokan", "Dari dua peta kelahiran: mengapa kalian bertemu, jenis ikatan ini, sejauh mana bisa diperdalam, dan alurnya dalam 10 tahun ke depan."],
+      ["Karma & Dharma — Tujuan Hidup Anda", "Laporan yang membaca Karma (tantangan) dan Dharma (misi) bawaan Anda dari peta kelahiran astrologi Veda."]
+    ],
+    points: [
+      "Apa yang dilakukan planet hari itu di setiap rumah peta Anda (pembacaan lengkap)",
+      "Cara menjalani dasha Anda saat ini (periode planet)",
+      "Tiga tindakan konkret untuk hari ini dan minggu ini (sampai hari, orang, dan situasinya)",
+      "Perlindungan hari ini (cara bersikap hari ini, terinspirasi mitologi India)",
+      "Hari waspada dan hari angin baik minggu ini, lengkap dengan tanggal",
+      "Sembilan planet dalam satu tabel, masing-masing dengan catatan singkat"
+    ],
+    titles: {
+      retro: (p, s) => `${p} retrograde di ${s}`,
+      direct: (p, s) => `${p} kembali bergerak maju di ${s}`,
+      enter: (p, s, note) => `${p} masuk ${s}${note}`,
+      exalted: ' (eksaltasi)', debilitated: ' (debilitasi)',
+      conjunction: (a, b, s) => `${a} dan ${b} bertemu di ${s}`,
+      eclipse: (solar, kind, s) => `Gerhana ${solar ? 'matahari' : 'bulan'} ${{ total: 'total', annular: 'cincin', partial: 'sebagian' }[kind]} di ${s}`
+    },
+    label: "[Langit Minggu Ini]",
+    next: "Titik balik berikutnya",
+    subjectNone: "[Langit Minggu Ini] Minggu yang tenang di langit",
+    intro: "Halo dari Libertas Jyotish, astrologi Veda. Inilah yang terjadi di langit minggu ini.",
+    introNext: (range) => `Halo dari Libertas Jyotish, astrologi Veda. Minggu ini (${range}) tidak ada pergerakan planet yang besar, jadi kami sampaikan titik balik berikutnya.`,
+    introNone: (range) => `Halo dari Libertas Jyotish, astrologi Veda. Minggu ini (${range}) tidak ada pergerakan planet yang besar.`,
+    heading: () => "Bagian hidup Anda yang disentuh pergerakan langit ini",
+    why: () => "Pergerakan langit yang sama bisa terasa di pekerjaan bagi sebagian orang, dan di keuangan atau cinta bagi yang lain. Di mana ia bekerja ditentukan oleh rumah yang dihitung dari zodiak bulan Anda. Sebagai anggota Premium, Anda membacanya setiap hari dari peta kelahiran Anda sendiri.",
+    premiumTitle: "Yang dibaca anggota Premium setiap hari",
+    button: "Jadi anggota Premium",
+    refund: "Bisa berhenti kapan saja dari halaman anggota. Dana dikembalikan jika diminta dalam 30 hari setelah pembayaran.",
+    reportTitle: "Laporan minggu ini",
+    more: "Lihat detail →",
+    banner: (range) => `Langit Minggu Ini · ${range}`
+  }),
+  fr: intlText('fr', {
+    reports: [
+      ["Rapport à vie", "Les thèmes de votre vie, vos cycles de dasha et des conseils pour la chance, réunis dans un rapport spécial de plusieurs dizaines de pages."],
+      ["Rapport de l’année", "À partir des Dashas et des transits : la trajectoire des 12 prochains mois, les tournants décisifs et des perspectives mois par mois pour le travail, l'amour, l'argent et la santé."],
+      ["Rapport carrière, argent et vocation", "Découvrez votre vocation, vos talents, votre potentiel financier, ainsi que les périodes clés pour changer d'emploi, devenir indépendant ou prendre une retraite anticipée (FIRE), décryptés à travers la 10e maison, l'Artha Trikona et les Dashas."],
+      ["Kar-Kundali (paume × thème natal)", "Votre thème natal (le Ciel) et les photos de vos deux mains (la Terre), lus ensemble selon la méthode classique du Hasta Samudrika : la lecture dans sa forme complète."],
+      ["Rapport de compatibilité", "À partir de deux thèmes natals : pourquoi vous vous êtes rencontrés, la nature de ce lien, jusqu’où il peut s’approfondir et son évolution sur les 10 prochaines années."],
+      ["Karma et Dharma — votre mission de vie", "Un rapport qui déchiffre votre Karma (vos défis) et votre Dharma (votre mission) innés à partir de votre thème natal védique."]
+    ],
+    points: [
+      "Ce que les planètes du jour font dans chaque maison de votre thème (lecture complète)",
+      "Comment vivre votre dasha actuel (période planétaire)",
+      "Trois actions concrètes pour aujourd’hui et cette semaine (jusqu’au jour, à la personne et à la situation)",
+      "Votre protection du jour (comment agir aujourd’hui, inspirée de la mythologie indienne)",
+      "Les jours de prudence et les jours porteurs de la semaine, avec leurs dates",
+      "Les neuf planètes dans un tableau, chacune avec une courte note"
+    ],
+    titles: {
+      retro: (p, s) => `${p} rétrograde en ${s}`,
+      direct: (p, s) => `${p} redevient direct en ${s}`,
+      enter: (p, s, note) => `${p} entre en ${s}${note}`,
+      exalted: ' (exalté)', debilitated: ' (en chute)',
+      conjunction: (a, b, s) => `${a} et ${b} se rejoignent en ${s}`,
+      eclipse: (solar, kind, s) => `Éclipse ${solar ? 'solaire' : 'lunaire'} ${{ total: 'totale', annular: 'annulaire', partial: 'partielle' }[kind]} en ${s}`
+    },
+    label: "[Le ciel de la semaine]",
+    next: "Prochain tournant",
+    subjectNone: "[Le ciel de la semaine] Une semaine calme dans le ciel",
+    intro: "Bonjour, ici Libertas Jyotish, astrologie védique. Voici ce qui se passe dans le ciel cette semaine.",
+    introNext: (range) => `Bonjour, ici Libertas Jyotish, astrologie védique. Cette semaine (${range}), aucun grand mouvement dans le ciel : voici donc le prochain tournant.`,
+    introNone: (range) => `Bonjour, ici Libertas Jyotish, astrologie védique. Cette semaine (${range}), aucun grand mouvement dans le ciel.`,
+    heading: () => "Quel domaine de votre vie ce mouvement du ciel touche",
+    why: () => "Un même mouvement du ciel se manifeste dans le travail pour certains, dans l’argent ou l’amour pour d’autres. Le domaine touché dépend de la maison comptée à partir de votre signe lunaire. En tant que membre Premium, vous le lisez chaque jour à partir de votre propre thème natal.",
+    premiumTitle: "Ce que les membres Premium lisent chaque jour",
+    button: "Devenir membre Premium",
+    refund: "Résiliable à tout moment depuis votre page membre. Remboursement possible dans les 30 jours suivant le paiement.",
+    reportTitle: "Le rapport de la semaine",
+    more: "Voir le détail →",
+    banner: (range) => `Le ciel de la semaine · ${range}`
+  }),
+  de: intlText('de', {
+    reports: [
+      ["Lebensbericht", "Ihre Lebensthemen, Dasha-Zyklen und Hinweise für Ihr Glück, zusammengefasst in einem besonderen Bericht von mehreren Dutzend Seiten."],
+      ["Jahresbericht", "Aus Dashas und Transiten: Der Verlauf der nächsten 12 Monate, Wendepunkte und ein monatlicher Ausblick für Arbeit, Liebe, Geld und Gesundheit."],
+      ["Bericht zu Beruf, Geld & Berufung", "Entschlüsseln Sie Berufung, Talente, finanzielles Potenzial sowie den richtigen Zeitpunkt für Jobwechsel, Selbstständigkeit und Vorruhestand (FIRE) anhand des 10. Hauses, des Artha-Trikona und der Dashas."],
+      ["Kar-Kundali (Handfläche × Geburtshoroskop)", "Ihr Geburtshoroskop (der Himmel) und Fotos Ihrer beiden Hände (die Erde), gemeinsam gedeutet nach der klassischen Methode des Hasta Samudrika – die Deutung in ihrer vollständigen Form."],
+      ["Kompatibilitätsbericht", "Aus zwei Geburtshoroskopen: warum Sie sich begegnet sind, welche Art von Verbindung Sie haben, wie weit sie sich vertiefen lässt und wie sie sich in den nächsten 10 Jahren entwickelt."],
+      ["Karma & Dharma — Ihre Lebensaufgabe", "Ein Bericht, der Ihr angeborenes Karma (Aufgaben) und Dharma (Mission) aus Ihrem vedischen Geburtshoroskop entschlüsselt."]
+    ],
+    points: [
+      "Was die Planeten des Tages in jedem Haus Ihres Horoskops bewirken (vollständige Deutung)",
+      "Wie Sie Ihr aktuelles Dasha (Planetenperiode) gestalten",
+      "Drei konkrete Schritte für heute und diese Woche (bis zum Wochentag, zur Person und zur Situation)",
+      "Ihr Schutz für heute (wie Sie heute handeln, angelehnt an die indische Mythologie)",
+      "Die Vorsichtstage und Rückenwindtage dieser Woche, mit Datum",
+      "Alle neun Planeten in einer Tabelle, jeweils mit kurzer Notiz"
+    ],
+    titles: {
+      retro: (p, s) => `${p} rückläufig im Zeichen ${s}`,
+      direct: (p, s) => `${p} wird direktläufig im Zeichen ${s}`,
+      enter: (p, s, note) => `${p} wechselt ins Zeichen ${s}${note}`,
+      exalted: ' (erhöht)', debilitated: ' (im Fall)',
+      conjunction: (a, b, s) => `${a} und ${b} treffen sich im Zeichen ${s}`,
+      eclipse: (solar, kind, s) => `${{ total: 'Totale', annular: 'Ringförmige', partial: 'Partielle' }[kind]} ${solar ? 'Sonnenfinsternis' : 'Mondfinsternis'} im Zeichen ${s}`
+    },
+    label: "[Der Himmel dieser Woche]",
+    next: "Nächster Wendepunkt",
+    subjectNone: "[Der Himmel dieser Woche] Eine ruhige Woche am Himmel",
+    intro: "Hallo, hier ist Libertas Jyotish, vedische Astrologie. Das geschieht diese Woche am Himmel.",
+    introNext: (range) => `Hallo, hier ist Libertas Jyotish, vedische Astrologie. Diese Woche (${range}) gibt es keine großen Planetenbewegungen, deshalb hier der nächste Wendepunkt.`,
+    introNone: (range) => `Hallo, hier ist Libertas Jyotish, vedische Astrologie. Diese Woche (${range}) gibt es keine großen Planetenbewegungen.`,
+    heading: () => "Welchen Bereich Ihres Lebens diese Himmelsbewegung berührt",
+    why: () => "Dieselbe Himmelsbewegung zeigt sich bei manchen im Beruf, bei anderen bei Geld oder Liebe. Wo sie wirkt, hängt vom Haus ab, gezählt von Ihrem Mondzeichen. Als Premium-Mitglied lesen Sie das jeden Tag aus Ihrem eigenen Geburtshoroskop.",
+    premiumTitle: "Was Premium-Mitglieder jeden Tag lesen",
+    button: "Premium-Mitglied werden",
+    refund: "Jederzeit über Ihre Mitgliederseite kündbar. Innerhalb von 30 Tagen nach der Zahlung erstatten wir den Betrag.",
+    reportTitle: "Bericht der Woche",
+    more: "Details ansehen →",
+    banner: (range) => `Der Himmel dieser Woche · ${range}`
+  }),
+  ar: intlText('ar', {
+    reports: [
+      ["تقرير العمر", "موضوعات حياتك ودورات الداشا ونصائح لجلب الحظ، مجموعة في تقرير خاص من عشرات الصفحات."],
+      ["تقرير العام القادم", "من الداشا والعبور: مسار الأشهر الـ12 القادمة، نقاط التحول، ونظرة شهرية للعمل والحب والمال والصحة."],
+      ["تقرير العمل والمال والرسالة", "نحلل المهنة الأنسب، والمواهب، وسعة الوفرة المالية، ومواعيد تغيير الوظيفة أو الاستقلال المهني أو التقاعد المبكر (FIRE)، استناداً إلى قراءة البيت العاشر، وأرثا تريكونا، وفترات الدشا."],
+      ["كار-كوندالي (الكف × خريطة الميلاد)", "خريطة ميلادك (السماء) وصور كفّيك (الأرض) تُقرأ معًا وفق المنهج الكلاسيكي هاستا سامودريكا، في أكمل صور القراءة."],
+      ["تقرير التوافق", "من خريطتَي ميلاد: لماذا التقيتما، ونوع هذه الرابطة، وإلى أي حد يمكن أن تتعمق، ومسارها في السنوات العشر القادمة."],
+      ["كارما ودارما — رسالة حياتك", "تقرير يفك رموز الكارما (التحديات) والدارما (الرسالة) التي وُلدت بها، من خريطة ميلادك في التنجيم الفيدي."]
+    ],
+    points: [
+      "ما تفعله كواكب اليوم في كل بيت من خريطتك (القراءة كاملة)",
+      "كيف تعيش الداشا الحالية (الفترة الكوكبية)",
+      "ثلاث خطوات محددة لليوم ولهذا الأسبوع (حتى اليوم والشخص والموقف)",
+      "حمايتك لليوم (كيف تتصرف اليوم، مستوحاة من الأساطير الهندية)",
+      "أيام الحذر وأيام الرياح المواتية لهذا الأسبوع، مع التواريخ",
+      "الكواكب التسعة في جدول واحد، مع ملاحظة قصيرة لكل منها"
+    ],
+    titles: {
+      retro: (p, s) => `تراجع ${p} في برج ${s}`,
+      direct: (p, s) => `عودة ${p} إلى الحركة المباشرة في برج ${s}`,
+      enter: (p, s, note) => `دخول ${p} برج ${s}${note}`,
+      exalted: ' (في شرفه)', debilitated: ' (في هبوطه)',
+      conjunction: (a, b, s) => `اقتران ${a} و${b} في برج ${s}`,
+      eclipse: (solar, kind, s) => `${solar ? 'كسوف' : 'خسوف'} ${{ total: 'كلي', annular: 'حلقي', partial: 'جزئي' }[kind]} في برج ${s}`
+    },
+    label: "[سماء هذا الأسبوع]",
+    comma: '، ',
+    next: "المحطة التالية",
+    subjectNone: "[سماء هذا الأسبوع] أسبوع هادئ في السماء",
+    intro: "مرحبًا من Libertas Jyotish للتنجيم الفيدي. إليك ما يحدث في السماء هذا الأسبوع.",
+    introNext: (range) => `مرحبًا من Libertas Jyotish للتنجيم الفيدي. لا توجد حركات كبيرة للكواكب هذا الأسبوع (${range})، لذلك نخبرك بالمحطة التالية.`,
+    introNone: (range) => `مرحبًا من Libertas Jyotish للتنجيم الفيدي. لا توجد حركات كبيرة للكواكب هذا الأسبوع (${range}).`,
+    heading: () => "أي جانب من حياتك تمسّه هذه الحركة في السماء",
+    why: () => "الحركة نفسها في السماء تظهر في العمل عند بعض الناس، وفي المال أو الحب عند آخرين. ويتحدد موضع تأثيرها بالبيت المحسوب من برجك القمري. وبصفتك عضوًا مميزًا، تقرأ ذلك كل يوم من خريطة ميلادك أنت.",
+    premiumTitle: "ما يقرؤه الأعضاء المميزون كل يوم",
+    button: "انضم إلى العضوية المميزة",
+    refund: "يمكنك الإلغاء في أي وقت من صفحة العضو، ونردّ المبلغ خلال 30 يومًا من الدفع.",
+    reportTitle: "تقرير الأسبوع",
+    more: "عرض التفاصيل ←",
+    banner: (range) => `سماء هذا الأسبوع · ${range}`
+  })
 };
 
 function esc(v) {
@@ -191,7 +474,7 @@ function buildIssue(lang, { events, nextEvent, first, last, reportIndex }) {
     </div>
     <h3 style="color:#8B6B1B; font-size:17px; margin:26px 0 8px; font-weight:600;">${esc(T.reportTitle)}</h3>
     <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%; border-collapse:collapse;"><tr>
-      <td style="width:110px; vertical-align:top; padding-right:12px;"><a href="${esc(reportUrl)}"><img src="${BASE_URL}/img/report-cover.jpg" width="110" alt="" style="display:block; border-radius:6px;"></a></td>
+      <td style="width:110px; vertical-align:top; padding-${lang === 'ar' ? 'left' : 'right'}:12px;"><a href="${esc(reportUrl)}"><img src="${BASE_URL}/img/report-cover.jpg" width="110" alt="" style="display:block; border-radius:6px;"></a></td>
       <td style="vertical-align:top; font-size:15px;">
         <div style="font-weight:700;">${esc(reportName)}</div>
         <div style="font-size:14px; margin:4px 0 8px;">${esc(reportDesc)}</div>

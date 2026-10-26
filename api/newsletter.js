@@ -1,7 +1,7 @@
 // お知らせメール
 //   GET  /api/newsletter?e=&t=&l=   … 配信停止の確認画面（リンク先読みで解除されないよう、解除はボタンの POST で行う）
 //   POST /api/newsletter?e=&t=&l=   … 配信停止（メールソフトのワンクリック解除 List-Unsubscribe-Post もここに来る）
-//   GET  /api/newsletter?run=1      … 期日の来たキャンペーンを送る（Vercel Cron 毎週金曜20時 JST＝日本語、土曜9/10時 JST＝英語・ニューヨークの金曜20時。CRON_SECRET 必須）
+//   GET  /api/newsletter?run=1      … 期日の来たキャンペーンを送る（Vercel Cron。各言語の地域の金曜20時に合わせて金曜・土曜に数回動く。どの言語を送るかは langs.<lang>.sendAfter で決まる。CRON_SECRET 必須）
 const { verifyUnsubToken, setOptIn, runCampaigns } = require('./_newsletter');
 const { sendInternal } = require('./_owner-mail');
 const { normalizeLang } = require('./_terms');

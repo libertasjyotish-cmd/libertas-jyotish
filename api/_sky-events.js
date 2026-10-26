@@ -309,10 +309,12 @@ function calendarEvents(start, end, pool = poolFor(start)) {
   return events.filter((e) => !shadowed(e) && !isReentry(e, pool) && buildEventTemplateJa(e, {}) !== null);
 }
 
-// { hook, body }（lang は ja / en）
+// { hook, body }（ja / en はこのファイル、ほかの6言語は _sky-events-intl.js）
 function eventScript(lang, event) {
   const around = sameEventNeighbours(event, poolFor(event.date));
-  return lang === 'en' ? buildEventTemplateEn(event, around) : buildEventTemplateJa(event, around);
+  if (lang === 'ja') return buildEventTemplateJa(event, around);
+  if (lang === 'en') return buildEventTemplateEn(event, around);
+  return require('./_sky-events-intl').buildEventTemplateIntl(lang, event, around);
 }
 
 module.exports = { DAY, PLANET, SIGN_JA, ECLIPSE_KIND, jaDate, enDate, calendarEvents, eventScript, scanSkyEvents };
