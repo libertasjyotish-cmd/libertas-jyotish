@@ -89,6 +89,17 @@ padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
 /* 無料鑑定の下に「会員なら見られる内容」をぼかし表示して差分を可視化する */
 .locked-section { margin-top: 35px; text-align: left; }
 .locked-section-title { font-size: 1.05rem; color: var(--color-gold-dark); font-weight: 700; margin-bottom: 4px; }
+.premium-benefits { list-style: none; margin: 10px 0 14px; padding: 0; }
+.premium-benefits li { margin-bottom: 10px; padding-inline-start: 1.1em; position: relative; line-height: 1.6; color: #4a3e36; font-size: 0.9rem; }
+.premium-benefits li::before { content: "✦"; position: absolute; inset-inline-start: 0; color: var(--color-gold-main); }
+.premium-benefits strong { display: block; color: var(--color-text-dark); font-size: 0.95rem; }
+.moon-guide { margin: 8px 0 24px; padding: 16px; background: rgba(139,107,27,0.06); border: 1px solid rgba(139,107,27,0.25); border-radius: 8px; color: #4a3e36; line-height: 1.7; font-size: 0.92rem; }
+.moon-guide-title { font-weight: 700; color: var(--color-gold-dark); margin-bottom: 6px; font-size: 1rem; }
+.moon-guide p { margin: 0 0 8px; }
+.moon-guide-next { font-weight: 700; color: var(--color-gold-dark); margin: 12px 0 4px; }
+.moon-guide ul { margin: 0; padding-inline-start: 1.2em; }
+.moon-guide li { margin-bottom: 4px; }
+.moon-guide a { color: var(--color-gold-dark); text-decoration: underline; }
 .locked-section-lead { font-size: 0.82rem; color: #5A4E48; margin-bottom: 14px; }
 .locked-wrapper { position: relative; border-radius: 10px; }
 .preview-card { background: rgba(255, 253, 248, 0.85); border: 1px solid rgba(139, 107, 27, 0.28); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
@@ -418,6 +429,7 @@ ${result.status === 'paid' ? `
 <div style="margin-top:25px; padding:15px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:8px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">
 ④ ${fr.lucky_element || '✨ 本日のラッキーテーマ: 沈黙と深い内省'}
 </div>` : buildFreeContinuation(fr)}
+${buildMoonGuide(result)}
 `;
 }
 
@@ -457,12 +469,12 @@ return `
 <div>
 <p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">② 本日受ける星の影響 (Astro Influence)</p>${line}
 <p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">③ 支配星周期の過ごし方 (Current Mahadasha Guidance)</p>${line}
-<p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">④ 本日のラッキーカラー／アクション</p>${line}
+<p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">④ 今日の守り</p>${line}
 </div>
 <div class="lock-overlay">
 <div class="lock-icon">🔒</div>
 <div class="lock-title">続きはプレミアム会員で</div>
-${fr.premium_teaser ? `<p class="lock-note">${fr.premium_teaser}</p>` : `<p class="lock-note">②星の影響・③支配星周期の過ごし方・④ラッキーカラー／アクション、翌日以降と時間帯の吉凶はプレミアム会員に表示されます。</p>`}
+${fr.premium_teaser ? `<p class="lock-note">${fr.premium_teaser}</p>` : `<p class="lock-note">②星の影響・③支配星周期の過ごし方・④今日の守り、今週の注意日と追い風日はプレミアム会員に表示されます。</p>`}
 <a href="#btn-upgrade-preview" onclick="document.getElementById('btn-upgrade-preview')?.scrollIntoView({behavior:'smooth',block:'center'});return false;" class="btn-primary" style="display:inline-block; width:auto; padding:10px 22px; text-decoration:none;">有料プランに登録する</a>
 </div>
 </div>
@@ -502,10 +514,42 @@ document.getElementById('lj-survey').innerHTML = '<p class="survey-title">あり
 });
 }
 
+// 月星座の意味（西洋占星術との違い）と、次に読むガイド記事を案内する
+function buildMoonGuide(result) {
+if (!result.moonSign && !result.nakshatra) return '';
+const strong = (v) => `<strong>${v || '-'}</strong>`;
+const body = 'インド占星術では、太陽星座よりも月星座を重く見ます。月は心・感情・日々の調子を表す星で、あなたの月星座は{moon}、月が入っているナクシャトラ（27宿）は{nak}です。'.replace('{moon}', strong(result.moonSign)).replace('{nak}', strong(result.nakshatra));
+const slug = /^[a-z-]+$/.test(result.nakshatra_slug || '') ? result.nakshatra_slug : '';
+const nakLink = slug && result.nakshatra
+? `<a href="/ja/guide/nakshatra-${slug}">${'{nak}の特徴と性質'.replace('{nak}', result.nakshatra)}</a>`
+: '<a href="/ja/guide/nakshatra">27宿（ナクシャトラ）の一覧</a>';
+return `
+<div class="moon-guide">
+<div class="moon-guide-title">あなたの月星座について</div>
+<p>${body}</p>
+<p>西洋占星術とは星座の基準が違うため、いつもの星座と違っていても計算の間違いではありません。</p>
+<div class="moon-guide-next">次に読むと理解が深まる記事</div>
+<ul>
+<li><a href="/ja/guide/indian-astrology">インド占星術とは｜西洋占星術との違い</a></li>
+<li>${nakLink}</li>
+<li><a href="/ja/guide/free-reading">無料鑑定でわかること・わからないこと</a></li>
+</ul>
+</div>
+`;
+}
+
 function buildLockedPreview() {
 return `
 <div class="locked-section">
-<div class="locked-section-title">🔒 プレミアム会員になると見られる内容</div>
+<div class="locked-section-title">プレミアム会員になると、毎日これが届きます</div>
+<ul class="premium-benefits">
+<li><strong>毎日の詳細運勢レポート（600字以上）</strong><span>「いま起きていること」「なぜ今そう感じるのか」「あなたの選択は」「この先に待っているもの」「今日・今週の一手」「注意日と追い風日」の6つに分けて、あなたの出生図から読み解きます。</span></li>
+<li><strong>今週の注意日と追い風日を日付つきで</strong><span>何を避けて、何を進めればいいかを1日ずつ示します。</span></li>
+<li><strong>今日・今週の一手を3つ</strong><span>曜日・相手・場面まで具体的に書きます。</span></li>
+<li><strong>②星の影響・③支配星周期の過ごし方・④今日の守り</strong><span>無料版でぼかしている部分です。</span></li>
+<li><strong>マハー・ダシャー周期の解読</strong><span>あなたがいま人生のどの周期にいて、どう過ごせばいいか。</span></li>
+<li><strong>9天体の配置表と、精密クンダリーの解読（300字以上）</strong></li>
+</ul>
 <p class="locked-section-lead">以下は表示イメージ（サンプル）です。ご登録いただくと、あなたの出生図に基づいた実際の内容が表示されます。</p>
 <div class="locked-wrapper">
 <div>

@@ -89,6 +89,17 @@ padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
 /* 無料鑑定の下に「会員なら見られる内容」をぼかし表示して差分を可視化する */
 .locked-section { margin-top: 35px; text-align: left; }
 .locked-section-title { font-size: 1.05rem; color: var(--color-gold-dark); font-weight: 700; margin-bottom: 4px; }
+.premium-benefits { list-style: none; margin: 10px 0 14px; padding: 0; }
+.premium-benefits li { margin-bottom: 10px; padding-inline-start: 1.1em; position: relative; line-height: 1.6; color: #4a3e36; font-size: 0.9rem; }
+.premium-benefits li::before { content: "✦"; position: absolute; inset-inline-start: 0; color: var(--color-gold-main); }
+.premium-benefits strong { display: block; color: var(--color-text-dark); font-size: 0.95rem; }
+.moon-guide { margin: 8px 0 24px; padding: 16px; background: rgba(139,107,27,0.06); border: 1px solid rgba(139,107,27,0.25); border-radius: 8px; color: #4a3e36; line-height: 1.7; font-size: 0.92rem; }
+.moon-guide-title { font-weight: 700; color: var(--color-gold-dark); margin-bottom: 6px; font-size: 1rem; }
+.moon-guide p { margin: 0 0 8px; }
+.moon-guide-next { font-weight: 700; color: var(--color-gold-dark); margin: 12px 0 4px; }
+.moon-guide ul { margin: 0; padding-inline-start: 1.2em; }
+.moon-guide li { margin-bottom: 4px; }
+.moon-guide a { color: var(--color-gold-dark); text-decoration: underline; }
 .locked-section-lead { font-size: 0.82rem; color: #5A4E48; margin-bottom: 14px; }
 .locked-wrapper { position: relative; border-radius: 10px; }
 .preview-card { background: rgba(255, 253, 248, 0.85); border: 1px solid rgba(139, 107, 27, 0.28); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
@@ -418,6 +429,7 @@ ${result.status === 'paid' ? `
 <div style="margin-top:25px; padding:15px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:8px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">
 ④ ${fr.lucky_element || '✨ Tema de sorte de hoje: silêncio e reflexão profunda'}
 </div>` : buildFreeContinuation(fr)}
+${buildMoonGuide(result)}
 `;
 }
 
@@ -457,12 +469,12 @@ return `
 <div>
 <p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">② Influência astral</p>${line}
 <p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">③ Orientação da Mahadasha atual</p>${line}
-<p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">④ Cor e ação da sorte de hoje</p>${line}
+<p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">④ A sua proteção de hoje</p>${line}
 </div>
 <div class="lock-overlay">
 <div class="lock-icon">🔒</div>
 <div class="lock-title">Continue com o Premium</div>
-${fr.premium_teaser ? `<p class="lock-note">${fr.premium_teaser}</p>` : `<p class="lock-note">② Influência planetária, ③ orientação do Mahadasha, ④ cor e ação da sorte, além dos próximos dias e das faixas horárias, são exibidos para membros Premium.</p>`}
+${fr.premium_teaser ? `<p class="lock-note">${fr.premium_teaser}</p>` : `<p class="lock-note">② Influência astral, ③ Orientação da Mahadasha, ④ A sua proteção de hoje, além dos dias de cautela e de vento a favor desta semana, são exibidos para membros Premium.</p>`}
 <a href="#btn-upgrade-preview" onclick="document.getElementById('btn-upgrade-preview')?.scrollIntoView({behavior:'smooth',block:'center'});return false;" class="btn-primary" style="display:inline-block; width:auto; padding:10px 22px; text-decoration:none;">Assinar um plano pago</a>
 </div>
 </div>
@@ -502,10 +514,42 @@ document.getElementById('lj-survey').innerHTML = '<p class="survey-title">Muito 
 });
 }
 
+// 月星座の意味（西洋占星術との違い）と、次に読むガイド記事を案内する
+function buildMoonGuide(result) {
+if (!result.moonSign && !result.nakshatra) return '';
+const strong = (v) => `<strong>${v || '-'}</strong>`;
+const body = 'A astrologia védica dá mais peso ao signo lunar do que ao solar. A Lua representa a mente, as emoções e o seu estado no dia a dia. O seu signo lunar é {moon}, e o nakshatra (uma das 27 mansões lunares) onde a Lua está é {nak}.'.replace('{moon}', strong(result.moonSign)).replace('{nak}', strong(result.nakshatra));
+const slug = /^[a-z-]+$/.test(result.nakshatra_slug || '') ? result.nakshatra_slug : '';
+const nakLink = slug && result.nakshatra
+? `<a href="/pt/guide/nakshatra-${slug}">${'{nak}: traços e natureza'.replace('{nak}', result.nakshatra)}</a>`
+: '<a href="/pt/guide/nakshatra">Os 27 nakshatras em resumo</a>';
+return `
+<div class="moon-guide">
+<div class="moon-guide-title">Sobre o seu signo lunar</div>
+<p>${body}</p>
+<p>A astrologia védica e a ocidental medem o zodíaco a partir de pontos de partida diferentes; por isso, se não coincidir com o signo que você costuma ler, não é um erro de cálculo.</p>
+<div class="moon-guide-next">Para entender mais, leia a seguir</div>
+<ul>
+<li><a href="/pt/guide/indian-astrology">O que é astrologia védica: diferenças da ocidental</a></li>
+<li>${nakLink}</li>
+<li><a href="/pt/guide/free-reading">O que uma leitura gratuita pode e não pode mostrar</a></li>
+</ul>
+</div>
+`;
+}
+
 function buildLockedPreview() {
 return `
 <div class="locked-section">
-<div class="locked-section-title">🔒 O que os membros Premium podem ver</div>
+<div class="locked-section-title">Como membro Premium, é isto que você recebe todos os dias</div>
+<ul class="premium-benefits">
+<li><strong>Uma leitura diária aprofundada</strong><span>Feita a partir do seu próprio mapa natal, em seis partes: o que está acontecendo com você agora, por que você se sente assim, a sua escolha, o que vem pela frente, a sua jogada para hoje e esta semana, e os dias de cautela e de vento a favor.</span></li>
+<li><strong>Os dias de cautela e de vento a favor desta semana, com datas</strong><span>Dia a dia, o que evitar e o que fazer avançar.</span></li>
+<li><strong>Três jogadas para hoje e esta semana</strong><span>Concretas até o dia, a pessoa e a situação.</span></li>
+<li><strong>② Influência astral, ③ Orientação da Mahadasha, ④ A sua proteção de hoje</strong><span>As partes desfocadas na versão gratuita.</span></li>
+<li><strong>Leitura do ciclo de Mahadasha</strong><span>Em que fase da vida você está agora e como vivê-la.</span></li>
+<li><strong>Uma tabela dos nove planetas e uma leitura detalhada do kundali</strong></li>
+</ul>
 <p class="locked-section-lead">Abaixo está uma amostra de como fica. Depois da assinatura, o conteúdo passa a ser real, baseado no seu próprio mapa natal.</p>
 <div class="locked-wrapper">
 <div>

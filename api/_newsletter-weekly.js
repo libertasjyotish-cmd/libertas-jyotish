@@ -28,7 +28,7 @@ const TEXT = {
       '今のダシャー（支配星の周期）の過ごし方',
       '今日・今週の具体的な行動3つ（曜日・相手・場面まで）',
       '今日の守り（インド神話にちなんだ、その日のふるまい）',
-      '翌日以降の流れと、時間帯ごとの吉凶',
+      '今週の注意日と追い風日（日付つき）',
       '9つの天体すべての配置表と一言解説'
     ],
     date: (d) => { const j = jaDate(d); return { day: j.label, full: `${j.label}（${j.weekday}）` }; },
@@ -82,7 +82,7 @@ const TEXT = {
       'How to live your current dasha (planetary period)',
       'Three concrete actions for today and this week (down to the day, the person and the setting)',
       'Today\'s protection (how to act today, drawn from Indian mythology)',
-      'The days ahead, and the good and difficult hours of each day',
+      'This week\'s caution days and tailwind days, with dates',
       'All nine planets in one table, each with a short note'
     ],
     date: (d) => ({ day: enDate(d), full: enDate(d, { weekday: 'short', month: 'long', day: 'numeric' }) }),
