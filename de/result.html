@@ -89,6 +89,17 @@ padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
 /* 無料鑑定の下に「会員なら見られる内容」をぼかし表示して差分を可視化する */
 .locked-section { margin-top: 35px; text-align: left; }
 .locked-section-title { font-size: 1.05rem; color: var(--color-gold-dark); font-weight: 700; margin-bottom: 4px; }
+.premium-benefits { list-style: none; margin: 10px 0 14px; padding: 0; }
+.premium-benefits li { margin-bottom: 10px; padding-inline-start: 1.1em; position: relative; line-height: 1.6; color: #4a3e36; font-size: 0.9rem; }
+.premium-benefits li::before { content: "✦"; position: absolute; inset-inline-start: 0; color: var(--color-gold-main); }
+.premium-benefits strong { display: block; color: var(--color-text-dark); font-size: 0.95rem; }
+.moon-guide { margin: 8px 0 24px; padding: 16px; background: rgba(139,107,27,0.06); border: 1px solid rgba(139,107,27,0.25); border-radius: 8px; color: #4a3e36; line-height: 1.7; font-size: 0.92rem; }
+.moon-guide-title { font-weight: 700; color: var(--color-gold-dark); margin-bottom: 6px; font-size: 1rem; }
+.moon-guide p { margin: 0 0 8px; }
+.moon-guide-next { font-weight: 700; color: var(--color-gold-dark); margin: 12px 0 4px; }
+.moon-guide ul { margin: 0; padding-inline-start: 1.2em; }
+.moon-guide li { margin-bottom: 4px; }
+.moon-guide a { color: var(--color-gold-dark); text-decoration: underline; }
 .locked-section-lead { font-size: 0.82rem; color: #5A4E48; margin-bottom: 14px; }
 .locked-wrapper { position: relative; border-radius: 10px; }
 .preview-card { background: rgba(255, 253, 248, 0.85); border: 1px solid rgba(139, 107, 27, 0.28); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
@@ -418,6 +429,7 @@ ${result.status === 'paid' ? `
 <div style="margin-top:25px; padding:15px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:8px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">
 ④ ${fr.lucky_element || '✨ Das heutige Glücksthema: Stille und tiefe Reflexion'}
 </div>` : buildFreeContinuation(fr)}
+${buildMoonGuide(result)}
 `;
 }
 
@@ -457,12 +469,12 @@ return `
 <div>
 <p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">② Astrologischer Einfluss</p>${line}
 <p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">③ Aktuelle Mahadasha-Wegweisung</p>${line}
-<p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">④ Glücksfarbe & -handlung für heute</p>${line}
+<p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">④ Ihr Schutz für heute</p>${line}
 </div>
 <div class="lock-overlay">
 <div class="lock-icon">🔒</div>
 <div class="lock-title">Weiter mit Premium</div>
-${fr.premium_teaser ? `<p class="lock-note">${fr.premium_teaser}</p>` : `<p class="lock-note">② Planeteneinfluss, ③ Mahadasha-Hinweise, ④ Glücksfarbe & -handlung sowie die kommenden Tage und Tageszeiten werden Premium-Mitgliedern angezeigt.</p>`}
+${fr.premium_teaser ? `<p class="lock-note">${fr.premium_teaser}</p>` : `<p class="lock-note">② Astrologischer Einfluss, ③ Mahadasha-Wegweisung, ④ Ihr Schutz für heute sowie die Vorsichtstage und Rückenwindtage dieser Woche werden Premium-Mitgliedern angezeigt.</p>`}
 <a href="#btn-upgrade-preview" onclick="document.getElementById('btn-upgrade-preview')?.scrollIntoView({behavior:'smooth',block:'center'});return false;" class="btn-primary" style="display:inline-block; width:auto; padding:10px 22px; text-decoration:none;">Einem kostenpflichtigen Plan beitreten</a>
 </div>
 </div>
@@ -502,10 +514,42 @@ document.getElementById('lj-survey').innerHTML = '<p class="survey-title">Herzli
 });
 }
 
+// 月星座の意味（西洋占星術との違い）と、次に読むガイド記事を案内する
+function buildMoonGuide(result) {
+if (!result.moonSign && !result.nakshatra) return '';
+const strong = (v) => `<strong>${v || '-'}</strong>`;
+const body = 'Die vedische Astrologie gewichtet das Mondzeichen stärker als das Sonnenzeichen. Der Mond steht für Geist, Gefühle und Ihre tägliche Verfassung. Ihr Mondzeichen ist {moon}, und das Nakshatra (eines der 27 Mondhäuser), in dem der Mond steht, ist {nak}.'.replace('{moon}', strong(result.moonSign)).replace('{nak}', strong(result.nakshatra));
+const slug = /^[a-z-]+$/.test(result.nakshatra_slug || '') ? result.nakshatra_slug : '';
+const nakLink = slug && result.nakshatra
+? `<a href="/de/guide/nakshatra-${slug}">${'{nak}: Eigenschaften und Wesen'.replace('{nak}', result.nakshatra)}</a>`
+: '<a href="/de/guide/nakshatra">Die 27 Nakshatras im Überblick</a>';
+return `
+<div class="moon-guide">
+<div class="moon-guide-title">Über Ihr Mondzeichen</div>
+<p>${body}</p>
+<p>Vedische und westliche Astrologie messen den Tierkreis von unterschiedlichen Ausgangspunkten aus. Wenn es also von dem Zeichen abweicht, das Sie sonst lesen, ist das kein Rechenfehler.</p>
+<div class="moon-guide-next">Weiterlesen, um mehr zu verstehen</div>
+<ul>
+<li><a href="/de/guide/indian-astrology">Was ist vedische Astrologie? Die Unterschiede zur westlichen Astrologie</a></li>
+<li>${nakLink}</li>
+<li><a href="/de/guide/free-reading">Was ein kostenloses Reading zeigen kann – und was nicht</a></li>
+</ul>
+</div>
+`;
+}
+
 function buildLockedPreview() {
 return `
 <div class="locked-section">
-<div class="locked-section-title">🔒 Was Premium-Mitglieder sehen können</div>
+<div class="locked-section-title">Als Premium-Mitglied erhalten Sie jeden Tag Folgendes</div>
+<ul class="premium-benefits">
+<li><strong>Eine ausführliche Tagesdeutung</strong><span>Aus Ihrem eigenen Geburtshoroskop gedeutet, in sechs Teilen: was gerade mit Ihnen geschieht, warum Sie sich so fühlen, Ihre Wahl, was vor Ihnen liegt, Ihr Zug für heute und diese Woche sowie Vorsichtstage und Rückenwindtage.</span></li>
+<li><strong>Die Vorsichtstage und Rückenwindtage dieser Woche, mit Datum</strong><span>Tag für Tag: was Sie meiden und was Sie vorantreiben sollten.</span></li>
+<li><strong>Drei Züge für heute und diese Woche</strong><span>Konkret bis zum Wochentag, zur Person und zur Situation.</span></li>
+<li><strong>② Astrologischer Einfluss, ③ Mahadasha-Wegweisung, ④ Ihr Schutz für heute</strong><span>Die Teile, die in der kostenlosen Version verschwommen sind.</span></li>
+<li><strong>Deutung Ihres Mahadasha-Zyklus</strong><span>In welcher Lebensphase Sie gerade sind und wie Sie sie gestalten.</span></li>
+<li><strong>Eine Tabelle aller neun Planeten und eine ausführliche Kundali-Deutung</strong></li>
+</ul>
 <p class="locked-section-lead">Unten sehen Sie ein Beispiel, wie es aussieht. Sobald Sie beitreten, werden echte Inhalte basierend auf Ihrem eigenen Geburtshoroskop angezeigt.</p>
 <div class="locked-wrapper">
 <div>

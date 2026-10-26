@@ -89,6 +89,17 @@ padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
 /* 無料鑑定の下に「会員なら見られる内容」をぼかし表示して差分を可視化する */
 .locked-section { margin-top: 35px; text-align: left; }
 .locked-section-title { font-size: 1.05rem; color: var(--color-gold-dark); font-weight: 700; margin-bottom: 4px; }
+.premium-benefits { list-style: none; margin: 10px 0 14px; padding: 0; }
+.premium-benefits li { margin-bottom: 10px; padding-inline-start: 1.1em; position: relative; line-height: 1.6; color: #4a3e36; font-size: 0.9rem; }
+.premium-benefits li::before { content: "✦"; position: absolute; inset-inline-start: 0; color: var(--color-gold-main); }
+.premium-benefits strong { display: block; color: var(--color-text-dark); font-size: 0.95rem; }
+.moon-guide { margin: 8px 0 24px; padding: 16px; background: rgba(139,107,27,0.06); border: 1px solid rgba(139,107,27,0.25); border-radius: 8px; color: #4a3e36; line-height: 1.7; font-size: 0.92rem; }
+.moon-guide-title { font-weight: 700; color: var(--color-gold-dark); margin-bottom: 6px; font-size: 1rem; }
+.moon-guide p { margin: 0 0 8px; }
+.moon-guide-next { font-weight: 700; color: var(--color-gold-dark); margin: 12px 0 4px; }
+.moon-guide ul { margin: 0; padding-inline-start: 1.2em; }
+.moon-guide li { margin-bottom: 4px; }
+.moon-guide a { color: var(--color-gold-dark); text-decoration: underline; }
 .locked-section-lead { font-size: 0.82rem; color: #5A4E48; margin-bottom: 14px; }
 .locked-wrapper { position: relative; border-radius: 10px; }
 .preview-card { background: rgba(255, 253, 248, 0.85); border: 1px solid rgba(139, 107, 27, 0.28); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
@@ -418,6 +429,7 @@ ${result.status === 'paid' ? `
 <div style="margin-top:25px; padding:15px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:8px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">
 ④ ${fr.lucky_element || '✨ Tema keberuntungan hari ini: keheningan dan perenungan mendalam'}
 </div>` : buildFreeContinuation(fr)}
+${buildMoonGuide(result)}
 `;
 }
 
@@ -457,12 +469,12 @@ return `
 <div>
 <p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">② Pengaruh bintang</p>${line}
 <p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">③ Panduan Mahadasha saat ini</p>${line}
-<p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">④ Warna & tindakan keberuntungan hari ini</p>${line}
+<p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">④ Perlindungan hari ini</p>${line}
 </div>
 <div class="lock-overlay">
 <div class="lock-icon">🔒</div>
 <div class="lock-title">Lanjutkan dengan Premium</div>
-${fr.premium_teaser ? `<p class="lock-note">${fr.premium_teaser}</p>` : `<p class="lock-note">② Pengaruh planet, ③ panduan Mahadasha, ④ warna & tindakan keberuntungan, serta hari-hari mendatang dan waktu per jam ditampilkan untuk anggota Premium.</p>`}
+${fr.premium_teaser ? `<p class="lock-note">${fr.premium_teaser}</p>` : `<p class="lock-note">② Pengaruh bintang, ③ Panduan Mahadasha, ④ Perlindungan hari ini, serta hari waspada dan hari angin baik minggu ini, ditampilkan untuk anggota Premium.</p>`}
 <a href="#btn-upgrade-preview" onclick="document.getElementById('btn-upgrade-preview')?.scrollIntoView({behavior:'smooth',block:'center'});return false;" class="btn-primary" style="display:inline-block; width:auto; padding:10px 22px; text-decoration:none;">Berlangganan paket berbayar</a>
 </div>
 </div>
@@ -502,10 +514,42 @@ document.getElementById('lj-survey').innerHTML = '<p class="survey-title">Terima
 });
 }
 
+// 月星座の意味（西洋占星術との違い）と、次に読むガイド記事を案内する
+function buildMoonGuide(result) {
+if (!result.moonSign && !result.nakshatra) return '';
+const strong = (v) => `<strong>${v || '-'}</strong>`;
+const body = 'Astrologi Veda memberi bobot lebih besar pada zodiak bulan daripada zodiak matahari. Bulan melambangkan pikiran, perasaan, dan kondisi Anda sehari-hari. Zodiak bulan Anda adalah {moon}, dan nakshatra (salah satu dari 27 rumah bulan) tempat Bulan berada adalah {nak}.'.replace('{moon}', strong(result.moonSign)).replace('{nak}', strong(result.nakshatra));
+const slug = /^[a-z-]+$/.test(result.nakshatra_slug || '') ? result.nakshatra_slug : '';
+const nakLink = slug && result.nakshatra
+? `<a href="/id/guide/nakshatra-${slug}">${'{nak}: sifat dan karakter'.replace('{nak}', result.nakshatra)}</a>`
+: '<a href="/id/guide/nakshatra">Daftar 27 nakshatra</a>';
+return `
+<div class="moon-guide">
+<div class="moon-guide-title">Tentang zodiak bulan Anda</div>
+<p>${body}</p>
+<p>Astrologi Veda dan astrologi Barat mengukur zodiak dari titik awal yang berbeda, jadi jika hasilnya berbeda dari zodiak yang biasa Anda baca, itu bukan kesalahan perhitungan.</p>
+<div class="moon-guide-next">Baca berikutnya agar lebih paham</div>
+<ul>
+<li><a href="/id/guide/indian-astrology">Apa itu astrologi Veda? Perbedaannya dengan astrologi Barat</a></li>
+<li>${nakLink}</li>
+<li><a href="/id/guide/free-reading">Apa yang bisa dan tidak bisa diketahui dari pembacaan gratis</a></li>
+</ul>
+</div>
+`;
+}
+
 function buildLockedPreview() {
 return `
 <div class="locked-section">
-<div class="locked-section-title">🔒 Yang dapat dilihat anggota Premium</div>
+<div class="locked-section-title">Sebagai anggota Premium, inilah yang Anda dapatkan setiap hari</div>
+<ul class="premium-benefits">
+<li><strong>Pembacaan harian yang mendalam</strong><span>Dibaca dari peta kelahiran Anda sendiri dalam enam bagian: apa yang sedang terjadi pada Anda, mengapa Anda merasa begini, pilihan Anda, apa yang menanti di depan, langkah Anda untuk hari ini dan minggu ini, serta hari waspada dan hari angin baik.</span></li>
+<li><strong>Hari waspada dan hari angin baik minggu ini, lengkap dengan tanggal</strong><span>Hari demi hari, apa yang perlu dihindari dan apa yang perlu dimajukan.</span></li>
+<li><strong>Tiga langkah untuk hari ini dan minggu ini</strong><span>Konkret sampai ke hari, orang, dan situasinya.</span></li>
+<li><strong>② Pengaruh bintang, ③ Panduan Mahadasha, ④ Perlindungan hari ini</strong><span>Bagian yang diburamkan di versi gratis.</span></li>
+<li><strong>Pembacaan siklus Mahadasha</strong><span>Di periode kehidupan mana Anda sekarang, dan bagaimana menjalaninya.</span></li>
+<li><strong>Tabel sembilan planet dan pembacaan kundali yang terperinci</strong></li>
+</ul>
 <p class="locked-section-lead">Berikut contoh tampilannya. Setelah berlangganan, isinya berubah menjadi pembacaan nyata dari peta kelahiran Anda sendiri.</p>
 <div class="locked-wrapper">
 <div>

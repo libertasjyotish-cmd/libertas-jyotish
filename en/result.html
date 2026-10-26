@@ -89,6 +89,17 @@ padding: 45px 35px 40px; text-align: center; margin-bottom: 30px;
 /* 無料鑑定の下に「会員なら見られる内容」をぼかし表示して差分を可視化する */
 .locked-section { margin-top: 35px; text-align: left; }
 .locked-section-title { font-size: 1.05rem; color: var(--color-gold-dark); font-weight: 700; margin-bottom: 4px; }
+.premium-benefits { list-style: none; margin: 10px 0 14px; padding: 0; }
+.premium-benefits li { margin-bottom: 10px; padding-inline-start: 1.1em; position: relative; line-height: 1.6; color: #4a3e36; font-size: 0.9rem; }
+.premium-benefits li::before { content: "✦"; position: absolute; inset-inline-start: 0; color: var(--color-gold-main); }
+.premium-benefits strong { display: block; color: var(--color-text-dark); font-size: 0.95rem; }
+.moon-guide { margin: 8px 0 24px; padding: 16px; background: rgba(139,107,27,0.06); border: 1px solid rgba(139,107,27,0.25); border-radius: 8px; color: #4a3e36; line-height: 1.7; font-size: 0.92rem; }
+.moon-guide-title { font-weight: 700; color: var(--color-gold-dark); margin-bottom: 6px; font-size: 1rem; }
+.moon-guide p { margin: 0 0 8px; }
+.moon-guide-next { font-weight: 700; color: var(--color-gold-dark); margin: 12px 0 4px; }
+.moon-guide ul { margin: 0; padding-inline-start: 1.2em; }
+.moon-guide li { margin-bottom: 4px; }
+.moon-guide a { color: var(--color-gold-dark); text-decoration: underline; }
 .locked-section-lead { font-size: 0.82rem; color: #5A4E48; margin-bottom: 14px; }
 .locked-wrapper { position: relative; border-radius: 10px; }
 .preview-card { background: rgba(255, 253, 248, 0.85); border: 1px solid rgba(139, 107, 27, 0.28); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
@@ -418,6 +429,7 @@ ${result.status === 'paid' ? `
 <div style="margin-top:25px; padding:15px; background:rgba(139,107,27,0.06); border:1px dashed var(--color-gold-main); border-radius:8px; text-align:center; font-weight:bold; color:var(--color-gold-dark);">
 ④ ${fr.lucky_element || '✨ Today\'s lucky theme: silence and deep reflection'}
 </div>` : buildFreeContinuation(fr)}
+${buildMoonGuide(result)}
 `;
 }
 
@@ -457,12 +469,12 @@ return `
 <div>
 <p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">② Astro Influence</p>${line}
 <p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">③ Current Mahadasha Guidance</p>${line}
-<p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">④ Today's lucky color & action</p>${line}
+<p style="font-weight:bold; color:var(--color-gold-dark); margin:18px 0 6px;">④ Today's protection</p>${line}
 </div>
 <div class="lock-overlay">
 <div class="lock-icon">🔒</div>
 <div class="lock-title">Continue with Premium</div>
-${fr.premium_teaser ? `<p class="lock-note">${fr.premium_teaser}</p>` : `<p class="lock-note">② Planetary influence, ③ Mahadasha guidance, ④ lucky color & action, plus the days ahead and hour-by-hour timing are shown to Premium members.</p>`}
+${fr.premium_teaser ? `<p class="lock-note">${fr.premium_teaser}</p>` : `<p class="lock-note">② Astro Influence, ③ Mahadasha guidance, ④ Today's protection, plus this week's caution days and tailwind days, are shown to Premium members.</p>`}
 <a href="#btn-upgrade-preview" onclick="document.getElementById('btn-upgrade-preview')?.scrollIntoView({behavior:'smooth',block:'center'});return false;" class="btn-primary" style="display:inline-block; width:auto; padding:10px 22px; text-decoration:none;">Join a paid plan</a>
 </div>
 </div>
@@ -502,10 +514,42 @@ document.getElementById('lj-survey').innerHTML = '<p class="survey-title">Thank 
 });
 }
 
+// 月星座の意味（西洋占星術との違い）と、次に読むガイド記事を案内する
+function buildMoonGuide(result) {
+if (!result.moonSign && !result.nakshatra) return '';
+const strong = (v) => `<strong>${v || '-'}</strong>`;
+const body = 'Vedic astrology gives more weight to the Moon sign than to the Sun sign. The Moon represents your mind, emotions and day-to-day state. Your Moon sign is {moon}, and the nakshatra (one of the 27 lunar mansions) the Moon occupies is {nak}.'.replace('{moon}', strong(result.moonSign)).replace('{nak}', strong(result.nakshatra));
+const slug = /^[a-z-]+$/.test(result.nakshatra_slug || '') ? result.nakshatra_slug : '';
+const nakLink = slug && result.nakshatra
+? `<a href="/en/guide/nakshatra-${slug}">${'{nak}: traits and nature'.replace('{nak}', result.nakshatra)}</a>`
+: '<a href="/en/guide/nakshatra">The 27 nakshatras at a glance</a>';
+return `
+<div class="moon-guide">
+<div class="moon-guide-title">About your Moon sign</div>
+<p>${body}</p>
+<p>Vedic and Western astrology measure the zodiac from different starting points, so if this differs from the sign you usually read, it is not a calculation error.</p>
+<div class="moon-guide-next">Read next to understand more</div>
+<ul>
+<li><a href="/en/guide/indian-astrology">What is Vedic astrology? How it differs from Western astrology</a></li>
+<li>${nakLink}</li>
+<li><a href="/en/guide/free-reading">What a free reading can and cannot tell you</a></li>
+</ul>
+</div>
+`;
+}
+
 function buildLockedPreview() {
 return `
 <div class="locked-section">
-<div class="locked-section-title">🔒 What Premium members can see</div>
+<div class="locked-section-title">As a Premium member, this is what you get every day</div>
+<ul class="premium-benefits">
+<li><strong>An in-depth daily reading</strong><span>Read from your own birth chart in six parts: what is happening to you now, why you feel this way, your choice, what lies ahead, your move for today and this week, and caution days and tailwind days.</span></li>
+<li><strong>This week's caution days and tailwind days, with dates</strong><span>Day by day, what to avoid and what to push forward.</span></li>
+<li><strong>Three moves for today and this week</strong><span>Specific down to the day, the person and the setting.</span></li>
+<li><strong>② Astro Influence, ③ Mahadasha guidance, ④ Today's protection</strong><span>The parts blurred in the free version.</span></li>
+<li><strong>Mahadasha cycle reading</strong><span>Which period of life you are in now, and how to live it.</span></li>
+<li><strong>A table of all nine planets, plus a detailed kundali reading</strong></li>
+</ul>
 <p class="locked-section-lead">Below is a sample of how it looks. Once you join, it shows real content based on your own birth chart.</p>
 <div class="locked-wrapper">
 <div>

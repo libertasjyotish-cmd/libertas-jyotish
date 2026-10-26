@@ -522,6 +522,7 @@ module.exports = async function handler(req, res) {
           if (computed.sunSign) cleanJsonResult.sunSign = computed.sunSign;
           if (computed.moonSign) cleanJsonResult.moonSign = computed.moonSign;
           if (computed.nakshatra) cleanJsonResult.nakshatra = computed.nakshatra;
+          if (computed.nakshatraSlug) cleanJsonResult.nakshatra_slug = computed.nakshatraSlug;
         }
 
         cleanJsonResult.status = finalStatus;
@@ -656,6 +657,18 @@ const NAKSHATRA_JA = {
   revati: 'レーヴァティー', abhijit: 'アビジット'
 };
 
+// 結果画面から各ナクシャトラのガイド記事（/guide/nakshatra-<slug>）へリンクするための対応表
+const NAKSHATRA_SLUG = {
+  'アシュヴィニー': 'ashwini', 'バラニー': 'bharani', 'クリッティカー': 'krittika', 'ローヒニー': 'rohini',
+  'ムリガシラス': 'mrigashira', 'アールドラー': 'ardra', 'プナルヴァス': 'punarvasu', 'プシャ': 'pushya',
+  'アーシュレーシャ': 'ashlesha', 'マガー': 'magha', 'プールヴァ・パールグニー': 'purva-phalguni',
+  'ウッタラ・パールグニー': 'uttara-phalguni', 'ハスタ': 'hasta', 'チトラ': 'chitra', 'スヴァーティ': 'swati',
+  'ヴィシャーカー': 'vishakha', 'アヌラーダ': 'anuradha', 'ジェーシュタ': 'jyeshtha', 'ムーラ': 'mula',
+  'プールヴァ・アシャーダー': 'purva-ashadha', 'ウッタラ・アシャーダー': 'uttara-ashadha', 'シュラヴァナ': 'shravana',
+  'ダニシュター': 'dhanishta', 'シャタビシャ': 'shatabhisha', 'プールヴァ・バードラパダー': 'purva-bhadrapada',
+  'ウッタラ・バードラパダー': 'uttara-bhadrapada', 'レーヴァティー': 'revati'
+};
+
 function toJapaneseNakshatra(name) {
   if (!name) return '';
   const key = String(name).toLowerCase().replace(/[^a-z]/g, '');
@@ -670,7 +683,8 @@ function computeSigns(prokeralaData, lang = 'ja') {
   return {
     sunSign: sun.sign ? signFor(sun.sign, lang) : '',
     moonSign: moon.sign ? signFor(moon.sign, lang) : '',
-    nakshatra: nakshatraFor(moon.nakshatra, lang)
+    nakshatra: nakshatraFor(moon.nakshatra, lang),
+    nakshatraSlug: moon.nakshatra ? NAKSHATRA_SLUG[toJapaneseNakshatra(moon.nakshatra)] || '' : ''
   };
 }
 
