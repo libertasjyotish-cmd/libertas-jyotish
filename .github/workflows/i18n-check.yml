@@ -16,6 +16,8 @@ on:
       - 'api/_newsletter-weekly.js'
       - 'api/_sky-events.js'
       - 'api/_sky-events-intl.js'
+      - 'api/jyotish.js'
+      - 'scripts/check-reading-prompt.mjs'
       - 'package.json'
       - 'package-lock.json'
       - 'data/newsletter/**'
@@ -34,5 +36,6 @@ jobs:
       - run: npm run check:i18n
       - run: npm run check:guide
       - run: npm run check:faq
+      - run: npm run check:prompt
       - run: npm ci --ignore-scripts
       - run: npm run check:newsletter
