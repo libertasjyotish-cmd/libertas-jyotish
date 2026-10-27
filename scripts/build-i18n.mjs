@@ -39,6 +39,8 @@ const SITEMAP_PAGES = [
 // {{pdfIntroJa}}: 生涯完全鑑定書（pdf-purchase）の商品説明ブロック。日本語のみ展開、他言語は空。
 // {{robotsSaleJa}}: 販売ページの robots。日本は KOMOJU、他言語は Gumroad で年間運勢を販売中のため全言語 index 可。
 const SALE_LANGS = new Set(['ja', 'en', 'es', 'pt', 'ar', 'id', 'fr', 'de']);
+// {{newsOptInChecked}}: お知らせメール同意チェックの初期値。EU（GDPR）では事前チェックが有効な同意にならないため de/fr はオフ。
+const NEWS_OPT_IN_UNCHECKED_LANGS = new Set(['de', 'fr']);
 function buildRobotsSaleJa(lang) {
   return SALE_LANGS.has(lang) ? '' : '<meta name="robots" content="noindex,nofollow">';
 }
@@ -303,6 +305,8 @@ function render(template, locale, base, context) {
       value = buildKarmaProductItem(locale.meta.lang, locale.strings);
     } else if (path === 'robotsSaleJa') {
       value = buildRobotsSaleJa(locale.meta.lang);
+    } else if (path === 'newsOptInChecked') {
+      value = NEWS_OPT_IN_UNCHECKED_LANGS.has(locale.meta.lang) ? '' : 'checked';
     } else if (path === 'page') {
       // {{page}}: そのページのパス（例 tools/moon-sign）。単機能ツールが自分の種別をJSへ渡すのに使う。
       value = context.page;

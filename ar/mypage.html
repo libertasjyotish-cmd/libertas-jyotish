@@ -394,6 +394,7 @@ data-width="320">
 <!-- お知らせメールの受信設定。本人確認セッションがある時だけ表示する。 -->
 <div id="newsletter-box" class="card-box" style="display:none;">
 <div class="card-title">إشعارات البريد الإلكتروني</div>
+<p id="newsletter-invite" style="display:none; font-size:0.85rem; color:#4a3e36; line-height:1.6; margin-bottom:10px;">احصل على رسائل عند صدور قراءات جديدة وعروض خاصة تناسب خريطتك. ضع علامة في المربع أدناه للاشتراك (يمكنك الإلغاء في أي وقت).</p>
 <label style="display:flex; gap:10px; align-items:flex-start; font-size:0.9rem; color:#4a3e36; line-height:1.5; cursor:pointer;"><input type="checkbox" id="newsletter-opt-in" style="margin-top:4px; flex:none;"><span>استلام قراءات جديدة وعروض مميزة عبر البريد (يمكنك الإلغاء في أي وقت)</span></label>
 <p id="newsletter-msg" style="font-size:0.8rem; color:#5A4E48; margin-top:6px; min-height:1em;"></p>
 </div>
@@ -1036,11 +1037,14 @@ const session = localStorage.getItem('lj_session');
 if (!box || !session || !email) return;
 const input = document.getElementById('newsletter-opt-in');
 const msg = document.getElementById('newsletter-msg');
+const invite = document.getElementById('newsletter-invite');
+const showInvite = () => { if (invite) invite.style.display = input.checked ? 'none' : 'block'; };
 const call = (extra) => fetch(JYOTISH_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
 body: JSON.stringify({ action: 'newsletter', email, session, ...extra }) }).then(r => r.ok ? r.json() : Promise.reject(r.status));
 try {
 const data = await call({});
 input.checked = Boolean(data.opt_in);
+showInvite();
 box.style.display = 'block';
 } catch (e) { return; }
 if (input.dataset.bound) return;
@@ -1055,7 +1059,7 @@ msg.textContent = 'تم الحفظ.';
 } catch (e) {
 input.checked = !value;
 msg.textContent = 'تعذر الإرسال. يُرجى المحاولة مرة أخرى.';
-} finally { input.disabled = false; }
+} finally { input.disabled = false; showInvite(); }
 });
 }
 
