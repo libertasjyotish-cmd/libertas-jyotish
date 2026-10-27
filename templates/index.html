@@ -123,6 +123,8 @@ box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.5);
 .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 25px; text-align: left; }
 .form-group { display: flex; flex-direction: column; }
 .form-group.full-width { grid-column: span 2; }
+.news-opt-in { display: flex; gap: 10px; align-items: flex-start; font-size: 0.9rem; color: #4a3e36; line-height: 1.5; cursor: pointer; }
+.news-opt-in input { margin-top: 4px; flex: none; width: auto; }
 
 label { font-size: 0.82rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 6px; }
 .label-note { font-size: 0.72rem; font-weight: normal; color: #7a6a58; margin-left: 4px; }
@@ -304,6 +306,9 @@ transition: color 0.3s, border-color 0.3s;
 <div class="form-group full-width">
 <label for="user-email">{{t.index.text07}} <span class="label-note">{{t.index.text08}}</span></label>
 <input type="email" id="user-email" placeholder="example@gmail.com" required>
+</div>
+<div class="form-group full-width">
+<label class="news-opt-in" for="user-newsletter"><input type="checkbox" id="user-newsletter" {{newsOptInChecked}}><span>{{t.result.surveyNews}}</span></label>
 </div>
 
 <div class="form-group">
@@ -500,6 +505,7 @@ city: birthPlace,
 dob: birthDate,
 tob: timeVal,
 status: 'free',
+newsletter: document.getElementById('user-newsletter').checked,
 language: '{{lang}}',
 tz: Intl.DateTimeFormat().resolvedOptions().timeZone
 };

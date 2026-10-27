@@ -334,6 +334,12 @@ if (!response.ok) {
 
 const data = await response.json();
 sessionStorage.setItem('lj_diagnosis_result', JSON.stringify(data));
+// フォームの同意は一度だけ記録する（後でマイページで解除した人を、保存済み入力の再送で戻さない）
+if ('newsletter' in payload) {
+delete payload.newsletter;
+sessionStorage.setItem('lj_user_input', JSON.stringify(payload));
+if (localStorage.getItem('lj_user_input_backup')) localStorage.setItem('lj_user_input_backup', JSON.stringify(payload));
+}
 
 // ★マイページでの即時表示・データ引継ぎのために jyotish_user キャッシュを保存
 try {
@@ -500,12 +506,13 @@ const btn = document.getElementById('lj-survey-send');
 if (!btn) return;
 btn.addEventListener('click', async () => {
 const picked = Array.from(document.querySelectorAll('input[name="lj-interest"]:checked')).map(i => i.value);
+const newsletter = document.getElementById('lj-newsletter').checked;
 const msg = document.getElementById('lj-survey-msg');
-if (!picked.length) { msg.textContent = 'Por favor, escolha um tema.'; return; }
+if (!picked.length && !newsletter) { msg.textContent = 'Por favor, escolha um tema.'; return; }
 btn.disabled = true;
 try {
 const r = await fetch(JYOTISH_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ action: 'survey', email, interest: picked.join(','), newsletter: document.getElementById('lj-newsletter').checked }) });
+body: JSON.stringify({ action: 'survey', email, interest: picked.join(','), newsletter }) });
 if (!r.ok) throw new Error('survey_failed');
 localStorage.setItem('lj_survey_done', '1');
 if (window.LJTrack) window.LJTrack('survey_submit', { interest: picked.join(','), content_language: 'pt' });

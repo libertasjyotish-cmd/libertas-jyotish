@@ -362,7 +362,10 @@ module.exports = async function handler(req, res) {
       const todayLocal = todayIn(viewerZone);
       const sameDayReading = reusableReading(sheetsProfile, { status: finalStatus, birthKey, today: todayLocal });
       const readingCache = lastReadingCacheReason;
+      // 診断フォームの同意チェックが入っていた時だけ yes を書く。外れていた時は既存の値に触れない。
+      const formOptIn = action === 'diagnosis' && req.body.newsletter === true && finalEmail && profileSource !== 'sheet_error';
       if (sameDayReading) {
+        if (formOptIn) await setOptIn(finalEmail, true).catch((err) => console.error('Newsletter opt-in save error:', err?.message));
         sameDayReading.profile_source = profileSource;
         sameDayReading.reading_cache = readingCache;
         return res.status(200).json(trimForFree(sameDayReading));
@@ -552,7 +555,9 @@ module.exports = async function handler(req, res) {
         // 残り時間が乏しいときに保存を待つと応答ごと打ち切られるため、その場合は待たずに返す。
         if (finalEmail && profileSource !== 'sheet_error') {
           const save = saveProfileToSheets(finalEmail, finalStatus, finalDob, finalTob, finalCity, cleanJsonResult, finalLang)
-            .catch((sheetSaveErr) => console.error("Google Sheets save error, skipped:", sheetSaveErr));
+            .catch((sheetSaveErr) => console.error("Google Sheets save error, skipped:", sheetSaveErr))
+            .then(() => formOptIn && setOptIn(finalEmail, true))
+            .catch((err) => console.error('Newsletter opt-in save error:', err?.message));
           if (elapsed() < FUNCTION_BUDGET_MS) await save;
           else console.warn('Sheets save not awaited: running out of time budget.');
         }
@@ -1145,7 +1150,8 @@ async function saveSurveyToSheets(email, picks, optIn) {
     const matched = findMemberRows(rows, email);
     const nowStr = new Date().toISOString();
     const values = { newsletter_opt_in: optIn, survey_at: nowStr };
-    for (const k of INTEREST_KEYS) values[`interest_${k}`] = picks.includes(k) ? 'yes' : '';
+    // テーマ未選択（お知らせの可否だけ）の送信では、以前の関心テーマを消さない。
+    if (picks.length) for (const k of INTEREST_KEYS) values[`interest_${k}`] = picks.includes(k) ? 'yes' : '';
     if (!matched.length) {
       await sheet.addRow({ email, status: 'free', created_at: nowStr, updated_at: nowStr, ...values });
       return true;
