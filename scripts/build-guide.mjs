@@ -207,6 +207,26 @@ ${items}
     return `<section class="related">\n<h2>${esc(ui.relatedHeading)}</h2>\n<ul>\n${items}\n</ul>\n</section>`;
   }
 
+  // 検索の多い項目を記事冒頭で目立たせる囲み（例: ダシャー記事のラーフ期）。
+  function spotlightHtml(sp) {
+    return `<aside class="guide-spotlight">\n<p class="guide-spotlight-tag">${esc(sp.tag)}</p>\n<h2>${esc(sp.heading)}</h2>\n<p>${esc(sp.body)}</p>\n<a class="guide-spotlight-link" href="/${LANG}/${SECTION}/${sp.link}">${esc(sp.linkLabel)}</a>\n</aside>`;
+  }
+
+  function faqHtml(page) {
+    const items = page.faq.map((f) => `<dt>${esc(f.q)}</dt>\n<dd>${esc(f.a)}</dd>`).join('\n');
+    return `<section class="guide-faq">\n<h2>${esc(page.faqHeading)}</h2>\n<dl>\n${items}\n</dl>\n</section>`;
+  }
+
+  function faqLd(page) {
+    if (!page.faq) return '';
+    return `\n${jsonLd({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      inLanguage: LANG,
+      mainEntity: page.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } }))
+    })}`;
+  }
+
   function sectionHtml(s) {
     const items = s.items ? `\n<ol class="guide-list">\n${s.items.map((it) => `<li>${esc(it)}</li>`).join('\n')}\n</ol>` : '';
     return `<section>\n<h2>${esc(s.heading)}</h2>\n<p>${esc(s.body)}</p>${items}\n</section>`;
@@ -235,7 +255,7 @@ ${items}
     return `<!DOCTYPE html>
 <html lang="${LANG}" dir="${dir}">
 <head>
-${head({ title: article.title, description: article.description, canonical, ogType: 'article', slug: article.slug, extra: `${ld}\n${breadcrumbLd(crumbs)}` })}
+${head({ title: article.title, description: article.description, canonical, ogType: 'article', slug: article.slug, extra: `${ld}\n${breadcrumbLd(crumbs)}${faqLd(article)}` })}
 </head>
 <body>
 ${header()}
@@ -244,8 +264,8 @@ ${breadcrumbNav(crumbs)}
 <article>
 <h1>${esc(article.h1)}</h1>
 <p class="lead">${esc(article.lead)}</p>
-${article.sections.map(sectionHtml).join('\n')}
-<p class="note">${esc(ui.disclaimer)}</p>
+${article.spotlight ? `${spotlightHtml(article.spotlight)}\n` : ''}${article.sections.map(sectionHtml).join('\n')}
+${article.faq ? `${faqHtml(article)}\n` : ''}<p class="note">${esc(ui.disclaimer)}</p>
 </article>
 ${collections}${cta()}
 ${products(article.slug)}
@@ -291,7 +311,7 @@ ${footer()}
     return `<!DOCTYPE html>
 <html lang="${LANG}" dir="${dir}">
 <head>
-${head({ title: item.title, description: item.description, canonical, ogType: 'article', slug, extra: `${ld}\n${breadcrumbLd(crumbs)}` })}
+${head({ title: item.title, description: item.description, canonical, ogType: 'article', slug, extra: `${ld}\n${breadcrumbLd(crumbs)}${faqLd(item)}` })}
 </head>
 <body>
 ${header()}
@@ -300,8 +320,8 @@ ${breadcrumbNav(crumbs)}
 <article>
 <h1>${esc(item.h1)}</h1>
 <p class="lead">${esc(item.lead)}</p>
-${item.sections.map(sectionHtml).join('\n')}
-<p class="note">${esc(ui.disclaimer)}</p>
+${item.spotlight ? `${spotlightHtml(item.spotlight)}\n` : ''}${item.sections.map(sectionHtml).join('\n')}
+${item.faq ? `${faqHtml(item)}\n` : ''}<p class="note">${esc(ui.disclaimer)}</p>
 </article>
 ${cta()}
 ${products(col.parent)}

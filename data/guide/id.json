@@ -178,7 +178,7 @@
     },
     {
       "slug": "dasha",
-      "title": "Apa itu Dasha dalam astrologi Veda? | Cara menghitungnya dan arti setiap periode planet",
+      "title": "Apa itu Dasha dalam astrologi Veda? | Rahu Dasha dan arti setiap periode planet",
       "description": "Vimshottari Dasha, sistem waktu astrologi Veda (Jyotish): bagaimana siklus 120 tahun dihitung dari Nakshatra Bulan, karakter setiap periode planet seperti Jupiter, Saturnus, atau Rahu, dan cara membaca Mahadasha dan Antardasha.",
       "h1": "Cara membaca Dasha (periode planet)",
       "lead": "Astrologi Veda memiliki sistem bernama Dasha yang membagi kehidupan menjadi periode-periode planet dan membaca angin apa yang bertiup pada periode saat ini. Ini adalah cara membaca waktu yang berbeda dari transit Barat dan khas astrologi Veda. Di sini kami membahas versi yang paling banyak dipakai, Vimshottari Dasha, dan menjelaskan cara menghitungnya serta seperti apa setiap periode planet.",
@@ -207,7 +207,14 @@
           "heading": "Hal yang perlu diperhatikan tentang Dasha",
           "body": "Dasha menunjukkan kualitas suatu periode; ia tidak menentukan peristiwa. Dalam periode Saturnus yang sama, satu orang menetap dan menghimpun kekuatan sementara yang lain merasa mandek. Sekitar setahun di sekitar pergantian dari satu periode utama ke berikutnya biasanya dibaca sebagai masa transisi ketika pengaruh kedua planet bercampur. Tabel Dasha bisa dihitung otomatis dari tanggal, jam, dan tempat lahir Anda. Pembacaan gratis di situs ini memberikan periode utama dan sub-periode Anda saat ini; laporan lengkap seumur hidup mencakup urutan lengkap Dasha kehidupan Anda dan pembacaan setiap periodenya."
         }
-      ]
+      ],
+      "spotlight": {
+        "tag": "Periode yang paling banyak dicari",
+        "heading": "Apa itu Rahu Dasha (Mahadasha Rahu)?",
+        "body": "Rahu Dasha berlangsung 18 tahun dalam sistem Vimshottari dasha, terpanjang ketiga setelah Venus (20 tahun) dan Saturnus (19 tahun). Periode ini dimulai setelah Mahadasha Mars dan diikuti oleh Dasha Jupiter. Rahu Dasha dikenal menonjolkan rasa ingin tahu terhadap hal yang belum dikenal, ambisi yang kuat, serta hubungan dengan luar negeri atau teknologi baru: masa ketika kenaikan dan gejolak sering berjalan bersamaan. Cara munculnya bergantung pada rumah dan rasi tempat Rahu berada dalam peta kelahiran.",
+        "linkLabel": "Baca selengkapnya tentang Rahu Dasha",
+        "link": "dasha-rahu"
+      }
     },
     {
       "slug": "nakshatra",

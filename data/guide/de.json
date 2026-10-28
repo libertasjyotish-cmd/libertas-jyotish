@@ -178,7 +178,7 @@
     },
     {
       "slug": "dasha",
-      "title": "Was ist ein Dasha in der vedischen Astrologie? Wie es berechnet wird und was jede Planetenperiode bedeutet",
+      "title": "Was ist ein Dasha in der vedischen Astrologie? Die Rahu-Dasha und jede Planetenperiode erklärt",
       "description": "Vimshottari Dasha, das zeitliche System der vedischen Astrologie (Jyotish): Wie der 120-jährige Zyklus aus dem Nakshatra des Mondes berechnet wird, der Charakter jeder Planetenperiode wie Jupiter, Saturn und Rahu, und wie man Mahadasha und Antardasha liest.",
       "h1": "Das Lesen des Dasha (Planetenperioden)",
       "lead": "Die vedische Astrologie verfügt über ein System namens Dasha, welches das Leben in Planetenperioden unterteilt und aufzeigt, welcher Wind in der aktuellen Phase weht. Es ist eine Methode der Zeitdeutung, die sich von den westlichen Transiten unterscheidet und einzigartig in der vedischen Astrologie ist. Hier behandeln wir die am weitesten verbreitete Version, das Vimshottari Dasha, und erklären, wie es berechnet wird und wie jede Planetenperiode beschaffen ist.",
@@ -207,7 +207,14 @@
           "heading": "Dinge, die man beachten sollte",
           "body": "Das Dasha zeigt die Qualität einer Periode an; es legt keine Ereignisse deterministisch fest. In derselben Saturn-Periode kann sich eine Person etablieren und Stärke aufbauen, während sich eine andere festgefahren fühlt. Das Jahr rund um den Wechsel von einer Hauptperiode zur nächsten wird üblicherweise als Übergangsphase gedeutet, in der sich der Einfluss beider Planeten vermischt. Eine Dasha-Tabelle kann automatisch anhand Ihres Geburtsdatums, Ihrer Geburtszeit und Ihres Geburtsortes berechnet werden. Die kostenlose Analyse auf dieser Website zeigt Ihre aktuelle Haupt- und Unterperiode; der vollständige Lebensbericht umfasst die komplette Dasha-Sequenz für Ihr Leben sowie eine Deutung jeder einzelnen Periode."
         }
-      ]
+      ],
+      "spotlight": {
+        "tag": "Am häufigsten gesucht",
+        "heading": "Was ist die Rahu-Dasha (Rahu-Mahadasha)?",
+        "body": "Die Rahu-Dasha dauert im Vimshottari-Dasha-System 18 Jahre und ist damit nach Venus (20 Jahre) und Saturn (19 Jahre) die drittlängste Periode. Sie beginnt nach der Mars-Dasha, danach folgt die Jupiter-Dasha. Sie ist dafür bekannt, die Neugier auf Unbekanntes, starken Ehrgeiz und Berührung mit dem Ausland oder neuen Technologien in den Vordergrund zu rücken – eine Zeit, in der Aufstieg und Unruhe oft zusammengehen. Wie sie sich zeigt, hängt vom Haus und Zeichen ab, in dem Rahu im Geburtshoroskop steht.",
+        "linkLabel": "Mehr über die Rahu-Dasha lesen",
+        "link": "dasha-rahu"
+      }
     },
     {
       "slug": "nakshatra",

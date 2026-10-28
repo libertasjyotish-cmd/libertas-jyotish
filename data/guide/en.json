@@ -178,7 +178,7 @@
     },
     {
       "slug": "dasha",
-      "title": "What Is a Dasha in Vedic Astrology? How It Is Calculated and What Each Planetary Period Means",
+      "title": "What Is a Dasha in Vedic Astrology? Rahu Mahadasha and Each Planetary Period Explained",
       "description": "Vimshottari Dasha, the timing system of Vedic astrology (Jyotish): how the 120-year cycle is calculated from the Moon's Nakshatra, the character of each planetary period such as Jupiter, Saturn and Rahu, and how to read Mahadasha and Antardasha.",
       "h1": "Reading the Dasha (planetary periods)",
       "lead": "Vedic astrology has a system called Dasha that divides life into planetary periods and reads what kind of wind is blowing in the current one. It is a way of reading time that is distinct from Western transits and unique to Vedic astrology. Here we take up the most widely used version, the Vimshottari Dasha, and explain how it is calculated and what each planetary period is like.",
@@ -207,7 +207,14 @@
           "heading": "Things to keep in mind",
           "body": "The Dasha shows the quality of a period; it does not fix events. In the same Saturn period, one person settles in and builds strength while another feels stuck. The year or so around the change from one major period to the next is usually read as a transition in which both planets' influence mixes. A Dasha table can be calculated automatically from your date, time and place of birth. The free reading on this site gives your current major and sub-period; the full lifetime report covers the complete Dasha sequence for your life and a reading of each period."
         }
-      ]
+      ],
+      "spotlight": {
+        "tag": "Most-read period",
+        "heading": "What is the Rahu mahadasha (Rahu dasha)?",
+        "body": "The Rahu mahadasha lasts 18 years in the Vimshottari dasha system, the third longest after Venus (20 years) and Saturn (19 years). It begins after the Mars dasha and is followed by the Jupiter dasha. It is known for bringing curiosity about the unfamiliar, strong ambition and contact with foreign countries or new technology to the fore, a time when rise and turbulence often go together. How it shows up depends on the house and sign Rahu occupies in the birth chart.",
+        "linkLabel": "Read more about the Rahu mahadasha",
+        "link": "dasha-rahu"
+      }
     },
     {
       "slug": "nakshatra",

@@ -178,17 +178,17 @@
       "lord": "Rahu",
       "years": 18,
       "name": "Dasha de Rahu",
-      "title": "Dasha de Rahu: claves y fases en la astrología védica",
-      "description": "Descubre qué representa el dasha de Rahu en la astrología védica, su duración de 18 años, sus temas tradicionales y cómo influye en la carta natal.",
-      "h1": "El dasha de Rahu en la astrología védica",
-      "lead": "El dasha de Rahu es una de las etapas temporales más distintivas dentro de la astrología védica tradicional. Durante este ciclo, se suele considerar que la persona experimenta un impulso notable hacia nuevos horizontes y transformaciones en su trayectoria vital.",
+      "title": "Dasha de Rahu (Rahu mahadasha): significado y efectos en 18 años",
+      "description": "Qué es el dasha de Rahu o Rahu mahadasha en la astrología védica: sus rasgos principales, cómo suele manifestarse en el trabajo y las relaciones durante sus 18 años, cómo evoluciona y cómo saber cuándo empieza el tuyo.",
+      "h1": "El dasha de Rahu (Rahu mahadasha) en la astrología védica",
+      "lead": "El dasha de Rahu, o Rahu mahadasha, es el periodo de 18 años del ciclo Vimshottari dasha en el que Rahu toma el protagonismo. Tradicionalmente se lee como una etapa de impulso hacia nuevos horizontes, y su forma de desarrollarse depende de la posición de Rahu en la carta natal.",
       "sections": [
         {
           "heading": "Fundamentos y duración del ciclo",
           "body": "Este periodo tiene una duración fija de 18 años y forma parte del sistema Vimshottari dasha, un ciclo mayor que abarca 120 años en su totalidad. Dentro de este marco astrológico tradicional, Rahu rige las nakshatras de Ardra, Swati y Shatabhisha. En la tradición india, este lapso se asocia principalmente con la expansión hacia lo desconocido, el despertar de una marcada ambición y el contacto con asuntos o entornos extranjeros."
         },
         {
-          "heading": "Temas e inclinaciones durante esta etapa",
+          "heading": "Rasgos y efectos del dasha de Rahu",
           "body": "Lejos de ser considerado positivo o negativo por sí mismo, este ciclo se interpreta tradicionalmente según la posición específica de Rahu en la carta natal de cada individuo. Con frecuencia, esta etapa tiende a poner de relieve el cuestionamiento de convenciones previas y la necesidad de explorar territorios culturales, conceptuales o geográficos poco familiares. La energía de este intervalo suele intensificar el anhelo de progreso personal y el deseo de alcanzar metas que antes parecían lejanas o complejas. Asimismo, suelen emerger situaciones que invitan a salir de las estructuras habituales y a desarrollar una mayor flexibilidad ante escenarios imprevistos. La perspectiva védica enfatiza que los efectos observables dependen siempre de las relaciones que este nodo mantenga con otros planetas en el mapa natal."
         },
         {
@@ -202,6 +202,29 @@
         {
           "heading": "Cómo se determina el periodo activo",
           "body": "Para determinar qué dasha se encuentra activo, el cálculo no parte del signo solar utilizado comúnmente en la astrología occidental, sino de la nakshatra ocupada por la Luna en el instante exacto del nacimiento. Por este motivo, resulta indispensable conocer con exactitud la fecha de nacimiento, la hora precisa y el lugar geográfico del evento natal. Con estos elementos técnicos, el sistema sideral permite calcular la cronología personalizada de los periodos planetarios y ubicar la fase actual de cada persona."
+        }
+      ],
+      "faqHeading": "Preguntas frecuentes sobre el dasha de Rahu",
+      "faq": [
+        {
+          "q": "¿Qué es el dasha de Rahu?",
+          "a": "Es el periodo de 18 años del ciclo Vimshottari dasha, de 120 años en total, en el que Rahu toma el protagonismo. Rahu es el nodo lunar norte, el punto donde la órbita de la Luna cruza la eclíptica, y rige tres nakshatras: Ardra, Swati y Shatabhisha."
+        },
+        {
+          "q": "¿Qué efectos tiene el Rahu mahadasha?",
+          "a": "Suele poner en primer plano los campos nuevos, una ambición marcada y el contacto con el extranjero, otras culturas o nuevas tecnologías. Crece el deseo de ir más allá de los límites conocidos, y también la inquietud y el afán, por eso se lee como una etapa en la que el ascenso y la agitación van juntos."
+        },
+        {
+          "q": "¿El dasha de Rahu es un mal periodo?",
+          "a": "Ningún periodo planetario es bueno o malo en sí mismo. Según la casa y el signo que ocupa Rahu y los planetas con los que se relaciona en la carta natal, puede ser una etapa de gran crecimiento o de más dudas. Dentro del mismo dasha de Rahu, cada antardasha (subperiodo) también cambia el matiz de los años."
+        },
+        {
+          "q": "¿Cuándo empieza el dasha de Rahu?",
+          "a": "El primer periodo de la vida lo determina el nakshatra en el que estaba la Luna al nacer, así que la edad en que empieza el dasha de Rahu cambia de una persona a otra. Quien nació con la Luna en Ardra, Swati o Shatabhisha comienza la vida en el dasha de Rahu. Para conocer los años exactos se necesitan la fecha, la hora exacta y el lugar de nacimiento."
+        },
+        {
+          "q": "¿Qué dashas vienen antes y después de Rahu?",
+          "a": "En el orden del Vimshottari, el dasha de Rahu sigue al dasha de Marte (7 años) y le sigue el dasha de Júpiter (16 años). El año aproximado en torno al cambio de Rahu a Júpiter se lee tradicionalmente como una transición en la que se mezclan ambos periodos."
         }
       ]
     },

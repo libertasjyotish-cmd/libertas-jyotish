@@ -178,7 +178,7 @@
     },
     {
       "slug": "dasha",
-      "title": "O que é o Dasha na astrologia védica | Como se calcula e o que significa cada período planetário",
+      "title": "O que é o Dasha na astrologia védica | A Rahu Dasha e cada período planetário",
       "description": "O Vimshottari Dasha, o sistema de tempo da astrologia védica (Jyotish): como o ciclo de 120 anos é calculado a partir do Nakshatra da Lua, o caráter de cada período planetário como Júpiter, Saturno ou Rahu, e como ler Mahadasha e Antardasha.",
       "h1": "Como ler o Dasha (períodos planetários)",
       "lead": "A astrologia védica tem um sistema chamado Dasha que divide a vida em períodos planetários e lê que vento sopra no atual. É uma forma de ler o tempo distinta dos trânsitos ocidentais e própria da astrologia védica. Aqui tratamos da versão mais usada, o Vimshottari Dasha, e explicamos como se calcula e como é cada período planetário.",
@@ -207,7 +207,14 @@
           "heading": "Cuidados com o Dasha",
           "body": "O Dasha mostra a qualidade de um período; não fixa acontecimentos. No mesmo período de Saturno, uma pessoa se assenta e acumula força enquanto outra se sente travada. O ano aproximado em torno da mudança de um período maior para o seguinte costuma ser lido como uma transição em que a influência dos dois planetas se mistura. Uma tabela de Dasha pode ser calculada automaticamente a partir de sua data, hora e local de nascimento. A leitura gratuita deste site dá seu período maior e subperíodo atuais; o relatório completo de vida cobre a sequência completa de Dashas da sua vida e uma leitura de cada período."
         }
-      ]
+      ],
+      "spotlight": {
+        "tag": "O período mais procurado",
+        "heading": "O que é a Rahu Dasha (Rahu mahadasha)?",
+        "body": "A Rahu Dasha dura 18 anos no Vimshottari dasha: é a terceira mais longa, depois de Vênus (20 anos) e Saturno (19 anos). Começa depois da Dasha de Marte e é seguida pela Dasha de Júpiter. É conhecida por trazer à tona o interesse pelo desconhecido, uma ambição forte e o contato com o exterior ou com novas tecnologias: uma fase em que ascensão e turbulência costumam andar juntas. A forma como se manifesta depende da casa e do signo que Rahu ocupa no mapa natal.",
+        "linkLabel": "Leia mais sobre a Rahu Dasha",
+        "link": "dasha-rahu"
+      }
     },
     {
       "slug": "nakshatra",

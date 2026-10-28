@@ -178,17 +178,17 @@
       "lord": "Rahu",
       "years": 18,
       "name": "Rahu-Dasha",
-      "title": "Rahu-Dasha in der vedischen Astrologie erklärt",
-      "description": "Die Rahu-Dasha in der vedischen Astrologie: Erfahren Sie mehr über diese 18-jährige Phase, ihre Themen wie Ambition und die Deutung im Geburtshoroskop.",
-      "h1": "Die Rahu-Dasha in der indischen Astrologie",
-      "lead": "Die Rahu-Dasha ist eine bedeutsame Zeitspanne in der indischen Astrologie, die oft mit Phasen intensiver Weiterentwicklung und innerem Wandel verbunden wird. Sie gilt traditionell als eine Lebensphase, in der vertraute Pfade verlassen und neue Horizonte erschlossen werden können.",
+      "title": "Rahu-Dasha (Rahu-Mahadasha): Bedeutung und Wirkung der 18 Jahre",
+      "description": "Was ist die Rahu-Dasha bzw. Rahu-Mahadasha in der vedischen Astrologie? Ihre wichtigsten Merkmale, wie sich die 18 Jahre in Beruf und Beziehungen zeigen, wie die Phase verläuft und wie Sie herausfinden, wann Ihre Rahu-Dasha beginnt.",
+      "h1": "Die Rahu-Dasha (Rahu-Mahadasha): die 18-jährige Periode der vedischen Astrologie",
+      "lead": "Die Rahu-Dasha, auch Rahu-Mahadasha genannt, ist die 18-jährige Periode des Vimshottari-Dasha-Zyklus, in der Rahu die Hauptrolle übernimmt. Sie gilt traditionell als Lebensphase, in der vertraute Pfade verlassen und neue Horizonte erschlossen werden, und ihr Verlauf hängt von Rahus Stellung im Geburtshoroskop ab.",
       "sections": [
         {
           "heading": "Grundlagen und zeitlicher Rahmen",
           "body": "Die Rahu-Dasha erstreckt sich über eine Dauer von 18 Jahren und ist ein fester Bestandteil des insgesamt 120 Jahre umfassenden Vimshottari-Dasha-Zyklus. Innerhalb der indischen Astrologie werden Rahu traditionell die drei Nakshatras Ardra, Swati und Shatabhisha zugeordnet. Zu den klassischen Themen dieses Zeitabschnitts gehören die Expansion in das Unbekannte, ausgeprägte Ambition sowie die Hinwendung zu fremden oder unkonventionellen Angelegenheiten."
         },
         {
-          "heading": "Typische Themen und Dynamiken dieser Phase",
+          "heading": "Merkmale und Wirkung der Rahu-Dasha",
           "body": "Während einer Rahu-Dasha tritt häufig der Wunsch nach spürbarem Fortschritt und persönlicher Verwirklichung in den Vordergrund. Menschen neigen in diesen Jahren oft dazu, bisherige Komfortzonen zu hinterfragen und sich Themen zuzuwenden, die zuvor außerhalb des gewohnten Lebensrahmens lagen. Dabei wird dieser Zeitraum in der traditionellen Deutung weder als rein positiv noch als grundsätzlich negativ angesehen, da die individuelle Wirkung eng mit der spezifischen Stellung Rahus im Geburtshoroskop verknüpft ist. Es können sich Phasen intensiven Strebens mit Momenten der inneren Neuorientierung abwechseln. Vielfach zeigt sich eine verstärkte Hinwendung zu neuen Konzepten, interkulturellen Erfahrungen oder unkonventionellen Perspektiven."
         },
         {
@@ -202,6 +202,29 @@
         {
           "heading": "Berechnung und Ermittlung der persönlichen Dasha",
           "body": "Um herauszufinden, in welcher Dasha-Phase man sich gegenwärtig befindet, ist das Nakshatra entscheidend, in dem der Mond zum genauen Zeitpunkt der Geburt stand. Im Gegensatz zur westlichen Astrologie, die primär vom Sonnenzeichen ausgeht, bildet in der vedischen Tradition die exakte Mondposition die Basis für den gesamten Dasha-Ablauf. Für eine genaue Berechnung werden daher das Geburtsdatum, die exakte Geburtszeit sowie der Geburtsort benötigt."
+        }
+      ],
+      "faqHeading": "Häufige Fragen zur Rahu-Dasha",
+      "faq": [
+        {
+          "q": "Was ist die Rahu-Dasha?",
+          "a": "Sie ist die 18-jährige Periode des insgesamt 120 Jahre umfassenden Vimshottari-Dasha-Zyklus, in der Rahu die Hauptrolle übernimmt. Rahu ist der nördliche Mondknoten, also der Punkt, an dem die Mondbahn die Ekliptik schneidet, und regiert drei Nakshatras: Ardra, Swati und Shatabhisha."
+        },
+        {
+          "q": "Welche Wirkung hat die Rahu-Mahadasha?",
+          "a": "Sie rückt oft neue Gebiete, starken Ehrgeiz und Berührung mit dem Ausland, anderen Kulturen oder neuen Technologien in den Vordergrund. Der Wunsch, vertraute Grenzen zu überschreiten, wächst – ebenso Unruhe und Verlangen. Deshalb wird sie als Zeit gelesen, in der Aufstieg und Turbulenz zusammengehen."
+        },
+        {
+          "q": "Ist die Rahu-Dasha eine schlechte Zeit?",
+          "a": "Keine Planetenperiode ist an sich gut oder schlecht. Je nachdem, in welchem Haus und Zeichen Rahu steht und mit welchen Planeten er im Geburtshoroskop verbunden ist, kann sie eine Zeit großen Wachstums oder eine Zeit größerer Unsicherheit sein. Innerhalb derselben Rahu-Dasha verändert zudem jede Antardasha (Unterperiode) die Färbung der Jahre."
+        },
+        {
+          "q": "Wann beginnt die Rahu-Dasha?",
+          "a": "Mit welcher Periode ein Leben beginnt, bestimmt das Nakshatra, in dem der Mond bei der Geburt stand. Deshalb ist das Alter, in dem die Rahu-Dasha beginnt, von Mensch zu Mensch verschieden. Wer mit dem Mond in Ardra, Swati oder Shatabhisha geboren ist, beginnt das Leben in der Rahu-Dasha. Für die genauen Jahre braucht man Geburtsdatum, genaue Geburtszeit und Geburtsort."
+        },
+        {
+          "q": "Welche Dashas kommen vor und nach Rahu?",
+          "a": "In der Vimshottari-Reihenfolge folgt die Rahu-Dasha auf die Mars-Dasha (7 Jahre), danach kommt die Jupiter-Dasha (16 Jahre). Das etwa eine Jahr rund um den Wechsel von Rahu zu Jupiter wird traditionell als Übergang gelesen, in dem sich beide Perioden mischen."
         }
       ]
     },
