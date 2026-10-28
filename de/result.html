@@ -189,6 +189,7 @@ window.LJ_I18N = {
 <script src="/js/checkout-links.js"></script>
 <script src="/js/play-billing.js"></script>
 <script src="/js/checkout-guard.js"></script>
+<script src="/js/nakshatra-intro.js"></script>
 </head>
 <body>
 
@@ -393,6 +394,7 @@ clearTimeout(clientTimeout);
 });
 
 function renderDiagnosis(result, input) {
+setTimeout(() => window.LJNakIntro && window.LJNakIntro.fill(), 0);
 let readingContent = result.reading || result.result || JSON.stringify(result);
 
 // ★【拡張ロジック】新簡易鑑定の4大要素（free_reading）が返ってきた場合に綺麗にカードレイアウト化
@@ -414,6 +416,7 @@ readingContent = `
 <div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
 <p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">Nakshatra</p>
 <p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.nakshatra || '-'}</p>
+${/^[a-z-]+$/.test(result.nakshatra_slug || '') ? `${'Heiliges Siegel' ? '<p style="text-align:center; font-weight:700; font-size:1.05rem; letter-spacing:0.3em; color:var(--color-gold-dark); margin:14px 0 0;">Heiliges Siegel</p>' : ''}<img src="/img/nakshatra/${result.nakshatra_slug}.webp" alt="${result.nakshatra || ''}" style="display:block; width:min(260px, 72%); height:auto; margin:12px auto 4px;"><div data-nak-intro="${result.nakshatra_slug}" data-lang="de" data-myth-title="Mythos des Nakshatra" data-link-text="${'{nak}: Eigenschaften und Wesen'.replace('{nak}', result.nakshatra || '')}" hidden style="margin:8px 8px 0;"></div>` : ''}
 </div>
 
 <div style="margin-bottom:24px;">

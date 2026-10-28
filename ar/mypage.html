@@ -334,6 +334,7 @@ window.LJ_I18N = {
 <script src="/js/checkout-links.js"></script>
 <script src="/js/play-billing.js"></script>
 <script src="/js/checkout-guard.js"></script>
+<script src="/js/nakshatra-intro.js"></script>
 </head>
 <body>
 
@@ -453,6 +454,9 @@ data-width="320">
 <div id="nakshatra-text" style="font-size:1.05rem; font-weight:700; color:var(--color-text-dark);">-</div>
 </div>
 </div>
+<p id="nakshatra-seal-title" hidden style="text-align:center; font-weight:700; font-size:1.05rem; letter-spacing:0.3em; color:var(--color-gold-dark); margin:0 0 4px;">الختم المقدس</p>
+<img id="nakshatra-medallion" alt="" hidden style="display:block; width:min(220px, 64%); height:auto; margin:0 auto 12px;">
+<div id="nakshatra-intro" hidden style="margin:0 0 12px; padding-bottom:10px; border-bottom:1px dashed rgba(139,107,27,0.25);"></div>
 <p id="today-transit-text" style="font-size:0.88rem; color:#4a3e36; min-height: 48px;">
 جارٍ تحميل بيانات خريطة اليوم...
 </p>
@@ -1441,6 +1445,22 @@ summary.style.display = 'flex';
 document.getElementById('sun-sign-text').textContent = data.sunSign || '-';
 document.getElementById('moon-sign-text').textContent = data.moonSign || '-';
 document.getElementById('nakshatra-text').textContent = data.nakshatra || '-';
+}
+const medallion = document.getElementById('nakshatra-medallion');
+if (medallion && /^[a-z-]+$/.test(data.nakshatra_slug || '')) {
+medallion.src = `/img/nakshatra/${data.nakshatra_slug}.webp`;
+medallion.alt = data.nakshatra || '';
+medallion.hidden = false;
+const sealTitle = document.getElementById('nakshatra-seal-title');
+if (sealTitle && sealTitle.textContent.trim()) sealTitle.hidden = false;
+}
+const nakIntro = document.getElementById('nakshatra-intro');
+if (nakIntro && /^[a-z-]+$/.test(data.nakshatra_slug || '') && window.LJNakIntro) {
+nakIntro.dataset.nakIntro = data.nakshatra_slug;
+nakIntro.dataset.lang = 'ar';
+nakIntro.dataset.mythTitle = 'أسطورة النكشترا';
+nakIntro.dataset.linkText = '{nak}: السمات والطبيعة'.replace('{nak}', data.nakshatra || '');
+window.LJNakIntro.fill();
 }
 }
 
