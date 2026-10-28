@@ -178,7 +178,7 @@
     },
     {
       "slug": "dasha",
-      "title": "Qué es el Dasha en la astrología védica | Cómo se calcula y qué significa cada periodo planetario",
+      "title": "Qué es el Dasha en la astrología védica | El dasha de Rahu y cada periodo planetario",
       "description": "El Vimshottari Dasha, el sistema de tiempos de la astrología védica (Jyotish): cómo se calcula el ciclo de 120 años a partir del Nakshatra de la Luna, el carácter de cada periodo planetario como Júpiter, Saturno o Rahu, y cómo leer Mahadasha y Antardasha.",
       "h1": "Cómo leer el Dasha (periodos planetarios)",
       "lead": "La astrología védica tiene un sistema llamado Dasha que divide la vida en periodos planetarios y lee qué viento sopla en el actual. Es una forma de leer el tiempo distinta de los tránsitos occidentales y propia de la astrología védica. Aquí tratamos la versión más usada, el Vimshottari Dasha, y explicamos cómo se calcula y cómo es cada periodo planetario.",
@@ -207,7 +207,14 @@
           "heading": "Precauciones con el Dasha",
           "body": "El Dasha muestra la calidad de un periodo; no fija acontecimientos. En el mismo periodo de Saturno, una persona se asienta y acumula fuerza mientras otra se siente estancada. El año aproximado en torno al cambio de un periodo mayor al siguiente suele leerse como una transición en la que se mezcla la influencia de ambos planetas. Una tabla de Dasha puede calcularse automáticamente a partir de tu fecha, hora y lugar de nacimiento. La lectura gratuita de este sitio da tu periodo mayor y subperiodo actuales; el informe completo de vida cubre la secuencia completa de Dashas de tu vida y una lectura de cada periodo."
         }
-      ]
+      ],
+      "spotlight": {
+        "tag": "El periodo más consultado",
+        "heading": "¿Qué es el dasha de Rahu (Rahu mahadasha)?",
+        "body": "El dasha de Rahu dura 18 años dentro del Vimshottari dasha: es el tercero más largo, después de Venus (20 años) y Saturno (19 años). Empieza después del dasha de Marte y le sigue el dasha de Júpiter. Se lo conoce por poner en primer plano el interés por lo desconocido, una ambición marcada y el contacto con el extranjero o con nuevas tecnologías: una etapa en la que el ascenso y la agitación suelen ir juntos. Su forma de manifestarse depende de la casa y el signo que ocupa Rahu en la carta natal.",
+        "linkLabel": "Leer más sobre el dasha de Rahu",
+        "link": "dasha-rahu"
+      }
     },
     {
       "slug": "nakshatra",
