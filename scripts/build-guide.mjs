@@ -387,7 +387,18 @@ ${footer()}
   ];
 }
 
-const outputs = LANGS.flatMap(makeBuilder);
+// 無料診断・マイページに出す27宿の説明（解説ページの「内面的な傾向」の節＋ data/nakshatra-myth/<lang>.json の神話）。js/nakshatra-intro.js が読む。
+const MYTH_DIR = join(ROOT, 'data', 'nakshatra-myth');
+const NAKSHATRA_MYTH = Object.fromEntries(LANGS.filter((lang) => existsSync(join(MYTH_DIR, `${lang}.json`)))
+  .map((lang) => [lang, JSON.parse(readFileSync(join(MYTH_DIR, `${lang}.json`), 'utf8'))]));
+const nakshatraIntroOutputs = LANGS.flatMap((lang) => COLLECTIONS[lang]
+  .filter((col) => col.slugPrefix === 'nakshatra')
+  .map((col) => [
+    join(ROOT, 'data', 'nakshatra-intro', `${lang}.json`),
+    JSON.stringify(Object.fromEntries(col.items.map((item) => [item.slug, { heading: item.sections[1].heading, body: item.sections[1].body, myth: NAKSHATRA_MYTH[lang]?.[item.slug] || '' }])), null, 1) + '\n'
+  ]));
+
+const outputs = [...LANGS.flatMap(makeBuilder), ...nakshatraIntroOutputs];
 
 const check = process.argv.includes('--check');
 let stale = 0;

@@ -368,6 +368,9 @@ module.exports = async function handler(req, res) {
         if (formOptIn) await setOptIn(finalEmail, true).catch((err) => console.error('Newsletter opt-in save error:', err?.message));
         sameDayReading.profile_source = profileSource;
         sameDayReading.reading_cache = readingCache;
+        if (sameDayReading.nakshatra && !sameDayReading.nakshatra_slug) {
+          sameDayReading.nakshatra_slug = NAKSHATRA_SLUG[sameDayReading.nakshatra] || NAKSHATRA_SLUG[toJapaneseNakshatra(sameDayReading.nakshatra)] || '';
+        }
         return res.status(200).json(trimForFree(sameDayReading));
       }
 
