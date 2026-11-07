@@ -813,8 +813,11 @@ const CAREER_LABELS = {
     function disclaimerPage(data) {
       return page(`<h2 class="chapter-title">Vor dem Lesen</h2>
         <p class="disclaimer">
-          Dieser Bericht beruht auf Berechnungen der vedischen Astrologie, die auf den von Ihnen bereitgestellten Geburtsdaten basieren.\\n          Er stellt keine medizinische, finanzielle oder rechtliche Beratung dar und darf nicht als Grundlage für Diagnosen, medizinische Behandlungen, Anlageentscheidungen oder juristische Beurteilungen herangezogen werden.\\n          Konsultieren Sie bei Entscheidungen bezüglich Gesundheit, Vermögenswerten oder Verträgen stets einen qualifizierten Fachexperten.<br><br>
-          Die beschriebenen Zeiträume basieren auf Vimshottari-Dasha-Berechnungen und stellen keinen Indikator dafür dar, ob ein bestimmtes Datum als günstig einzustufen ist.\\n          Bei den Angaben zu Edelsteinen, Farben und Himmelsrichtungen handelt es sich um Empfehlungen, die aus klassischen Entsprechungstabellen abgeleitet sind; eine tatsächliche Wirkung wird ausdrücklich nicht garantiert.<br><br>
+          Dieser Bericht beruht auf Berechnungen der vedischen Astrologie, die auf den von Ihnen bereitgestellten Geburtsdaten basieren.
+          Er stellt keine medizinische, finanzielle oder rechtliche Beratung dar und darf nicht als Grundlage für Diagnosen, medizinische Behandlungen, Anlageentscheidungen oder juristische Beurteilungen herangezogen werden.
+          Konsultieren Sie bei Entscheidungen bezüglich Gesundheit, Vermögenswerten oder Verträgen stets einen qualifizierten Fachexperten.<br><br>
+          Die beschriebenen Zeiträume basieren auf Vimshottari-Dasha-Berechnungen und stellen keinen Indikator dafür dar, ob ein bestimmtes Datum als günstig einzustufen ist.
+          Bei den Angaben zu Edelsteinen, Farben und Himmelsrichtungen handelt es sich um Empfehlungen, die aus klassischen Entsprechungstabellen abgeleitet sind; eine tatsächliche Wirkung wird ausdrücklich nicht garantiert.<br><br>
           Erstellt am: ${esc((data.astro?.generated_at || '').slice(0, 10))}<br>
           &copy; Libertas Jyotish
         </p>`);

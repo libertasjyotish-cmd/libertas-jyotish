@@ -813,8 +813,11 @@ const CAREER_LABELS = {
     function disclaimerPage(data) {
       return page(`<h2 class="chapter-title">Antes de leer</h2>
         <p class="disclaimer">
-          Este informe se ha escrito a partir de cálculos de astrología védica basados en los datos de nacimiento que has facilitado.\\n          No es asesoramiento médico, financiero ni jurídico, y no puede servir de base para diagnósticos, tratamientos, decisiones de inversión ni juicios legales.\\n          Para decisiones sobre salud, patrimonio o contratos, consulta siempre a un profesional del ámbito correspondiente.<br><br>
-          Los periodos descritos se basan en los cálculos de la Vimshottari Dasha y no indican si una fecha concreta es propicia.\\n          Las piedras, los colores y las direcciones son sugerencias extraídas de las tablas clásicas de correspondencias, sin garantía de efecto.<br><br>
+          Este informe se ha escrito a partir de cálculos de astrología védica basados en los datos de nacimiento que has facilitado.
+          No es asesoramiento médico, financiero ni jurídico, y no puede servir de base para diagnósticos, tratamientos, decisiones de inversión ni juicios legales.
+          Para decisiones sobre salud, patrimonio o contratos, consulta siempre a un profesional del ámbito correspondiente.<br><br>
+          Los periodos descritos se basan en los cálculos de la Vimshottari Dasha y no indican si una fecha concreta es propicia.
+          Las piedras, los colores y las direcciones son sugerencias extraídas de las tablas clásicas de correspondencias, sin garantía de efecto.<br><br>
           Emitido el: ${esc((data.astro?.generated_at || '').slice(0, 10))}<br>
           &copy; Libertas Jyotish
         </p>`);
