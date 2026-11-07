@@ -258,7 +258,7 @@
 
       html.push(cover(a));
       html.push(toc());
-      if (c.summary) html.push(a.product === 'compat' ? genericPage({ title: c.summary.title || '{{t.pdf-report.tpl10|tpl}}', ...c.summary }) : summaryPage(c.summary, a));
+      if (c.summary) html.push(a.product === 'compat' ? genericPage({ title: c.summary.title || '{{t.pdf-report.tpl10|js}}', ...c.summary }) : summaryPage(c.summary, a));
       if (c.ch1) html.push(page(`<h2 class="chapter-title">${esc(c.ch1.title)}</h2>
         <h3>{{t.pdf-report.tpl01|tpl}}</h3>${para(c.ch1.lagna)}
         <h3>{{t.pdf-report.tpl02|tpl}}</h3>${para(c.ch1.moon)}
@@ -638,11 +638,11 @@ const CAREER_LABELS = {
     }
 
     function productCover(a) {
-      const sub = a.product === 'yearly' ? '{{t.pdf-report.prodYearly|tpl}}'
-        : a.product === 'career' ? '{{t.pdf-report.prodCareer|tpl}}'
-        : a.product === 'palm' ? '{{t.pdf-report.prodPalm|tpl}}'
+      const sub = a.product === 'yearly' ? '{{t.pdf-report.prodYearly|js}}'
+        : a.product === 'career' ? '{{t.pdf-report.prodCareer|js}}'
+        : a.product === 'palm' ? '{{t.pdf-report.prodPalm|js}}'
         : a.product === 'karma' ? '{{t.pdf-report.prodKarma|js}}'
-        : '{{t.pdf-report.prodCompat|tpl}}';
+        : '{{t.pdf-report.prodCompat|js}}';
       const owner = a.product === 'yearly'
         ? `${esc(a.period?.start || '')} — ${esc(a.period?.end || '')}<br>${personLine(a)}`
         : a.product === 'career' || a.product === 'palm' || a.product === 'karma' ? personLine(a)
@@ -674,7 +674,7 @@ const CAREER_LABELS = {
       const yHead = yrs[0] ? yrs[0].planets.map((p) => `<th>${esc(p.planet)}</th>`).join('') : '';
       const yRows = yrs.map((y) => `<tr><td>${esc(y.year)}</td><td>${esc(y.dashaA.maha || '')}／${esc(y.dashaA.antar || '')}</td><td>${esc(y.dashaB.maha || '')}／${esc(y.dashaB.antar || '')}</td>${y.planets.map((p) => `<td>${esc(p.sign)} (${esc(p.houseFromMoonA)}/${esc(p.houseFromMoonB)})</td>`).join('')}</tr>`).join('');
       const longTerm = yrs.length ? `<h3>{{t.pdf-report.compatYears|tpl}}</h3><table><thead><tr><th>{{t.pdf-report.compatYear|tpl}}</th><th>{{t.pdf-report.compatYou|tpl}}</th><th>{{t.pdf-report.compatPartner|tpl}}</th>${yHead}</tr></thead><tbody>${yRows}</tbody></table><p class="disclaimer">{{t.pdf-report.compatYearsNote|tpl}}</p>` : '';
-      return page(`<h2 class="chapter-title">{{t.pdf-report.tpl50|tpl}}</h2>${table(a.personA || {}, '{{t.pdf-report.compatYou|tpl}}')}${table(a.personB || {}, '{{t.pdf-report.compatPartner|tpl}}')}${kootas}${longTerm}`);
+      return page(`<h2 class="chapter-title">{{t.pdf-report.tpl50|tpl}}</h2>${table(a.personA || {}, '{{t.pdf-report.compatYou|js}}')}${table(a.personB || {}, '{{t.pdf-report.compatPartner|js}}')}${kootas}${longTerm}`);
     }
 
     function careerDataPage(a) {
@@ -701,8 +701,8 @@ const CAREER_LABELS = {
       const R = hands.right || {}, L = hands.left || {};
       const terms = a.palmTerms || { lines: {}, mounts: {}, marks: {} };
       const rows = [
-        rowPair('{{t.pdf-report.prodPalmQuality|tpl}}', p.image_quality?.right, p.image_quality?.left),
-        rowPair('{{t.pdf-report.prodPalmShape|tpl}}', R.hand_shape, L.hand_shape),
+        rowPair('{{t.pdf-report.prodPalmQuality|js}}', p.image_quality?.right, p.image_quality?.left),
+        rowPair('{{t.pdf-report.prodPalmShape|js}}', R.hand_shape, L.hand_shape),
         ...Object.keys(R.mounts || {}).map((m) => rowPair(`◎ ${terms.mounts[m] || m}`, R.mounts?.[m], L.mounts?.[m])),
         ...Object.keys(R.lines || {}).map((ln) => rowPair(`― ${terms.lines[ln] || ln}`, `${R.lines?.[ln]?.clarity || ''} / ${R.lines?.[ln]?.length || ''}`, `${L.lines?.[ln]?.clarity || ''} / ${L.lines?.[ln]?.length || ''}`))
       ].join('');

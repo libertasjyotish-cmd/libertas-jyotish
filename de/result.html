@@ -124,6 +124,11 @@ border-radius: 10px; padding: 18px 16px; text-align: center;
 .survey-news { border-top:1px dashed rgba(139,107,27,0.35); margin-top:6px; padding-top:12px; }
 .lock-overlay .lock-note { font-size: 0.82rem; color: #5A4E48; margin-bottom: 15px; }
 
+.sign-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 20px; }
+.sign-cell { background: rgba(212,175,55,0.1); border: 1px solid rgba(139,107,27,0.25); border-radius: 8px; padding: 10px 2px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
+.sign-label { font-size: 0.66rem; letter-spacing: -0.02em; font-weight: bold; color: var(--color-gold-dark); line-height: 1.35; margin-bottom: 6px; }
+.sign-value { font-size: 1.02rem; font-weight: 700; color: var(--color-text-dark); line-height: 1.3; overflow-wrap: anywhere; }
+.sign-value.is-long { font-size: 0.8rem; }
 .site-footer { width: 100%; background: rgba(8, 18, 22, 0.95); border-top: 1px solid rgba(139, 107, 27, 0.3); padding: 24px 20px; text-align: center; position: relative; z-index: 10; }
 .footer-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
     .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
@@ -184,8 +189,6 @@ window.LJ_I18N = {
 };
 </script>
 <script defer src="/js/site-menu.js"></script>
-<link rel="stylesheet" href="/css/today-sky.css">
-<script defer src="/js/today-sky.js"></script>
 <script src="/js/checkout-links.js"></script>
 <script src="/js/play-billing.js"></script>
 <script src="/js/checkout-guard.js"></script>
@@ -403,19 +406,13 @@ const fr = result.free_reading;
 readingContent = `
 <h2>Die mystische Deutung, die Sie führt</h2>
 
-<div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
-<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">Ihr Sonnenzeichen</p>
-<p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.sunSign || '-'}</p>
+<div class="sign-row">
+<div class="sign-cell"><p class="sign-label">${'Ihr Sonnenzeichen'.replace(' (', '<br>(')}</p><p class="sign-value${String(result.sunSign || '').split(' ').some((w) => w.length > 9) ? ' is-long' : ''}">${result.sunSign || '-'}</p></div>
+<div class="sign-cell"><p class="sign-label">${'Ihr Mondzeichen'.replace(' (', '<br>(')}</p><p class="sign-value${String(result.moonSign || '').split(' ').some((w) => w.length > 9) ? ' is-long' : ''}">${result.moonSign || '-'}</p></div>
+<div class="sign-cell"><p class="sign-label">${'Nakshatra'.replace(' (', '<br>(')}</p><p class="sign-value${String(result.nakshatra || '').split(' ').some((w) => w.length > 9) ? ' is-long' : ''}">${result.nakshatra || '-'}</p></div>
 </div>
 
 <div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
-<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">Ihr Mondzeichen</p>
-<p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.moonSign || '-'}</p>
-</div>
-
-<div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
-<p style="font-weight:bold; color:var(--color-gold-dark); margin-bottom:4px;">Nakshatra</p>
-<p style="font-size:1.15rem; font-weight:700; color:var(--color-text-dark); margin-left:8px;">${result.nakshatra || '-'}</p>
 ${/^[a-z-]+$/.test(result.nakshatra_slug || '') ? `${'Heiliges Siegel' ? '<p style="text-align:center; font-weight:700; font-size:1.05rem; letter-spacing:0.3em; color:var(--color-gold-dark); margin:14px 0 0;">Heiliges Siegel</p>' : ''}<img src="/img/nakshatra/${result.nakshatra_slug}.webp" alt="${result.nakshatra || ''}" style="display:block; width:min(260px, 72%); height:auto; margin:12px auto 4px;"><div data-nak-intro="${result.nakshatra_slug}" data-lang="de" data-myth-title="Mythos des Nakshatra" data-link-text="${'{nak}: Eigenschaften und Wesen'.replace('{nak}', result.nakshatra || '')}" hidden style="margin:8px 8px 0;"></div>` : ''}
 </div>
 
@@ -444,7 +441,6 @@ ${buildMoonGuide(result)}
 
 document.getElementById('content-area').innerHTML = `
 ${input ? `<div class="meta-card">✉️ E-Mail: ${input.email || 'Nicht angegeben'}<br>📅 Geburtsdatum: ${input.dob} ${input.tob || ''} | 📍 Geburtsort: ${input.address || input.city}</div>` : ''}
-<div id="today-sky" class="today-sky" hidden></div>
 <div class="result-body">${readingContent}</div>
 ${result.geo_notice ? `<p style="margin:12px 4px 0; font-size:0.78rem; color:#6b5b4a; line-height:1.6;">${result.geo_notice}</p>` : ''}
 ${result.status === 'paid' ? '' : buildLockedPreview()}
@@ -457,7 +453,6 @@ ${buildSurvey()}
 `;
 
 window.LJCheckout.paint();
-if (window.LJTodaySky) window.LJTodaySky.mount();
 
 bindSurvey((input && input.email) || localStorage.getItem('lj_user_email') || '');
 
