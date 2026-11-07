@@ -813,8 +813,11 @@ const CAREER_LABELS = {
     function disclaimerPage(data) {
       return page(`<h2 class="chapter-title">Sebelum Anda membaca</h2>
         <p class="disclaimer">
-          Laporan ini disusun dari perhitungan astrologi Veda berdasarkan data kelahiran yang Anda berikan.\\n          Laporan ini bukan nasihat medis, keuangan, atau hukum, dan tidak dapat dijadikan dasar diagnosis, pengobatan, keputusan investasi, atau pertimbangan hukum.\\n          Untuk keputusan mengenai kesehatan, harta, atau kontrak, selalu konsultasikan dengan ahli di bidangnya.<br><br>
-          Periode yang diuraikan didasarkan pada perhitungan Vimshottari Dasha dan tidak menunjukkan apakah suatu tanggal tertentu baik atau tidak.\\n          Batu, warna, dan arah adalah saran yang diambil dari tabel korespondensi klasik, tanpa jaminan hasil.<br><br>
+          Laporan ini disusun dari perhitungan astrologi Veda berdasarkan data kelahiran yang Anda berikan.
+          Laporan ini bukan nasihat medis, keuangan, atau hukum, dan tidak dapat dijadikan dasar diagnosis, pengobatan, keputusan investasi, atau pertimbangan hukum.
+          Untuk keputusan mengenai kesehatan, harta, atau kontrak, selalu konsultasikan dengan ahli di bidangnya.<br><br>
+          Periode yang diuraikan didasarkan pada perhitungan Vimshottari Dasha dan tidak menunjukkan apakah suatu tanggal tertentu baik atau tidak.
+          Batu, warna, dan arah adalah saran yang diambil dari tabel korespondensi klasik, tanpa jaminan hasil.<br><br>
           Diterbitkan pada: ${esc((data.astro?.generated_at || '').slice(0, 10))}<br>
           &copy; Libertas Jyotish
         </p>`);
