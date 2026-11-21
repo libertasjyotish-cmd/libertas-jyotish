@@ -1479,6 +1479,8 @@ const blur = '<div class="blur-content" aria-hidden="true" style="line-height:1.
 html += `<div style="margin-top:14px;"><strong>② Astrologischer Einfluss:</strong>${blur}<strong>③ Aktueller Mahadasha-Wegweiser:</strong>${blur}<strong>④ Ihr Schutz für heute</strong>${blur}</div>`;
 }
 if (data.status !== 'paid' && fr.premium_teaser) html += `<div style="margin-top:14px; padding:12px 14px; background:rgba(58,46,43,0.06); border-left:3px solid var(--color-gold-main); border-radius:6px; font-size:0.86rem; line-height:1.7; color:#4a3e36;"><div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:4px;">🔒 Fortsetzung im detaillierten Bericht</div>${fr.premium_teaser}<div style="margin-top:8px;"><a href="#btn-upgrade-premium" onclick="document.getElementById('btn-upgrade-premium')?.scrollIntoView({behavior:'smooth',block:'center'});return false;" style="font-weight:600; color:var(--color-gold-dark); text-decoration:underline;">Sehen Sie die wichtigen Tage dieser Woche, Tage mit Rückenwind und 3 konkrete Schritte →</a></div></div>`;
+const skyItems = skyGuideItems(data.guide_links);
+if (skyItems) html += `<div style="margin-top:14px; padding-top:10px; border-top:1px dashed rgba(139,107,27,0.25); font-size:0.88rem; line-height:1.8;"><div style="font-weight:600; color:var(--color-gold-dark); margin-bottom:4px;">Mehr zum heutigen Himmel</div><ul style="margin:0; padding-inline-start:1.2em;">${skyItems}</ul></div>`;
 if (data.geo_notice) html += `<p style="margin-top:12px; font-size:0.78rem; color:#6b5b4a; line-height:1.6;">${data.geo_notice}</p>`;
 document.getElementById('today-transit-text').innerHTML = html;
 } else {
@@ -1530,6 +1532,16 @@ detailContainer.innerHTML = detailHtml;
 }
 
 if (data.status !== 'paid') applyPremiumSample();
+}
+
+// 今日の月のナクシャトラと今の大周期の解説ページ（API がコード計算の値から選んだもの）
+function skyGuideItems(links) {
+const gl = links || {};
+const safe = (x) => x && /^[a-z-]+$/.test(x.slug || '') && /^[^<>&"]+$/.test(x.name || '');
+let items = '';
+if (safe(gl.today_nakshatra)) items += `<li><a href="/de/guide/nakshatra-${gl.today_nakshatra.slug}">${'Das Mond-Nakshatra von heute: {nak}'.replace('{nak}', gl.today_nakshatra.name)}</a></li>`;
+if (safe(gl.maha)) items += `<li><a href="/de/guide/dasha-${gl.maha.slug}">${'Aktuelle Periode: {planet}-Mahadasha'.replace('{planet}', gl.maha.name)}</a></li>`;
+return items;
 }
 
 // 108区分の生涯カルテは日々変わらない内容なので、マイページでは見本にとどめて完全鑑定書へ誘導する。

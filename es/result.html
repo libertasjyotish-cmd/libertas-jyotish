@@ -519,6 +519,16 @@ document.getElementById('lj-survey').innerHTML = '<p class="survey-title">¡Much
 });
 }
 
+// 今日の月のナクシャトラと今の大周期の解説ページ（API がコード計算の値から選んだもの）
+function skyGuideItems(links) {
+const gl = links || {};
+const safe = (x) => x && /^[a-z-]+$/.test(x.slug || '') && /^[^<>&"]+$/.test(x.name || '');
+let items = '';
+if (safe(gl.today_nakshatra)) items += `<li><a href="/es/guide/nakshatra-${gl.today_nakshatra.slug}">${'La nakshatra de la Luna hoy: {nak}'.replace('{nak}', gl.today_nakshatra.name)}</a></li>`;
+if (safe(gl.maha)) items += `<li><a href="/es/guide/dasha-${gl.maha.slug}">${'Periodo actual: Mahadasha de {planet}'.replace('{planet}', gl.maha.name)}</a></li>`;
+return items;
+}
+
 // 月星座の意味（西洋占星術との違い）と、次に読むガイド記事を案内する
 function buildMoonGuide(result) {
 if (!result.moonSign && !result.nakshatra) return '';
@@ -535,6 +545,7 @@ return `
 <p>La astrología védica y la occidental miden el zodiaco desde puntos de partida distintos, así que si no coincide con el signo que sueles leer, no es un error de cálculo.</p>
 <div class="moon-guide-next">Para entender más, lee a continuación</div>
 <ul>
+${skyGuideItems(result.guide_links)}
 <li><a href="/es/guide/indian-astrology">Qué es la astrología védica: diferencias con la occidental</a></li>
 <li>${nakLink}</li>
 <li><a href="/es/guide/free-reading">Qué puede y qué no puede decirte una lectura gratuita</a></li>
