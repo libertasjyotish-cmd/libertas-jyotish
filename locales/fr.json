@@ -835,7 +835,8 @@
       "cta": "Lequel des 27 est le vôtre ? Découvrez-le gratuitement",
       "button": "Partager ma carte nakshatra",
       "text": "Mon nakshatra de naissance est {nak}. Et le vôtre ?",
-      "error": "Impossible de créer la carte. Veuillez réessayer."
+      "error": "Impossible de créer la carte. Veuillez réessayer.",
+      "making": "Création de votre carte…"
     }
   }
 }

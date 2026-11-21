@@ -835,7 +835,8 @@
       "cta": "Mana dari 27 yang milikmu? Cek gratis",
       "button": "Bagikan kartu Nakshatra-ku",
       "text": "Nakshatra kelahiranku adalah {nak}. Bagaimana denganmu?",
-      "error": "Kartu tidak dapat dibuat. Silakan coba lagi."
+      "error": "Kartu tidak dapat dibuat. Silakan coba lagi.",
+      "making": "Membuat kartu…"
     }
   }
 }

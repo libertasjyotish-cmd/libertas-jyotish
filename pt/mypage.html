@@ -1466,7 +1466,7 @@ window.LJNakIntro.fill();
 }
 const nakShare = document.getElementById('nakshatra-share');
 if (nakShare && /^[a-z-]+$/.test(data.nakshatra_slug || '') && window.LJShareCard) {
-window.LJShareCard.attach(nakShare, { slug: data.nakshatra_slug, lang: 'pt', strings: { label: 'Astrologia védica · Meu nakshatra de nascimento', index: 'Nº {n} dos 27 nakshatras', lord: 'Regente: {lord}', cta: 'Qual dos 27 é o seu? Descubra grátis', button: 'Compartilhar meu cartão de nakshatra', text: 'Meu nakshatra de nascimento é {nak}. Qual é o seu?', error: 'Não foi possível criar o cartão. Tente novamente.' } });
+window.LJShareCard.attach(nakShare, { slug: data.nakshatra_slug, lang: 'pt', strings: { label: 'Astrologia védica · Meu nakshatra de nascimento', index: 'Nº {n} dos 27 nakshatras', lord: 'Regente: {lord}', cta: 'Qual dos 27 é o seu? Descubra grátis', button: 'Compartilhar meu cartão de nakshatra', text: 'Meu nakshatra de nascimento é {nak}. Qual é o seu?', error: 'Não foi possível criar o cartão. Tente novamente.', making: 'Criando seu cartão…' } });
 }
 }
 

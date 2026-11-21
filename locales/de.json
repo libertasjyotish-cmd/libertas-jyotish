@@ -835,7 +835,8 @@
       "cta": "Welches der 27 ist Ihres? Kostenlos herausfinden",
       "button": "Meine Nakshatra-Karte teilen",
       "text": "Mein Geburts-Nakshatra ist {nak}. Welches ist Ihres?",
-      "error": "Die Karte konnte nicht erstellt werden. Bitte versuchen Sie es erneut."
+      "error": "Die Karte konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
+      "making": "Karte wird erstellt…"
     }
   }
 }

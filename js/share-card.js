@@ -101,7 +101,8 @@ window.LJShareCard = (function () {
   }
 
   async function share(opts, btn) {
-    if (btn) btn.disabled = true;
+    const label = btn ? btn.textContent : '';
+    if (btn) { btn.disabled = true; if (opts.strings.making) btn.textContent = opts.strings.making; btn.style.opacity = '.7'; }
     try {
       const { canvas, item } = await render(opts);
       const blob = await new Promise((ok) => canvas.toBlob(ok, 'image/png'));
@@ -123,7 +124,7 @@ window.LJShareCard = (function () {
     } catch (e) {
       if (btn && opts.strings.error) alert(opts.strings.error);
     } finally {
-      if (btn) btn.disabled = false;
+      if (btn) { btn.disabled = false; btn.textContent = label; btn.style.opacity = ''; }
     }
   }
 
