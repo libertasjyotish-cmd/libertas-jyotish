@@ -58,6 +58,18 @@ async function storeAstroCache(receiptId, cache) {
   return putBlob(`etsy/${receiptId}/${nonce}/astro-cache.json`, JSON.stringify(cache), 'application/json');
 }
 
+// シートに入れると重くなる長文（鑑定書の章や天体データの JSON）をシートの外に置く。
+async function storeText(pathname, text) {
+  const nonce = crypto.randomBytes(16).toString('hex');
+  return putBlob(`${pathname}/${nonce}.json`, text, 'application/json');
+}
+
+async function loadText(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Blob read ${res.status}`);
+  return res.text();
+}
+
 async function loadJson(url) {
   if (!url) return null;
   const res = await fetch(url);
@@ -115,4 +127,4 @@ function verifyUploadToken(t) {
   return { receiptId };
 }
 
-module.exports = { storePdf, storePhoto, storeAstroCache, loadJson, deleteBlobs, downloadUrl, verifyToken, uploadToken, uploadUrl, verifyUploadToken, LINK_TTL_DAYS, UPLOAD_TTL_DAYS };
+module.exports = { storePdf, storePhoto, storeAstroCache, storeText, loadText, loadJson, deleteBlobs, downloadUrl, verifyToken, uploadToken, uploadUrl, verifyUploadToken, LINK_TTL_DAYS, UPLOAD_TTL_DAYS };

@@ -2,6 +2,7 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library');
 const { normalizeLang } = require('./_terms');
+const sheetBlob = require('./_sheet-blob');
 
 const SHEET_TITLE = process.env.GOOGLE_SHEETS_MEMBER_TAB || '会員データ';
 
@@ -509,7 +510,6 @@ async function setPdfPurchased(email, { playToken } = {}) {
 
 // 鑑定書は1セルに収まらないため、専用タブに章ごとの列で保存する。
 const REPORT_SHEET_TITLE = process.env.GOOGLE_SHEETS_REPORT_TAB || 'PDF鑑定書';
-const CELL_LIMIT = 45000; // Google Sheets の1セル上限（50,000文字）に対する安全域
 const CHUNKS_PER_FIELD = 2;
 const REPORT_FIELDS = [
   'astro', 'summary', 'ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'ch6',
@@ -552,20 +552,22 @@ async function getReportSheet() {
   });
 }
 
-function writeChunks(target, field, value) {
+// 本文は Blob に置き、シートには参照だけを残す（長文セルでファイルが重くならないように）。
+// 旧形式（本文を _1/_2 に分割して直接保存）もそのまま読める。
+async function writeChunks(target, field, value) {
   const text = value == null ? '' : String(value);
-  for (let i = 0; i < CHUNKS_PER_FIELD; i += 1) {
-    target[`${field}_${i + 1}`] = text.slice(i * CELL_LIMIT, (i + 1) * CELL_LIMIT);
-  }
-  if (text.length > CELL_LIMIT * CHUNKS_PER_FIELD) {
-    console.warn(`Report field ${field} exceeds storage capacity (${text.length} chars) and was truncated.`);
-  }
+  target[`${field}_1`] = await sheetBlob.externalize(text, 'sheets/pdf-report');
+  for (let i = 2; i <= CHUNKS_PER_FIELD; i += 1) target[`${field}_${i}`] = '';
 }
 
-function readChunks(row, field) {
+function rawChunks(row, field) {
   let text = '';
   for (let i = 1; i <= CHUNKS_PER_FIELD; i += 1) text += row.get(`${field}_${i}`) || '';
   return text;
+}
+
+function readChunks(row, field) {
+  return sheetBlob.resolve(rawChunks(row, field));
 }
 
 // 保存済みの鑑定書を取得する（再訪時に再生成しないため）。鑑定書はメール×言語で 1 行。
@@ -579,15 +581,16 @@ async function getPdfReport(email, language) {
   if (!row) return null;
 
   const report = { language: lang, updated_at: row.get('updated_at') || '' };
-  for (const field of REPORT_FIELDS) {
-    const text = readChunks(row, field);
-    if (!text) continue;
+  const texts = await Promise.all(REPORT_FIELDS.map(field => readChunks(row, field)));
+  REPORT_FIELDS.forEach((field, i) => {
+    const text = texts[i];
+    if (!text) return;
     try {
       report[field] = JSON.parse(text);
     } catch (err) {
       console.warn(`Stored report field ${field} is not valid JSON, ignoring.`);
     }
-  }
+  });
   return report;
 }
 
@@ -602,27 +605,50 @@ async function savePdfReport(email, language, partial) {
   const nowStr = new Date().toISOString();
 
   if (row) {
+    const chunks = {};
+    await Promise.all(REPORT_FIELDS.filter(field => field in partial)
+      .map(field => writeChunks(chunks, field, JSON.stringify(partial[field]))));
+    const before = Object.keys(chunks).map(key => row.get(key) || '');
     row.set('language', lang);
     row.set('updated_at', nowStr);
-    for (const field of REPORT_FIELDS) {
-      if (!(field in partial)) continue;
-      const chunks = {};
-      writeChunks(chunks, field, JSON.stringify(partial[field]));
-      for (const [key, value] of Object.entries(chunks)) row.set(key, value);
-    }
+    for (const [key, value] of Object.entries(chunks)) row.set(key, value);
     await row.save();
+    await sheetBlob.deleteReplaced(before, Object.values(chunks));
     return true;
   }
 
   const payload = { email: email, language: lang, updated_at: nowStr };
-  for (const field of REPORT_FIELDS) {
-    writeChunks(payload, field, field in partial ? JSON.stringify(partial[field]) : '');
-  }
+  await Promise.all(REPORT_FIELDS.map(field => writeChunks(payload, field, field in partial ? JSON.stringify(partial[field]) : '')));
   await sheet.addRow(payload);
   return true;
 }
 
+// 既存行の長文セルを Blob に移す。冪等で、1 回あたり maxRows 行まで（Cron ごとに少しずつ進む）。
+async function externalizePdfReports({ maxRows = 20 } = {}) {
+  const sheet = await getReportSheet();
+  if (!sheet) return 0;
+  const rows = await sheet.getRows();
+  let moved = 0;
+  for (const row of rows) {
+    if (moved >= maxRows) break;
+    const long = REPORT_FIELDS.filter(field => {
+      const text = rawChunks(row, field);
+      return text.length > sheetBlob.MAX_INLINE_CHARS && !sheetBlob.isRef(text);
+    });
+    if (!long.length) continue;
+    for (const field of long) {
+      const chunks = {};
+      await writeChunks(chunks, field, rawChunks(row, field));
+      for (const [key, value] of Object.entries(chunks)) row.set(key, value);
+    }
+    await row.save();
+    moved += 1;
+  }
+  return moved;
+}
+
 module.exports = {
+  externalizePdfReports,
   getMemberSheet,
   setMemberStatus,
   downgradeMember,

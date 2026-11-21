@@ -223,7 +223,16 @@ function parseJson(text) {
 }
 
 // 1 件の注文を制限時間内で進める。戻り値はこの呼び出しで到達した段階。
-async function advanceOrder(order, ctx) {
+async function advanceOrder(rawOrder, ctx) {
+  let order = rawOrder;
+  if (ctx.store.hydrateOrder) {
+    try {
+      order = await ctx.store.hydrateOrder(rawOrder);
+    } catch (err) {
+      ctx.log(`  ${rawOrder.receipt_id}: stored text unavailable, retry next run: ${err.message}`);
+      return 'deferred';
+    }
+  }
   const receiptId = order.receipt_id;
   const language = normalizeLang(order.language || 'en');
   const tob = order.tob || '12:00';
@@ -434,17 +443,27 @@ async function markShippedIfNeeded(ctx) {
   return count;
 }
 
-async function connectEtsy(store) {
-  const state = await store.getState();
+const TOKEN_REUSE_MARGIN_MS = 10 * 60 * 1000;
+
+// アクセストークンは期限まで使い回し、期限が近いときだけ更新してシートに書く（Cron 毎回の書き込みでファイルが重くなるのを防ぐ）
+async function accessToken(store, state, { force = false } = {}) {
+  const expiresAt = Date.parse(state.access_expires_at || '') || 0;
+  if (!force && state.access_token && expiresAt - Date.now() > TOKEN_REUSE_MARGIN_MS) return { token: state.access_token, cached: true };
   const refreshToken = state.refresh_token || process.env.ETSY_REFRESH_TOKEN;
   if (!refreshToken) throw new Error('No Etsy refresh token. Run scripts/etsy/auth.js first.');
-
   const token = await etsy.refreshAccessToken(refreshToken);
   await store.setState({
     refresh_token: token.refresh_token,
+    access_token: token.access_token,
     access_expires_at: new Date(Date.now() + (token.expires_in || 3600) * 1000).toISOString()
   });
-  const client = etsy.createClient(token.access_token);
+  return { token: token.access_token, cached: false };
+}
+
+async function connectEtsy(store, { force = false } = {}) {
+  const state = await store.getState();
+  const { token: access, cached } = await accessToken(store, state, { force });
+  const client = etsy.createClient(access);
 
   let shopId = process.env.ETSY_SHOP_ID || state.shop_id;
   if (!shopId) {
@@ -453,7 +472,7 @@ async function connectEtsy(store) {
     if (!shopId) throw new Error('Could not determine shop_id from users/me');
     await store.setState({ shop_id: shopId });
   }
-  return { client, shopId };
+  return { client, shopId, cached };
 }
 
 function geminiModels() {
@@ -489,8 +508,17 @@ async function runCycle({ deadline, store = ledger, receipts = null, mail: sendM
   setRateLimitDeadline(deadline);
 
   if (!receipts) {
-    ({ client: ctx.client, shopId: ctx.shopId } = await connectEtsy(store));
-    receipts = await ctx.client.listOpenReceipts(ctx.shopId);
+    let conn = await connectEtsy(store);
+    try {
+      receipts = await conn.client.listOpenReceipts(conn.shopId);
+    } catch (err) {
+      // 使い回したトークンが失効していたら 1 回だけ更新してやり直す
+      if (!conn.cached || !/Etsy API 401/.test(err.message)) throw err;
+      log('cached Etsy token rejected, refreshing');
+      conn = await connectEtsy(store, { force: true });
+      receipts = await conn.client.listOpenReceipts(conn.shopId);
+    }
+    ({ client: ctx.client, shopId: ctx.shopId } = conn);
   }
   ctx.orders = await store.listOrders();
   log(`${receipts.length} open receipt(s), ${ctx.orders.length} ledger row(s)`);
@@ -516,4 +544,4 @@ async function runCycle({ deadline, store = ledger, receipts = null, mail: sendM
   return summary;
 }
 
-module.exports = { runCycle, personalizationOf, productOf };
+module.exports = { runCycle, personalizationOf, productOf, connectEtsy };
