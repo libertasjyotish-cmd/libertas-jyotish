@@ -62,16 +62,46 @@ assert.ok(!prompt.includes('"longitude"'), '生の天体データがプロンプ
 
 // Gemini が使えない・照合で項目が空になったときの、コードだけで組み立てる鑑定も根拠一覧どおりであること
 for (const paid of [false, true]) {
-  for (const lang of ['ja', 'en']) {
+  for (const lang of ['ja', 'en', 'es', 'pt', 'fr', 'de', 'id', 'ar']) {
     const c = composeReading(facts, paid, lang);
     for (const k of ['horoscope', 'influence', 'dasha_summary', 'lucky_element', 'premium_teaser']) assert.ok(c.free_reading[k], `${lang} ${k} が空`);
     assert.ok(c.dashaTitle && c.dashaDesc, 'dashaTitle/dashaDesc が空');
-    if (paid) assert.ok(c.premium_reading.detailed_horoscope.includes(lang === 'ja' ? '【今日・今週の一手】' : '[Moves for today'), '有料の詳細がない');
+    if (paid) assert.ok((c.premium_reading.detailed_horoscope.match(/^[【[]/gm) || []).length === 5, `${lang} 有料の詳細の見出しが5つない`);
     assert.deepStrictEqual(auditReading(c, facts, lang), [], `${lang} のコード鑑定が照合に通らない`);
   }
 }
 const ja = composeReading(facts, false, 'ja');
 assert.ok(ja.free_reading.dasha_summary.includes('土星の大周期') && ja.free_reading.dasha_summary.includes('金星の小周期'), ja.free_reading.dasha_summary);
 assert.ok(ja.free_reading.horoscope.includes('第3ハウス'), ja.free_reading.horoscope);
+
+// 日本語以外も、星座・ハウス・周期・逆行・ナクシャトラ・日付を照合する
+const INTL = {
+  en: { ok: ['The Moon in Pisces passes through your 3rd house.', 'Retrograde Jupiter in Gemini brings a chance to relearn.', 'You are in the Saturn Mahadasha until January 2037, within the Venus Antardasha.'],
+    ng: ['You are now in the Rahu Mahadasha.', 'Mars in Scorpio pushes you forward.', 'The Moon enters your 5th house of romance.', 'Things shift around December 3.', 'Retrograde Venus brings back old ties.', 'The Moon in Rohini brings calm.', 'The Jupiter period has begun.'] },
+  es: { ok: ['La Luna en Piscis recorre tu casa 3.', 'Estás en la Mahadasha de Saturno, dentro de la Antardasha de Venus.'],
+    ng: ['Marte en Escorpio te impulsa.', 'Estás en el periodo de Rahu.', 'La Luna entra en la casa 5.', 'Todo cambia hacia el 3 de diciembre.', 'Venus retrógrado trae viejos lazos.'] },
+  pt: { ok: ['A Lua em Peixes passa pela sua casa 3.'],
+    ng: ['Marte em Escorpião te impulsiona.', 'A Lua entra na casa 5.', 'Tudo muda por volta de 3 de dezembro.', 'Você está no período de Rahu.'] },
+  fr: { ok: ['La Lune en Poissons traverse votre maison 3.'],
+    ng: ['Mars en Scorpion vous pousse.', 'La Lune entre dans la maison 5.', 'Tout change vers le 3 décembre.', 'Vous êtes dans la période de Rahu.'] },
+  de: { ok: ['Der Mond in Fische läuft durch Ihr 3. Haus.'],
+    ng: ['Mars im Skorpion treibt Sie an.', 'Der Mond steht im 5. Haus.', 'Um den 3. Dezember ändert sich alles.', 'Sie sind in der Rahu-Periode.'] },
+  id: { ok: ['Bulan di Pisces melintasi rumah ke-3 Anda.'],
+    ng: ['Mars di Scorpio mendorong Anda.', 'Bulan masuk ke rumah ke-5.', 'Semua berubah sekitar 3 Desember.', 'Anda berada dalam Mahadasha Rahu.'] },
+  ar: { ok: ['القمر في الحوت يمر في البيت 3.'],
+    ng: ['المريخ في العقرب يدفعك.', 'القمر في البيت ٥ اليوم.', 'يتغير كل شيء في حوالي 3 ديسمبر.', 'أنت في ماهاداشا راهو.'] }
+};
+for (const [lang, { ok, ng }] of Object.entries(INTL)) {
+  const auditL = (text) => auditReading({ free_reading: { horoscope: text } }, facts, lang);
+  for (const t of ok) assert.deepStrictEqual(auditL(t), [], `${lang}: 正しい記述を誤りとした: ${t}`);
+  for (const t of ng) {
+    const found = auditL(t);
+    assert.ok(found.length, `${lang}: 作り話を見逃した: ${t}`);
+    for (const f of found) assert.ok(t.includes(f.quote), `${lang}: 引用が原文にない: ${f.quote}`);
+    const json = { free_reading: { horoscope: `${ok[0]} ${t}` } };
+    assert.deepStrictEqual(stripFabricated(json, found), [], `${lang}: 文を削除できない`);
+    assert.strictEqual(json.free_reading.horoscope.trim(), ok[0], `${lang}: 正しい文が残らない: ${json.free_reading.horoscope}`);
+  }
+}
 
 console.log('check-reading-facts: ok');
