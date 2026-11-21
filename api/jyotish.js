@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const { getMemberSheet, getLastSheetIssue, getMemberRecord } = require('./_sheets');
 const { listGeminiModels, generateWithGemini } = require('./_gemini');
 const { findViolations } = require('./_report');
+const { auditReading, stripFabricated, SIGN_LORD_JA } = require('./_reading-facts');
 const { issueSession, verifySession } = require('./_auth');
 const GOOGLE_CLIENT_ID = '789459066589-2tla7ubk127eic0g5aekql75ohdejnto.apps.googleusercontent.com';
 const { getOptIn, setOptIn } = require('./_newsletter');
@@ -463,12 +464,14 @@ module.exports = async function handler(req, res) {
                 : await listGeminiModels(geminiApiKey);
 
               const previous = previousReadingSummary(sheetsProfile && sheetsProfile.lastResult);
+              const facts = readingFacts(prokeralaData, transitData, todayLocal, finalDob);
+              const deadline = startedAt + FUNCTION_BUDGET_MS;
               if (isPaid) {
                 // 有料は出力量が多く1回の生成が長い。基本鑑定とプレミアム詳細を別プロンプトに割って
                 // 同時に生成することで、実行時間を最長のセクション1本分に抑える。
                 const [base, premium] = await Promise.all([
-                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'base', previous, todayLocal, finalDob), 40000, startedAt + FUNCTION_BUDGET_MS),
-                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'premium', previous, todayLocal, finalDob), 40000, startedAt + FUNCTION_BUDGET_MS)
+                  generateGrounded(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'base', previous, todayLocal, finalDob), 40000, deadline, facts, finalLang),
+                  generateGrounded(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'premium', previous, todayLocal, finalDob), 40000, deadline, facts, finalLang)
                 ]);
 
                 const baseViolations = base.json ? findViolations(JSON.stringify(base.json), finalLang, { allowDates: true }) : [];
@@ -487,7 +490,7 @@ module.exports = async function handler(req, res) {
                   fallbackReason = base.reason || 'gemini_error';
                 }
               } else {
-                const result = await generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, false, finalLang, 'all', previous, todayLocal, finalDob), 45000, startedAt + FUNCTION_BUDGET_MS);
+                const result = await generateGrounded(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, false, finalLang, 'all', previous, todayLocal, finalDob), 45000, deadline, facts, finalLang);
                 const violations = result.json ? findViolations(JSON.stringify(result.json), finalLang, { allowDates: true }) : [];
                 if (violations.length) {
                   console.warn('Daily reading contains banned expressions:', violations.join(', '));
@@ -580,6 +583,44 @@ module.exports = async function handler(req, res) {
     return sendReadingUnavailable(res, 'internal_error');
   }
 };
+
+// 生成した鑑定を根拠一覧と照合する。食い違いがあれば、誤りと正しい値を返して1回だけ書き直させ、
+// それでも残る文は取り除く。取り除いて空になる項目が出たら鑑定を出さない（作り話を表示しない）。
+async function generateGrounded(apiKey, models, prompt, timeoutMs, deadline, facts, lang) {
+  let result = await generateWithGemini(apiKey, models, prompt, timeoutMs, deadline);
+  if (!result.json) return result;
+  let found = auditReading(result.json, facts, lang);
+  if (found.length && deadline - Date.now() > 15000) {
+    console.warn('Daily reading not grounded, regenerating:', JSON.stringify(found).slice(0, 800));
+    const fix = `
+  【前回の出力の誤り（根拠一覧と食い違う。この誤りを含めずに、全体を書き直す）】
+${found.map(f => `  - 「${f.quote}」: ${f.why}`).join('\n')}
+`;
+    const retry = await generateWithGemini(apiKey, models, prompt + fix, timeoutMs, deadline);
+    if (retry.json) {
+      result = retry;
+      found = auditReading(result.json, facts, lang);
+    }
+  }
+  if (found.length) {
+    console.warn('Daily reading not grounded, removing sentences:', JSON.stringify(found).slice(0, 800));
+    if (!stripFabricated(result.json, found)) return { ...result, json: null, reason: 'ungrounded_reading' };
+  }
+  fixPlanetTable(result.json, facts, lang);
+  return result;
+}
+
+// 有料の天体表は Gemini に書かせた値を使わず、コードで計算した星座・ハウスで上書きする
+function fixPlanetTable(json, facts, lang) {
+  if (!json || !Array.isArray(json.planets)) return;
+  for (const row of json.planets) {
+    const key = String(row.name || '').trim();
+    const fact = facts.natal.find(p => p.ja === key || p.name.toLowerCase() === key.toLowerCase());
+    if (!fact) continue;
+    row.sign = signFor(fact.sign, lang);
+    row.house = String(fact.house);
+  }
+}
 
 // タイミング攻撃を避けた署名比較
 function isSignatureEqual(actual, expected) {
@@ -884,6 +925,67 @@ function vimshottariAt(moonLongitude, birthDate, atMs) {
 // 出生時刻の扱いで日がずれても鑑定書の日付と食い違わないよう、月までで書く。
 const ymd = (ms) => { const d = new Date(ms); return `${d.getUTCFullYear()}年${d.getUTCMonth() + 1}月`; };
 
+// 鑑定に書いてよい星の配置・周期・日付をコードで確定させる。プロンプトの根拠一覧と、出力の照合の両方に使う。
+function readingFacts(prokeralaData, transitData, todayStr, birthDate) {
+  const natal = extractPlanets(prokeralaData);
+  const transit = extractPlanets(transitData);
+  const asc = natal.find(p => p.name === 'Ascendant') || {};
+  const nMoon = natal.find(p => p.name === 'Moon') || {};
+  const row = (p) => ({
+    name: p.name,
+    ja: DASHA_JA[p.name] || p.name,
+    sign: toJapaneseSign(p.sign),
+    house: asc.sign ? houseFrom(asc.sign, p.sign) : null,
+    houseFromMoon: nMoon.sign ? houseFrom(nMoon.sign, p.sign) : null,
+    nakshatra: p.nakshatra ? toJapaneseNakshatra(p.nakshatra) : '',
+    retro: !!p.is_retrograde
+  });
+  const ascIdx = signIndex(asc.sign);
+  const lords = {};
+  if (ascIdx >= 0) for (let h = 1; h <= 12; h++) lords[h] = SIGN_LORD_JA[(ascIdx + h - 1) % 12];
+  const todayMs = Date.parse(`${todayStr}T12:00:00Z`);
+  const dasha = birthDate ? vimshottariAt(nMoon.longitude, birthDate, todayMs) : null;
+  const year = (ms) => new Date(ms).getUTCFullYear();
+  const daily = dailyFactors(natal, transit);
+  const week = weekFactors(natal, transit, todayStr) || [];
+  const ingresses = nextIngresses(natal, transit, todayStr).map(x => {
+    const [month, day] = x.date.split('/').map(Number);
+    return { ja: DASHA_JA[x.name] || x.name, month, day, date: x.date, nextSign: x.nextSign, house: x.house };
+  });
+  const years = new Set([year(todayMs)]);
+  if (birthDate) years.add(Number(String(birthDate).slice(0, 4)));
+  if (dasha) [dasha.maha.start, dasha.maha.end, dasha.antar.start, dasha.antar.end].forEach(ms => years.add(year(ms)));
+  return {
+    asc: toJapaneseSign(asc.sign),
+    natal: natal.filter(p => p.name !== 'Ascendant' && p.sign).map(row),
+    transit: transit.filter(p => p.name !== 'Ascendant' && p.sign).map(row),
+    lords,
+    tithi: daily && daily.tithi,
+    dasha: dasha && {
+      maha: { ja: DASHA_JA[dasha.maha.lord], startYear: year(dasha.maha.start), endYear: year(dasha.maha.end) },
+      antar: { ja: DASHA_JA[dasha.antar.lord], startYear: year(dasha.antar.start), endYear: year(dasha.antar.end) },
+      next: DASHA_JA[dasha.nextAntar]
+    },
+    ingresses,
+    weekDates: week.map(d => d.date.split('/').map(Number)),
+    years: [...years]
+  };
+}
+
+function factsTable(f, todayStr) {
+  const line = (p, from) => `    - ${p.ja}: ${p.sign}・${from}第${p.house}ハウス${p.houseFromMoon ? `（出生の月から第${p.houseFromMoon}）` : ''}${p.nakshatra ? `・${p.nakshatra}` : ''}${p.retro ? '・逆行' : ''}`;
+  const lords = Object.entries(f.lords).map(([h, l]) => `第${h}=${l}`).join('、');
+  return `
+  【根拠一覧（コードで計算済み。鑑定に書いてよい星の配置・周期・日付・ティティはこの一覧と【次の節目】【ダシャー】【今週の日別チャンドラ・バラ】にあるものだけ）】
+  出生図（ラグナ: ${f.asc}）
+${f.natal.map(p => line(p, 'ラグナから')).join('\n')}
+  ${todayStr} のトランジット
+${f.transit.length ? f.transit.map(p => line(p, 'ラグナから')).join('\n') : '    - 取得できませんでした'}
+  ハウスの支配星: ${lords || '不明'}
+  - 星座・ハウス番号・ナクシャトラ・逆行は一覧の値をそのまま書く。自分で数え直したり、一覧にない配置・アスペクトの角度・周期名・年や日付を作ったりしない。
+  - 一覧で言えないことは星の話にせず、生活の場面の言い当てとして書く。`;
+}
+
 function themeDomainFor(prokeralaData, transitData) {
   if (!prokeralaData || !transitData) return null;
   const d = dailyFactors(extractPlanets(prokeralaData), extractPlanets(transitData));
@@ -1082,16 +1184,12 @@ ${dashaBlock}
   【月のナクシャトラ (Nakshatra)】 ${nakshatra}
   【アセンダント (Ascendant/Lagna)】 ${ascendantData.sign}、第1ハウス
 
-  【出生図9天体配置データ（natal）】
-  ${JSON.stringify(planetList)}
-
-  【${todayJst} 現在のトランジット天体配置】
-  ${transitPlanets.length ? JSON.stringify(transitPlanets) : '取得できませんでした'}
+  ${factsTable(readingFacts(prokeralaData, transitData, todayJst, birthDate), todayJst)}
   【本日のトランジット月】 ${signFor(transitMoon.sign, lang)} / ナクシャトラ: ${nakshatraFor(transitMoon.nakshatra, lang) || '不明'}
   ${dailyBlock}
 
   【鑑定執筆の基本ガイドライン】
-  - 「本日の運勢」「本日受ける星の影響」は、必ず ${todayJst} のトランジット天体配置と出生図の関係（アスペクト・在住ハウス）から導くこと。日付が変われば内容も変わるのが正しい振る舞いです。
+  - 「本日の運勢」「本日受ける星の影響」は、必ず ${todayJst} のトランジット天体配置と出生図の関係（根拠一覧の在住ハウス、月が重なる・対向する出生天体）から導くこと。日付が変われば内容も変わるのが正しい振る舞いです。
   - ポエムや使い回しの文章は一切禁止。本当に天体配置と月の位置、ナクシャトラの特徴から、相談者の心へ誠実かつ深い内省を促すように語りかけてください。
   - トーンは高貴で、神秘的でありながら、現実的で温かい励ましに満ちた言葉遣い。
 
