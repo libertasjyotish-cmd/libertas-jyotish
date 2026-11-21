@@ -827,6 +827,15 @@
     "result.surveySend": "Send",
     "result.surveyPick": "Please choose a topic.",
     "result.surveyThanks": "Thank you so much!",
-    "result.surveyError": "Something went wrong. Please try again."
+    "result.surveyError": "Something went wrong. Please try again.",
+    "share": {
+      "label": "Vedic Astrology · My Birth Nakshatra",
+      "index": "No. {n} of the 27 Nakshatras",
+      "lord": "Ruled by {lord}",
+      "cta": "Which of the 27 is yours? Find out free",
+      "button": "Share my Nakshatra card",
+      "text": "My birth Nakshatra is {nak}. Which one is yours?",
+      "error": "Could not create the card. Please try again."
+    }
   }
 }

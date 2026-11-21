@@ -1,0 +1,191 @@
+{
+ "ashwini": {
+  "no": 1,
+  "name": "Ashwini",
+  "lord": "Ketu",
+  "range": "Bélier 0°–13°20′",
+  "trait": "Élan rapide, nouveaux départs et un don de guérison"
+ },
+ "bharani": {
+  "no": 2,
+  "name": "Bharani",
+  "lord": "Vénus",
+  "range": "Bélier 13°20′–26°40′",
+  "trait": "Une volonté farouche et la force de porter le poids de la vie"
+ },
+ "krittika": {
+  "no": 3,
+  "name": "Krittika",
+  "lord": "le Soleil",
+  "range": "Bélier 26°40′–Taureau 10°",
+  "trait": "Une flamme vive et purificatrice qui va droit à la vérité"
+ },
+ "rohini": {
+  "no": 4,
+  "name": "Rohini",
+  "lord": "la Lune",
+  "range": "Taureau 10°–23°20′",
+  "trait": "Beauté, chaleur et le don de faire fleurir"
+ },
+ "mrigashira": {
+  "no": 5,
+  "name": "Mrigashira",
+  "lord": "Mars",
+  "range": "Taureau 23°20′–Gémeaux 6°40′",
+  "trait": "Un chercheur délicat, toujours curieux"
+ },
+ "ardra": {
+  "no": 6,
+  "name": "Ardra",
+  "lord": "Rahu",
+  "range": "Gémeaux 6°40′–20°",
+  "trait": "Orage et renouveau : une sensibilité profonde qui éclaircit le ciel"
+ },
+ "punarvasu": {
+  "no": 7,
+  "name": "Punarvasu",
+  "lord": "Jupiter",
+  "range": "Gémeaux 20°–Cancer 3°20′",
+  "trait": "Retour et renouveau : la lumière qui revient toujours"
+ },
+ "pushya": {
+  "no": 8,
+  "name": "Pushya",
+  "lord": "Saturne",
+  "range": "Cancer 3°20′–16°40′",
+  "trait": "Un soin nourricier, une dévotion constante et une force tranquille"
+ },
+ "ashlesha": {
+  "no": 9,
+  "name": "Ashlesha",
+  "lord": "Mercure",
+  "range": "Cancer 16°40′–30°",
+  "trait": "Une perception pénétrante et un esprit profondément intuitif"
+ },
+ "magha": {
+  "no": 10,
+  "name": "Magha",
+  "lord": "Ketu",
+  "range": "Lion 0°–13°20′",
+  "trait": "Fierté ancestrale, dignité et autorité naturelle"
+ },
+ "purva-phalguni": {
+  "no": 11,
+  "name": "Purva Phalguni",
+  "lord": "Vénus",
+  "range": "Lion 13°20′–26°40′",
+  "trait": "Joie, tendresse et un esprit chaleureux et créatif"
+ },
+ "uttara-phalguni": {
+  "no": 12,
+  "name": "Uttara Phalguni",
+  "lord": "le Soleil",
+  "range": "Lion 26°40′–Vierge 10°",
+  "trait": "Un partenariat loyal et un soutien généreux et fiable"
+ },
+ "hasta": {
+  "no": 13,
+  "name": "Hasta",
+  "lord": "la Lune",
+  "range": "Vierge 10°–23°20′",
+  "trait": "Des mains habiles et un esprit vif qui concrétisent les idées"
+ },
+ "chitra": {
+  "no": 14,
+  "name": "Chitra",
+  "lord": "Mars",
+  "range": "Vierge 23°20′–Balance 6°40′",
+  "trait": "Éclat, sens du design et talent pour créer la beauté"
+ },
+ "swati": {
+  "no": 15,
+  "name": "Swati",
+  "lord": "Rahu",
+  "range": "Balance 6°40′–20°",
+  "trait": "Indépendant, souple et libre comme le vent"
+ },
+ "vishakha": {
+  "no": 16,
+  "name": "Vishakha",
+  "lord": "Jupiter",
+  "range": "Balance 20°–Scorpion 3°20′",
+  "trait": "Une concentration résolue sur un but jusqu'à l'atteindre"
+ },
+ "anuradha": {
+  "no": 17,
+  "name": "Anuradha",
+  "lord": "Saturne",
+  "range": "Scorpion 3°20′–16°40′",
+  "trait": "Une amitié dévouée et des liens qui durent"
+ },
+ "jyeshtha": {
+  "no": 18,
+  "name": "Jyeshtha",
+  "lord": "Mercure",
+  "range": "Scorpion 16°40′–30°",
+  "trait": "La force de l'aîné : protecteur et responsable"
+ },
+ "mula": {
+  "no": 19,
+  "name": "Mula",
+  "lord": "Ketu",
+  "range": "Sagittaire 0°–13°20′",
+  "trait": "Creuser jusqu'à la racine pour trouver le vrai"
+ },
+ "purva-ashadha": {
+  "no": 20,
+  "name": "Purva Ashadha",
+  "lord": "Vénus",
+  "range": "Sagittaire 13°20′–26°40′",
+  "trait": "Une conviction inébranlable qui inspire les autres"
+ },
+ "uttara-ashadha": {
+  "no": 21,
+  "name": "Uttara Ashadha",
+  "lord": "le Soleil",
+  "range": "Sagittaire 26°40′–Capricorne 10°",
+  "trait": "Intégrité et persévérance qui l'emportent à la fin"
+ },
+ "shravana": {
+  "no": 22,
+  "name": "Shravana",
+  "lord": "la Lune",
+  "range": "Capricorne 10°–23°20′",
+  "trait": "Écouter profondément, apprendre et transmettre la sagesse"
+ },
+ "dhanishta": {
+  "no": 23,
+  "name": "Dhanishta",
+  "lord": "Mars",
+  "range": "Capricorne 23°20′–Verseau 6°40′",
+  "trait": "Rythme, abondance et une polyvalence généreuse"
+ },
+ "shatabhisha": {
+  "no": 24,
+  "name": "Shatabhisha",
+  "lord": "Rahu",
+  "range": "Verseau 6°40′–20°",
+  "trait": "Un esprit indépendant qui guérit et perce les mystères"
+ },
+ "purva-bhadrapada": {
+  "no": 25,
+  "name": "Purva Bhadrapada",
+  "lord": "Jupiter",
+  "range": "Verseau 20°–Poissons 3°20′",
+  "trait": "Un idéalisme intense et le feu de la transformation"
+ },
+ "uttara-bhadrapada": {
+  "no": 26,
+  "name": "Uttara Bhadrapada",
+  "lord": "Saturne",
+  "range": "Poissons 3°20′–16°40′",
+  "trait": "Un calme profond, de la sagesse et une force intérieure stable"
+ },
+ "revati": {
+  "no": 27,
+  "name": "Revati",
+  "lord": "Mercure",
+  "range": "Poissons 16°40′–30°",
+  "trait": "Empathie profonde, imagination paisible et désir de paix"
+ }
+}

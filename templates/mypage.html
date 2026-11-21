@@ -276,6 +276,7 @@ background-size: cover; background-position: center center; background-repeat: n
 <script src="/js/play-billing.js"></script>
 <script src="/js/checkout-guard.js"></script>
 <script src="/js/nakshatra-intro.js"></script>
+<script src="/js/share-card.js"></script>
 </head>
 <body>
 
@@ -397,6 +398,7 @@ data-width="320">
 </div>
 <p id="nakshatra-seal-title" hidden style="text-align:center; font-weight:700; font-size:1.05rem; letter-spacing:0.3em; color:var(--color-gold-dark); margin:0 0 4px;">{{t.result.sealTitle}}</p>
 <img id="nakshatra-medallion" alt="" hidden style="display:block; width:min(220px, 64%); height:auto; margin:0 auto 12px;">
+<div id="nakshatra-share" hidden></div>
 <div id="nakshatra-intro" hidden style="margin:0 0 12px; padding-bottom:10px; border-bottom:1px dashed rgba(139,107,27,0.25);"></div>
 <p id="today-transit-text" style="font-size:0.88rem; color:#4a3e36; min-height: 48px;">
 {{t.mypage.text24}}
@@ -1398,6 +1400,10 @@ nakIntro.dataset.lang = '{{lang}}';
 nakIntro.dataset.mythTitle = '{{t.result.mythTitle|js}}';
 nakIntro.dataset.linkText = '{{t.result.guideLinkNak|js}}'.replace('{nak}', data.nakshatra || '');
 window.LJNakIntro.fill();
+}
+const nakShare = document.getElementById('nakshatra-share');
+if (nakShare && /^[a-z-]+$/.test(data.nakshatra_slug || '') && window.LJShareCard) {
+window.LJShareCard.attach(nakShare, { slug: data.nakshatra_slug, lang: '{{lang}}', strings: { label: '{{t.share.label|js}}', index: '{{t.share.index|js}}', lord: '{{t.share.lord|js}}', cta: '{{t.share.cta|js}}', button: '{{t.share.button|js}}', text: '{{t.share.text|js}}', error: '{{t.share.error|js}}' } });
 }
 }
 

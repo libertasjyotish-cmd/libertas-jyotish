@@ -335,6 +335,7 @@ window.LJ_I18N = {
 <script src="/js/play-billing.js"></script>
 <script src="/js/checkout-guard.js"></script>
 <script src="/js/nakshatra-intro.js"></script>
+<script src="/js/share-card.js"></script>
 </head>
 <body>
 
@@ -456,6 +457,7 @@ Setelah tersimpan, Anda akan masuk secara otomatis pada kunjungan berikutnya.
 </div>
 <p id="nakshatra-seal-title" hidden style="text-align:center; font-weight:700; font-size:1.05rem; letter-spacing:0.3em; color:var(--color-gold-dark); margin:0 0 4px;">Segel Suci</p>
 <img id="nakshatra-medallion" alt="" hidden style="display:block; width:min(220px, 64%); height:auto; margin:0 auto 12px;">
+<div id="nakshatra-share" hidden></div>
 <div id="nakshatra-intro" hidden style="margin:0 0 12px; padding-bottom:10px; border-bottom:1px dashed rgba(139,107,27,0.25);"></div>
 <p id="today-transit-text" style="font-size:0.88rem; color:#4a3e36; min-height: 48px;">
 Memuat data peta hari ini...
@@ -1461,6 +1463,10 @@ nakIntro.dataset.lang = 'id';
 nakIntro.dataset.mythTitle = 'Mitos Nakshatra';
 nakIntro.dataset.linkText = '{nak}: sifat dan karakter'.replace('{nak}', data.nakshatra || '');
 window.LJNakIntro.fill();
+}
+const nakShare = document.getElementById('nakshatra-share');
+if (nakShare && /^[a-z-]+$/.test(data.nakshatra_slug || '') && window.LJShareCard) {
+window.LJShareCard.attach(nakShare, { slug: data.nakshatra_slug, lang: 'id', strings: { label: 'Astrologi Weda · Nakshatra Kelahiranku', index: 'No. {n} dari 27 Nakshatra', lord: 'Penguasa: {lord}', cta: 'Mana dari 27 yang milikmu? Cek gratis', button: 'Bagikan kartu Nakshatra-ku', text: 'Nakshatra kelahiranku adalah {nak}. Bagaimana denganmu?', error: 'Kartu tidak dapat dibuat. Silakan coba lagi.' } });
 }
 }
 

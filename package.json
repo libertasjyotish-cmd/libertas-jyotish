@@ -21,7 +21,9 @@
     "check:newsletter": "node scripts/check-newsletter.mjs",
     "check:prompt": "node scripts/check-reading-prompt.mjs",
     "check:sheet-blob": "node scripts/check-sheet-blob.js",
-    "check:reading-facts": "node scripts/check-reading-facts.js"
+    "check:reading-facts": "node scripts/check-reading-facts.js",
+    "build:share-cards": "node scripts/build-share-cards.mjs",
+    "check:share-cards": "node scripts/build-share-cards.mjs --check"
   },
   "dependencies": {
     "@sparticuz/chromium": "^149.0.0",

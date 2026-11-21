@@ -827,6 +827,15 @@
     "result.surveySend": "Envoyer",
     "result.surveyPick": "Choisissez au moins un thème.",
     "result.surveyThanks": "Merci infiniment !",
-    "result.surveyError": "Une erreur est survenue. Veuillez réessayer."
+    "result.surveyError": "Une erreur est survenue. Veuillez réessayer.",
+    "share": {
+      "label": "Astrologie védique · Mon nakshatra de naissance",
+      "index": "N° {n} des 27 nakshatras",
+      "lord": "Maître : {lord}",
+      "cta": "Lequel des 27 est le vôtre ? Découvrez-le gratuitement",
+      "button": "Partager ma carte nakshatra",
+      "text": "Mon nakshatra de naissance est {nak}. Et le vôtre ?",
+      "error": "Impossible de créer la carte. Veuillez réessayer."
+    }
   }
 }
