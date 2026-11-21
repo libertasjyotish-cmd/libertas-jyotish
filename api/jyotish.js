@@ -449,6 +449,7 @@ module.exports = async function handler(req, res) {
 
         // (C) Gemini API 呼び出し
         let cleanJsonResult = null;
+        const facts = prokeralaData ? readingFacts(prokeralaData, transitData, todayLocal, finalDob) : null;
         if (prokeralaData) {
           try {
             const geminiApiKey = process.env.GEMINI_API_KEY;
@@ -464,7 +465,6 @@ module.exports = async function handler(req, res) {
                 : await listGeminiModels(geminiApiKey);
 
               const previous = previousReadingSummary(sheetsProfile && sheetsProfile.lastResult);
-              const facts = readingFacts(prokeralaData, transitData, todayLocal, finalDob);
               const deadline = startedAt + FUNCTION_BUDGET_MS;
               if (isPaid) {
                 // 有料は出力量が多く1回の生成が長い。基本鑑定とプレミアム詳細を別プロンプトに割って
@@ -512,6 +512,19 @@ module.exports = async function handler(req, res) {
         }
 
         // (D) 【大救済ロジック】もしAPIやAIが途中で落ちていても、絶対に500エラーにせず、正常な診断書を構築して返す！
+        // 出生図が計算できていれば、生成に失敗しても根拠一覧だけで組み立てた鑑定を返す（「鑑定できませんでした」を出さない）。
+        // is_fallback を付けて当日分として固定せず、次に開いたときに作り直す。
+        if (facts && (!cleanJsonResult || (finalStatus === 'paid' && !cleanJsonResult.premium_reading))) {
+          const composed = composeReading(facts, finalStatus === 'paid', finalLang);
+          console.warn('Daily reading composed from chart facts:', fallbackReason || 'unknown');
+          if (!cleanJsonResult) {
+            cleanJsonResult = composed;
+            cleanJsonResult.generated_by = 'chart_facts';
+          } else {
+            cleanJsonResult.premium_reading = composed.premium_reading;
+          }
+          cleanJsonResult.is_fallback = true;
+        }
         if (!cleanJsonResult) {
           console.warn("[READING UNAVAILABLE] Calculation or generation failed.", {
             prokerala: Boolean(prokeralaData),
@@ -604,7 +617,19 @@ ${found.map(f => `  - 「${f.quote}」: ${f.why}`).join('\n')}
   }
   if (found.length) {
     console.warn('Daily reading not grounded, removing sentences:', JSON.stringify(found).slice(0, 800));
-    if (!stripFabricated(result.json, found)) return { ...result, json: null, reason: 'ungrounded_reading' };
+    const emptied = stripFabricated(result.json, found);
+    if (emptied.length) {
+      const composed = composeReading(facts, true, lang);
+      for (const path of emptied) {
+        const keys = path.split('.');
+        let src = composed;
+        let dst = result.json;
+        for (const k of keys.slice(0, -1)) { src = src && src[k]; dst = dst && dst[k]; }
+        const last = keys[keys.length - 1];
+        if (dst && src && typeof src[last] === 'string') dst[last] = src[last];
+        else return { ...result, json: null, reason: 'ungrounded_reading' };
+      }
+    }
   }
   fixPlanetTable(result.json, facts, lang);
   return result;
@@ -955,7 +980,24 @@ function readingFacts(prokeralaData, transitData, todayStr, birthDate) {
   const years = new Set([year(todayMs)]);
   if (birthDate) years.add(Number(String(birthDate).slice(0, 4)));
   if (dasha) [dasha.maha.start, dasha.maha.end, dasha.antar.start, dasha.antar.end].forEach(ms => years.add(year(ms)));
+  const tMoon = transit.find(p => p.name === 'Moon');
+  const domain = daily && daily.houseFromLagna ? HOUSE_DOMAIN[daily.houseFromLagna] : null;
   return {
+    today: daily && tMoon ? {
+      sign: toJapaneseSign(tMoon.sign),
+      nakshatra: tMoon.nakshatra ? toJapaneseNakshatra(tMoon.nakshatra) : '',
+      house: daily.houseFromLagna,
+      houseFromMoon: daily.houseFromMoon,
+      conjunct: daily.conjunct.map(n => DASHA_JA[n] || n),
+      opposite: daily.opposite.map(n => DASHA_JA[n] || n),
+      domain,
+      facet: todayFacet(domain, todayStr),
+      kind: week[0] ? week[0].kind : 'neutral'
+    } : null,
+    week: week.map(d => ({ date: d.date, kind: d.kind, fromLagna: d.fromLagna })),
+    // 今週の日別チャンドラ・バラに渡す月の位置（有料の注意日・追い風日で書いてよい）
+    weekMoons: week.map(d => ({ ja: '月', date: d.date, sign: d.sign, house: d.fromLagna, houseFromMoon: d.fromMoon })),
+    natalMoonNakshatra: nMoon.nakshatra ? toJapaneseNakshatra(nMoon.nakshatra) : '',
     asc: toJapaneseSign(asc.sign),
     natal: natal.filter(p => p.name !== 'Ascendant' && p.sign).map(row),
     transit: transit.filter(p => p.name !== 'Ascendant' && p.sign).map(row),
@@ -964,12 +1006,94 @@ function readingFacts(prokeralaData, transitData, todayStr, birthDate) {
     dasha: dasha && {
       maha: { ja: DASHA_JA[dasha.maha.lord], startYear: year(dasha.maha.start), endYear: year(dasha.maha.end) },
       antar: { ja: DASHA_JA[dasha.antar.lord], startYear: year(dasha.antar.start), endYear: year(dasha.antar.end) },
-      next: DASHA_JA[dasha.nextAntar]
+      next: DASHA_JA[dasha.nextAntar],
+      mahaSpan: `${ymd(dasha.maha.start)}〜${ymd(dasha.maha.end)}`,
+      antarEnd: ymd(dasha.antar.end),
+      antarEndMs: dasha.antar.end,
+      mahaEndMs: dasha.maha.end,
+      mahaStartMs: dasha.maha.start,
+      mahaLord: dasha.maha.lord,
+      antarLord: dasha.antar.lord
     },
     ingresses,
     weekDates: week.map(d => d.date.split('/').map(Number)),
     years: [...years]
   };
+}
+
+// Gemini が使えない、または照合で項目が空になったときに、根拠一覧の値だけで鑑定を組み立てる。
+// 「鑑定できませんでした」を出さず、かつ星廻りにない話を書かないための最後の受け皿。
+function composeReading(f, isPaid, lang) {
+  const t = f.today;
+  const d = f.dasha;
+  const ing = f.ingresses[0];
+  const ja = lang === 'ja';
+  const ord = (n) => { const s = ['th', 'st', 'nd', 'rd']; const v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
+  const ymEn = (ms) => new Date(ms).toLocaleDateString('en-US', { year: 'numeric', month: 'long', timeZone: 'UTC' });
+  const sign = (x) => signFor(x, lang);
+  const nak = (x) => nakshatraFor(x, lang);
+  const pl = (name) => ja ? DASHA_JA[name] || name : name;
+  let horoscope;
+  let influence;
+  if (t && ja) {
+    const scene = t.facet || t.domain || '身の回り';
+    const toneLine = t.kind === 'good'
+      ? `出生の月から数えて第${t.houseFromMoon}ハウスにあたる追い風の配置なので、${scene}について自分から一歩動くと手応えを得やすいでしょう。`
+      : t.kind === 'caution'
+        ? `出生の月から数えて第${t.houseFromMoon}ハウスにあたるため、${scene}では気疲れしやすい日です。予定を一つ減らせば、余力を残したまま一日を終えられます。`
+        : `出生の月から数えて第${t.houseFromMoon}ハウスにあたるため、${scene}について選択に迷いやすい日です。選ぶ基準を一つだけ先に決めておくと、迷いが短くなります。`;
+    horoscope = `今日は月が${t.sign}（${t.nakshatra}）にあり、ラグナから第${t.house}ハウスの「${t.domain}」のうち、「${scene}」の場面が動きやすい日です。${toneLine}今日は${scene}に関わる用件を一つだけ選び、自分から手を付けてください。`;
+    const touch = [
+      t.conjunct.length ? `今日の月は出生の${t.conjunct.join('・')}と重なっています。` : '',
+      t.opposite.length ? `今日の月は出生の${t.opposite.join('・')}と向かい合っています。` : ''
+    ].join('');
+    influence = `今日の月はラグナから第${t.house}ハウス、出生の月から第${t.houseFromMoon}ハウスを通っています。${touch}${f.tithi ? `ティティは${f.tithi}です。` : ''}${ing ? `${ing.date}頃に${ing.ja}が${ing.nextSign}${ing.house ? `（ラグナから第${ing.house}ハウス）` : ''}へ移り、次の節目になります。` : ''}`;
+  } else if (t) {
+    const toneLine = t.kind === 'good'
+      ? 'This is a supportive position, so taking the first step yourself is likely to pay off.'
+      : t.kind === 'caution'
+        ? 'This position can be tiring, so dropping one plan today leaves you energy in reserve.'
+        : 'This position can make choices feel unclear, so decide on one criterion before you choose.';
+    horoscope = `Today the Moon is in ${sign(t.sign)} (${nak(t.nakshatra)}), passing through the ${ord(t.house)} house from your Lagna and the ${ord(t.houseFromMoon)} house from your natal Moon. ${toneLine} Pick one matter in this area of life today and start on it yourself.`;
+    influence = `The Moon is in the ${ord(t.house)} house from your Lagna.${t.conjunct.length ? ` It joins your natal ${t.conjunct.join(', ')}.` : ''}${t.opposite.length ? ` It faces your natal ${t.opposite.join(', ')}.` : ''}${ing ? ` Around ${ing.date}, ${ing.ja === '金星' ? 'Venus' : ing.ja === '火星' ? 'Mars' : 'the Sun'} moves into ${sign(ing.nextSign)}, the next turning point.` : ''}`;
+  } else {
+    horoscope = ja ? `出生の月は${f.natalMoonNakshatra}にあります。今日は一つの用件に絞って、自分から手を付けてください。` : `Your natal Moon is in ${nak(f.natalMoonNakshatra)}. Pick one matter today and start on it yourself.`;
+    influence = ja ? `ラグナは${f.asc}です。` : `Your Lagna is ${sign(f.asc)}.`;
+  }
+  const dashaText = d
+    ? (ja
+      ? `現在は${d.maha.ja}の大周期（${d.mahaSpan}）の中の、${d.antar.ja}の小周期（〜${d.antarEnd}）です。長く続いている状況の区切りは、この小周期が終わる${d.antarEnd}が目安で、次は${d.next}の小周期に入ります。`
+      : `You are in the ${d.mahaLord} Mahadasha (until ${ymEn(d.mahaEndMs)}), within the ${d.antarLord} Antardasha (until ${ymEn(d.antarEndMs)}). A long-running situation is most likely to turn when this Antardasha ends in ${ymEn(d.antarEndMs)}.`)
+    : (ja ? `ラグナは${f.asc}、出生の月は${f.natalMoonNakshatra}です。` : `Your Lagna is ${sign(f.asc)} and your natal Moon is in ${nak(f.natalMoonNakshatra)}.`);
+  const nakName = t ? t.nakshatra : f.natalMoonNakshatra;
+  const lucky = ja
+    ? `今日の守り：${nakName}の月。今日の月が通る${nakName}を思い出し、大事な話の前に一呼吸置いてから口を開いてください。`
+    : `Today's charm: the Moon in ${nak(nakName)}. Before an important conversation, pause for one breath before you speak.`;
+  const teaser = ja
+    ? '今週の注意日と追い風日、そしてこの状況を動かす具体的な3つの一手は、詳細レポートで読めます。'
+    : 'This week\'s caution and tailwind days, and three concrete moves for this situation, are in the detailed report.';
+  const out = {
+    dashaTitle: d ? (ja ? `${d.maha.ja}期` : `${d.mahaLord} Mahadasha`) : '',
+    dashaDesc: dashaText,
+    free_reading: { horoscope, influence, dasha_summary: dashaText, lucky_element: lucky, premium_teaser: teaser },
+    planets: f.natal.map(p => ({ name: pl(p.name), sign: sign(p.sign), house: String(p.house), comment: ja ? `${p.sign}・ラグナから第${p.house}ハウス${p.retro ? '・逆行' : ''}` : `${sign(p.sign)}, ${ord(p.house)} house from Lagna${p.retro ? ', retrograde' : ''}` }))
+  };
+  if (isPaid) {
+    const label = (k) => ja ? (k === 'good' ? '追い風日' : k === 'caution' ? '注意日' : '平常') : (k === 'good' ? 'tailwind' : k === 'caution' ? 'caution' : 'steady');
+    const days = f.week.filter(x => x.kind !== 'neutral').map(x => `・${x.date}: ${label(x.kind)}${x.fromLagna ? (ja ? `（月はラグナから第${x.fromLagna}ハウス）` : ` (Moon in the ${ord(x.fromLagna)} house from Lagna)`) : ''}`).join('\n');
+    const h = ja
+      ? ['【いま、あなたに起きていること】', '【なぜ今そう感じるのか】', '【この先に待っているもの】', '【注意日と追い風日】', '【今日・今週の一手】']
+      : ['[What is happening now]', '[Why you feel this now]', '[What lies ahead]', '[Caution and tailwind days]', '[Moves for today and this week]'];
+    const firstGood = f.week.slice(1).find(x => x.kind === 'good');
+    const moves = ja
+      ? [`・今日：${t ? t.facet || t.domain : '身の回り'}に関わる用件を一つだけ選び、自分から手を付ける`, firstGood ? `・${firstGood.date}：追い風日なので、先送りしていた連絡を一本入れる` : '・今週：先送りしていた連絡を一本入れる', `・今日の守り：${nakName}の月`].join('\n')
+      : [`・Today: pick one matter and start on it yourself`, firstGood ? `・${firstGood.date}: a tailwind day, send the message you have been putting off` : '・This week: send the message you have been putting off', `・Today's charm: the Moon in ${nak(nakName)}`].join('\n');
+    out.premium_reading = {
+      kundali_reading: f.natal.map(p => ja ? `${p.ja}は${p.sign}・ラグナから第${p.house}ハウス${p.retro ? '（逆行）' : ''}。` : `${p.name} is in ${sign(p.sign)}, the ${ord(p.house)} house from Lagna${p.retro ? ' (retrograde)' : ''}.`).join(ja ? '' : ' '),
+      detailed_horoscope: `${h[0]}\n${horoscope}\n${h[1]}\n${influence}\n${h[2]}\n${dashaText}\n${h[3]}\n${days || (ja ? '・今週は平常の日が続きます' : '・A steady week')}\n${h[4]}\n${moves}`
+    };
+  }
+  return out;
 }
 
 function factsTable(f, todayStr) {
