@@ -335,6 +335,7 @@ window.LJ_I18N = {
 <script src="/js/play-billing.js"></script>
 <script src="/js/checkout-guard.js"></script>
 <script src="/js/nakshatra-intro.js"></script>
+<script src="/js/share-card.js"></script>
 </head>
 <body>
 
@@ -456,6 +457,7 @@ data-width="320">
 </div>
 <p id="nakshatra-seal-title" hidden style="text-align:center; font-weight:700; font-size:1.05rem; letter-spacing:0.3em; color:var(--color-gold-dark); margin:0 0 4px;">聖印</p>
 <img id="nakshatra-medallion" alt="" hidden style="display:block; width:min(220px, 64%); height:auto; margin:0 auto 12px;">
+<div id="nakshatra-share" hidden></div>
 <div id="nakshatra-intro" hidden style="margin:0 0 12px; padding-bottom:10px; border-bottom:1px dashed rgba(139,107,27,0.25);"></div>
 <p id="today-transit-text" style="font-size:0.88rem; color:#4a3e36; min-height: 48px;">
 本日の星回りデータを読み込んでいます...
@@ -1461,6 +1463,10 @@ nakIntro.dataset.lang = 'ja';
 nakIntro.dataset.mythTitle = 'ナクシャトラの神話';
 nakIntro.dataset.linkText = '{nak}の特徴と性質'.replace('{nak}', data.nakshatra || '');
 window.LJNakIntro.fill();
+}
+const nakShare = document.getElementById('nakshatra-share');
+if (nakShare && /^[a-z-]+$/.test(data.nakshatra_slug || '') && window.LJShareCard) {
+window.LJShareCard.attach(nakShare, { slug: data.nakshatra_slug, lang: 'ja', strings: { label: 'インド占星術｜私の生まれ宿（ナクシャトラ）', index: '27宿のうち　第{n}宿', lord: '支配星：{lord}', cta: 'あなたの宿は？ 27宿から無料で診断', button: '私の宿をカードでシェア', text: '私の生まれ宿（ナクシャトラ）は{nak}でした。あなたの宿は？', error: 'カードを作れませんでした。もう一度お試しください。' } });
 }
 }
 

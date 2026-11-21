@@ -335,6 +335,7 @@ window.LJ_I18N = {
 <script src="/js/play-billing.js"></script>
 <script src="/js/checkout-guard.js"></script>
 <script src="/js/nakshatra-intro.js"></script>
+<script src="/js/share-card.js"></script>
 </head>
 <body>
 
@@ -456,6 +457,7 @@ Once saved, you will be signed in automatically from next time.
 </div>
 <p id="nakshatra-seal-title" hidden style="text-align:center; font-weight:700; font-size:1.05rem; letter-spacing:0.3em; color:var(--color-gold-dark); margin:0 0 4px;">Sacred Seal</p>
 <img id="nakshatra-medallion" alt="" hidden style="display:block; width:min(220px, 64%); height:auto; margin:0 auto 12px;">
+<div id="nakshatra-share" hidden></div>
 <div id="nakshatra-intro" hidden style="margin:0 0 12px; padding-bottom:10px; border-bottom:1px dashed rgba(139,107,27,0.25);"></div>
 <p id="today-transit-text" style="font-size:0.88rem; color:#4a3e36; min-height: 48px;">
 Loading today's chart data...
@@ -1461,6 +1463,10 @@ nakIntro.dataset.lang = 'en';
 nakIntro.dataset.mythTitle = 'Nakshatra Myth';
 nakIntro.dataset.linkText = '{nak}: traits and nature'.replace('{nak}', data.nakshatra || '');
 window.LJNakIntro.fill();
+}
+const nakShare = document.getElementById('nakshatra-share');
+if (nakShare && /^[a-z-]+$/.test(data.nakshatra_slug || '') && window.LJShareCard) {
+window.LJShareCard.attach(nakShare, { slug: data.nakshatra_slug, lang: 'en', strings: { label: 'Vedic Astrology · My Birth Nakshatra', index: 'No. {n} of the 27 Nakshatras', lord: 'Ruled by {lord}', cta: 'Which of the 27 is yours? Find out free', button: 'Share my Nakshatra card', text: 'My birth Nakshatra is {nak}. Which one is yours?', error: 'Could not create the card. Please try again.' } });
 }
 }
 

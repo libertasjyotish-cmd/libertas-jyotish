@@ -1,0 +1,191 @@
+{
+ "ashwini": {
+  "no": 1,
+  "name": "Ashwini",
+  "lord": "Ketu",
+  "range": "Aries 0°–13°20′",
+  "trait": "Iniciativa rápida, nuevos comienzos y un don sanador"
+ },
+ "bharani": {
+  "no": 2,
+  "name": "Bharani",
+  "lord": "Venus",
+  "range": "Aries 13°20′–26°40′",
+  "trait": "Voluntad firme y la capacidad de sostener el peso de la vida"
+ },
+ "krittika": {
+  "no": 3,
+  "name": "Krittika",
+  "lord": "el Sol",
+  "range": "Aries 26°40′–Tauro 10°",
+  "trait": "Una llama aguda y purificadora que llega a la verdad"
+ },
+ "rohini": {
+  "no": 4,
+  "name": "Rohini",
+  "lord": "la Luna",
+  "range": "Tauro 10°–23°20′",
+  "trait": "Belleza, calidez y el don de hacer florecer"
+ },
+ "mrigashira": {
+  "no": 5,
+  "name": "Mrigashira",
+  "lord": "Marte",
+  "range": "Tauro 23°20′–Géminis 6°40′",
+  "trait": "Un buscador sensible, siempre curioso"
+ },
+ "ardra": {
+  "no": 6,
+  "name": "Ardra",
+  "lord": "Rahu",
+  "range": "Géminis 6°40′–20°",
+  "trait": "Tormenta y renovación: emociones profundas que despejan el aire"
+ },
+ "punarvasu": {
+  "no": 7,
+  "name": "Punarvasu",
+  "lord": "Júpiter",
+  "range": "Géminis 20°–Cáncer 3°20′",
+  "trait": "Regreso y renovación: la luz que siempre vuelve"
+ },
+ "pushya": {
+  "no": 8,
+  "name": "Pushya",
+  "lord": "Saturno",
+  "range": "Cáncer 3°20′–16°40′",
+  "trait": "Cuidado que nutre, entrega constante y fuerza serena"
+ },
+ "ashlesha": {
+  "no": 9,
+  "name": "Ashlesha",
+  "lord": "Mercurio",
+  "range": "Cáncer 16°40′–30°",
+  "trait": "Percepción penetrante y una mente intuitiva y profunda"
+ },
+ "magha": {
+  "no": 10,
+  "name": "Magha",
+  "lord": "Ketu",
+  "range": "Leo 0°–13°20′",
+  "trait": "Orgullo ancestral, dignidad y autoridad natural"
+ },
+ "purva-phalguni": {
+  "no": 11,
+  "name": "Purva Phalguni",
+  "lord": "Venus",
+  "range": "Leo 13°20′–26°40′",
+  "trait": "Alegría, afecto y un espíritu cálido y creativo"
+ },
+ "uttara-phalguni": {
+  "no": 12,
+  "name": "Uttara Phalguni",
+  "lord": "el Sol",
+  "range": "Leo 26°40′–Virgo 10°",
+  "trait": "Compañerismo leal y un apoyo generoso y fiable"
+ },
+ "hasta": {
+  "no": 13,
+  "name": "Hasta",
+  "lord": "la Luna",
+  "range": "Virgo 10°–23°20′",
+  "trait": "Manos hábiles e ingenio que hacen reales las ideas"
+ },
+ "chitra": {
+  "no": 14,
+  "name": "Chitra",
+  "lord": "Marte",
+  "range": "Virgo 23°20′–Libra 6°40′",
+  "trait": "Brillo, diseño y talento para crear belleza"
+ },
+ "swati": {
+  "no": 15,
+  "name": "Swati",
+  "lord": "Rahu",
+  "range": "Libra 6°40′–20°",
+  "trait": "Independiente, flexible y libre como el viento"
+ },
+ "vishakha": {
+  "no": 16,
+  "name": "Vishakha",
+  "lord": "Júpiter",
+  "range": "Libra 20°–Escorpio 3°20′",
+  "trait": "Enfoque decidido en una meta hasta alcanzarla"
+ },
+ "anuradha": {
+  "no": 17,
+  "name": "Anuradha",
+  "lord": "Saturno",
+  "range": "Escorpio 3°20′–16°40′",
+  "trait": "Amistad entregada y vínculos que perduran"
+ },
+ "jyeshtha": {
+  "no": 18,
+  "name": "Jyeshtha",
+  "lord": "Mercurio",
+  "range": "Escorpio 16°40′–30°",
+  "trait": "La fuerza del mayor: protector y responsable"
+ },
+ "mula": {
+  "no": 19,
+  "name": "Mula",
+  "lord": "Ketu",
+  "range": "Sagitario 0°–13°20′",
+  "trait": "Llegar a la raíz para encontrar la verdad"
+ },
+ "purva-ashadha": {
+  "no": 20,
+  "name": "Purva Ashadha",
+  "lord": "Venus",
+  "range": "Sagitario 13°20′–26°40′",
+  "trait": "Una convicción inquebrantable que inspira a los demás"
+ },
+ "uttara-ashadha": {
+  "no": 21,
+  "name": "Uttara Ashadha",
+  "lord": "el Sol",
+  "range": "Sagitario 26°40′–Capricornio 10°",
+  "trait": "Integridad y perseverancia que triunfan al final"
+ },
+ "shravana": {
+  "no": 22,
+  "name": "Shravana",
+  "lord": "la Luna",
+  "range": "Capricornio 10°–23°20′",
+  "trait": "Escuchar a fondo, aprender y transmitir sabiduría"
+ },
+ "dhanishta": {
+  "no": 23,
+  "name": "Dhanishta",
+  "lord": "Marte",
+  "range": "Capricornio 23°20′–Acuario 6°40′",
+  "trait": "Ritmo, abundancia y una versatilidad generosa"
+ },
+ "shatabhisha": {
+  "no": 24,
+  "name": "Shatabhisha",
+  "lord": "Rahu",
+  "range": "Acuario 6°40′–20°",
+  "trait": "Una mente independiente que sana y descifra misterios"
+ },
+ "purva-bhadrapada": {
+  "no": 25,
+  "name": "Purva Bhadrapada",
+  "lord": "Júpiter",
+  "range": "Acuario 20°–Piscis 3°20′",
+  "trait": "Idealismo intenso y el fuego de la transformación"
+ },
+ "uttara-bhadrapada": {
+  "no": 26,
+  "name": "Uttara Bhadrapada",
+  "lord": "Saturno",
+  "range": "Piscis 3°20′–16°40′",
+  "trait": "Calma profunda, sabiduría y una fuerza interior firme"
+ },
+ "revati": {
+  "no": 27,
+  "name": "Revati",
+  "lord": "Mercurio",
+  "range": "Piscis 16°40′–30°",
+  "trait": "Empatía profunda, imaginación serena y anhelo de paz"
+ }
+}

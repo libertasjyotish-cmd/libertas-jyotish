@@ -193,6 +193,7 @@ window.LJ_I18N = {
 <script src="/js/play-billing.js"></script>
 <script src="/js/checkout-guard.js"></script>
 <script src="/js/nakshatra-intro.js"></script>
+<script src="/js/share-card.js"></script>
 </head>
 <body>
 
@@ -396,8 +397,17 @@ clearTimeout(clientTimeout);
 }
 });
 
+// 生まれ宿のシェア用カード（js/share-card.js）
+const SHARE_STRINGS = { label: 'Astrologi Weda · Nakshatra Kelahiranku', index: 'No. {n} dari 27 Nakshatra', lord: 'Penguasa: {lord}', cta: 'Mana dari 27 yang milikmu? Cek gratis', button: 'Bagikan kartu Nakshatra-ku', text: 'Nakshatra kelahiranku adalah {nak}. Bagaimana denganmu?', error: 'Kartu tidak dapat dibuat. Silakan coba lagi.' };
+function fillShareCards() {
+document.querySelectorAll('[data-share-card]:not([data-filled])').forEach((el) => {
+el.dataset.filled = '1';
+if (window.LJShareCard) window.LJShareCard.attach(el, { slug: el.dataset.shareCard, lang: 'id', strings: SHARE_STRINGS });
+});
+}
+
 function renderDiagnosis(result, input) {
-setTimeout(() => window.LJNakIntro && window.LJNakIntro.fill(), 0);
+setTimeout(() => { if (window.LJNakIntro) window.LJNakIntro.fill(); fillShareCards(); }, 0);
 let readingContent = result.reading || result.result || JSON.stringify(result);
 
 // ★【拡張ロジック】新簡易鑑定の4大要素（free_reading）が返ってきた場合に綺麗にカードレイアウト化
@@ -413,7 +423,7 @@ readingContent = `
 </div>
 
 <div style="margin-bottom:20px; border-bottom:1px dashed rgba(139,107,27,0.25); padding-bottom:12px;">
-${/^[a-z-]+$/.test(result.nakshatra_slug || '') ? `${'Segel Suci' ? '<p style="text-align:center; font-weight:700; font-size:1.05rem; letter-spacing:0.3em; color:var(--color-gold-dark); margin:14px 0 0;">Segel Suci</p>' : ''}<img src="/img/nakshatra/${result.nakshatra_slug}.webp" alt="${result.nakshatra || ''}" style="display:block; width:min(260px, 72%); height:auto; margin:12px auto 4px;"><div data-nak-intro="${result.nakshatra_slug}" data-lang="id" data-myth-title="Mitos Nakshatra" data-link-text="${'{nak}: sifat dan karakter'.replace('{nak}', result.nakshatra || '')}" hidden style="margin:8px 8px 0;"></div>` : ''}
+${/^[a-z-]+$/.test(result.nakshatra_slug || '') ? `${'Segel Suci' ? '<p style="text-align:center; font-weight:700; font-size:1.05rem; letter-spacing:0.3em; color:var(--color-gold-dark); margin:14px 0 0;">Segel Suci</p>' : ''}<img src="/img/nakshatra/${result.nakshatra_slug}.webp" alt="${result.nakshatra || ''}" style="display:block; width:min(260px, 72%); height:auto; margin:12px auto 4px;"><div data-share-card="${result.nakshatra_slug}" hidden></div><div data-nak-intro="${result.nakshatra_slug}" data-lang="id" data-myth-title="Mitos Nakshatra" data-link-text="${'{nak}: sifat dan karakter'.replace('{nak}', result.nakshatra || '')}" hidden style="margin:8px 8px 0;"></div>` : ''}
 </div>
 
 <div style="margin-bottom:24px;">

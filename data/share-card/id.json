@@ -1,0 +1,191 @@
+{
+ "ashwini": {
+  "no": 1,
+  "name": "Ashwini",
+  "lord": "Ketu",
+  "range": "Aries 0°–13°20′",
+  "trait": "Inisiatif cepat, awal yang baru, dan sentuhan penyembuh"
+ },
+ "bharani": {
+  "no": 2,
+  "name": "Bharani",
+  "lord": "Venus",
+  "range": "Aries 13°20′–26°40′",
+  "trait": "Tekad kuat dan kemampuan memikul beratnya kehidupan"
+ },
+ "krittika": {
+  "no": 3,
+  "name": "Krittika",
+  "lord": "Matahari",
+  "range": "Aries 26°40′–Taurus 10°",
+  "trait": "Api tajam yang menyucikan dan menembus kebenaran"
+ },
+ "rohini": {
+  "no": 4,
+  "name": "Rohini",
+  "lord": "Bulan",
+  "range": "Taurus 10°–23°20′",
+  "trait": "Keindahan, kehangatan, dan bakat menumbuhkan"
+ },
+ "mrigashira": {
+  "no": 5,
+  "name": "Mrigashira",
+  "lord": "Mars",
+  "range": "Taurus 23°20′–Gemini 6°40′",
+  "trait": "Pencari yang lembut, selalu ingin tahu"
+ },
+ "ardra": {
+  "no": 6,
+  "name": "Ardra",
+  "lord": "Rahu",
+  "range": "Gemini 6°40′–20°",
+  "trait": "Badai dan pembaruan: perasaan mendalam yang menjernihkan"
+ },
+ "punarvasu": {
+  "no": 7,
+  "name": "Punarvasu",
+  "lord": "Yupiter",
+  "range": "Gemini 20°–Cancer 3°20′",
+  "trait": "Kembali dan pulih: cahaya yang selalu datang lagi"
+ },
+ "pushya": {
+  "no": 8,
+  "name": "Pushya",
+  "lord": "Saturnus",
+  "range": "Cancer 3°20′–16°40′",
+  "trait": "Kasih yang merawat, pengabdian setia, dan kekuatan tenang"
+ },
+ "ashlesha": {
+  "no": 9,
+  "name": "Ashlesha",
+  "lord": "Merkurius",
+  "range": "Cancer 16°40′–30°",
+  "trait": "Wawasan tajam dan pikiran yang sangat intuitif"
+ },
+ "magha": {
+  "no": 10,
+  "name": "Magha",
+  "lord": "Ketu",
+  "range": "Leo 0°–13°20′",
+  "trait": "Kebanggaan leluhur, martabat, dan wibawa alami"
+ },
+ "purva-phalguni": {
+  "no": 11,
+  "name": "Purva Phalguni",
+  "lord": "Venus",
+  "range": "Leo 13°20′–26°40′",
+  "trait": "Sukacita, kasih sayang, dan jiwa kreatif yang hangat"
+ },
+ "uttara-phalguni": {
+  "no": 12,
+  "name": "Uttara Phalguni",
+  "lord": "Matahari",
+  "range": "Leo 26°40′–Virgo 10°",
+  "trait": "Kemitraan setia dan dukungan yang murah hati serta dapat diandalkan"
+ },
+ "hasta": {
+  "no": 13,
+  "name": "Hasta",
+  "lord": "Bulan",
+  "range": "Virgo 10°–23°20′",
+  "trait": "Tangan terampil dan akal cerdik yang mewujudkan gagasan"
+ },
+ "chitra": {
+  "no": 14,
+  "name": "Chitra",
+  "lord": "Mars",
+  "range": "Virgo 23°20′–Libra 6°40′",
+  "trait": "Kecemerlangan, rancangan, dan bakat menciptakan keindahan"
+ },
+ "swati": {
+  "no": 15,
+  "name": "Swati",
+  "lord": "Rahu",
+  "range": "Libra 6°40′–20°",
+  "trait": "Mandiri, luwes, dan bebas seperti angin"
+ },
+ "vishakha": {
+  "no": 16,
+  "name": "Vishakha",
+  "lord": "Yupiter",
+  "range": "Libra 20°–Scorpio 3°20′",
+  "trait": "Fokus teguh pada tujuan hingga tercapai"
+ },
+ "anuradha": {
+  "no": 17,
+  "name": "Anuradha",
+  "lord": "Saturnus",
+  "range": "Scorpio 3°20′–16°40′",
+  "trait": "Persahabatan yang setia dan ikatan yang bertahan"
+ },
+ "jyeshtha": {
+  "no": 18,
+  "name": "Jyeshtha",
+  "lord": "Merkurius",
+  "range": "Scorpio 16°40′–30°",
+  "trait": "Kekuatan sang sulung: melindungi dan bertanggung jawab"
+ },
+ "mula": {
+  "no": 19,
+  "name": "Mula",
+  "lord": "Ketu",
+  "range": "Sagitarius 0°–13°20′",
+  "trait": "Menggali hingga ke akar untuk menemukan kebenaran"
+ },
+ "purva-ashadha": {
+  "no": 20,
+  "name": "Purva Ashadha",
+  "lord": "Venus",
+  "range": "Sagitarius 13°20′–26°40′",
+  "trait": "Keyakinan teguh yang menginspirasi orang lain"
+ },
+ "uttara-ashadha": {
+  "no": 21,
+  "name": "Uttara Ashadha",
+  "lord": "Matahari",
+  "range": "Sagitarius 26°40′–Capricorn 10°",
+  "trait": "Integritas dan ketekunan yang menang pada akhirnya"
+ },
+ "shravana": {
+  "no": 22,
+  "name": "Shravana",
+  "lord": "Bulan",
+  "range": "Capricorn 10°–23°20′",
+  "trait": "Mendengar dengan saksama, belajar, dan mewariskan kearifan"
+ },
+ "dhanishta": {
+  "no": 23,
+  "name": "Dhanishta",
+  "lord": "Mars",
+  "range": "Capricorn 23°20′–Aquarius 6°40′",
+  "trait": "Irama, kelimpahan, dan keserbabisaan yang murah hati"
+ },
+ "shatabhisha": {
+  "no": 24,
+  "name": "Shatabhisha",
+  "lord": "Rahu",
+  "range": "Aquarius 6°40′–20°",
+  "trait": "Pikiran mandiri yang menyembuhkan dan mengurai misteri"
+ },
+ "purva-bhadrapada": {
+  "no": 25,
+  "name": "Purva Bhadrapada",
+  "lord": "Yupiter",
+  "range": "Aquarius 20°–Pisces 3°20′",
+  "trait": "Idealisme yang kuat dan api transformasi"
+ },
+ "uttara-bhadrapada": {
+  "no": 26,
+  "name": "Uttara Bhadrapada",
+  "lord": "Saturnus",
+  "range": "Pisces 3°20′–16°40′",
+  "trait": "Ketenangan mendalam, kearifan, dan kekuatan batin yang teguh"
+ },
+ "revati": {
+  "no": 27,
+  "name": "Revati",
+  "lord": "Merkurius",
+  "range": "Pisces 16°40′–30°",
+  "trait": "Empati mendalam, imajinasi tenang, dan kerinduan akan kedamaian"
+ }
+}

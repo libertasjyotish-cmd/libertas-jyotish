@@ -335,6 +335,7 @@ window.LJ_I18N = {
 <script src="/js/play-billing.js"></script>
 <script src="/js/checkout-guard.js"></script>
 <script src="/js/nakshatra-intro.js"></script>
+<script src="/js/share-card.js"></script>
 </head>
 <body>
 
@@ -456,6 +457,7 @@ data-width="320">
 </div>
 <p id="nakshatra-seal-title" hidden style="text-align:center; font-weight:700; font-size:1.05rem; letter-spacing:0.3em; color:var(--color-gold-dark); margin:0 0 4px;">الختم المقدس</p>
 <img id="nakshatra-medallion" alt="" hidden style="display:block; width:min(220px, 64%); height:auto; margin:0 auto 12px;">
+<div id="nakshatra-share" hidden></div>
 <div id="nakshatra-intro" hidden style="margin:0 0 12px; padding-bottom:10px; border-bottom:1px dashed rgba(139,107,27,0.25);"></div>
 <p id="today-transit-text" style="font-size:0.88rem; color:#4a3e36; min-height: 48px;">
 جارٍ تحميل بيانات خريطة اليوم...
@@ -1461,6 +1463,10 @@ nakIntro.dataset.lang = 'ar';
 nakIntro.dataset.mythTitle = 'أسطورة النكشترا';
 nakIntro.dataset.linkText = '{nak}: السمات والطبيعة'.replace('{nak}', data.nakshatra || '');
 window.LJNakIntro.fill();
+}
+const nakShare = document.getElementById('nakshatra-share');
+if (nakShare && /^[a-z-]+$/.test(data.nakshatra_slug || '') && window.LJShareCard) {
+window.LJShareCard.attach(nakShare, { slug: data.nakshatra_slug, lang: 'ar', strings: { label: 'علم التنجيم الفيدي · نكشاترا ميلادي', index: 'رقم {n} من 27 نكشاترا', lord: 'الكوكب الحاكم: {lord}', cta: 'أيّ الـ27 لك؟ اكتشف مجانًا', button: 'شارك بطاقة نكشاترا الخاصة بي', text: 'نكشاترا ميلادي هي {nak}. وما هي نكشاترا الخاصة بك؟', error: 'تعذّر إنشاء البطاقة. يُرجى المحاولة مرة أخرى.' } });
 }
 }
 

@@ -827,6 +827,15 @@
     "result.surveySend": "Kirim",
     "result.surveyPick": "Pilih topiknya dulu ya.",
     "result.surveyThanks": "Terima kasih banyak ya!",
-    "result.surveyError": "Gagal mengirim. Silakan coba lagi ya."
+    "result.surveyError": "Gagal mengirim. Silakan coba lagi ya.",
+    "share": {
+      "label": "Astrologi Weda · Nakshatra Kelahiranku",
+      "index": "No. {n} dari 27 Nakshatra",
+      "lord": "Penguasa: {lord}",
+      "cta": "Mana dari 27 yang milikmu? Cek gratis",
+      "button": "Bagikan kartu Nakshatra-ku",
+      "text": "Nakshatra kelahiranku adalah {nak}. Bagaimana denganmu?",
+      "error": "Kartu tidak dapat dibuat. Silakan coba lagi."
+    }
   }
 }
