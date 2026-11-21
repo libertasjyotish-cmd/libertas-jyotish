@@ -9,8 +9,8 @@ const file = path.resolve(__dirname, '../api/jyotish.js');
 const m = new Module(file, null);
 m.filename = file;
 m.paths = Module._nodeModulePaths(path.dirname(file));
-m._compile(`${fs.readFileSync(file, 'utf8')};module.exports.__t={readingFacts,buildAstrologyPrompt};`, file);
-const { readingFacts, buildAstrologyPrompt } = m.exports.__t;
+m._compile(`${fs.readFileSync(file, 'utf8')};module.exports.__t={readingFacts,buildAstrologyPrompt,composeReading};`, file);
+const { readingFacts, buildAstrologyPrompt, composeReading } = m.exports.__t;
 
 const P = (name, sign, degree, longitude, extra = {}) => ({ name, rasi: { name: sign }, degree, longitude, ...extra });
 const natal = { data: { planet_position: [
@@ -50,14 +50,28 @@ for (const [t, quote] of fabricated) {
 }
 
 const json = { free_reading: { horoscope: '交友の場で好機があります。今はラーフ期です。知人へ連絡を。' } };
-assert.strictEqual(stripFabricated(json, auditReading(json, facts, 'ja')), true);
+assert.deepStrictEqual(stripFabricated(json, auditReading(json, facts, 'ja')), []);
 assert.strictEqual(json.free_reading.horoscope, '交友の場で好機があります。知人へ連絡を。');
 const empty = { free_reading: { horoscope: '今はラーフ期です。' } };
-assert.strictEqual(stripFabricated(empty, auditReading(empty, facts, 'ja')), false);
+assert.deepStrictEqual(stripFabricated(empty, auditReading(empty, facts, 'ja')), ['free_reading.horoscope']);
 
 const prompt = buildAstrologyPrompt(natal, transit, true, 'ja', 'all', null, '2026-11-22', '1970-01-09');
 assert.ok(prompt.includes('【根拠一覧'), '根拠一覧がプロンプトにない');
 assert.ok(prompt.includes('- 月: 魚座・ラグナから第3ハウス'), 'トランジットの月の行がない');
 assert.ok(!prompt.includes('"longitude"'), '生の天体データがプロンプトに残っている');
+
+// Gemini が使えない・照合で項目が空になったときの、コードだけで組み立てる鑑定も根拠一覧どおりであること
+for (const paid of [false, true]) {
+  for (const lang of ['ja', 'en']) {
+    const c = composeReading(facts, paid, lang);
+    for (const k of ['horoscope', 'influence', 'dasha_summary', 'lucky_element', 'premium_teaser']) assert.ok(c.free_reading[k], `${lang} ${k} が空`);
+    assert.ok(c.dashaTitle && c.dashaDesc, 'dashaTitle/dashaDesc が空');
+    if (paid) assert.ok(c.premium_reading.detailed_horoscope.includes(lang === 'ja' ? '【今日・今週の一手】' : '[Moves for today'), '有料の詳細がない');
+    assert.deepStrictEqual(auditReading(c, facts, lang), [], `${lang} のコード鑑定が照合に通らない`);
+  }
+}
+const ja = composeReading(facts, false, 'ja');
+assert.ok(ja.free_reading.dasha_summary.includes('土星の大周期') && ja.free_reading.dasha_summary.includes('金星の小周期'), ja.free_reading.dasha_summary);
+assert.ok(ja.free_reading.horoscope.includes('第3ハウス'), ja.free_reading.horoscope);
 
 console.log('check-reading-facts: ok');

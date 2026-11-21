@@ -36,8 +36,13 @@ const RE = {
   retro: new RegExp(`${PL}(?:の|が|は)?逆行|逆行(?:中|している)の${PL}`, 'g')
 };
 
-function bodies(facts, ja) {
-  return [...facts.natal, ...facts.transit].filter((p) => p.ja === ja);
+// 今週の日別の月の位置は、その日付を書いた文の中でだけ根拠として認める
+function bodies(facts, ja, text) {
+  const week = (facts.weekMoons || []).filter((w) => {
+    const [mo, da] = w.date.split('/');
+    return new RegExp(`(?<![\\d/])${mo}/${da}(?![\\d/])|(?<!\\d)${mo}月${da}日`).test(text);
+  });
+  return [...facts.natal, ...facts.transit, ...week].filter((p) => p.ja === ja);
 }
 
 // facts: { natal, transit: [{ ja, sign, house, houseFromMoon, nakshatra, retro }], lords: {1..12: 惑星名},
@@ -77,21 +82,21 @@ function findFabrications(text, facts, lang) {
       if (m[1] === '月' && /周期|期/.test(m[2]) && !/大周期|小周期|ダシャー/.test(m[2])) continue;
       checkDasha(m[1], m[2], m[0]);
     }
-    const where = (ja) => bodies(facts, ja).map((p) => `${p.sign}・第${p.house}ハウス`).join('／') || 'なし';
+    const where = (ja) => bodies(facts, ja, s).map((p) => `${p.sign}・第${p.house}ハウス`).join('／') || 'なし';
     for (const m of s.matchAll(RE.signOfPlanet)) {
       const [, sign, ja] = m;
-      const ok = bodies(facts, ja).some((p) => p.sign === sign) || facts.ingresses.some((x) => x.ja === ja && x.nextSign === sign);
+      const ok = bodies(facts, ja, s).some((p) => p.sign === sign) || facts.ingresses.some((x) => x.ja === ja && x.nextSign === sign);
       if (!ok) add(m[0], `根拠一覧では${ja}は ${where(ja)}`);
     }
     for (const m of s.matchAll(RE.planetInSign)) {
       const [, ja, sign] = m;
-      const ok = bodies(facts, ja).some((p) => p.sign === sign) || facts.ingresses.some((x) => x.ja === ja && x.nextSign === sign);
+      const ok = bodies(facts, ja, s).some((p) => p.sign === sign) || facts.ingresses.some((x) => x.ja === ja && x.nextSign === sign);
       if (!ok) add(m[0], `根拠一覧では${ja}は ${where(ja)}`);
     }
     for (const m of s.matchAll(RE.planetHouse)) {
       const ja = m[1];
       const n = Number(m[2]);
-      const ok = bodies(facts, ja).some((p) => p.house === n || p.houseFromMoon === n) || facts.ingresses.some((x) => x.ja === ja && x.house === n);
+      const ok = bodies(facts, ja, s).some((p) => p.house === n || p.houseFromMoon === n) || facts.ingresses.some((x) => x.ja === ja && x.house === n);
       if (!ok) add(m[0], `根拠一覧では${ja}は ${where(ja)}`);
     }
     for (const m of s.matchAll(RE.housePlanet)) {
@@ -99,12 +104,12 @@ function findFabrications(text, facts, lang) {
       const ja = m[3];
       const ok = /支配/.test(m[2])
         ? facts.lords[n] === ja
-        : bodies(facts, ja).some((p) => p.house === n || p.houseFromMoon === n) || facts.ingresses.some((x) => x.ja === ja && x.house === n) || facts.lords[n] === ja;
+        : bodies(facts, ja, s).some((p) => p.house === n || p.houseFromMoon === n) || facts.ingresses.some((x) => x.ja === ja && x.house === n) || facts.lords[n] === ja;
       if (!ok) add(m[0], `根拠一覧では${ja}は ${where(ja)}、第${n}ハウスの支配星は${facts.lords[n] || '不明'}`);
     }
     for (const m of s.matchAll(RE.retro)) {
       const ja = m[1] || m[2];
-      if (!bodies(facts, ja).some((p) => p.retro)) add(m[0], `根拠一覧では${ja}は逆行していない`);
+      if (!bodies(facts, ja, s).some((p) => p.retro)) add(m[0], `根拠一覧では${ja}は逆行していない`);
     }
     const naks = new Set([...facts.natal, ...facts.transit].map((p) => p.nakshatra).filter(Boolean));
     for (const m of s.matchAll(NAK_RE)) {
@@ -130,7 +135,9 @@ function auditReading(json, facts, lang) {
   const found = [];
   const walk = (v, path) => {
     if (typeof v === 'string') {
-      for (const f of findFabrications(v, facts, lang)) found.push({ ...f, path });
+      for (const sentence of v.match(/[^。．.!?！？؟\n]+[。．.!?！？؟]*/g) || []) {
+        for (const f of findFabrications(sentence, facts, lang)) found.push({ ...f, path });
+      }
     } else if (v && typeof v === 'object') {
       for (const [k, child] of Object.entries(v)) if (!SKIP_KEYS.has(k)) walk(child, path ? `${path}.${k}` : k);
     }
@@ -139,9 +146,9 @@ function auditReading(json, facts, lang) {
   return found;
 }
 
-// 照合で引っかかった文だけを取り除く。取り除いて空になった項目があれば false を返す。
+// 照合で引っかかった文だけを取り除き、取り除いて空になった項目のパスを返す。
 function stripFabricated(json, found) {
-  let intact = true;
+  const emptied = [];
   const SENT = /[^。．.!?！？؟\n]+[。．.!?！？؟]*\n?/g;
   for (const { path, quote } of found) {
     const keys = path.split('.');
@@ -150,10 +157,10 @@ function stripFabricated(json, found) {
     const last = keys[keys.length - 1];
     if (!obj || typeof obj[last] !== 'string') continue;
     const kept = (obj[last].match(SENT) || []).filter((x) => !x.includes(quote)).join('');
-    if (!kept.trim()) intact = false;
     obj[last] = kept.trim();
+    if (!obj[last] && !emptied.includes(path)) emptied.push(path);
   }
-  return intact;
+  return emptied;
 }
 
 module.exports = { findFabrications, auditReading, stripFabricated, SIGNS_JA, SIGN_LORD_JA };
