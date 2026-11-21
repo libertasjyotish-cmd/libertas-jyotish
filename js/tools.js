@@ -144,6 +144,11 @@
       values.textContent = '';
       renderValues(res.data);
       renderGuide(res.data);
+      var share = document.getElementById('tool-share');
+      if (share) share.hidden = true;
+      if (share && tool === 'nakshatra' && res.data.nakshatraSlug && window.LJShareCard && config.share) {
+        window.LJShareCard.attach(share, { slug: res.data.nakshatraSlug, lang: lang, strings: config.share });
+      }
       if (res.data.geo && res.data.geo.notice) {
         geoNote.textContent = res.data.geo.notice;
         geoNote.hidden = false;

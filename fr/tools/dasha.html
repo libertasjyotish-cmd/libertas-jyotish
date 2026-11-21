@@ -35,6 +35,7 @@
 <link rel="stylesheet" href="/css/tools.css">
 <style>body{font-family:'Noto Serif', serif;}</style>
 <script defer src="/js/site-menu.js"></script>
+<script defer src="/js/share-card.js"></script>
 <script defer src="/js/tools.js"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Calculer votre période de Dasha actuelle","url":"https://www.libertas-jyotish.com/fr/tools/dasha","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"fr","description":"Déterminez gratuitement votre période planétaire actuelle (Mahadasha) selon le système du Vimshottari Dasha (cycle de 120 ans) et découvrez la date de transition vers la période suivante.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://www.libertas-jyotish.com/fr"},{"@type":"ListItem","position":2,"name":"Calculer votre période de Dasha actuelle","item":"https://www.libertas-jyotish.com/fr/tools/dasha"}]}]}</script>
 </head>
@@ -106,6 +107,7 @@ window.LJ_I18N = {
   padaValue: 'Pada {pada}',
   period: 'De {start} à {end}',
   guideLink: 'Lire l\'interprétation de {name}',
+  share: { label: 'Astrologie védique · Mon nakshatra de naissance', index: 'N° {n} des 27 nakshatras', lord: 'Maître : {lord}', cta: 'Lequel des 27 est le vôtre ? Découvrez-le gratuitement', button: 'Partager ma carte nakshatra', text: 'Mon nakshatra de naissance est {nak}. Et le vôtre ?', error: 'Impossible de créer la carte. Veuillez réessayer.', making: 'Création de votre carte…' },
   submit: 'Calculer gratuitement',
   submitting: 'Calcul en cours…',
   errors: {
@@ -144,6 +146,7 @@ window.LJ_I18N = {
 <dl class="tool-values" id="tool-values"></dl>
 <p class="tool-geo" id="tool-geo" hidden></p>
 <p class="tool-guide" id="tool-guide" hidden></p>
+<div id="tool-share" hidden></div>
 </section>
 
 <section>

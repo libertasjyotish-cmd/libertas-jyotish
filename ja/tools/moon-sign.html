@@ -35,6 +35,7 @@
 <link rel="stylesheet" href="/css/tools.css">
 <style>body{font-family:'Noto Serif JP', serif;}</style>
 <script defer src="/js/site-menu.js"></script>
+<script defer src="/js/share-card.js"></script>
 <script defer src="/js/tools.js"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"月星座を調べる","url":"https://www.libertas-jyotish.com/ja/tools/moon-sign","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ja","description":"生年月日・出生時刻・出生地から、インド占星術（ヴェーダ占星術）の月星座をサイデリアル方式で無料計算します。西洋占星術の太陽星座との違いも解説しています。","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"トップ","item":"https://www.libertas-jyotish.com/ja"},{"@type":"ListItem","position":2,"name":"月星座を調べる","item":"https://www.libertas-jyotish.com/ja/tools/moon-sign"}]}]}</script>
 </head>
@@ -106,6 +107,7 @@ window.LJ_I18N = {
   padaValue: '第{pada}パダ',
   period: '{start}〜{end}',
   guideLink: '{name}の解説を読む',
+  share: { label: 'インド占星術｜私の生まれ宿（ナクシャトラ）', index: '27宿のうち　第{n}宿', lord: '支配星：{lord}', cta: 'あなたの宿は？ 27宿から無料で診断', button: '私の宿をカードでシェア', text: '私の生まれ宿（ナクシャトラ）は{nak}でした。あなたの宿は？', error: 'カードを作れませんでした。もう一度お試しください。', making: 'カードを作成中…' },
   submit: '無料で計算する',
   submitting: '計算しています…',
   errors: {
@@ -144,6 +146,7 @@ window.LJ_I18N = {
 <dl class="tool-values" id="tool-values"></dl>
 <p class="tool-geo" id="tool-geo" hidden></p>
 <p class="tool-guide" id="tool-guide" hidden></p>
+<div id="tool-share" hidden></div>
 </section>
 
 <section>

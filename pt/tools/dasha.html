@@ -35,6 +35,7 @@
 <link rel="stylesheet" href="/css/tools.css">
 <style>body{font-family:'Noto Serif', serif;}</style>
 <script defer src="/js/site-menu.js"></script>
+<script defer src="/js/share-card.js"></script>
 <script defer src="/js/tools.js"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Descubra seu Período Dasha Atual","url":"https://www.libertas-jyotish.com/pt/tools/dasha","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"pt","description":"Calcule gratuitamente em qual período planetário (Mahadasha) do ciclo de 120 anos do Vimshottari Dasha você se encontra, e consulte a época de transição para o próximo ciclo.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Início","item":"https://www.libertas-jyotish.com/pt"},{"@type":"ListItem","position":2,"name":"Descubra seu Período Dasha Atual","item":"https://www.libertas-jyotish.com/pt/tools/dasha"}]}]}</script>
 </head>
@@ -106,6 +107,7 @@ window.LJ_I18N = {
   padaValue: 'Pada {pada}',
   period: '{start} a {end}',
   guideLink: 'Ler o guia de {name}',
+  share: { label: 'Astrologia védica · Meu nakshatra de nascimento', index: 'Nº {n} dos 27 nakshatras', lord: 'Regente: {lord}', cta: 'Qual dos 27 é o seu? Descubra grátis', button: 'Compartilhar meu cartão de nakshatra', text: 'Meu nakshatra de nascimento é {nak}. Qual é o seu?', error: 'Não foi possível criar o cartão. Tente novamente.', making: 'Criando seu cartão…' },
   submit: 'Calcular gratuitamente',
   submitting: 'Calculando…',
   errors: {
@@ -144,6 +146,7 @@ window.LJ_I18N = {
 <dl class="tool-values" id="tool-values"></dl>
 <p class="tool-geo" id="tool-geo" hidden></p>
 <p class="tool-guide" id="tool-guide" hidden></p>
+<div id="tool-share" hidden></div>
 </section>
 
 <section>

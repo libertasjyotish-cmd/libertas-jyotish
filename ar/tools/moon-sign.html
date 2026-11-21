@@ -35,6 +35,7 @@
 <link rel="stylesheet" href="/css/tools.css">
 <style>body{font-family:'Noto Naskh Arabic', serif;}</style>
 <script defer src="/js/site-menu.js"></script>
+<script defer src="/js/share-card.js"></script>
 <script defer src="/js/tools.js"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"معرفة برج القمر","url":"https://www.libertas-jyotish.com/ar/tools/moon-sign","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ar","description":"احسب برج القمر مجاناً في التنجيم الفيدي (الهندي) بالنظام النجمي بناءً على تاريخ ووقت ومكان ميلادك. يتضمن أيضاً شرحاً للفروق بينه وبين برج الشمس في التنجيم الغربي.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"الرئيسية","item":"https://www.libertas-jyotish.com/ar"},{"@type":"ListItem","position":2,"name":"معرفة برج القمر","item":"https://www.libertas-jyotish.com/ar/tools/moon-sign"}]}]}</script>
 </head>
@@ -106,6 +107,7 @@ window.LJ_I18N = {
   padaValue: 'البادا {pada}',
   period: '{start} إلى {end}',
   guideLink: 'اقرأ شرح {name}',
+  share: { label: 'علم التنجيم الفيدي · نكشاترا ميلادي', index: 'رقم {n} من 27 نكشاترا', lord: 'الكوكب الحاكم: {lord}', cta: 'أيّ الـ27 لك؟ اكتشف مجانًا', button: 'شارك بطاقة نكشاترا الخاصة بي', text: 'نكشاترا ميلادي هي {nak}. وما هي نكشاترا الخاصة بك؟', error: 'تعذّر إنشاء البطاقة. يُرجى المحاولة مرة أخرى.', making: 'جارٍ إنشاء البطاقة…' },
   submit: 'احسب مجاناً',
   submitting: 'جارٍ الحساب…',
   errors: {
@@ -144,6 +146,7 @@ window.LJ_I18N = {
 <dl class="tool-values" id="tool-values"></dl>
 <p class="tool-geo" id="tool-geo" hidden></p>
 <p class="tool-guide" id="tool-guide" hidden></p>
+<div id="tool-share" hidden></div>
 </section>
 
 <section>

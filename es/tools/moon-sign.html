@@ -35,6 +35,7 @@
 <link rel="stylesheet" href="/css/tools.css">
 <style>body{font-family:'Noto Serif', serif;}</style>
 <script defer src="/js/site-menu.js"></script>
+<script defer src="/js/share-card.js"></script>
 <script defer src="/js/tools.js"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Calcular signo lunar","url":"https://www.libertas-jyotish.com/es/tools/moon-sign","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"es","description":"Calcula gratis tu signo lunar en la astrología védica (sistema sideral) a partir de tu fecha, hora y lugar de nacimiento. Conoce también las diferencias con el signo solar de la astrología occidental.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://www.libertas-jyotish.com/es"},{"@type":"ListItem","position":2,"name":"Calcular signo lunar","item":"https://www.libertas-jyotish.com/es/tools/moon-sign"}]}]}</script>
 </head>
@@ -106,6 +107,7 @@ window.LJ_I18N = {
   padaValue: 'Pada {pada}',
   period: '{start} - {end}',
   guideLink: 'Leer la guía de {name}',
+  share: { label: 'Astrología védica · Mi nakshatra de nacimiento', index: 'N.º {n} de los 27 nakshatras', lord: 'Regente: {lord}', cta: '¿Cuál de los 27 es el tuyo? Descúbrelo gratis', button: 'Compartir mi tarjeta de nakshatra', text: 'Mi nakshatra de nacimiento es {nak}. ¿Cuál es el tuyo?', error: 'No se pudo crear la tarjeta. Inténtalo de nuevo.', making: 'Creando tu tarjeta…' },
   submit: 'Calcular gratis',
   submitting: 'Calculando…',
   errors: {
@@ -144,6 +146,7 @@ window.LJ_I18N = {
 <dl class="tool-values" id="tool-values"></dl>
 <p class="tool-geo" id="tool-geo" hidden></p>
 <p class="tool-guide" id="tool-guide" hidden></p>
+<div id="tool-share" hidden></div>
 </section>
 
 <section>

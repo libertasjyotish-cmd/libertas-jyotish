@@ -35,6 +35,7 @@
 <link rel="stylesheet" href="/css/tools.css">
 <style>body{font-family:'Noto Serif', serif;}</style>
 <script defer src="/js/site-menu.js"></script>
+<script defer src="/js/share-card.js"></script>
 <script defer src="/js/tools.js"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Aktuelle Dasha-Phase berechnen","url":"https://www.libertas-jyotish.com/de/tools/dasha","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"de","description":"Berechnen Sie anhand von Geburtsdatum, -zeit und -ort kostenlos, in welcher planetaren Hauptphase (Mahadasha) des 120-jährigen Vimshottari-Dasha-Systems Sie sich befinden, inklusive Übergang zur nächsten Phase.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Startseite","item":"https://www.libertas-jyotish.com/de"},{"@type":"ListItem","position":2,"name":"Aktuelle Dasha-Phase berechnen","item":"https://www.libertas-jyotish.com/de/tools/dasha"}]}]}</script>
 </head>
@@ -106,6 +107,7 @@ window.LJ_I18N = {
   padaValue: '{pada}. Pada',
   period: '{start} bis {end}',
   guideLink: 'Erklärung zu {name} lesen',
+  share: { label: 'Vedische Astrologie · Mein Geburts-Nakshatra', index: 'Nr. {n} der 27 Nakshatras', lord: 'Herrscher: {lord}', cta: 'Welches der 27 ist Ihres? Kostenlos herausfinden', button: 'Meine Nakshatra-Karte teilen', text: 'Mein Geburts-Nakshatra ist {nak}. Welches ist Ihres?', error: 'Die Karte konnte nicht erstellt werden. Bitte versuchen Sie es erneut.', making: 'Karte wird erstellt…' },
   submit: 'Kostenlos berechnen',
   submitting: 'Wird berechnet…',
   errors: {
@@ -144,6 +146,7 @@ window.LJ_I18N = {
 <dl class="tool-values" id="tool-values"></dl>
 <p class="tool-geo" id="tool-geo" hidden></p>
 <p class="tool-guide" id="tool-guide" hidden></p>
+<div id="tool-share" hidden></div>
 </section>
 
 <section>
