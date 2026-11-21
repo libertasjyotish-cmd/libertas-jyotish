@@ -85,7 +85,7 @@ function makeBuilder(LANG) {
     return `${HUB_URL}/${article.slug}`;
   }
 
-  function head({ title, description, canonical, ogType, slug, extra }) {
+  function head({ title, description, canonical, ogType, slug, extra, image = OG_IMAGE }) {
     return `<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(title)}</title>
@@ -98,11 +98,11 @@ ${alternates(slug)}
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${canonical}">
-<meta property="og:image" content="${OG_IMAGE}">
+<meta property="og:image" content="${image}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
-<meta name="twitter:image" content="${OG_IMAGE}">
+<meta name="twitter:image" content="${image}">
 <link rel="icon" type="image/png" href="/img/libertas-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -282,6 +282,9 @@ ${footer()}
     const slug = pageSlug(col, item);
     const canonical = `${HUB_URL}/${slug}`;
     const parent = data.articles.find((a) => a.slug === col.parent);
+    // 宿ごとのリンクプレビュー画像（scripts/build-og-cards.mjs）があればそれを使う
+    const ogPath = `img/og/${col.slugPrefix}/${LANG}/${item.slug}.jpg`;
+    const image = existsSync(join(ROOT, ogPath)) ? `${SITE}/${ogPath}` : OG_IMAGE;
     const crumbs = [
       { name: ui.crumbHome, url: HOME_URL },
       { name: ui.crumbHub, url: HUB_URL },
@@ -295,7 +298,7 @@ ${footer()}
       description: item.description,
       inLanguage: LANG,
       mainEntityOfPage: canonical,
-      image: OG_IMAGE,
+      image,
       isPartOf: { '@type': 'CollectionPage', name: parent.title, url: `${HUB_URL}/${parent.slug}` },
       author: { '@type': 'Organization', name: SITE_NAME, url: SITE },
       publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE, logo: { '@type': 'ImageObject', url: `${SITE}/img/libertas-logo.png` } }
@@ -311,7 +314,7 @@ ${footer()}
     return `<!DOCTYPE html>
 <html lang="${LANG}" dir="${dir}">
 <head>
-${head({ title: item.title, description: item.description, canonical, ogType: 'article', slug, extra: `${ld}\n${breadcrumbLd(crumbs)}${faqLd(item)}` })}
+${head({ title: item.title, description: item.description, canonical, ogType: 'article', slug, image, extra: `${ld}\n${breadcrumbLd(crumbs)}${faqLd(item)}` })}
 </head>
 <body>
 ${header()}

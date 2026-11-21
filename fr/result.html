@@ -398,7 +398,7 @@ clearTimeout(clientTimeout);
 });
 
 // 生まれ宿のシェア用カード（js/share-card.js）
-const SHARE_STRINGS = { label: 'Astrologie védique · Mon nakshatra de naissance', index: 'N° {n} des 27 nakshatras', lord: 'Maître : {lord}', cta: 'Lequel des 27 est le vôtre ? Découvrez-le gratuitement', button: 'Partager ma carte nakshatra', text: 'Mon nakshatra de naissance est {nak}. Et le vôtre ?', error: 'Impossible de créer la carte. Veuillez réessayer.', making: 'Création de votre carte…' };
+const SHARE_STRINGS = { label: 'Astrologie védique · Mon nakshatra de naissance', index: 'N° {n} des 27 nakshatras', lord: 'Maître : {lord}', cta: 'Lequel des 27 est le vôtre ? Découvrez-le gratuitement', button: 'Partager ma carte nakshatra', text: 'Mon nakshatra de naissance est {nak}. Et le vôtre ?', error: 'Impossible de créer la carte. Veuillez réessayer.', making: 'Création de votre carte…', image: 'Enregistrer / partager l’image (Instagram, TikTok)', tags: '#AstrologieVédique #Nakshatra', choose: 'Choisissez où partager' };
 function fillShareCards() {
 document.querySelectorAll('[data-share-card]:not([data-filled])').forEach((el) => {
 el.dataset.filled = '1';

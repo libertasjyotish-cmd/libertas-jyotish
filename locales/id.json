@@ -836,7 +836,10 @@
       "button": "Bagikan kartu Nakshatra-ku",
       "text": "Nakshatra kelahiranku adalah {nak}. Bagaimana denganmu?",
       "error": "Kartu tidak dapat dibuat. Silakan coba lagi.",
-      "making": "Membuat kartu…"
+      "making": "Membuat kartu…",
+      "image": "Simpan / bagikan gambar (Instagram, TikTok)",
+      "tags": "#AstrologiVeda #Nakshatra",
+      "choose": "Pilih tempat berbagi"
     }
   }
 }

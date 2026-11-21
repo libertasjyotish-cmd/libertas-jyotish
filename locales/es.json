@@ -836,7 +836,10 @@
       "button": "Compartir mi tarjeta de nakshatra",
       "text": "Mi nakshatra de nacimiento es {nak}. ¿Cuál es el tuyo?",
       "error": "No se pudo crear la tarjeta. Inténtalo de nuevo.",
-      "making": "Creando tu tarjeta…"
+      "making": "Creando tu tarjeta…",
+      "image": "Guardar / compartir imagen (Instagram, TikTok)",
+      "tags": "#AstrologíaVédica #Nakshatra",
+      "choose": "Elige dónde compartir"
     }
   }
 }

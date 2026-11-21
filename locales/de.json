@@ -836,7 +836,10 @@
       "button": "Meine Nakshatra-Karte teilen",
       "text": "Mein Geburts-Nakshatra ist {nak}. Welches ist Ihres?",
       "error": "Die Karte konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
-      "making": "Karte wird erstellt…"
+      "making": "Karte wird erstellt…",
+      "image": "Bild speichern / teilen (Instagram, TikTok)",
+      "tags": "#VedischeAstrologie #Nakshatra",
+      "choose": "Wähle, wo du teilen möchtest"
     }
   }
 }

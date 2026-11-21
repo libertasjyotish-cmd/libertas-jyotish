@@ -100,6 +100,11 @@ window.LJShareCard = (function () {
     return { canvas: c, item };
   }
 
+  const SITE = 'https://www.libertas-jyotish.com';
+  const shareUrl = (opts, source) => `${SITE}/${opts.lang}/guide/nakshatra-${opts.slug}?utm_source=${source}&utm_medium=social`;
+  const track = (opts, method) => { if (window.LJTrack) window.LJTrack('share_card', { nakshatra: opts.slug, method, content_language: opts.lang }); };
+
+  // 画像を渡せるのはスマホの共有画面だけ（Instagram・TikTok はここから）。渡せないブラウザでは保存する
   async function share(opts, btn) {
     const label = btn ? btn.textContent : '';
     if (btn) { btn.disabled = true; if (opts.strings.making) btn.textContent = opts.strings.making; btn.style.opacity = '.7'; }
@@ -107,12 +112,12 @@ window.LJShareCard = (function () {
       const { canvas, item } = await render(opts);
       const blob = await new Promise((ok) => canvas.toBlob(ok, 'image/png'));
       const file = new File([blob], `nakshatra-${opts.slug}.png`, { type: 'image/png' });
-      const url = `https://www.libertas-jyotish.com/${opts.lang}/guide/nakshatra-${opts.slug}?utm_source=share_card&utm_medium=social`;
+      const url = shareUrl(opts, 'share_card');
       const message = opts.strings.text.replace('{nak}', item.name);
       let method = 'download';
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         method = 'share';
-        try { await navigator.share({ files: [file], text: `${message} ${url}` }); } catch (e) { if (e && e.name === 'AbortError') method = 'cancel'; else throw e; }
+        try { await navigator.share({ files: [file], text: `${message} ${opts.strings.tags || ''} ${url}` }); } catch (e) { if (e && e.name === 'AbortError') method = 'cancel'; else throw e; }
       } else {
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
@@ -120,7 +125,7 @@ window.LJShareCard = (function () {
         document.body.appendChild(a); a.click(); a.remove();
         setTimeout(() => URL.revokeObjectURL(a.href), 4000);
       }
-      if (window.LJTrack) window.LJTrack('share_card', { nakshatra: opts.slug, method, content_language: opts.lang });
+      track(opts, method);
     } catch (e) {
       if (btn && opts.strings.error) alert(opts.strings.error);
     } finally {
@@ -128,16 +133,73 @@ window.LJShareCard = (function () {
     }
   }
 
-  // el: ボタンを入れる要素。data-share-slug / data-share-lang と文言を渡す
+  // 文とリンクを入れた投稿画面。画像はリンク先（宿の解説ページ）のプレビュー画像として出る
+  function intent(target, opts, name) {
+    const url = shareUrl(opts, `share_${target}`);
+    const text = `${opts.strings.text.replace('{nak}', name)} ${opts.strings.tags || ''}`.trim();
+    const q = encodeURIComponent;
+    return {
+      x: `https://x.com/intent/post?text=${q(text)}&url=${q(url)}`,
+      threads: `https://www.threads.net/intent/post?text=${q(`${text} ${url}`)}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${q(url)}`,
+      line: `https://social-plugins.line.me/lineit/share?url=${q(url)}&text=${q(text)}`
+    }[target];
+  }
+
+  const PILL = 'display:inline-block; padding:8px 16px; border-radius:999px; border:1px solid rgba(139,107,27,.5); background:#fffaf0; color:#5a4020; font:inherit; font-size:.9em; font-weight:700; text-decoration:none; cursor:pointer;';
+  const TARGETS = [['x', 'X'], ['threads', 'Threads'], ['facebook', 'Facebook'], ['line', 'LINE']];
+
+  // el: ボタンを入れる要素。押すとシェア先（X・Threads・Facebook・LINE・画像）を開く
   function attach(el, opts) {
     if (!el || !/^[a-z-]+$/.test(opts.slug || '') || !/^[a-z]{2}$/.test(opts.lang || '')) return;
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'share-card-btn';
     btn.textContent = opts.strings.button;
+    btn.setAttribute('aria-expanded', 'false');
     btn.style.cssText = 'display:block; margin:10px auto 14px; padding:10px 22px; border-radius:999px; border:1px solid rgba(139,107,27,.6); background:linear-gradient(#fffaf0,#f1e2bf); color:#5a4020; font:inherit; font-weight:700; cursor:pointer; box-shadow:0 2px 6px rgba(90,52,18,.18);';
-    btn.addEventListener('click', () => share(opts, btn));
-    el.replaceChildren(btn);
+
+    const panel = document.createElement('div');
+    panel.className = 'share-card-targets';
+    panel.hidden = true;
+    panel.style.cssText = 'margin:-4px auto 16px; text-align:center;';
+    if (opts.strings.choose) {
+      const p = document.createElement('p');
+      p.textContent = opts.strings.choose;
+      p.style.cssText = 'margin:0 0 8px; font-size:.85em; color:#6b5b4a;';
+      panel.appendChild(p);
+    }
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex; flex-wrap:wrap; justify-content:center; gap:8px;';
+    panel.appendChild(row);
+
+    // リンクは押した瞬間に開く必要があるので（ポップアップ扱いを避ける）、宿の名前を先に読み込んで href を作っておく
+    loadData(opts.lang).then((data) => {
+      const item = data[opts.slug];
+      if (!item) return;
+      TARGETS.forEach(([target, name]) => {
+        const a = document.createElement('a');
+        a.href = intent(target, opts, item.name);
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = name;
+        a.style.cssText = PILL;
+        a.addEventListener('click', () => track(opts, target));
+        row.appendChild(a);
+      });
+      const img = document.createElement('button');
+      img.type = 'button';
+      img.textContent = opts.strings.image || opts.strings.button;
+      img.style.cssText = PILL;
+      img.addEventListener('click', () => share(opts, img));
+      row.appendChild(img);
+    }).catch(() => {});
+
+    btn.addEventListener('click', () => {
+      panel.hidden = !panel.hidden;
+      btn.setAttribute('aria-expanded', String(!panel.hidden));
+    });
+    el.replaceChildren(btn, panel);
     el.hidden = false;
   }
 
