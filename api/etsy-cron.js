@@ -7,6 +7,7 @@ const { runCycle } = require('./_etsy-fulfill');
 const { parsePersonalization } = require('./_etsy-parse');
 const ledger = require('./_etsy-ledger');
 const { retryPending } = require('./_play-link');
+const { externalizePdfReports } = require('./_sheets');
 
 const MAX_DURATION_S = 300;
 const SAFETY_MS = 8000;
@@ -46,8 +47,14 @@ module.exports = async function handler(req, res) {
     // Play 購入の紐づけ再試行（Etsy 処理とは独立。失敗しても Etsy 側は止めない）
     const play = await retryPending({ deadline: Date.now() + 30000 }).catch((e) => ({ error: e.message }));
     if (play.linked || play.dropped || play.error) console.log('play pending retry', play);
+    // 既存の長文セルを少しずつ Blob に移す（移し終われば読み取りだけ）。失敗しても注文処理は止めない
+    const slimmed = {
+      orders: await ledger.externalizeLongCells().catch((e) => `error: ${e.message}`),
+      reports: await externalizePdfReports().catch((e) => `error: ${e.message}`)
+    };
+    if (slimmed.orders || slimmed.reports) console.log('sheet cells moved to blob', slimmed);
     const summary = await runCycle({ deadline });
-    res.status(200).json({ ok: true, ...summary, play });
+    res.status(200).json({ ok: true, ...summary, play, slimmed });
   } catch (err) {
     console.error('etsy-cron failed:', err.message);
     res.status(500).json({ ok: false, error: String(err.message || err).slice(0, 300) });

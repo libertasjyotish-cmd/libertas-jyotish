@@ -2,6 +2,7 @@
 // 注文は receipt_id で 1 行。ポーリングの再実行で二重生成・二重送信しないための状態を持つ。
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library');
+const sheetBlob = require('./_sheet-blob');
 
 const STATE_TAB = process.env.GOOGLE_SHEETS_ETSY_STATE_TAB || 'Etsy設定';
 const ORDER_TAB = process.env.GOOGLE_SHEETS_ETSY_ORDER_TAB || 'Etsy注文';
@@ -17,6 +18,8 @@ const ORDER_HEADERS = [
   'hand', 'photo_right', 'photo_left', 'palm', 'upload_mailed_at', 'photos_deleted_at', 'astro_cache',
   ...REPORT_FIELDS
 ];
+// 長文になる列。シートには Blob の参照だけを置き、処理直前に hydrateOrder で本文に戻す。
+const LONG_FIELDS = [...REPORT_FIELDS, 'palm'];
 
 // status の遷移: new → generating → delivered / needs_info / error
 // サイト直販（receipt_id が web- で始まる行）は awaiting_payment で登録し、決済確定で new に進む。
@@ -134,21 +137,58 @@ function rowToOrder(row) {
   return out;
 }
 
+async function toCellValues(id, fields) {
+  const out = {};
+  for (const [key, value] of Object.entries(fields)) {
+    const text = value == null ? '' : String(value);
+    out[key] = LONG_FIELDS.includes(key) ? await sheetBlob.externalize(text, `sheets/etsy/${id}`) : text;
+  }
+  return out;
+}
+
 async function upsertOrder(receiptId, fields) {
   const { sheet, rows } = await loadOrders();
   const id = String(receiptId);
   const nowStr = new Date().toISOString();
+  const values = await toCellValues(id, fields);
   const row = rows.find((r) => String(r.get('receipt_id')) === id);
   if (row) {
-    for (const [key, value] of Object.entries(fields)) row.set(key, value == null ? '' : String(value));
+    const before = Object.keys(values).map((key) => row.get(key) || '');
+    for (const [key, value] of Object.entries(values)) row.set(key, value);
     row.set('updated_at', nowStr);
     await row.save();
+    await sheetBlob.deleteReplaced(before, Object.values(values));
     return rowToOrder(row);
   }
-  const payload = { receipt_id: id, created_at: nowStr, updated_at: nowStr, attempts: '0' };
-  for (const [key, value] of Object.entries(fields)) payload[key] = value == null ? '' : String(value);
+  const payload = { receipt_id: id, created_at: nowStr, updated_at: nowStr, attempts: '0', ...values };
   const added = await sheet.addRow(payload);
   return rowToOrder(added);
+}
+
+// Blob 参照になっている長文列を本文に戻す（章の生成・PDF 化の直前に 1 件だけ呼ぶ）
+async function hydrateOrder(order) {
+  const out = { ...order };
+  await Promise.all(LONG_FIELDS.map(async (field) => { out[field] = await sheetBlob.resolve(order[field]); }));
+  return out;
+}
+
+// 既存行の長文セルを Blob に移す。冪等で、1 回あたり maxRows 行まで（Cron ごとに少しずつ進む）。
+async function externalizeLongCells({ maxRows = 20 } = {}) {
+  const { rows } = await loadOrders();
+  let moved = 0;
+  for (const row of rows) {
+    if (moved >= maxRows) break;
+    const id = String(row.get('receipt_id') || '');
+    const long = LONG_FIELDS.filter((f) => {
+      const v = row.get(f) || '';
+      return v.length > sheetBlob.MAX_INLINE_CHARS && !sheetBlob.isRef(v);
+    });
+    if (!id || !long.length) continue;
+    for (const field of long) row.set(field, await sheetBlob.externalize(row.get(field), `sheets/etsy/${id}`));
+    await row.save();
+    moved += 1;
+  }
+  return moved;
 }
 
 async function findOrder(receiptId) {
@@ -185,4 +225,4 @@ async function refundWebOrder(orderId) {
   return 'refunded';
 }
 
-module.exports = { STATUS, WEB_PREFIX, isWebOrder, confirmWebOrder, refundWebOrder, ORDER_HEADERS, REPORT_FIELDS, getState, setState, upsertOrder, findOrder, listOrders };
+module.exports = { STATUS, WEB_PREFIX, isWebOrder, confirmWebOrder, refundWebOrder, ORDER_HEADERS, REPORT_FIELDS, getState, setState, upsertOrder, findOrder, listOrders, hydrateOrder, externalizeLongCells };
