@@ -37,6 +37,7 @@ jobs:
       - run: npm run check:guide
       - run: npm run check:faq
       - run: npm run check:prompt
+      - run: npm run check:reading-facts
       - run: npm ci --ignore-scripts
       - run: npm run check:newsletter
       - run: npm run check:sheet-blob

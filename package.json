@@ -20,7 +20,8 @@
     "indexnow": "node scripts/indexnow-submit.mjs",
     "check:newsletter": "node scripts/check-newsletter.mjs",
     "check:prompt": "node scripts/check-reading-prompt.mjs",
-    "check:sheet-blob": "node scripts/check-sheet-blob.js"
+    "check:sheet-blob": "node scripts/check-sheet-blob.js",
+    "check:reading-facts": "node scripts/check-reading-facts.js"
   },
   "dependencies": {
     "@sparticuz/chromium": "^149.0.0",
