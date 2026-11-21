@@ -467,8 +467,8 @@ module.exports = async function handler(req, res) {
                 // 有料は出力量が多く1回の生成が長い。基本鑑定とプレミアム詳細を別プロンプトに割って
                 // 同時に生成することで、実行時間を最長のセクション1本分に抑える。
                 const [base, premium] = await Promise.all([
-                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'base', previous, todayLocal), 40000, startedAt + FUNCTION_BUDGET_MS),
-                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'premium', previous, todayLocal), 40000, startedAt + FUNCTION_BUDGET_MS)
+                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'base', previous, todayLocal, finalDob), 40000, startedAt + FUNCTION_BUDGET_MS),
+                  generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, true, finalLang, 'premium', previous, todayLocal, finalDob), 40000, startedAt + FUNCTION_BUDGET_MS)
                 ]);
 
                 const baseViolations = base.json ? findViolations(JSON.stringify(base.json), finalLang, { allowDates: true }) : [];
@@ -487,7 +487,7 @@ module.exports = async function handler(req, res) {
                   fallbackReason = base.reason || 'gemini_error';
                 }
               } else {
-                const result = await generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, false, finalLang, 'all', previous, todayLocal), 45000, startedAt + FUNCTION_BUDGET_MS);
+                const result = await generateWithGemini(geminiApiKey, geminiModels, buildAstrologyPrompt(prokeralaData, transitData, false, finalLang, 'all', previous, todayLocal, finalDob), 45000, startedAt + FUNCTION_BUDGET_MS);
                 const violations = result.json ? findViolations(JSON.stringify(result.json), finalLang, { allowDates: true }) : [];
                 if (violations.length) {
                   console.warn('Daily reading contains banned expressions:', violations.join(', '));
@@ -848,6 +848,42 @@ const TONE = {
   caution: '負荷・注意（気をつける場面を言い当て、必ず救いを添える）'
 };
 
+// ヴィムショッタリー・ダシャーを出生の月の黄経から計算する（Prokerala の鑑定書と同じ 365.25 日年）。
+// 毎日の鑑定の「いつ明けるか」をこの日付に固定し、Gemini に周期名や日付を作らせない。
+const DASHA_ORDER = [['Ketu', 7], ['Venus', 20], ['Sun', 6], ['Moon', 10], ['Mars', 7], ['Rahu', 18], ['Jupiter', 16], ['Saturn', 19], ['Mercury', 17]];
+const DASHA_JA = { Ketu: 'ケートゥ', Venus: '金星', Sun: '太陽', Moon: '月', Mars: '火星', Rahu: 'ラーフ', Jupiter: '木星', Saturn: '土星', Mercury: '水星' };
+const DASHA_YEAR_MS = 365.25 * 86400000;
+function vimshottariAt(moonLongitude, birthDate, atMs) {
+  const birthMs = Date.parse(`${birthDate}T00:00:00Z`);
+  if (typeof moonLongitude !== 'number' || Number.isNaN(birthMs)) return null;
+  const span = 360 / 27;
+  const lon = ((moonLongitude % 360) + 360) % 360;
+  const first = Math.floor(lon / span) % 9;
+  const elapsed = (lon % span) / span;
+  let start = birthMs - elapsed * DASHA_ORDER[first][1] * DASHA_YEAR_MS;
+  for (let i = 0; i < 18; i++) {
+    const [lord, years] = DASHA_ORDER[(first + i) % 9];
+    const end = start + years * DASHA_YEAR_MS;
+    if (atMs < end) {
+      const mi = (first + i) % 9;
+      let aStart = start;
+      for (let j = 0; j < 9; j++) {
+        const [aLord, aYears] = DASHA_ORDER[(mi + j) % 9];
+        const aEnd = aStart + (years * aYears / 120) * DASHA_YEAR_MS;
+        if (atMs < aEnd) {
+          const next = j < 8 ? DASHA_ORDER[(mi + j + 1) % 9][0] : DASHA_ORDER[(mi + 1) % 9][0];
+          return { maha: { lord, start, end }, antar: { lord: aLord, start: aStart, end: aEnd }, nextAntar: next };
+        }
+        aStart = aEnd;
+      }
+    }
+    start = end;
+  }
+  return null;
+}
+// 出生時刻の扱いで日がずれても鑑定書の日付と食い違わないよう、月までで書く。
+const ymd = (ms) => { const d = new Date(ms); return `${d.getUTCFullYear()}年${d.getUTCMonth() + 1}月`; };
+
 function themeDomainFor(prokeralaData, transitData) {
   if (!prokeralaData || !transitData) return null;
   const d = dailyFactors(extractPlanets(prokeralaData), extractPlanets(transitData));
@@ -909,7 +945,7 @@ function trimForFree(result) {
 }
 
 // section: 'all'（既定）/ 'base'（プレミアム詳細以外）/ 'premium'（プレミアム詳細のみ）
-function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section = 'all', previous = null, today = null) {
+function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section = 'all', previous = null, today = null, birthDate = null) {
   const planetList = extractPlanets(prokeralaData);
   const ascRaw = prokeralaData.data?.ascendant || planetList.find(p => p.name === 'Ascendant') || {};
   const outputLanguage = OUTPUT_LANGUAGE[lang] || OUTPUT_LANGUAGE.ja;
@@ -938,6 +974,14 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
   const facet = todayFacet(todayDomain, todayJst);
   const tone = week && week[0] ? TONE[week[0].kind] : null;
   const ingresses = nextIngresses(planetList, transitPlanets, todayJst);
+  const dasha = birthDate ? vimshottariAt(moonData.longitude, birthDate, Date.parse(`${todayJst}T12:00:00Z`)) : null;
+  const dashaBlock = dasha ? `
+  【ダシャー（コードで確定済み。周期の名前と日付はここだけを使い、別の周期名・日付を作らない）】
+    - 大周期: ${DASHA_JA[dasha.maha.lord]}期 ${ymd(dasha.maha.start)}〜${ymd(dasha.maha.end)}
+    - 小周期: ${DASHA_JA[dasha.antar.lord]} ${ymd(dasha.antar.start)}〜${ymd(dasha.antar.end)}（次は${DASHA_JA[dasha.nextAntar]}の小周期）
+    - 長く続いている状況が「いつ明けるか」を書くときは、小周期の終わり ${ymd(dasha.antar.end)} を根拠にし、毎回この日付で書く。今日・数日・数週間で長年の状況が明けるとは書かない。
+    - dashaTitle・dashaDesc・dasha_summary はこの大周期・小周期の支配星の性質で書く。` : `
+  【ダシャー】データなし。周期の名前・期間・切り替わり日は書かない。dashaTitle・dashaDesc・dasha_summary は出生図の配置だけで書く。`;
   const ingressBlock = ingresses.length
     ? ingresses.map(x => `    - ${x.date}頃: ${x.name} が ${signFor(x.nextSign, lang)}へ${x.house ? `（ラグナから第${x.house}ハウス: ${HOUSE_DOMAIN[x.house]}）` : ''}`).join('\n')
     : '    - なし（この場合は時期を書かず、現在のダシャー期の性質だけを根拠にする）';
@@ -960,6 +1004,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
 
   【次の節目（好転の時期の根拠はここからだけ選ぶ。月の移動は使わない）】
 ${ingressBlock}
+${dashaBlock}
   ${weekBlock(week, lang)}  ` : (previous ? `
   【前回の鑑定】${previous.date}:「${previous.head}」。今日は同じ状況描写・同じ行動を繰り返さないこと。
   ` : '');
