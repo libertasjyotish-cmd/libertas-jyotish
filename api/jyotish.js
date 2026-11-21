@@ -811,18 +811,42 @@ function weekFactors(natal, transit, todayStr) {
   return days;
 }
 
-// 月が今のハウスに入った日と抜ける日（M/D）。滞在中は毎日同じ日付になるので、鑑定文の「この流れは○日まで」が日々ぶれない。
-function moonStay(moonMove, todayStr) {
-  if (!moonMove || !todayStr) return null;
+// 太陽・金星・火星が次の星座へ移る日（平均速度で外挿、45日以内・順行のみ）。好転の時期の根拠を月の2〜3日周期から外す。
+const INGRESS_SPEED = { Sun: 1.0, Venus: 1.2, Mars: 0.6 };
+function nextIngresses(natal, transit, todayStr) {
+  const nAsc = natal.find(p => p.name === 'Ascendant') || {};
   const base = new Date(`${todayStr}T12:00:00Z`);
-  if (Number.isNaN(base.getTime())) return null;
-  const md = (offsetDays) => { const d = new Date(base.getTime() + offsetDays * 86400000); return `${d.getUTCMonth() + 1}/${d.getUTCDate()}`; };
-  const start = md(-Math.floor(moonMove.elapsedDays));
-  const end = md(Math.floor(moonMove.remainingDays));
-  const total = Math.floor(moonMove.elapsedDays) + Math.floor(moonMove.remainingDays) + 1;
-  const dayNo = Math.floor(moonMove.elapsedDays) + 1;
-  return { start, end, dayNo, total, lastDay: moonMove.remainingDays < 1 };
+  if (!todayStr || Number.isNaN(base.getTime())) return [];
+  return transit
+    .filter(p => INGRESS_SPEED[p.name] && p.sign && typeof p.degree === 'number' && !p.is_retrograde)
+    .map(p => {
+      const days = Math.max(1, Math.round((30 - p.degree) / INGRESS_SPEED[p.name]));
+      const d = new Date(base.getTime() + days * 86400000);
+      const nextSign = SIGN_ORDER_JA[(signIndex(p.sign) + 1) % 12];
+      const house = nAsc.sign ? houseFrom(nAsc.sign, nextSign) : null;
+      return { name: p.name, days, date: `${d.getUTCMonth() + 1}/${d.getUTCDate()}`, nextSign, house };
+    })
+    .filter(x => x.days <= 45)
+    .sort((a, b) => a.days - b.days);
 }
+
+// 今日の領域のうち、どの側面を場面にするかを日付で回す（同じハウスに月が留まる2〜3日でも毎日別の側面になる）。
+function dayOrdinal(todayStr) {
+  const t = Date.parse(`${todayStr}T00:00:00Z`);
+  return Number.isNaN(t) ? 0 : Math.floor(t / 86400000);
+}
+function todayFacet(domain, todayStr) {
+  if (!domain) return null;
+  const facets = domain.split('・');
+  return facets[dayOrdinal(todayStr) % facets.length];
+}
+
+// チャンドラ・バラで今日の言い当ての種類を決める。毎日「負荷」から入らないようにする。
+const TONE = {
+  good: '好機・喜び（今日はうまくいきやすいこと、手応えを感じやすい場面を言い当てる。負荷や重圧から書き始めない）',
+  neutral: '迷い・選択（どちらを選ぶか揺れている場面を言い当てる）',
+  caution: '負荷・注意（気をつける場面を言い当て、必ず救いを添える）'
+};
 
 function themeDomainFor(prokeralaData, transitData) {
   if (!prokeralaData || !transitData) return null;
@@ -847,7 +871,7 @@ const DETAILED_HOROSCOPE_SPEC = JSON.stringify(
   '本日のアスペクトによる日次＆週次詳細運勢レポート（600文字以上）。'
   + '「【いま、あなたに起きていること】」「【なぜ今そう感じるのか】」「【あなたの選択は】」「【この先に待っているもの】」「【今日・今週の一手】」「【注意日と追い風日】」の6つの見出しで構成し、'
   + 'それぞれの見出しの直前に改行（\n）を入れ、見出しの後も改行してから本文を書くこと。'
-  + '【この先に待っているもの】は救いの段落。今日の領域で言い当てた状況が「何のための時期か」を、天体の移動時期（トランジットの月・水星・太陽が次の星座やハウスへ移る日、現在のダシャー期の後半に開く領域など）を根拠に、いつ頃からどう好転しやすいか・どう活かせるかまで具体的に書く。'
+  + '【この先に待っているもの】は救いの段落。今日の領域で言い当てた状況が「何のための時期か」を、【次の節目】に挙げた天体の移動日や、現在のダシャー期の後半に開く領域を根拠に（月の2〜3日ごとの移動は根拠にしない）、いつ頃からどう好転しやすいか・どう活かせるかまで具体的に書く。'
   + '【今日・今週の一手】は行動を3つ、各行の先頭に「・」を付け、曜日または日付・相手・場面まで具体的に書く。最後に「・今日の守り：〈名前〉」で始まる2〜3文のレメディを添える。〈名前〉は今日の圧を封じる動作に、支配星や月のナクシャトラの神格の神話から取った言葉を重ねた短い題（例:「火星の鞘を収める」「ヴァルナの水門を半分だけ開ける」）。本文は (1)神話の一場面を比喩として1句（例:「戦神カールッティケーヤが矛を置いた日のように」）、(2)今日の配置がこの人に起こす圧、(3)それを封じる今日限りの具体的なふるまい（時間帯・相手・場面・言い方まで）。神話はヒンドゥー（ヴェーダ）神話のみ（出力言語が何であってもギリシャ神話等は使わない）、比喩に限り、根拠は必ず実在の配置に置く。読者のその日の判断に直接効くものだけを書く。'
   + '【注意日と追い風日】は今週の日付を挙げて、それぞれ何を避け何を進めるかを1文で書く。追い風日は注意日と同数以上にし、注意日で締めない。'
   + '最後に、希望を確認する一文（この時期を越えた先の明るい見立て）と、読者への問いかけを1文添えて終える。'
@@ -856,11 +880,11 @@ const DETAILED_HOROSCOPE_SPEC = JSON.stringify(
 // 「状況の言い当て → 理由 → 肯定 → 行動」の型。抽象語で終わらせず、読者が自分の今と照らし合わせられる文にする。
 const READING_STYLE = `
   【文章の型（無料・有料とも厳守）】
-  - 星の説明から始めず、読者の「いまの状況・感情」から始める。ハウス・ダシャー・トランジットが示す生活領域（仕事／人間関係／家庭／お金／健康習慣／学び）のうち、今日の月のハウス・ナクシャトラ・ティティが示す領域から今日のテーマを1つ選び（週で固定しない）、「〜な場面が続いていませんか」「〜と感じやすい時期です」のように、読者が自分の現状と照らし合わせられる具体的な描写で言い当てる。
+  - 星の説明から始めず、読者の「いまの状況・感情」から始める。今日のテーマは【日替わりの規則】で指定した領域と側面から選び（週で固定しない）、「〜な場面が続いていませんか」「〜と感じやすい時期です」のように、読者が自分の現状と照らし合わせられる具体的な描写で言い当てる。
   - 次に、それが起きる理由を天体の配置で1〜2文だけ添える（今日の月のハウスと重なる出生天体を根拠に書く）。理由は納得のために添えるもので、主役にしない。
   - 読者が最近下した判断・我慢・迷いに触れ、それを肯定するか、別の角度から意味づけする（「距離を置いた判断は流れに沿っています」など）。
   - 最後は必ず行動で終える。「いつ（曜日・時間帯）」「誰と／どの場面で」「何をする」まで具体的に書く。
-  - 【救いを必ず混ぜる】言い当てが的確なほど読者は苦しくなる。負荷・注意点を1つ書いたら、必ず同じ段落か直後に「それが何のための準備か」「いつ頃どう好転しやすいか」を、天体の移動時期やダシャー期の性質を根拠にして添える。根拠のない気休めは書かないが、注意点だけで終わる段落・文章は禁止。全体の印象は「大変さを理解された上で、希望が見えた」で終える。
+  - 【救いを必ず混ぜる】言い当てが的確なほど読者は苦しくなる。負荷・注意点を1つ書いたら、必ず同じ段落か直後に「それが何のための準備か」「いつ頃どう好転しやすいか」を、【次の節目】の天体の移動日やダシャー期の性質を根拠にして添える（月の2〜3日ごとの移動を好転の時期にしない）。根拠のない気休めは書かないが、注意点だけで終わる段落・文章は禁止。全体の印象は「大変さを理解された上で、希望が見えた」で終える。
   - 【レメディ・行動の禁止事項】読者は自分の生活に責任を持つ大人である。ハーブティー・白湯・アロマ・入浴・ストレッチ・散歩・睡眠・日記・自分を褒める・感謝する・深呼吸 などの日常のセルフケア、「流れに身を任せる」「静かに観照する」などの具体性のない精神論、マントラ詠唱・宝石やパワーストーンの購入・寺院への祈祷や寄付 の推奨は、いかなる言い換えでも書かない。レメディと行動は、今日の配置が招く自滅パターンを先回りして封じる「今日限りの具体的なふるまい」（何時までに・誰に・どの場面で・どうする）として書き、支配星やナクシャトラの神格の神話を比喩として1句重ねて、読み物としての手応えを持たせる。
   - 「調和」「バランス」「整える」「充実」「エネルギー」「流れに乗る」などの抽象語は最小限にとどめ、使う場合は必ず具体例を続ける。詩的な比喩や決まり文句で1文を終わらせない。
   - 断定は「傾向」の範囲で行うが、遠回しになりすぎず、読者に語りかける率直な文体で書く。
@@ -911,23 +935,31 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
   const week = weekFactors(planetList, transitPlanets, todayJst);
   const todayDomain = daily && daily.houseFromLagna ? HOUSE_DOMAIN[daily.houseFromLagna] : null;
   const sameDomain = !!(previous && previous.domain && todayDomain && previous.domain === todayDomain);
-  const stay = daily ? moonStay(daily.moonMove, todayJst) : null;
+  const facet = todayFacet(todayDomain, todayJst);
+  const tone = week && week[0] ? TONE[week[0].kind] : null;
+  const ingresses = nextIngresses(planetList, transitPlanets, todayJst);
+  const ingressBlock = ingresses.length
+    ? ingresses.map(x => `    - ${x.date}頃: ${x.name} が ${signFor(x.nextSign, lang)}へ${x.house ? `（ラグナから第${x.house}ハウス: ${HOUSE_DOMAIN[x.house]}）` : ''}`).join('\n')
+    : '    - なし（この場合は時期を書かず、現在のダシャー期の性質だけを根拠にする）';
 
   const dailyBlock = daily ? `
   【本日 ${todayJst} 固有の要素（鑑定の軸。必ずここから今日の悩みテーマを選ぶ）】
   - トランジットの月: ${signFor(transitMoon.sign, lang)}${daily.houseFromLagna ? ` ＝ ラグナから第${daily.houseFromLagna}ハウス` : ''}${daily.houseFromMoon ? `、出生の月から第${daily.houseFromMoon}ハウス（チャンドラ・ラグナ）` : ''}
   - 今日の月のナクシャトラ: ${nakshatraFor(transitMoon.nakshatra, lang) || '不明'}
   - 月が重なる出生天体: ${daily.conjunct.length ? daily.conjunct.join('・') : 'なし'} ／ 月と対向する出生天体: ${daily.opposite.length ? daily.opposite.join('・') : 'なし'}
-  - 曜日・曜日の支配星には言及しない（相談者の地域により曜日が異なるため）${daily.tithi ? `\n  - ティティ: ${daily.tithi}` : ''}${stay ? `\n  - 今の領域の流れ: ${stay.start}〜${stay.end}（${stay.total}日間の ${stay.dayNo}日目${stay.lastDay ? '・最終日' : ''}）。次は ${stay.end} を過ぎると月が ${signFor(daily.moonMove.nextSign, lang)}${daily.moonMove.nextHouseFromLagna ? `（第${daily.moonMove.nextHouseFromLagna}ハウス: ${HOUSE_DOMAIN[daily.moonMove.nextHouseFromLagna]}）` : ''} へ移る。\n  - 流れの期間は必ずこの日付で書く（「約2.5日後」「数日後に変わる」のような相対表現・曖昧な予告は禁止）。書き方の例: ${stay.dayNo === 1 ? `「このテーマは今日 ${stay.start} から ${stay.end} までの流れ」` : stay.lastDay ? `「${stay.start} から続いたこの流れは今日 ${stay.end} で一区切り。明日からは○○の領域へ」` : `「${stay.start} から続くこの流れは ${stay.end} まで。今日はその ${stay.dayNo}日目」`}。${previous && !sameDomain ? '今日は前回と領域が変わった日なので、冒頭で「前回までの流れが区切りを迎え、今日から新しい領域に入った」と繋げる。' : ''}` : `\n  - 月の移動予告は書かない（「〇日後に変わる」等の予告文を禁止。今日の状態だけを書く）`}
+  - 曜日・曜日の支配星には言及しない（相談者の地域により曜日が異なるため）${daily.tithi ? `\n  - ティティ: ${daily.tithi}` : ''}\n  - 月は2〜3日ごとに次のハウスへ移る。月がこのハウスに入った日・抜ける日、「一区切り」「明日から○○へ移る」「数日で変わる」などの月の移動の予告は書かない（毎回同じ話になり信憑性を失う）。好転の時期は下の【次の節目】から選ぶ。
   - 速い天体: ${daily.fast.join('、') || '不明'}
   - 遅い天体（背景として1文まで）: ${daily.slow.join('、') || '不明'}
 
   【日替わりの規則】
-  - 「本日の運勢」の悩みテーマの領域は「${todayDomain || '不明'}」（トランジットの月がラグナから第${daily.houseFromLagna || '?'}ハウス）。必ずこの領域の場面で書く。言い当ては負荷に限らず、この領域で今日起きやすい迷い・好機・喜びのいずれでもよい。月が重なる出生天体があればその天体の性質を場面に混ぜる。土星・木星・ラーフ・ケートゥやダシャーは背景説明に留め、テーマの主役にしない。
+  - 「本日の運勢」の悩みテーマの領域は「${todayDomain || '不明'}」（トランジットの月がラグナから第${daily.houseFromLagna || '?'}ハウス）。必ずこの領域の場面で書く。${facet ? `今日はこの領域のうち「${facet}」の側面を場面にする。` : ''}${tone ? `今日の言い当ての種類は「${tone}」。` : ''}言い当ては負荷に限らず、この領域で今日起きやすい迷い・好機・喜びのいずれでもよい。月が重なる出生天体があればその天体の性質を場面に混ぜる。土星・木星・ラーフ・ケートゥやダシャーは背景説明に留め、テーマの主役にしない。
   - 今日の月のナクシャトラとティティの性質を、今日の心の状態と「今日ひとつの行動」に必ず反映させる。月が同じハウスに留まる日でも、ナクシャトラとティティが変わるので言い当ての場面・行動は変える。${previous ? `
   - 前回（${previous.date}）の鑑定の冒頭:「${previous.head}」${previous.action ? `／前回の一手:「${previous.action}」` : ''}。${sameDomain
     ? '今日も同じ領域だが、前回と同じ場面・同じ相手・同じ行動は禁止。同じ領域の別の側面（例: 領域名に列挙された別の語）を、今日のナクシャトラとティティの性質で選び直して書く。前回の一手の続編にしない。'
-    : '今日は領域が変わったので、前回のテーマは1文で「一段落」として触れるだけにし、新しい領域の場面で書く。同じ状況描写・同じ行動を繰り返さない。'}` : ''}
+    : '前回のテーマには触れず、今日の領域の場面で書く。同じ状況描写・同じ行動を繰り返さない。'}` : ''}
+
+  【次の節目（好転の時期の根拠はここからだけ選ぶ。月の移動は使わない）】
+${ingressBlock}
   ${weekBlock(week, lang)}  ` : (previous ? `
   【前回の鑑定】${previous.date}:「${previous.head}」。今日は同じ状況描写・同じ行動を繰り返さないこと。
   ` : '');
@@ -974,7 +1006,7 @@ function buildAstrologyPrompt(prokeralaData, transitData, isPaid, lang, section 
       "nakshatra": "${nakshatra}",
       "free_reading": {
         "horoscope": "本日の運勢（150〜180文字）。①今日の月の領域の悩みを状況として言い当て ②今日の心の状態 ③今日ひとつだけの具体行動、の順。無料表示は冒頭2文だけなので、最初の2文で①の言い当てを完結させる。",
-        "influence": "本日受ける星の影響（150〜180文字）。①で言い当てた状況が『なぜ今起きているか』を、トランジット天体と出生図の関係で説明し、読者の最近の判断を1文で肯定または意味づけし、最後にこの配置が抜けた後（天体の移動時期を根拠に）どう好転しやすいかを1文で添える。",
+        "influence": "本日受ける星の影響（150〜180文字）。①で言い当てた状況が『なぜ今起きているか』を、トランジット天体と出生図の関係で説明し、読者の最近の判断を1文で肯定または意味づけし、最後に【次の節目】の天体の移動日を根拠に、いつ頃どう好転しやすいかを1文で添える。",
         "dasha_summary": "支配星周期の過ごし方（150文字前後）。現在の大周期がこの人の人生のどの領域を動かしているかを、生活の具体場面で書く。",
         "lucky_element": "今日の守り（1〜2文）。「今日の守り：〈名前〉」で始め、〈名前〉は支配星・ナクシャトラの神格の神話から取った短い題。続けて、今日の配置がこの人に起こす圧を1つ名指しし、それを封じる今日限りの具体的なふるまい（時間帯・相手・場面）を書く。色・食べ物・開運アクション・セルフケア習慣は書かない。",
         "premium_teaser": "有料の詳細レポートで扱う内容の予告（80〜110文字・1〜2文）。今週の注意日と追い風日が『存在すること』、そして『この状況を動かす具体的な3つの一手』があることを、日付や中身は伏せたまま伝える（今日の領域のテーマだけ具体に触れ、日付・手順は書かない）。"
