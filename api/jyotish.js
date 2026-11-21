@@ -8,6 +8,7 @@ const { issueSession, verifySession } = require('./_auth');
 const GOOGLE_CLIENT_ID = '789459066589-2tla7ubk127eic0g5aekql75ohdejnto.apps.googleusercontent.com';
 const { getOptIn, setOptIn } = require('./_newsletter');
 const { createTerms } = require('./_terms');
+const { composeReadingIntl } = require('./_compose-intl');
 const { nakshatraFromLongitude } = require('./_astrology');
 const { geocodeBirthPlace } = require('./_geocode');
 const { DEFAULT_ZONE, isValidZone, zoneForCoordinates, localDateTimeToIso, nowIsoIn, todayIn } = require('./_tz');
@@ -975,7 +976,7 @@ function readingFacts(prokeralaData, transitData, todayStr, birthDate) {
   const week = weekFactors(natal, transit, todayStr) || [];
   const ingresses = nextIngresses(natal, transit, todayStr).map(x => {
     const [month, day] = x.date.split('/').map(Number);
-    return { ja: DASHA_JA[x.name] || x.name, month, day, date: x.date, nextSign: x.nextSign, house: x.house };
+    return { name: x.name, ja: DASHA_JA[x.name] || x.name, month, day, date: x.date, nextSign: x.nextSign, house: x.house };
   });
   const years = new Set([year(todayMs)]);
   if (birthDate) years.add(Number(String(birthDate).slice(0, 4)));
@@ -990,6 +991,8 @@ function readingFacts(prokeralaData, transitData, todayStr, birthDate) {
       houseFromMoon: daily.houseFromMoon,
       conjunct: daily.conjunct.map(n => DASHA_JA[n] || n),
       opposite: daily.opposite.map(n => DASHA_JA[n] || n),
+      conjunctKeys: daily.conjunct,
+      oppositeKeys: daily.opposite,
       domain,
       facet: todayFacet(domain, todayStr),
       kind: week[0] ? week[0].kind : 'neutral'
@@ -1013,8 +1016,10 @@ function readingFacts(prokeralaData, transitData, todayStr, birthDate) {
       mahaEndMs: dasha.maha.end,
       mahaStartMs: dasha.maha.start,
       mahaLord: dasha.maha.lord,
-      antarLord: dasha.antar.lord
+      antarLord: dasha.antar.lord,
+      nextLord: dasha.nextAntar
     },
+    todayStr,
     ingresses,
     weekDates: week.map(d => d.date.split('/').map(Number)),
     years: [...years]
@@ -1024,6 +1029,7 @@ function readingFacts(prokeralaData, transitData, todayStr, birthDate) {
 // Gemini が使えない、または照合で項目が空になったときに、根拠一覧の値だけで鑑定を組み立てる。
 // 「鑑定できませんでした」を出さず、かつ星廻りにない話を書かないための最後の受け皿。
 function composeReading(f, isPaid, lang) {
+  if (lang !== 'ja') return composeReadingIntl(f, isPaid, lang);
   const t = f.today;
   const d = f.dasha;
   const ing = f.ingresses[0];
@@ -1048,14 +1054,6 @@ function composeReading(f, isPaid, lang) {
       t.opposite.length ? `今日の月は出生の${t.opposite.join('・')}と向かい合っています。` : ''
     ].join('');
     influence = `今日の月はラグナから第${t.house}ハウス、出生の月から第${t.houseFromMoon}ハウスを通っています。${touch}${f.tithi ? `ティティは${f.tithi}です。` : ''}${ing ? `${ing.date}頃に${ing.ja}が${ing.nextSign}${ing.house ? `（ラグナから第${ing.house}ハウス）` : ''}へ移り、次の節目になります。` : ''}`;
-  } else if (t) {
-    const toneLine = t.kind === 'good'
-      ? 'This is a supportive position, so taking the first step yourself is likely to pay off.'
-      : t.kind === 'caution'
-        ? 'This position can be tiring, so dropping one plan today leaves you energy in reserve.'
-        : 'This position can make choices feel unclear, so decide on one criterion before you choose.';
-    horoscope = `Today the Moon is in ${sign(t.sign)} (${nak(t.nakshatra)}), passing through the ${ord(t.house)} house from your Lagna and the ${ord(t.houseFromMoon)} house from your natal Moon. ${toneLine} Pick one matter in this area of life today and start on it yourself.`;
-    influence = `The Moon is in the ${ord(t.house)} house from your Lagna.${t.conjunct.length ? ` It joins your natal ${t.conjunct.join(', ')}.` : ''}${t.opposite.length ? ` It faces your natal ${t.opposite.join(', ')}.` : ''}${ing ? ` Around ${ing.date}, ${ing.ja === '金星' ? 'Venus' : ing.ja === '火星' ? 'Mars' : 'the Sun'} moves into ${sign(ing.nextSign)}, the next turning point.` : ''}`;
   } else {
     horoscope = ja ? `出生の月は${f.natalMoonNakshatra}にあります。今日は一つの用件に絞って、自分から手を付けてください。` : `Your natal Moon is in ${nak(f.natalMoonNakshatra)}. Pick one matter today and start on it yourself.`;
     influence = ja ? `ラグナは${f.asc}です。` : `Your Lagna is ${sign(f.asc)}.`;
