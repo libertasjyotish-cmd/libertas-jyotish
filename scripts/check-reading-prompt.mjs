@@ -24,6 +24,11 @@ for (const m of body.matchAll(/上司|部下|同僚|指摘|会議|残業|納期|
   problems.push(`行${lineOf(m.index)}付近に「${m[0]}」`);
 }
 
+// 月の2〜3日ごとの移動を「一区切り・明日から好転」と書かせる見本文を入れない（毎回同じ話になる）
+for (const m of body.matchAll(/から続(?:いた|く)この流れ|一区切り。明日から/g)) {
+  problems.push(`行${lineOf(m.index)}付近に月の移動の見本文「${m[0]}」`);
+}
+
 if (problems.length) {
   console.error('毎日の鑑定プロンプトに、特定の場面やハウスを書いた例文があります（例文は領域を限定しない書き方にしてください）:\n' + problems.map((p) => `- ${p}`).join('\n'));
   process.exit(1);
