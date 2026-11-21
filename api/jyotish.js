@@ -547,6 +547,7 @@ module.exports = async function handler(req, res) {
           if (computed.nakshatra) cleanJsonResult.nakshatra = computed.nakshatra;
           if (computed.nakshatraSlug) cleanJsonResult.nakshatra_slug = computed.nakshatraSlug;
         }
+        if (facts) cleanJsonResult.guide_links = guideLinks(facts, finalLang);
 
         cleanJsonResult.status = finalStatus;
         // 出生地を市区町村まで特定できたか。概算のときは画面に注意書きを出す。
@@ -751,6 +752,17 @@ function toJapaneseNakshatra(name) {
 }
 
 // Prokerala の出生図から太陽星座・月星座・ナクシャトラを求める（表示の正となる値）
+// 今日の鑑定の下に出す解説ページ（今日の月のナクシャトラ・今の大周期）。どちらもコード計算の値から選ぶ。
+function guideLinks(f, lang) {
+  const terms = createTerms(lang);
+  const out = {};
+  const nak = f.today && f.today.nakshatra;
+  if (nak && NAKSHATRA_SLUG[nak]) out.today_nakshatra = { slug: NAKSHATRA_SLUG[nak], name: terms.nakshatra(nak) || nak };
+  const lord = f.dasha && f.dasha.mahaLord;
+  if (lord && DASHA_JA[lord]) out.maha = { slug: lord.toLowerCase(), name: terms.planet(lord, DASHA_JA[lord]) };
+  return out;
+}
+
 function computeSigns(prokeralaData, lang = 'ja') {
   const planets = extractPlanets(prokeralaData);
   const moon = planets.find(p => p.name === 'Moon') || {};
