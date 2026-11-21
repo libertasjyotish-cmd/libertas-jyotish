@@ -27,6 +27,7 @@
 <link rel="stylesheet" href="/css/tools.css">
 <style>body{font-family:{{fontFamily}};}</style>
 <script defer src="/js/site-menu.js"></script>
+<script defer src="/js/share-card.js"></script>
 <script defer src="/js/tools.js"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"{{tool.h1|json}}","url":"{{canonical}}","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"{{lang}}","description":"{{tool.description|json}}","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"{{t.menu.top|json}}","item":"https://www.libertas-jyotish.com/{{lang}}"},{"@type":"ListItem","position":2,"name":"{{tool.h1|json}}","item":"{{canonical}}"}]}]}</script>
 </head>
@@ -47,6 +48,7 @@
   padaValue: '{{t.tools.common.padaValue|js}}',
   period: '{{t.tools.common.period|js}}',
   guideLink: '{{t.tools.common.guideLink|js}}',
+  share: { label: '{{t.share.label|js}}', index: '{{t.share.index|js}}', lord: '{{t.share.lord|js}}', cta: '{{t.share.cta|js}}', button: '{{t.share.button|js}}', text: '{{t.share.text|js}}', error: '{{t.share.error|js}}', making: '{{t.share.making|js}}' },
   submit: '{{t.tools.common.submit|js}}',
   submitting: '{{t.tools.common.submitting|js}}',
   errors: {
@@ -85,6 +87,7 @@
 <dl class="tool-values" id="tool-values"></dl>
 <p class="tool-geo" id="tool-geo" hidden></p>
 <p class="tool-guide" id="tool-guide" hidden></p>
+<div id="tool-share" hidden></div>
 </section>
 
 <section>

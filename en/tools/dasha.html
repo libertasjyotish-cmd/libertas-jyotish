@@ -35,6 +35,7 @@
 <link rel="stylesheet" href="/css/tools.css">
 <style>body{font-family:'Noto Serif', serif;}</style>
 <script defer src="/js/site-menu.js"></script>
+<script defer src="/js/share-card.js"></script>
 <script defer src="/js/tools.js"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Find Your Current Dasha Period","url":"https://www.libertas-jyotish.com/en/tools/dasha","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"en","description":"Calculate your current planetary period (Mahadasha) within the 120-year Vimshottari Dasha cycle for free from your birth date, time, and place, and see when your next period begins.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"Libertas Jyotish","url":"https://www.libertas-jyotish.com"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.libertas-jyotish.com/en"},{"@type":"ListItem","position":2,"name":"Find Your Current Dasha Period","item":"https://www.libertas-jyotish.com/en/tools/dasha"}]}]}</script>
 </head>
@@ -106,6 +107,7 @@ window.LJ_I18N = {
   padaValue: 'Pada {pada}',
   period: '{start} – {end}',
   guideLink: 'Read about {name}',
+  share: { label: 'Vedic Astrology · My Birth Nakshatra', index: 'No. {n} of the 27 Nakshatras', lord: 'Ruled by {lord}', cta: 'Which of the 27 is yours? Find out free', button: 'Share my Nakshatra card', text: 'My birth Nakshatra is {nak}. Which one is yours?', error: 'Could not create the card. Please try again.', making: 'Creating your card…' },
   submit: 'Calculate for Free',
   submitting: 'Calculating…',
   errors: {
@@ -144,6 +146,7 @@ window.LJ_I18N = {
 <dl class="tool-values" id="tool-values"></dl>
 <p class="tool-geo" id="tool-geo" hidden></p>
 <p class="tool-guide" id="tool-guide" hidden></p>
+<div id="tool-share" hidden></div>
 </section>
 
 <section>
