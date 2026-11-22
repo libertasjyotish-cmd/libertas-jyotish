@@ -398,7 +398,7 @@ clearTimeout(clientTimeout);
 });
 
 // 生まれ宿のシェア用カード（js/share-card.js）
-const SHARE_STRINGS = { label: 'Astrologi Weda · Nakshatra Kelahiranku', index: 'No. {n} dari 27 Nakshatra', lord: 'Penguasa: {lord}', cta: 'Mana dari 27 yang milikmu? Cek gratis', button: 'Bagikan kartu Nakshatra-ku', text: 'Nakshatra kelahiranku adalah {nak}. Bagaimana denganmu?', error: 'Kartu tidak dapat dibuat. Silakan coba lagi.', making: 'Membuat kartu…', image: 'Simpan / bagikan gambar (Instagram, TikTok)', tags: '#AstrologiVeda #Nakshatra', choose: 'Pilih tempat berbagi' };
+const SHARE_STRINGS = { label: 'Astrologi Weda · Nakshatra Kelahiranku', index: 'No. {n} dari 27 Nakshatra', lord: 'Penguasa: {lord}', cta: 'Mana dari 27 yang milikmu? Cek gratis', button: 'Bagikan kartu Nakshatra-ku', text: 'Nakshatra kelahiranku adalah {nak}. Bagaimana denganmu?', error: 'Kartu tidak dapat dibuat. Silakan coba lagi.', making: 'Membuat kartu…', image: 'Simpan / bagikan gambar (Instagram, TikTok)', tags: '#AstrologiVeda #Nakshatra', choose: 'Pilih tempat berbagi', copied: 'Tautan disalin. Tempel di stiker tautan pada Story Anda' };
 function fillShareCards() {
 document.querySelectorAll('[data-share-card]:not([data-filled])').forEach((el) => {
 el.dataset.filled = '1';

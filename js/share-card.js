@@ -105,8 +105,11 @@ window.LJShareCard = (function () {
   const track = (opts, method) => { if (window.LJTrack) window.LJTrack('share_card', { nakshatra: opts.slug, method, content_language: opts.lang }); };
 
   // 画像を渡せるのはスマホの共有画面だけ（Instagram・TikTok はここから）。渡せないブラウザでは保存する
-  async function share(opts, btn) {
+  async function share(opts, btn, note) {
     const label = btn ? btn.textContent : '';
+    // Instagram・TikTok の画像投稿ではリンクを押せないので、ストーリーズのリンクスタンプ用にコピーしておく
+    let copied = Promise.resolve(false);
+    if (note && navigator.clipboard && navigator.clipboard.writeText) copied = navigator.clipboard.writeText(shareUrl(opts, 'share_card')).then(() => true, () => false);
     if (btn) { btn.disabled = true; if (opts.strings.making) btn.textContent = opts.strings.making; btn.style.opacity = '.7'; }
     try {
       const { canvas, item } = await render(opts);
@@ -126,6 +129,7 @@ window.LJShareCard = (function () {
         setTimeout(() => URL.revokeObjectURL(a.href), 4000);
       }
       track(opts, method);
+      if (note && opts.strings.copied && await copied) { note.textContent = opts.strings.copied; note.hidden = false; }
     } catch (e) {
       if (btn && opts.strings.error) alert(opts.strings.error);
     } finally {
@@ -191,8 +195,13 @@ window.LJShareCard = (function () {
       img.type = 'button';
       img.textContent = opts.strings.image || opts.strings.button;
       img.style.cssText = PILL;
-      img.addEventListener('click', () => share(opts, img));
+      const note = document.createElement('p');
+      note.hidden = true;
+      note.setAttribute('role', 'status');
+      note.style.cssText = 'margin:8px 0 0; font-size:.85em; color:#6b5b4a;';
+      img.addEventListener('click', () => share(opts, img, note));
       row.appendChild(img);
+      panel.appendChild(note);
     }).catch(() => {});
 
     btn.addEventListener('click', () => {

@@ -335,7 +335,7 @@ clearTimeout(clientTimeout);
 });
 
 // 生まれ宿のシェア用カード（js/share-card.js）
-const SHARE_STRINGS = { label: '{{t.share.label|js}}', index: '{{t.share.index|js}}', lord: '{{t.share.lord|js}}', cta: '{{t.share.cta|js}}', button: '{{t.share.button|js}}', text: '{{t.share.text|js}}', error: '{{t.share.error|js}}', making: '{{t.share.making|js}}', image: '{{t.share.image|js}}', tags: '{{t.share.tags|js}}', choose: '{{t.share.choose|js}}' };
+const SHARE_STRINGS = { label: '{{t.share.label|js}}', index: '{{t.share.index|js}}', lord: '{{t.share.lord|js}}', cta: '{{t.share.cta|js}}', button: '{{t.share.button|js}}', text: '{{t.share.text|js}}', error: '{{t.share.error|js}}', making: '{{t.share.making|js}}', image: '{{t.share.image|js}}', tags: '{{t.share.tags|js}}', choose: '{{t.share.choose|js}}', copied: '{{t.share.copied|js}}' };
 function fillShareCards() {
 document.querySelectorAll('[data-share-card]:not([data-filled])').forEach((el) => {
 el.dataset.filled = '1';
