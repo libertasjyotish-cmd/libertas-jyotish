@@ -398,7 +398,7 @@ clearTimeout(clientTimeout);
 });
 
 // 生まれ宿のシェア用カード（js/share-card.js）
-const SHARE_STRINGS = { label: 'インド占星術｜私の生まれ宿（ナクシャトラ）', index: '27宿のうち　第{n}宿', lord: '支配星：{lord}', cta: 'あなたの宿は？ 27宿から無料で診断', button: '私の宿をカードでシェア', text: '私の生まれ宿（ナクシャトラ）は{nak}でした。あなたの宿は？', error: 'カードを作れませんでした。もう一度お試しください。', making: 'カードを作成中…', image: '画像を保存・共有（Instagram・TikTok）', tags: '#インド占星術 #ナクシャトラ', choose: 'シェア先を選んでください' };
+const SHARE_STRINGS = { label: 'インド占星術｜私の生まれ宿（ナクシャトラ）', index: '27宿のうち　第{n}宿', lord: '支配星：{lord}', cta: 'あなたの宿は？ 27宿から無料で診断', button: '私の宿をカードでシェア', text: '私の生まれ宿（ナクシャトラ）は{nak}でした。あなたの宿は？', error: 'カードを作れませんでした。もう一度お試しください。', making: 'カードを作成中…', image: '画像を保存・共有（Instagram・TikTok）', tags: '#インド占星術 #ナクシャトラ', choose: 'シェア先を選んでください', copied: 'リンクをコピーしました。ストーリーズのリンクスタンプに貼れます' };
 function fillShareCards() {
 document.querySelectorAll('[data-share-card]:not([data-filled])').forEach((el) => {
 el.dataset.filled = '1';
