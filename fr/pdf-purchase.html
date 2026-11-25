@@ -167,17 +167,45 @@
     .btn-preview:disabled { opacity: 0.6; cursor: default; }
     .preview-note { font-size: 0.78rem; color: #5A4E48; margin-top: 8px; }
     #preview-box { display: none; text-align: left; margin: 0 0 24px; }
-    #preview-box .report-card h2 { font-size: 1.1rem; color: var(--color-gold-dark); margin-bottom: 10px; }
-    #preview-box .lead { font-size: 1.15rem; line-height: 1.7; color: var(--color-gold-dark); text-align: center; margin: 6px 0 16px; }
-    #preview-box h3 { font-size: 0.95rem; color: var(--color-gold-dark); margin: 14px 0 6px; }
-    #preview-box p, #preview-box li { font-size: 0.9rem; line-height: 1.9; }
-    #preview-box ul { padding-inline-start: 1.2em; }
-    #preview-box .fact { font-size: 0.82rem; color: #5A4E48; margin: 12px 0; }
+    #preview-box .pv-label { font-size: 0.8rem; color: #5A4E48; text-align: center; margin-bottom: 10px; }
+    #preview-box .pv-book { background: #0c1a1f; border-radius: 10px; padding: 16px 12px 18px; }
+    #preview-box .pv-page {
+      position: relative; background: #FFFDF7; color: #2C221E; padding: 26px 20px 30px; margin-bottom: 14px; line-height: 1.8;
+      border: 1px solid rgba(184, 142, 60, 0.5); border-radius: 6px; box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
+    }
+    #preview-box .pv-page::before {
+      content: ''; position: absolute; inset: 0; border-radius: 6px; pointer-events: none;
+      background: url("/img/report-cover.jpg") center / cover; opacity: 0.07;
+    }
+    #preview-box .pv-page > * { position: relative; }
+    #preview-box .pv-cover {
+      min-height: 300px; text-align: center; color: #3a2f14; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;
+      background: linear-gradient(rgba(255, 253, 247, 0.35), rgba(255, 253, 247, 0.55)), url("/img/report-cover.jpg") center / cover;
+    }
+    #preview-box .pv-cover::before { content: none; }
+    #preview-box .pv-cover img { width: 48px; margin: 0 auto; }
+    #preview-box .pv-cover h2 { font-family: var(--font-en); font-size: 1.4rem; letter-spacing: 0.14em; color: var(--color-gold-dark); }
+    #preview-box .pv-cover .sub { font-size: 0.95rem; letter-spacing: 0.3em; margin-top: 6px; }
+    #preview-box .pv-cover .owner { font-size: 0.8rem; line-height: 2; }
+    #preview-box .chapter-title {
+      font-size: 1.1rem; color: var(--color-gold-dark); letter-spacing: 0.06em; text-align: left;
+      border-bottom: 1px solid rgba(139, 107, 27, 0.35); padding-bottom: 8px; margin-bottom: 16px;
+    }
+    #preview-box .lead { font-size: 1.15rem; line-height: 1.7; color: var(--color-gold-dark); text-align: center; margin: 6px 0 18px; }
+    #preview-box h3 { font-size: 0.95rem; color: var(--color-gold-dark); margin: 16px 0 6px; text-align: left; }
+    #preview-box p { font-size: 0.9rem; line-height: 1.9; margin-bottom: 10px; text-align: justify; }
+    #preview-box ul { font-size: 0.9rem; line-height: 1.9; margin: 4px 0 10px 1.2em; text-align: left; }
+    #preview-box .fact {
+      background: rgba(212, 175, 55, 0.09); border-left: 3px solid var(--color-gold-main);
+      padding: 10px 14px; margin: 12px 0; font-size: 0.85rem; text-align: left;
+    }
+    #preview-box .fact .reason { display: block; font-size: 0.78rem; color: #6A5E58; margin-top: 4px; }
+    #preview-box .toc { list-style: none; margin: 0; text-align: left; }
+    #preview-box .toc li { padding: 5px 0; border-bottom: 1px dashed rgba(139, 107, 27, 0.25); }
+    #preview-box .toc .open { color: var(--color-gold-dark); font-weight: 600; }
+    #preview-box .toc .open span { font-size: 0.75rem; margin-inline-start: 6px; }
     .preview-status { font-size: 0.88rem; color: #5A4E48; text-align: center; }
-    .preview-rest { position: relative; }
-    .preview-rest ul { list-style: none; padding: 0; }
-    .preview-rest li { padding: 6px 0; border-bottom: 1px dashed rgba(139, 107, 27, 0.25); }
-    .preview-rest-lock { text-align: center; margin-top: 14px; }
+    .preview-rest-lock { text-align: center; margin-top: 16px; }
 
     @media print {
       .site-header, .site-footer, .btn-purchase, #btn-print-pdf { display: none !important; }
@@ -416,7 +444,7 @@ window.LJ_I18N = {
     const previewPara = (text) => (text ? String(text).split(/\n{1,}/).map((t) => `<p>${previewEsc(t)}</p>`).join('') : '');
     const previewList = (arr) => (Array.isArray(arr) ? `<ul>${arr.filter(Boolean).map((v) => `<li>${previewEsc(v)}</li>`).join('')}</ul>` : '');
     const PREVIEW_REST = [
-      'Chapitre 1 Le plan qui vous définit', 'Chapitre 2 La planète la plus forte en vous', 'Chapitre 3 La bonne fortune avec laquelle vous êtes né', 'Chapitre 4 Objets — pierres et couleurs',
+      'Votre mode d\'emploi, en un coup d\'œil', 'Chapitre 1 Le plan qui vous définit', 'Chapitre 2 La planète la plus forte en vous', 'Chapitre 3 La bonne fortune avec laquelle vous êtes né', 'Chapitre 4 Objets — pierres et couleurs',
       'Chapitre 5 Pratiques — habitudes et méthodes de travail', 'Chapitre 6 Lieux — directions et environnements', 'Chapitre 7 Votre vocation et comment utiliser vos talents', 'Chapitre 8 Votre chemin vers l\'abondance',
       'Chapitre 9 La carte de votre destin (chronologie de vie)', 'Chapitre 10 Où vous en êtes aujourd\'hui', 'Chapitre 11 La période dorée à venir', 'Chapitre 12 Transformer les épreuves en fondations',
       'Annexe Données'
@@ -427,33 +455,56 @@ window.LJ_I18N = {
       unknown_birthplace: '出生地が見つかりませんでした。市区町村名まで入力してください。'
     };
 
-    function previewRestHtml() {
-      return `<div class="report-card preview-rest">
-        <h2>この続きは完全鑑定書で</h2>
-        <ul>${PREVIEW_REST.map((t) => `<li>${previewEsc(t)}</li>`).join('')}</ul>
+    function previewTocHtml() {
+      const items = PREVIEW_REST.map((t, i) => (i === 0
+        ? `<li class="open">${previewEsc(t)}<span>← 無料公開中</span></li>`
+        : `<li>${previewEsc(t)}</li>`)).join('');
+      return `<section class="pv-page">
+        <h2 class="chapter-title">Sommaire</h2>
+        <ul class="toc">${items}</ul>
         <div class="preview-rest-lock"><button type="button" class="btn-purchase" id="btn-preview-buy">続きを読む（完全鑑定書を購入する）</button></div>
-      </div>`;
+      </section>`;
     }
 
     function showPreview(html) {
       const box = document.getElementById('preview-box');
-      box.innerHTML = html + previewRestHtml();
+      box.innerHTML = html;
       box.style.display = 'block';
-      document.getElementById('btn-preview-buy').addEventListener('click', () => document.getElementById('btn-proceed-checkout').click());
+      const buy = document.getElementById('btn-preview-buy');
+      if (buy) buy.addEventListener('click', () => document.getElementById('btn-proceed-checkout').click());
     }
 
-    function renderSummary(s, dasha) {
+    function previewCoverHtml(c) {
+      if (!c) return '';
+      return `<section class="pv-page pv-cover">
+        <div><img src="/img/libertas-logo.png" alt="Libertas Jyotish"></div>
+        <div><h2>Libertas Jyotish</h2><div class="sub">Rapport de vie</div></div>
+        <div class="owner">
+          Né(e) le  ${previewEsc(c.dob)} ${previewEsc(c.tob)}<br>
+          Lieu de naissance  ${previewEsc(c.city)}<br>
+          Lagna  ${previewEsc(c.lagna)}  /  Lune  ${previewEsc(c.moon)}  /  ${previewEsc(c.nakshatra)}
+        </div>
+      </section>`;
+    }
+
+    function renderSummary(s, dasha, cover) {
       const fact = dasha && dasha.lordJa
-        ? `<div class="fact">Période majeure actuelle : ${previewEsc(dasha.lordJa)} (${previewEsc(dasha.start)} – ${previewEsc(dasha.end)})</div>`
+        ? `<div class="fact">Période majeure actuelle : ${previewEsc(dasha.lordJa)} (${previewEsc(dasha.start)} – ${previewEsc(dasha.end)})
+          <span class="reason">Calculé à partir de la Vimshottari Dasha</span></div>`
         : '';
-      return `<div class="report-card">
-        <h2>Votre mode d\'emploi, en un coup d\'œil</h2>
-        <div class="lead">${previewEsc(s.catchphrase)}</div>
-        ${previewPara(s.essence)}
-        <h3>Les qualités qui sont vos atouts</h3>${previewList(s.weapons)}
-        <h3>Les domaines avec une marge de progression</h3>${previewList(s.growth)}
-        ${fact}
-        ${previewPara(s.now)}
+      return `<p class="pv-label">あなたの完全鑑定書（PDF）より、一部を無料公開</p>
+      <div class="pv-book">
+        ${previewCoverHtml(cover)}
+        <section class="pv-page">
+          <h2 class="chapter-title">Votre mode d\'emploi, en un coup d\'œil</h2>
+          <div class="lead">${previewEsc(s.catchphrase)}</div>
+          ${previewPara(s.essence)}
+          <h3>Les qualités qui sont vos atouts</h3>${previewList(s.weapons)}
+          <h3>Les domaines avec une marge de progression</h3>${previewList(s.growth)}
+          ${fact}
+          ${previewPara(s.now)}
+        </section>
+        ${previewTocHtml()}
       </div>`;
     }
 
@@ -502,7 +553,7 @@ window.LJ_I18N = {
         }
         if (res.ok && data.purchased) { window.location.reload(); return; }
         if (res.ok && data.summary) {
-          showPreview(renderSummary(data.summary, data.dasha));
+          showPreview(renderSummary(data.summary, data.dasha, data.cover));
           document.getElementById('preview-cta').style.display = 'none';
           box.scrollIntoView({ behavior: 'smooth', block: 'start' });
           return;
