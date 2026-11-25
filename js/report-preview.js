@@ -99,6 +99,8 @@
     var data = { product: product, lang: lang };
     new FormData(form).forEach(function (v, k) { data[k] = v; });
     data.tob_unknown = document.getElementById('f-tob-unknown').checked;
+    var news = document.getElementById('preview-news');
+    data.newsletter = news ? news.checked : false;
     var cbB = document.getElementById('f-tob-unknown-b');
     if (cbB) data.tob_unknown_b = cbB.checked;
     return data;
@@ -113,6 +115,8 @@
       if (!el) return;
       if (el.length && el[0] && el[0].type === 'radio') { for (var i = 0; i < el.length; i++) el[i].checked = el[i].value === saved[k]; } else if (el.type !== 'checkbox') el.value = saved[k];
     });
+    var news = document.getElementById('preview-news');
+    if (news && typeof saved.newsletter === 'boolean') news.checked = saved.newsletter;
     [['f-tob-unknown', 'tob_unknown', 'f-tob'], ['f-tob-unknown-b', 'tob_unknown_b', 'f-tob-b']].forEach(function (x) {
       var cb = document.getElementById(x[0]);
       if (cb && saved[x[1]]) { cb.checked = true; document.getElementById(x[2]).disabled = true; }

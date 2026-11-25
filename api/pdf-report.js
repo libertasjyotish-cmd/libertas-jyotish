@@ -7,6 +7,7 @@ const { listGeminiModels } = require('./_gemini');
 const { CHAPTER_IDS, generateChapters } = require('./_report');
 const { normalizeLang } = require('./_terms');
 const { geocodeBirthPlace } = require('./_geocode');
+const { optInFromPreview } = require('./_newsletter');
 // 1リクエストで生成する章数の上限。全13章を一度に生成すると実行時間上限とGeminiのレート制限に触れるため、
 // 残りは pending として返し、画面側が続けて要求する。
 const CHAPTERS_PER_REQUEST = 4;
@@ -44,8 +45,10 @@ const previewBody = (summary, astro) => ({
   }
 });
 
-async function handlePreview(res, { email, member, dob, tob, city, lang }) {
+async function handlePreview(res, { email, member, dob, tob, city, lang, newsletter }) {
   if (!PREVIEW_LANGS.includes(lang)) return res.status(404).json({ error: 'preview_unavailable' });
+  // プレビューの入り口のチェック（お知らせメールを受け取る）に同意した人だけ配信対象にする
+  if (newsletter === true) await optInFromPreview(email, lang).catch((err) => console.error('Newsletter opt-in failed:', err?.message));
   if (member?.pdfPurchased) return res.status(200).json({ purchased: true });
   if (!dob || !city) return res.status(400).json({ error: 'missing_birth_data' });
 
@@ -103,7 +106,7 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { email, session, dob, tob, city, language, preview } = req.body || {};
+  const { email, session, dob, tob, city, language, preview, newsletter } = req.body || {};
   const lang = normalizeLang(language);
   if (!email || !session) return res.status(400).json({ error: 'missing_credentials' });
 
@@ -117,7 +120,7 @@ module.exports = async function handler(req, res) {
     console.error('Member lookup failed:', err?.message);
     return res.status(503).json({ error: 'member_lookup_failed' });
   }
-  if (preview) return handlePreview(res, { email, member, dob, tob: tob || '12:00', city, lang });
+  if (preview) return handlePreview(res, { email, member, dob, tob: tob || '12:00', city, lang, newsletter });
   if (!member || !member.pdfPurchased) return res.status(403).json({ error: 'not_purchased' });
 
   const finalDob = dob || member.dob;

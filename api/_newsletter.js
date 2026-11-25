@@ -126,6 +126,16 @@ async function setOptIn(email, optIn) {
   return true;
 }
 
+// 無料プレビューの入り口で同意した人。会員行が無ければ（無料診断を使っていない人）同意つきの行を作る。
+async function optInFromPreview(email, lang) {
+  if (await setOptIn(email, true)) return true;
+  const sheet = await getMemberSheet();
+  if (!sheet) throw new Error('sheet_unavailable');
+  const now = new Date().toISOString();
+  await sheet.addRow({ email: normalizeEmail(email), status: 'free', language: normalizeLang(lang || 'ja'), created_at: now, updated_at: now, newsletter_opt_in: 'yes', newsletter_updated_at: now });
+  return true;
+}
+
 async function getOptIn(email) {
   const sheet = await getMemberSheet();
   if (!sheet) throw new Error('sheet_unavailable');
@@ -249,6 +259,7 @@ async function runCampaigns({ now = Date.now(), campaigns, mailer = send, gap = 
 }
 
 module.exports = {
+  optInFromPreview,
   isSendable,
   unsubToken,
   verifyUnsubToken,
