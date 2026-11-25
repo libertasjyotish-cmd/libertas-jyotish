@@ -22,6 +22,8 @@ const SEND_LOCAL = {
   ar: { tz: 'Asia/Riyadh', hour: 20 }
 };
 const REPORT_PATHS = ['/pdf-purchase', '/yearly', '/career', '/palm-chart', '/compat', '/karma'];
+// 購入前の無料プレビューがある鑑定書（日本語のみ）と1日の先着数。手相は写真が購入後なので無い。
+const PREVIEW_LIMITS = { '/pdf-purchase': 100, '/yearly': 10, '/career': 10, '/compat': 10, '/karma': 10 };
 
 // スペイン語・ポルトガル語・インドネシア語・フランス語・ドイツ語・アラビア語の共通部分（日付・星の名前・件名）
 function intlText(lang, t) {
@@ -106,6 +108,8 @@ const TEXT = {
     refund: 'マイページからいつでも解約できます。お支払いから30日以内なら返金いたします。',
     reportTitle: '今週のおすすめ鑑定書',
     more: '詳しく見る →',
+    preview: (n) => `購入前に、あなたの出生図で作った鑑定書の最初のページを無料で読めます（毎日先着${n}名様限定）。`,
+    previewButton: 'まずは無料で試し読み →',
     banner: (range) => `今週の空 ・ ${range}`,
     bullet: '・',
     colon: '：'
@@ -450,6 +454,8 @@ function buildIssue(lang, { events, nextEvent, first, last, reportIndex }) {
   const [reportName, reportDesc] = T.reports[reportIndex];
   const reportUrl = `${BASE_URL}/${lang}${REPORT_PATHS[reportIndex]}`;
   const premiumUrl = `${BASE_URL}/${lang}/mypage#premium`;
+  const previewLimit = T.preview ? PREVIEW_LIMITS[REPORT_PATHS[reportIndex]] : null;
+  const previewUrl = `${reportUrl}#preview-cta`;
 
   const cardHtml = (c, i) => `<div style="border:1px solid rgba(139,107,27,0.35); border-radius:8px; padding:14px 16px; background:#fbf6ea;${i ? ' margin-top:12px;' : ''}">
       <div style="color:#8B6B1B; font-size:13px;">${esc(c.full)}</div>
@@ -478,6 +484,8 @@ function buildIssue(lang, { events, nextEvent, first, last, reportIndex }) {
       <td style="vertical-align:top; font-size:15px;">
         <div style="font-weight:700;">${esc(reportName)}</div>
         <div style="font-size:14px; margin:4px 0 8px;">${esc(reportDesc)}</div>
+        ${previewLimit ? `<div style="font-size:14px; margin:0 0 10px; color:#123528; font-weight:600;">${esc(T.preview(previewLimit))}</div>
+        <a href="${esc(previewUrl)}" style="display:inline-block; background:#123528; color:#fff6dc; text-decoration:none; padding:10px 18px; border-radius:20px; font-weight:700; border:1px solid #C9A227; margin-bottom:8px;">${esc(T.previewButton)}</a><br>` : ''}
         <a href="${esc(reportUrl)}" style="color:#8B6B1B; font-weight:700;">${esc(T.more)}</a>
       </td>
     </tr></table>
@@ -488,7 +496,7 @@ function buildIssue(lang, { events, nextEvent, first, last, reportIndex }) {
     ...cards.map((c) => `\n■ ${c.full}　${c.title}\n${c.question}\n${c.body}`),
     `\n■ ${heading}\n${why}`,
     `\n■ ${T.premiumTitle}\n${T.points.map((x) => `${T.bullet}${x}`).join('\n')}\n${T.button}${T.colon}${premiumUrl}\n${T.refund}`,
-    `\n■ ${T.reportTitle}\n${reportName}\n${reportDesc}\n${reportUrl}`
+    `\n■ ${T.reportTitle}\n${reportName}\n${reportDesc}${previewLimit ? `\n${T.preview(previewLimit)}\n${T.previewButton.replace(' →', '')}${T.colon}${previewUrl}` : ''}\n${reportUrl}`
   ].join('\n');
 
   return { subject, html, text, banner: T.banner(range) };
