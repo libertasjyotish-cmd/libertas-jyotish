@@ -1,6 +1,6 @@
 // 日次: Play 会員の状態を Google に照会して反映し、解約済みで paid_until を過ぎた KOMOJU/Play 会員を無料へ戻す（Vercel Cron）
 // Vercel は CRON_SECRET を Authorization: Bearer で付けて呼ぶ。手動実行は ?key=<CRON_SECRET> でも可。
-const { expireKomojuMembers } = require('./_sheets');
+const { expireKomojuMembers, prunePdfPreviews } = require('./_sheets');
 const { syncPlayMembers } = require('./_play-link');
 
 module.exports = async function handler(req, res) {
@@ -11,9 +11,11 @@ module.exports = async function handler(req, res) {
   // Play の照会が失敗しても KOMOJU の失効処理は続ける
   const play = await syncPlayMembers({ deadline: Date.now() + 40000 }).catch((e) => ({ error: e.message }));
   if (play.changed || play.errors || play.error) console.log('play sync', play);
+  // 無料プレビューの古い受付記録（7日より前）を消す。失敗しても失効処理は続ける
+  const pruned = await prunePdfPreviews().catch((e) => { console.error('preview prune failed:', e.message); return 0; });
   try {
     const expired = await expireKomojuMembers();
-    return res.status(200).json({ ok: true, expired: expired.length, play });
+    return res.status(200).json({ ok: true, expired: expired.length, play, pruned });
   } catch (err) {
     console.error('komoju-cron failed:', err.message);
     return res.status(500).json({ error: 'cron_failed' });
