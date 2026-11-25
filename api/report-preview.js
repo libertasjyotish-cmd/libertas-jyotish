@@ -7,7 +7,7 @@ const { listGeminiModels } = require('./_gemini');
 const { generateChapters } = require('./_report');
 const { normalizeLang } = require('./_terms');
 const { geocodeBirthPlace } = require('./_geocode');
-const { PREVIEW_PRODUCTS, PREVIEW_LANGS, previewDefs, previewKey, isFresh } = require('./_report-preview');
+const { PREVIEW_PRODUCTS, PREVIEW_LANGS, previewDefs, previewKey, isFresh, maskSummary } = require('./_report-preview');
 
 const DAILY_LIMIT = 10;
 const PER_EMAIL_LIMIT = 3;
@@ -34,7 +34,8 @@ function responseBody(product, relation, astro, summary, source) {
   const { defs, ids } = previewDefs(product, relation);
   const toc = ids.map((id) => defs.find((c) => c.id === id)?.title).filter(Boolean);
   const persons = product === 'compat' ? [personCover(astro.personA), personCover(astro.personB)] : [personCover(astro)];
-  return { source, summary, toc, cover: { product, period: astro.period || null, persons } };
+  const visible = maskSummary(product, summary);
+  return { source, summary: visible.summary, locked: visible.locked, toc, cover: { product, period: astro.period || null, persons } };
 }
 
 async function fetchAstro(product, a, b, relation, lang) {
