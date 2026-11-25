@@ -51,7 +51,14 @@
     return para(String(v));
   }
 
-  function summaryPage(s) {
+  var GHOST = 'この配置が示すものと、その理由を、出生図の根拠とともにお伝えします。';
+  function maskHtml(locked) {
+    return '<div class="pv-mask">' + locked.map(function (label) {
+      return '<h3>' + esc(label) + '</h3><p class="pv-ghost" aria-hidden="true">' + GHOST + '</p>';
+    }).join('') + '<p class="pv-mask-note">この先は完全版でお読みいただけます</p></div>';
+  }
+
+  function summaryPage(s, locked) {
     var html = '<h2 class="chapter-title">' + esc(s.title || '') + '</h2>';
     if (s.catchphrase) html += '<div class="lead">' + esc(s.catchphrase) + '</div>';
     Object.keys(s).forEach(function (k) {
@@ -59,7 +66,7 @@
       if (product === 'career' && CAREER_LABELS[k]) html += '<h3>' + esc(CAREER_LABELS[k]) + '</h3>';
       html += value(s[k]);
     });
-    return '<section class="pv-page">' + html + '</section>';
+    return '<section class="pv-page">' + html + (locked && locked.length ? maskHtml(locked) : '') + '</section>';
   }
 
   function personLine(p) {
@@ -143,7 +150,7 @@
         if (res.ok && res.j.summary) {
           sessionStorage.removeItem(FORM_KEY);
           show('<p class="pv-label">あなたの鑑定書（PDF）より、一部を無料公開</p><div class="pv-book">' +
-            coverPage(res.j.cover || {}) + summaryPage(res.j.summary) + tocPage(res.j.toc || []) + '</div>');
+            coverPage(res.j.cover || {}) + summaryPage(res.j.summary, res.j.locked) + tocPage(res.j.toc || []) + '</div>');
           cta.style.display = 'none';
           box.scrollIntoView({ behavior: 'smooth', block: 'start' });
           return;
