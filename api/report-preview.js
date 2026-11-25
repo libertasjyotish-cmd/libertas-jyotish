@@ -7,6 +7,7 @@ const { listGeminiModels } = require('./_gemini');
 const { generateChapters } = require('./_report');
 const { normalizeLang } = require('./_terms');
 const { geocodeBirthPlace } = require('./_geocode');
+const { optInFromPreview } = require('./_newsletter');
 const { PREVIEW_PRODUCTS, PREVIEW_LANGS, previewDefs, previewKey, isFresh, maskSummary } = require('./_report-preview');
 
 const DAILY_LIMIT = 10;
@@ -68,6 +69,8 @@ module.exports = async function handler(req, res) {
   if (!PREVIEW_PRODUCTS.has(product) || !PREVIEW_LANGS.has(lang)) return res.status(404).json({ error: 'preview_unavailable' });
   if (!email || !body.session || !verifySession(email, body.session)) return res.status(401).json({ error: 'invalid_session' });
 
+  // プレビューの入り口のチェック（お知らせメールを受け取る）に同意した人だけ配信対象にする。外した人の既存の設定は変えない
+  if (body.newsletter === true) await optInFromPreview(email, lang).catch((err) => console.error('Newsletter opt-in failed:', err?.message));
   const a = person(body, '');
   const b = product === 'compat' ? person(body, '_b') : null;
   const relation = product === 'compat' ? (RELATIONS.has(str(body.relation, 20)) ? str(body.relation, 20) : 'general') : '';

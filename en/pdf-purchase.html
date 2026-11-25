@@ -164,6 +164,8 @@
     .preview-cta .pv-free { display: block; font-size: 1.15rem; font-weight: 700; color: #fff6dc; margin-bottom: 12px; line-height: 1.6; }
     .btn-preview { width: 100%; padding: 16px 20px; font-size: 1.05rem; font-weight: 700; font-family: inherit; color: #fffdf9; background: linear-gradient(135deg, #C59B27 0%, #8B6B1B 100%); border: 0; border-radius: 8px; cursor: pointer; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4); }
     .btn-preview:disabled { opacity: 0.6; cursor: default; }
+    .preview-cta .pv-news { display: flex; gap: 8px; align-items: flex-start; justify-content: center; margin: 12px 0 0; font-size: 0.8rem; color: #e6dcc6; text-align: left; cursor: pointer; }
+    .preview-cta .pv-news input { margin-top: 4px; flex: none; }
     .preview-note { font-size: 0.78rem; color: #d8cdb4; margin-top: 10px; text-align: left; }
     .pv-banner { display: block; margin: 16px auto 0; max-width: 560px; padding: 12px 16px; text-align: center; text-decoration: none; color: #2C221E; background: linear-gradient(135deg, #F3D77A 0%, #D4AF37 100%); border-radius: 10px; font-weight: 700; line-height: 1.6; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35); }
     .pv-banner small { display: block; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; }
@@ -377,6 +379,7 @@ window.LJ_I18N = {
           <span class="pv-limit">毎日先着100名様限定・無料</span>
           <span class="pv-free">購入前に、あなたの鑑定書の最初のページを読めます</span>
           <button type="button" id="btn-preview" class="btn-preview">まずは無料で「あなたの取扱説明書」を読む</button>
+          <label class="pv-news"><input type="checkbox" id="preview-news" checked><span>Receive new readings and special offers by email (Unsubscribe anytime)</span></label>
           <p class="preview-note">鑑定書の最初の1章を、あなたの出生図から無料でお作りします（メールアドレスの確認が必要です）。</p>
         </div>
         <div id="preview-box" aria-live="polite"></div>
@@ -539,6 +542,7 @@ window.LJ_I18N = {
       const fields = readBirthFields();
       if (!fields) return;
       const session = localStorage.getItem('lj_session') || '';
+      sessionStorage.setItem('lj_preview_news', document.getElementById('preview-news').checked ? 'yes' : 'no');
       if (!window.LJCheckoutGuard.hasSession() || window.LJCheckoutGuard.verifiedEmail().toLowerCase() !== fields.email.trim().toLowerCase()) {
         window.location.href = '/en/mypage?next=pdf-preview&hint=' + encodeURIComponent(fields.email);
         return;
@@ -552,7 +556,7 @@ window.LJ_I18N = {
         const res = await fetch('/api/pdf-report', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ preview: true, email: fields.email, session, dob: fields.dob, tob: fields.tob, city: fields.city, language: 'en' })
+          body: JSON.stringify({ preview: true, newsletter: document.getElementById('preview-news').checked, email: fields.email, session, dob: fields.dob, tob: fields.tob, city: fields.city, language: 'en' })
         });
         const data = await res.json().catch(() => ({}));
         if (res.status === 401) {
@@ -623,6 +627,7 @@ window.LJ_I18N = {
       if (PREVIEW_ENABLED) {
         document.getElementById('preview-cta').style.display = 'block';
         document.getElementById('preview-banner').style.display = 'block';
+        if (sessionStorage.getItem('lj_preview_news')) document.getElementById('preview-news').checked = sessionStorage.getItem('lj_preview_news') === 'yes';
         document.getElementById('btn-preview').addEventListener('click', runPreview);
         // 本人確認から戻ってきたら、そのままプレビューを作る
         if (new URLSearchParams(window.location.search).get('preview') === '1' && window.LJCheckoutGuard.hasSession()) runPreview();
