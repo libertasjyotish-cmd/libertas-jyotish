@@ -213,6 +213,11 @@ async function confirmWebOrder(orderId) {
   if (order.status !== STATUS.AWAITING_PAYMENT) return 'already_confirmed';
   const next = order.product === 'palm' ? STATUS.AWAITING_PHOTOS : STATUS.NEW;
   await upsertOrder(orderId, { status: next, last_error: '' });
+  const names = { yearly: '年間運勢', career: '仕事運・金運・天職', palm: '手相×出生図', compat: '相性', karma: 'カルマとダルマ' };
+  await require('./_owner-mail').notifySale(`${names[order.product] || order.product} 鑑定書の購入`, [
+    `email: ${order.buyer_email}`, `product: ${order.product}`, `order: ${orderId}`,
+    `via: ${order.personalization || ''}`, `language: ${order.language || ''}`
+  ]);
   return 'confirmed';
 }
 

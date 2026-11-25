@@ -142,6 +142,7 @@ async function registerReceipt(receipt, ctx) {
     place_b: compat ? compat.b.place || '' : '',
     language: normalizeLang(parsed.language || 'en')
   };
+  if (ctx.mail) await mail.notifyOwner(`[売上] 新しい注文（${product || 'natal'}, receipt ${receiptId}）`, [`buyer: ${buyerName} <${buyerEmail || 'no email'}>`, `product: ${product || 'natal'}`, `language: ${base.language}`]).catch((err) => ctx.log(`  ${receiptId}: sale notify failed: ${err.message}`));
 
   if (parsed.missing.length) {
     if (ctx.mail) {
