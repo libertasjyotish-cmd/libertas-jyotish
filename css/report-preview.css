@@ -1,0 +1,51 @@
+/* 鑑定書の無料プレビュー（年間運勢・仕事・カルマ・相性）。PDF の紙面（pdf-report.html）を縮小して再現する。 */
+#preview-box { --color-gold-main: #D4AF37; --color-gold-dark: #8B6B1B; }
+.preview-cta { margin: 18px 0 6px; text-align: center; }
+.preview-cta .pv-limit { display: inline-block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; color: #fff6dc; background: #8b6b1b; border-radius: 4px; padding: 3px 10px; margin-bottom: 8px; }
+.btn-preview { width: 100%; padding: 13px 20px; font-size: 0.98rem; font-weight: 600; font-family: inherit; color: #8B6B1B; background: rgba(255, 252, 245, 0.95); border: 1px solid #8B6B1B; border-radius: 8px; cursor: pointer; }
+.btn-preview:disabled { opacity: 0.6; cursor: default; }
+.preview-note { font-size: 0.78rem; color: #7a6a58; margin-top: 8px; text-align: left; }
+#preview-box { display: none; text-align: left; margin: 0 0 24px; }
+#preview-box .pv-label { font-size: 0.8rem; color: #5A4E48; text-align: center; margin-bottom: 10px; }
+#preview-box .pv-book { background: #123528; border-radius: 10px; padding: 16px 12px 18px; }
+#preview-box .pv-page {
+  position: relative; background: #FFFDF7; color: #2C221E; padding: 26px 20px 30px; margin-bottom: 14px; line-height: 1.8;
+  border: 1px solid rgba(184, 142, 60, 0.5); border-radius: 6px; box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
+}
+#preview-box .pv-page::before {
+  content: ''; position: absolute; inset: 0; border-radius: 6px; pointer-events: none;
+  background: url("/img/report-cover.jpg") center / cover; opacity: 0.07;
+}
+#preview-box .pv-page > * { position: relative; }
+#preview-box .pv-cover {
+  min-height: 300px; text-align: center; color: #3a2f14; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;
+  background: linear-gradient(rgba(255, 253, 247, 0.35), rgba(255, 253, 247, 0.55)), url("/img/report-cover.jpg") center / cover;
+}
+#preview-box .pv-cover::before { content: none; }
+#preview-box .pv-cover img { width: 48px; margin: 0 auto; }
+#preview-box .pv-cover h2 { font-family: 'Cinzel', serif; font-size: 1.4rem; letter-spacing: 0.14em; color: var(--color-gold-dark); }
+#preview-box .pv-cover .sub { font-size: 0.95rem; letter-spacing: 0.3em; margin-top: 6px; }
+#preview-box .pv-cover .owner { font-size: 0.8rem; line-height: 2; }
+#preview-box .chapter-title {
+  font-size: 1.1rem; color: var(--color-gold-dark); letter-spacing: 0.06em; text-align: left;
+  border-bottom: 1px solid rgba(139, 107, 27, 0.35); padding-bottom: 8px; margin-bottom: 16px;
+}
+#preview-box .lead { font-size: 1.15rem; line-height: 1.7; color: var(--color-gold-dark); text-align: center; margin: 6px 0 18px; }
+#preview-box h3 { font-size: 0.95rem; color: var(--color-gold-dark); margin: 16px 0 6px; text-align: left; }
+#preview-box p { font-size: 0.9rem; line-height: 1.9; margin-bottom: 10px; text-align: justify; }
+#preview-box ul { font-size: 0.9rem; line-height: 1.9; margin: 4px 0 10px 1.2em; text-align: left; }
+#preview-box .fact {
+  background: rgba(212, 175, 55, 0.09); border-left: 3px solid var(--color-gold-main);
+  padding: 10px 14px; margin: 12px 0; font-size: 0.85rem; text-align: left;
+}
+#preview-box .fact .reason { display: block; font-size: 0.78rem; color: #6A5E58; margin-top: 4px; }
+#preview-box .toc { list-style: none; margin: 0; text-align: left; }
+#preview-box .toc li { padding: 5px 0; border-bottom: 1px dashed rgba(139, 107, 27, 0.25); }
+#preview-box .toc .open { color: var(--color-gold-dark); font-weight: 600; }
+#preview-box .toc .open span { font-size: 0.75rem; margin-inline-start: 6px; }
+.preview-status { font-size: 0.88rem; color: #5A4E48; text-align: center; }
+.preview-rest-lock { text-align: center; margin-top: 16px; }
+#preview-box .pv-cover h2 { border: 0; padding: 0; margin: 0; }
+#preview-box h3 { border: 0; padding: 0; }
+#preview-box .lead-note { font-size: 0.85rem; color: #6A5E58; }
+#preview-box .chapter-title { border-left: 0; padding-left: 0; margin-top: 0; }

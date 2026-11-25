@@ -12,6 +12,8 @@ const { normalizeLang } = require('./_terms');
 const ledger = require('./_etsy-ledger');
 const { PLAY_PRODUCTS } = require('./_play');
 const storage = require('./_etsy-storage');
+const { getReportPreview } = require('./_sheets');
+const { PREVIEW_PRODUCTS, PREVIEW_LANGS, previewKey, isFresh } = require('./_report-preview');
 
 const PRODUCTS = new Set(['compat', 'yearly', 'career', 'palm', 'karma']);
 const HANDS = new Set(['right', 'left']);
@@ -95,6 +97,13 @@ module.exports = async (req, res) => {
     return res.status(503).json({ error: 'unavailable' });
   }
 
+  // 購入前の無料プレビューで作った星回りと見取り図を引き継ぐ（同じ入力・同じ月のみ）
+  let fromPreview = {};
+  if (PREVIEW_PRODUCTS.has(product) && PREVIEW_LANGS.has(lang)) {
+    const stored = await getReportPreview(previewKey({ email, product, lang, relation, a, b })).catch(() => null);
+    if (stored && isFresh(stored.createdAt)) fromPreview = { astro: JSON.stringify(stored.astro), summary: JSON.stringify(stored.summary) };
+  }
+
   const orderId = `${ledger.WEB_PREFIX}${ownerTest ? 'test-' : ''}${crypto.randomBytes(8).toString('hex')}`;
   const tier = resolveTier(country);
   const amount = AMOUNTS[product][tier];
@@ -117,6 +126,7 @@ module.exports = async (req, res) => {
         tob_unknown_b: b && b.tobUnknown ? 'true' : 'false',
         place_b: b ? b.place : '',
         language: lang,
+      ...fromPreview,
         status: product === 'palm' ? ledger.STATUS.AWAITING_PHOTOS : ledger.STATUS.NEW
       });
       const uploadUrl = product === 'palm' ? storage.uploadUrl(orderId, lang) : null;
@@ -139,6 +149,7 @@ module.exports = async (req, res) => {
       tob_unknown_b: b && b.tobUnknown ? 'true' : 'false',
       place_b: b ? b.place : '',
       language: lang,
+      ...fromPreview,
       status: ledger.STATUS.AWAITING_PAYMENT
     });
     if (viaPlay) {

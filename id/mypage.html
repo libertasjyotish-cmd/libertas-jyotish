@@ -862,6 +862,18 @@ return;
 requestReauth('pdf-preview', new URLSearchParams(window.location.search).get('hint') || savedEmail);
 }
 
+const REPORT_PREVIEW_PRODUCTS = ['yearly', 'career', 'karma', 'compat'];
+if (nextTarget === 'report-preview') {
+const previewProduct = new URLSearchParams(window.location.search).get('product');
+if (REPORT_PREVIEW_PRODUCTS.indexOf(previewProduct) >= 0) {
+if (window.LJCheckoutGuard.hasSession()) {
+window.location.replace('/id/' + previewProduct + '?preview=1#order');
+return;
+}
+requestReauth('report-preview:' + previewProduct, new URLSearchParams(window.location.search).get('hint') || savedEmail);
+}
+}
+
 if (nextTarget === 'pdf-report') {
 if (localStorage.getItem('lj_session')) {
 window.location.replace('/id/pdf-report');
@@ -1002,6 +1014,11 @@ if (window.ljPendingAfterAuth === 'pdf-preview') {
 window.ljPendingAfterAuth = '';
 window.location.href = '/id/pdf-purchase?preview=1';
 }
+if (String(window.ljPendingAfterAuth || '').indexOf('report-preview:') === 0) {
+const previewProduct = window.ljPendingAfterAuth.slice('report-preview:'.length);
+window.ljPendingAfterAuth = '';
+window.location.href = '/id/' + previewProduct + '?preview=1#order';
+}
 if (window.ljPendingAfterAuth === 'pdf-report') {
 window.ljPendingAfterAuth = '';
 window.location.href = '/id/pdf-report';
@@ -1100,7 +1117,7 @@ if (box) box.style.display = 'block';
 const title = box ? box.querySelector('.card-title') : null;
 const titleText = pendingAction === 'pdf-report'
 ? '🔑 Konfirmasi identitas (untuk membuka Laporan Seumur Hidup)'
-: pendingAction === 'pdf-preview' ? '🔑 本人確認（鑑定書の無料プレビュー）' : '🔑 Konfirmasi identitas (untuk mengelola atau membatalkan paket)';
+: pendingAction === 'pdf-preview' || String(pendingAction).indexOf('report-preview:') === 0 ? '🔑 本人確認（鑑定書の無料プレビュー）' : '🔑 Konfirmasi identitas (untuk mengelola atau membatalkan paket)';
 if (title) title.textContent = titleText;
 const input = document.getElementById('login-email');
 if (input) {

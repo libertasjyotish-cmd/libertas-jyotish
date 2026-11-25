@@ -12,6 +12,7 @@
     "api/etsy-cron.js": { "maxDuration": 300, "includeFiles": "{pdf-report.html,*/pdf-report.html,css/rtl.css,img/libertas-logo.png,img/report-cover.jpg}" },
     "api/komoju-return.js": { "maxDuration": 30 },
     "api/report-order.js": { "maxDuration": 30 },
+    "api/report-preview.js": { "maxDuration": 60 },
     "api/komoju-webhook.js": { "maxDuration": 30 },
     "api/health.js": { "maxDuration": 60 },
     "api/today.js": { "maxDuration": 30 },
