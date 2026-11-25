@@ -799,6 +799,18 @@ return;
 requestReauth('pdf-preview', new URLSearchParams(window.location.search).get('hint') || savedEmail);
 }
 
+const REPORT_PREVIEW_PRODUCTS = ['yearly', 'career', 'karma', 'compat'];
+if (nextTarget === 'report-preview') {
+const previewProduct = new URLSearchParams(window.location.search).get('product');
+if (REPORT_PREVIEW_PRODUCTS.indexOf(previewProduct) >= 0) {
+if (window.LJCheckoutGuard.hasSession()) {
+window.location.replace('/{{lang}}/' + previewProduct + '?preview=1#order');
+return;
+}
+requestReauth('report-preview:' + previewProduct, new URLSearchParams(window.location.search).get('hint') || savedEmail);
+}
+}
+
 if (nextTarget === 'pdf-report') {
 if (localStorage.getItem('lj_session')) {
 window.location.replace('/{{lang}}/pdf-report');
@@ -939,6 +951,11 @@ if (window.ljPendingAfterAuth === 'pdf-preview') {
 window.ljPendingAfterAuth = '';
 window.location.href = '/{{lang}}/pdf-purchase?preview=1';
 }
+if (String(window.ljPendingAfterAuth || '').indexOf('report-preview:') === 0) {
+const previewProduct = window.ljPendingAfterAuth.slice('report-preview:'.length);
+window.ljPendingAfterAuth = '';
+window.location.href = '/{{lang}}/' + previewProduct + '?preview=1#order';
+}
 if (window.ljPendingAfterAuth === 'pdf-report') {
 window.ljPendingAfterAuth = '';
 window.location.href = '/{{lang}}/pdf-report';
@@ -1037,7 +1054,7 @@ if (box) box.style.display = 'block';
 const title = box ? box.querySelector('.card-title') : null;
 const titleText = pendingAction === 'pdf-report'
 ? '{{t.mypage.js14|js}}'
-: pendingAction === 'pdf-preview' ? '{{t.mypage.previewAuthTitle|js}}' : '{{t.mypage.js15|js}}';
+: pendingAction === 'pdf-preview' || String(pendingAction).indexOf('report-preview:') === 0 ? '{{t.mypage.previewAuthTitle|js}}' : '{{t.mypage.js15|js}}';
 if (title) title.textContent = titleText;
 const input = document.getElementById('login-email');
 if (input) {

@@ -653,16 +653,22 @@ const PREVIEW_HEADERS = ['date_jst', 'email', 'created_at'];
 const PREVIEW_KEEP_DAYS = 7;
 const jstDate = (ms = Date.now()) => new Date(ms + 9 * 3600 * 1000).toISOString().slice(0, 10);
 
-async function getPreviewSheet() {
+// 年間運勢・仕事・カルマ・相性の無料プレビュー。受付の記録と、生成した見取り図（購入時に鑑定書へ引き継ぐ）を同じ行に置く。
+const REPORT_PREVIEW_SHEET_TITLE = process.env.GOOGLE_SHEETS_REPORT_PREVIEW_TAB || 'レポートプレビュー';
+const REPORT_PREVIEW_HEADERS = ['date_jst', 'email', 'created_at', 'key', 'product', 'astro', 'summary'];
+const REPORT_PREVIEW_KEEP_DAYS = 40;
+
+async function getPreviewSheet(title = PREVIEW_SHEET_TITLE, headers = PREVIEW_HEADERS) {
   const doc = await getSpreadsheet();
   if (!doc) return null;
-  const existing = doc.sheetsByTitle[PREVIEW_SHEET_TITLE];
+  const existing = doc.sheetsByTitle[title];
   if (existing) {
     await existing.loadHeaderRow().catch(() => null);
     return existing;
   }
-  return doc.addSheet({ title: PREVIEW_SHEET_TITLE, headerValues: PREVIEW_HEADERS, gridProperties: { rowCount: 1000, columnCount: PREVIEW_HEADERS.length } });
+  return doc.addSheet({ title, headerValues: headers, gridProperties: { rowCount: 1000, columnCount: headers.length } });
 }
+const getReportPreviewSheet = () => getPreviewSheet(REPORT_PREVIEW_SHEET_TITLE, REPORT_PREVIEW_HEADERS);
 
 function countPreviews(rows, today, email) {
   const todays = rows.filter(r => r.get('date_jst') === today);
@@ -671,8 +677,8 @@ function countPreviews(rows, today, email) {
 
 // 1日の総数とメールごとの数の上限内なら 1 行確保する。同時に申し込まれても上限を超えないよう、
 // 追記した後に自分の行より前の件数で数え直し、超えていたら受け付けない（確保した行も 1 件として残る）。
-async function reservePdfPreview(email, { dailyLimit, perEmailLimit }) {
-  const sheet = await getPreviewSheet();
+async function reservePdfPreview(email, { dailyLimit, perEmailLimit, sheet: target = null, fields = {} }) {
+  const sheet = target || await getPreviewSheet();
   if (!sheet) return { ok: false, reason: 'sheet_unavailable' };
   const today = jstDate();
   const normalized = normalizeEmail(email);
@@ -680,17 +686,45 @@ async function reservePdfPreview(email, { dailyLimit, perEmailLimit }) {
   const before = countPreviews(await sheet.getRows(), today, normalized);
   const early = over({ total: before.total + 1, byEmail: before.byEmail + 1 });
   if (early) return { ok: false, reason: early };
-  const added = await sheet.addRow({ date_jst: today, email: normalized, created_at: new Date().toISOString() });
+  const added = await sheet.addRow({ date_jst: today, email: normalized, created_at: new Date().toISOString(), ...fields });
   const upTo = (await sheet.getRows()).filter(r => r.rowNumber <= added.rowNumber);
   const late = over(countPreviews(upTo, today, normalized));
-  return late ? { ok: false, reason: late } : { ok: true };
+  return late ? { ok: false, reason: late } : { ok: true, row: added };
+}
+
+async function reserveReportPreview(email, key, product, limits) {
+  const sheet = await getReportPreviewSheet();
+  if (!sheet) return { ok: false, reason: 'sheet_unavailable' };
+  return reservePdfPreview(email, { ...limits, sheet, fields: { key, product } });
+}
+
+async function saveReportPreview(row, { astro, summary }) {
+  const path = `sheets/report-preview/${row.get('key')}`;
+  row.set('astro', await sheetBlob.externalize(JSON.stringify(astro), path));
+  row.set('summary', await sheetBlob.externalize(JSON.stringify(summary), path));
+  await row.save();
+}
+
+// key が同じで見取り図まで保存された最新の行。{ astro, summary, createdAt } か null。
+async function getReportPreview(key) {
+  const sheet = await getReportPreviewSheet();
+  if (!sheet) return null;
+  const row = (await sheet.getRows()).filter((r) => r.get('key') === key && r.get('summary')).pop();
+  if (!row) return null;
+  const parse = async (field) => JSON.parse(await sheetBlob.resolve(row.get(field)));
+  return { astro: await parse('astro'), summary: await parse('summary'), createdAt: row.get('created_at') || '' };
 }
 
 // 古い受付記録を先頭からまとめて消す（Cron から 1 日 1 回）。行は日付順に追記されている。
 async function prunePdfPreviews() {
-  const sheet = await getPreviewSheet();
+  const pdf = await prunePreviewSheet(await getPreviewSheet(), PREVIEW_KEEP_DAYS);
+  const report = await prunePreviewSheet(await getReportPreviewSheet(), REPORT_PREVIEW_KEEP_DAYS);
+  return pdf + report;
+}
+
+async function prunePreviewSheet(sheet, keepDays) {
   if (!sheet) return 0;
-  const cutoff = jstDate(Date.now() - PREVIEW_KEEP_DAYS * 86400 * 1000);
+  const cutoff = jstDate(Date.now() - keepDays * 86400 * 1000);
   const rows = await sheet.getRows();
   let count = 0;
   while (count < rows.length && String(rows[count].get('date_jst') || '') < cutoff) count += 1;
@@ -703,6 +737,9 @@ async function prunePdfPreviews() {
 
 module.exports = {
   reservePdfPreview,
+  reserveReportPreview,
+  saveReportPreview,
+  getReportPreview,
   prunePdfPreviews,
   externalizePdfReports,
   getMemberSheet,

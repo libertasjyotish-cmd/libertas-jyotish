@@ -32,6 +32,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/site-menu.css">
 <link rel="stylesheet" href="/css/guide.css">
+<link rel="stylesheet" href="/css/report-preview.css">
 <style>
 body { font-family: 'Noto Serif JP', serif; }
 .guide { max-width: 860px; }
@@ -267,6 +268,12 @@ body { font-family: 'Noto Serif JP', serif; }
   <label for="f-place">出生地（市区町村・国）</label>
   <input id="f-place" name="place" type="text" placeholder="例: 東京都千代田区" required>
   <div class="pc-err" id="form-error"></div>
+  <div id="preview-cta" class="preview-cta" data-product="career" data-lang="ja" style="display:none;">
+    <span class="pv-limit">毎日先着10名様限定・無料プレビュー</span>
+    <button type="button" id="btn-preview" class="btn-preview">まずは無料で、あなたの「見取り図」を読む</button>
+    <p class="preview-note">ご入力の出生データから、鑑定書の最初のページ（あなたの天職の見取り図）を無料でお作りします（メールアドレスの確認が必要です）。</p>
+  </div>
+  <div id="preview-box" aria-live="polite"></div>
   <div class="pc-cta">
     <button class="pc-btn" type="button" id="btn-order">決済に進む（¥4,800 税込）</button>
     <span class="pc-btn-sub">クレジットカード・コンビニ ／ 決済は KOMOJU のページで行われます</span>
@@ -340,5 +347,6 @@ body { font-family: 'Noto Serif JP', serif; }
 <a href="/ja/contact">お問い合わせ</a>
 <p class="copyright">&copy; Libertas Jyotish All Rights Reserved.</p>
 </footer>
+<script src="/js/report-preview.js"></script>
 </body>
 </html>
