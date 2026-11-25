@@ -35,7 +35,14 @@ async function fetchAstro(dob, tob, city, lang) {
   }
 }
 
-const previewBody = (summary, astro) => ({ summary, dasha: astro?.dasha?.current?.maha || null });
+const previewBody = (summary, astro) => ({
+  summary,
+  dasha: astro?.dasha?.current?.maha || null,
+  cover: {
+    dob: astro?.birth?.dob || '', tob: astro?.birth?.tob || '', city: astro?.city || '',
+    lagna: astro?.ascendant?.sign || '', moon: astro?.moon?.sign || '', nakshatra: astro?.nakshatra || ''
+  }
+});
 
 async function handlePreview(res, { email, member, dob, tob, city, lang }) {
   if (!PREVIEW_LANGS.includes(lang)) return res.status(404).json({ error: 'preview_unavailable' });
