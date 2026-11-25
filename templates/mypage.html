@@ -791,6 +791,14 @@ if (nextTarget === 'checkout') {
   return;
 }
 
+if (nextTarget === 'pdf-preview') {
+if (window.LJCheckoutGuard.hasSession()) {
+window.location.replace('/{{lang}}/pdf-purchase?preview=1');
+return;
+}
+requestReauth('pdf-preview', new URLSearchParams(window.location.search).get('hint') || savedEmail);
+}
+
 if (nextTarget === 'pdf-report') {
 if (localStorage.getItem('lj_session')) {
 window.location.replace('/{{lang}}/pdf-report');
@@ -927,6 +935,10 @@ if (verified.session) localStorage.setItem('lj_session', verified.session);
 window.LJCheckoutGuard.markVerified(email);
 completeLogin(email);
 // 認証待ちにしていた操作をそのまま続行する
+if (window.ljPendingAfterAuth === 'pdf-preview') {
+window.ljPendingAfterAuth = '';
+window.location.href = '/{{lang}}/pdf-purchase?preview=1';
+}
 if (window.ljPendingAfterAuth === 'pdf-report') {
 window.ljPendingAfterAuth = '';
 window.location.href = '/{{lang}}/pdf-report';
@@ -1025,7 +1037,7 @@ if (box) box.style.display = 'block';
 const title = box ? box.querySelector('.card-title') : null;
 const titleText = pendingAction === 'pdf-report'
 ? '{{t.mypage.js14|js}}'
-: '{{t.mypage.js15|js}}';
+: pendingAction === 'pdf-preview' ? '{{t.mypage.previewAuthTitle|js}}' : '{{t.mypage.js15|js}}';
 if (title) title.textContent = titleText;
 const input = document.getElementById('login-email');
 if (input) {

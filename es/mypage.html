@@ -854,6 +854,14 @@ if (nextTarget === 'checkout') {
   return;
 }
 
+if (nextTarget === 'pdf-preview') {
+if (window.LJCheckoutGuard.hasSession()) {
+window.location.replace('/es/pdf-purchase?preview=1');
+return;
+}
+requestReauth('pdf-preview', new URLSearchParams(window.location.search).get('hint') || savedEmail);
+}
+
 if (nextTarget === 'pdf-report') {
 if (localStorage.getItem('lj_session')) {
 window.location.replace('/es/pdf-report');
@@ -990,6 +998,10 @@ if (verified.session) localStorage.setItem('lj_session', verified.session);
 window.LJCheckoutGuard.markVerified(email);
 completeLogin(email);
 // 認証待ちにしていた操作をそのまま続行する
+if (window.ljPendingAfterAuth === 'pdf-preview') {
+window.ljPendingAfterAuth = '';
+window.location.href = '/es/pdf-purchase?preview=1';
+}
 if (window.ljPendingAfterAuth === 'pdf-report') {
 window.ljPendingAfterAuth = '';
 window.location.href = '/es/pdf-report';
@@ -1088,7 +1100,7 @@ if (box) box.style.display = 'block';
 const title = box ? box.querySelector('.card-title') : null;
 const titleText = pendingAction === 'pdf-report'
 ? '🔑 Confirmación de identidad (para abrir el Informe Vitalicio)'
-: '🔑 Confirmación de identidad (para gestionar o cancelar el plan)';
+: pendingAction === 'pdf-preview' ? '🔑 本人確認（鑑定書の無料プレビュー）' : '🔑 Confirmación de identidad (para gestionar o cancelar el plan)';
 if (title) title.textContent = titleText;
 const input = document.getElementById('login-email');
 if (input) {

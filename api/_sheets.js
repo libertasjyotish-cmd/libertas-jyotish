@@ -647,7 +647,63 @@ async function externalizePdfReports({ maxRows = 20 } = {}) {
   return moved;
 }
 
+// 完全鑑定書の無料プレビュー（要約章）の受付記録。1件 1 行、追記のみ（行の書き換え・途中削除はしない）。
+const PREVIEW_SHEET_TITLE = process.env.GOOGLE_SHEETS_PREVIEW_TAB || 'PDFプレビュー';
+const PREVIEW_HEADERS = ['date_jst', 'email', 'created_at'];
+const PREVIEW_KEEP_DAYS = 7;
+const jstDate = (ms = Date.now()) => new Date(ms + 9 * 3600 * 1000).toISOString().slice(0, 10);
+
+async function getPreviewSheet() {
+  const doc = await getSpreadsheet();
+  if (!doc) return null;
+  const existing = doc.sheetsByTitle[PREVIEW_SHEET_TITLE];
+  if (existing) {
+    await existing.loadHeaderRow().catch(() => null);
+    return existing;
+  }
+  return doc.addSheet({ title: PREVIEW_SHEET_TITLE, headerValues: PREVIEW_HEADERS, gridProperties: { rowCount: 1000, columnCount: PREVIEW_HEADERS.length } });
+}
+
+function countPreviews(rows, today, email) {
+  const todays = rows.filter(r => r.get('date_jst') === today);
+  return { total: todays.length, byEmail: todays.filter(r => normalizeEmail(r.get('email')) === email).length };
+}
+
+// 1日の総数とメールごとの数の上限内なら 1 行確保する。同時に申し込まれても上限を超えないよう、
+// 追記した後に自分の行より前の件数で数え直し、超えていたら受け付けない（確保した行も 1 件として残る）。
+async function reservePdfPreview(email, { dailyLimit, perEmailLimit }) {
+  const sheet = await getPreviewSheet();
+  if (!sheet) return { ok: false, reason: 'sheet_unavailable' };
+  const today = jstDate();
+  const normalized = normalizeEmail(email);
+  const over = ({ total, byEmail }) => (total > dailyLimit ? 'daily_limit' : byEmail > perEmailLimit ? 'email_limit' : null);
+  const before = countPreviews(await sheet.getRows(), today, normalized);
+  const early = over({ total: before.total + 1, byEmail: before.byEmail + 1 });
+  if (early) return { ok: false, reason: early };
+  const added = await sheet.addRow({ date_jst: today, email: normalized, created_at: new Date().toISOString() });
+  const upTo = (await sheet.getRows()).filter(r => r.rowNumber <= added.rowNumber);
+  const late = over(countPreviews(upTo, today, normalized));
+  return late ? { ok: false, reason: late } : { ok: true };
+}
+
+// 古い受付記録を先頭からまとめて消す（Cron から 1 日 1 回）。行は日付順に追記されている。
+async function prunePdfPreviews() {
+  const sheet = await getPreviewSheet();
+  if (!sheet) return 0;
+  const cutoff = jstDate(Date.now() - PREVIEW_KEEP_DAYS * 86400 * 1000);
+  const rows = await sheet.getRows();
+  let count = 0;
+  while (count < rows.length && String(rows[count].get('date_jst') || '') < cutoff) count += 1;
+  if (!count) return 0;
+  await sheet._makeSingleUpdateRequest('deleteDimension', {
+    range: { sheetId: sheet.sheetId, dimension: 'ROWS', startIndex: 1, endIndex: 1 + count }
+  });
+  return count;
+}
+
 module.exports = {
+  reservePdfPreview,
+  prunePdfPreviews,
   externalizePdfReports,
   getMemberSheet,
   setMemberStatus,

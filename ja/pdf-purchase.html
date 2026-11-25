@@ -159,6 +159,26 @@
     .footer-links a { color: var(--color-gold-main); text-decoration: none; font-size: 0.82rem; }
     .copyright { font-size: 0.75rem; color: #8A9A9E; font-family: var(--font-en); margin-top: 8px; }
 
+    .preview-cta { margin: 0 0 22px; }
+    .btn-preview {
+      width: 100%; padding: 13px 20px; font-size: 0.98rem; font-weight: 600; font-family: var(--font-ja); color: var(--color-gold-dark);
+      background: rgba(255, 252, 245, 0.9); border: 1px solid var(--color-gold-dark); border-radius: 8px; cursor: pointer;
+    }
+    .btn-preview:disabled { opacity: 0.6; cursor: default; }
+    .preview-note { font-size: 0.78rem; color: #5A4E48; margin-top: 8px; }
+    #preview-box { display: none; text-align: left; margin: 0 0 24px; }
+    #preview-box .report-card h2 { font-size: 1.1rem; color: var(--color-gold-dark); margin-bottom: 10px; }
+    #preview-box .lead { font-size: 1.15rem; line-height: 1.7; color: var(--color-gold-dark); text-align: center; margin: 6px 0 16px; }
+    #preview-box h3 { font-size: 0.95rem; color: var(--color-gold-dark); margin: 14px 0 6px; }
+    #preview-box p, #preview-box li { font-size: 0.9rem; line-height: 1.9; }
+    #preview-box ul { padding-inline-start: 1.2em; }
+    #preview-box .fact { font-size: 0.82rem; color: #5A4E48; margin: 12px 0; }
+    .preview-status { font-size: 0.88rem; color: #5A4E48; text-align: center; }
+    .preview-rest { position: relative; }
+    .preview-rest ul { list-style: none; padding: 0; filter: blur(1.5px); opacity: 0.75; }
+    .preview-rest li { padding: 6px 0; border-bottom: 1px dashed rgba(139, 107, 27, 0.25); }
+    .preview-rest-lock { text-align: center; margin-top: 14px; }
+
     @media print {
       .site-header, .site-footer, .btn-purchase, #btn-print-pdf { display: none !important; }
       body { background: #ffffff !important; color: #000000 !important; }
@@ -318,6 +338,12 @@ window.LJ_I18N = {
           <div class="form-group"><label for="user-birthplace">出生地</label><input type="text" id="user-birthplace" placeholder="例: 東京都千代田区" required></div>
         </div>
 
+        <div id="preview-cta" class="preview-cta" style="display:none;">
+          <button type="button" id="btn-preview" class="btn-preview">まずは無料で「あなたの取扱説明書」を読む</button>
+          <p class="preview-note">鑑定書の最初の1章を、あなたの出生図から無料でお作りします（メールアドレスの確認が必要です）。</p>
+        </div>
+        <div id="preview-box" aria-live="polite"></div>
+
         <div id="price-label" style="font-size:1.3rem; font-weight:700; color:var(--color-gold-dark); margin-bottom:15px;"></div>
         <p id="checkout-email-notice" style="font-size:0.78rem; color:#5A4E48; margin-bottom:12px;">決済画面のメールアドレスは、ログイン中のアドレスから変更しないでください。会員の紐づけに使用します。</p>
         <button id="btn-proceed-checkout" class="btn-purchase">💳 決済に進む（Gumroad）</button>
@@ -382,6 +408,114 @@ window.LJ_I18N = {
       }).catch(() => {});
     }
 
+    // 購入前の無料プレビュー（要約章）。本人確認セッションが必要で、1日の受付数はサーバー側で制限する。
+    const PREVIEW_ENABLED = 'ja' === 'ja';
+    const previewEsc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+    ));
+    const previewPara = (text) => (text ? String(text).split(/\n{1,}/).map((t) => `<p>${previewEsc(t)}</p>`).join('') : '');
+    const previewList = (arr) => (Array.isArray(arr) ? `<ul>${arr.filter(Boolean).map((v) => `<li>${previewEsc(v)}</li>`).join('')}</ul>` : '');
+    const PREVIEW_REST = [
+      '第1章 あなたという設計図', '第2章 あなたの中で最も強い星', '第3章 持って生まれた強運の型', '第4章 「モノ」— 石と色',
+      '第5章 「コト」— 習慣と働き方', '第6章 「場所」— 方位と環境', '第7章 天職と才能の使い道', '第8章 豊かさのルート',
+      '第9章 運命の地図（生涯年表）', '第10章 いま立っている場所', '第11章 これから訪れる黄金期', '第12章 試練を土台に変える時期',
+      '巻末 データ集'
+    ];
+    const PREVIEW_ERRORS = {
+      daily_limit: '本日の無料プレビューの受付は終了しました。明日またお試しください。',
+      email_limit: 'このメールアドレスでの本日の無料プレビューは上限に達しました。明日またお試しください。',
+      unknown_birthplace: '出生地が見つかりませんでした。市区町村名まで入力してください。'
+    };
+
+    function previewRestHtml() {
+      return `<div class="report-card preview-rest">
+        <h2>この続きは完全鑑定書で</h2>
+        <ul>${PREVIEW_REST.map((t) => `<li>${previewEsc(t)}</li>`).join('')}</ul>
+        <div class="preview-rest-lock"><button type="button" class="btn-purchase" id="btn-preview-buy">続きを読む（完全鑑定書を購入する）</button></div>
+      </div>`;
+    }
+
+    function showPreview(html) {
+      const box = document.getElementById('preview-box');
+      box.innerHTML = html + previewRestHtml();
+      box.style.display = 'block';
+      document.getElementById('btn-preview-buy').addEventListener('click', () => document.getElementById('btn-proceed-checkout').click());
+    }
+
+    function renderSummary(s, dasha) {
+      const fact = dasha && dasha.lordJa
+        ? `<div class="fact">現在の大周期: ${previewEsc(dasha.lordJa)}期（${previewEsc(dasha.start)} 〜 ${previewEsc(dasha.end)}）</div>`
+        : '';
+      return `<div class="report-card">
+        <h2>1枚でわかる、あなたの取扱説明書</h2>
+        <div class="lead">${previewEsc(s.catchphrase)}</div>
+        ${previewPara(s.essence)}
+        <h3>武器になる資質</h3>${previewList(s.weapons)}
+        <h3>伸びしろとなる領域</h3>${previewList(s.growth)}
+        ${fact}
+        ${previewPara(s.now)}
+      </div>`;
+    }
+
+    function readBirthFields() {
+      const email = document.getElementById('user-email').value;
+      const birthdate = document.getElementById('user-birthdate').value;
+      const birthplace = document.getElementById('user-birthplace').value;
+      if (!email) { alert('メールアドレスを入力してください。'); return null; }
+      if (!birthdate) { alert('生年月日・時間を入力してください。'); return null; }
+      if (!birthplace) { alert('出生地を入力してください。'); return null; }
+      localStorage.setItem('lj_user_email', email);
+      localStorage.setItem('lj_user_birthdate', birthdate);
+      localStorage.setItem('lj_user_birthplace', birthplace);
+      // 鑑定書ページと同じキーで出生データを保持する
+      const [datePart, timePart] = birthdate.split('T');
+      if (datePart) localStorage.setItem('dob', datePart);
+      if (timePart) localStorage.setItem('tob', timePart.slice(0, 5));
+      localStorage.setItem('city', birthplace);
+      return { email, dob: datePart, tob: (timePart || '12:00').slice(0, 5), city: birthplace };
+    }
+
+    async function runPreview() {
+      const fields = readBirthFields();
+      if (!fields) return;
+      const session = localStorage.getItem('lj_session') || '';
+      if (!window.LJCheckoutGuard.hasSession() || window.LJCheckoutGuard.verifiedEmail().toLowerCase() !== fields.email.trim().toLowerCase()) {
+        window.location.href = '/ja/mypage?next=pdf-preview&hint=' + encodeURIComponent(fields.email);
+        return;
+      }
+      const btn = document.getElementById('btn-preview');
+      const box = document.getElementById('preview-box');
+      btn.disabled = true;
+      box.innerHTML = '<p class="preview-status">あなたの出生図を読み解いています（30秒ほどかかります）…</p>';
+      box.style.display = 'block';
+      try {
+        const res = await fetch('/api/pdf-report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ preview: true, email: fields.email, session, dob: fields.dob, tob: fields.tob, city: fields.city, language: 'ja' })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 401) {
+          localStorage.removeItem('lj_session');
+          window.location.href = '/ja/mypage?next=pdf-preview&hint=' + encodeURIComponent(fields.email);
+          return;
+        }
+        if (res.ok && data.purchased) { window.location.reload(); return; }
+        if (res.ok && data.summary) {
+          showPreview(renderSummary(data.summary, data.dasha));
+          document.getElementById('preview-cta').style.display = 'none';
+          box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+        showPreview(`<p class="preview-status">${previewEsc(PREVIEW_ERRORS[data.error] || 'ただいま混み合っています。少し時間をおいてお試しください。')}</p>`);
+      } catch (err) {
+        console.error('preview failed', err);
+        showPreview('<p class="preview-status">ただいま混み合っています。少し時間をおいてお試しください。</p>');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       showPurchaseStateView();
       document.getElementById('price-label').textContent = pdfPriceLabel();
@@ -425,6 +559,13 @@ window.LJ_I18N = {
       if (savedEmail && !verifiedEmail) document.getElementById('user-email').value = savedEmail;
       if (savedBirthdate) document.getElementById('user-birthdate').value = savedBirthdate;
       if (savedBirthplace) document.getElementById('user-birthplace').value = savedBirthplace;
+
+      if (PREVIEW_ENABLED) {
+        document.getElementById('preview-cta').style.display = 'block';
+        document.getElementById('btn-preview').addEventListener('click', runPreview);
+        // 本人確認から戻ってきたら、そのままプレビューを作る
+        if (new URLSearchParams(window.location.search).get('preview') === '1' && window.LJCheckoutGuard.hasSession()) runPreview();
+      }
 
 
       document.getElementById('btn-proceed-checkout').addEventListener('click', () => {

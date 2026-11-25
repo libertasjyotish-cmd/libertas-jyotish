@@ -854,6 +854,14 @@ if (nextTarget === 'checkout') {
   return;
 }
 
+if (nextTarget === 'pdf-preview') {
+if (window.LJCheckoutGuard.hasSession()) {
+window.location.replace('/ja/pdf-purchase?preview=1');
+return;
+}
+requestReauth('pdf-preview', new URLSearchParams(window.location.search).get('hint') || savedEmail);
+}
+
 if (nextTarget === 'pdf-report') {
 if (localStorage.getItem('lj_session')) {
 window.location.replace('/ja/pdf-report');
@@ -990,6 +998,10 @@ if (verified.session) localStorage.setItem('lj_session', verified.session);
 window.LJCheckoutGuard.markVerified(email);
 completeLogin(email);
 // 認証待ちにしていた操作をそのまま続行する
+if (window.ljPendingAfterAuth === 'pdf-preview') {
+window.ljPendingAfterAuth = '';
+window.location.href = '/ja/pdf-purchase?preview=1';
+}
 if (window.ljPendingAfterAuth === 'pdf-report') {
 window.ljPendingAfterAuth = '';
 window.location.href = '/ja/pdf-report';
@@ -1088,7 +1100,7 @@ if (box) box.style.display = 'block';
 const title = box ? box.querySelector('.card-title') : null;
 const titleText = pendingAction === 'pdf-report'
 ? '🔑 本人確認（完全鑑定書の閲覧）'
-: '🔑 本人確認（プランの管理・解約）';
+: pendingAction === 'pdf-preview' ? '🔑 本人確認（鑑定書の無料プレビュー）' : '🔑 本人確認（プランの管理・解約）';
 if (title) title.textContent = titleText;
 const input = document.getElementById('login-email');
 if (input) {
