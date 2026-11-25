@@ -40,4 +40,13 @@ async function sendInternal({ to, subject, html, text, replyTo }) {
   return info.messageId || '';
 }
 
-module.exports = { sendInternal, gmailConfigured, OWNER_TO };
+// 有料購入の通知（運営者宛）。送信に失敗しても決済処理は止めない。
+async function notifySale(title, lines) {
+  try {
+    await sendInternal({ subject: `[売上] ${title}`, text: lines.filter(Boolean).join('\n') });
+  } catch (err) {
+    console.error('sale notify failed:', err.message);
+  }
+}
+
+module.exports = { sendInternal, gmailConfigured, notifySale, OWNER_TO };

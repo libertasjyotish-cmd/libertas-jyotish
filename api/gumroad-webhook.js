@@ -103,7 +103,7 @@ module.exports = async function handler(req, res) {
         // 自分でテスト購入した通知は権利を付与しない
         if (truthy(body.test)) return res.status(200).json({ received: true, ignored: 'test_purchase' });
         if (kind === 'report') {
-          if (!(await setPdfPurchased(email))) return res.status(500).json({ error: 'Member sheet unavailable' });
+          if (!(await setPdfPurchased(email, { provider: 'gumroad' }))) return res.status(500).json({ error: 'Member sheet unavailable' });
         } else if (kind === 'web_report') {
           const orderId = webOrderId(body);
           if (!orderId) {

@@ -3,6 +3,7 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library');
 const { normalizeLang } = require('./_terms');
 const sheetBlob = require('./_sheet-blob');
+const notifySaleLazy = (...a) => require('./_owner-mail').notifySale(...a);
 
 const SHEET_TITLE = process.env.GOOGLE_SHEETS_MEMBER_TAB || '会員データ';
 
@@ -122,6 +123,7 @@ async function setMemberStatus(email, status) {
   const rows = await sheet.getRows();
   const row = rows.find(r => String(r.get('email') || '').trim().toLowerCase() === normalized);
   const nowStr = new Date().toISOString();
+  const isNewPaid = status === 'paid' && !(row && row.get('status') === 'paid');
 
   if (row) {
     row.set('status', status);
@@ -137,6 +139,7 @@ async function setMemberStatus(email, status) {
       language: 'ja'
     });
   }
+  if (isNewPaid) await notifySaleLazy('プレミアム会員の新規登録（Gumroad）', [`email: ${normalized}`]);
   return true;
 }
 
@@ -397,6 +400,8 @@ async function setKomojuSubscription(email, { customerId, subscriptionId, paidUn
     updated_at: nowStr
   };
   const row = await findMemberRow(email);
+  // 新しい定期課金（サブスク ID が変わった時）だけ通知する。毎月の更新（同じ ID）は通知しない
+  const isNew = Boolean(subscriptionId) && !(row && String(row.get('komoju_subscription_id') || '') === String(subscriptionId));
   if (row) {
     Object.entries(fields).forEach(([k, v]) => row.set(k, v));
     await row.save();
@@ -409,6 +414,7 @@ async function setKomojuSubscription(email, { customerId, subscriptionId, paidUn
       ...fields
     });
   }
+  if (isNew) await notifySaleLazy('プレミアム会員の新規登録（KOMOJU）', [`email: ${normalizeEmail(email)}`, `paid_until: ${paidUntil || ''}`]);
   return true;
 }
 
@@ -478,7 +484,7 @@ async function revokePdfPurchase(email) {
 }
 
 // 買い切り決済の完了を記録する。会員行が無ければ最小限の行を作る。
-async function setPdfPurchased(email, { playToken } = {}) {
+async function setPdfPurchased(email, { playToken, provider } = {}) {
   if (!email) return false;
   const sheet = await getMemberSheet();
   if (!sheet) return false;
@@ -486,6 +492,8 @@ async function setPdfPurchased(email, { playToken } = {}) {
 
   const nowStr = new Date().toISOString();
   const row = await findMemberRow(email);
+  // 初めて購入済みになった時だけ通知する（return と Webhook の二重呼び出し、Play は _play-link が通知済み）
+  const isNew = !(row && String(row.get('pdf_purchased') || '') === 'true');
   if (row) {
     row.set('pdf_purchased', 'true');
     row.set('pdf_purchased_at', nowStr);
@@ -505,6 +513,7 @@ async function setPdfPurchased(email, { playToken } = {}) {
       language: 'ja'
     });
   }
+  if (isNew && !playToken) await notifySaleLazy('生涯完全鑑定書の購入', [`email: ${normalizeEmail(email)}`, `via: ${provider || ''}`]);
   return true;
 }
 

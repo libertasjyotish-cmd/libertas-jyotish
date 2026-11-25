@@ -58,7 +58,7 @@ async function handlePayment(type, payment) {
   if (!email) return 'no_email';
   switch (type) {
     case 'payment.captured':
-      assertWritten(await setPdfPurchased(email));
+      assertWritten(await setPdfPurchased(email, { provider: 'komoju' }));
       return 'pdf_granted';
     case 'payment.refunded':
     case 'payment.marked.as.fraud':

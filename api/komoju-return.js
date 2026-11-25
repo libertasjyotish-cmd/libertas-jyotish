@@ -93,7 +93,7 @@ module.exports = async (req, res) => {
     const payment = session.payment || {};
     if (payment.status === 'captured') {
       const email = metaEmail(session);
-      if (email) await setPdfPurchased(email);
+      if (email) await setPdfPurchased(email, { provider: 'komoju' });
       return redirect(res, `/${lang}/pdf-success?c=1`);
     }
     return redirect(res, `/${lang}/pdf-success?pending=1`);
