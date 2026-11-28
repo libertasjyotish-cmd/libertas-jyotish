@@ -441,10 +441,10 @@
           box.scrollIntoView({ behavior: 'smooth', block: 'start' });
           return;
         }
-        showPreview(`<p class="preview-status">${previewEsc(PREVIEW_ERRORS[data.error] || '{{t.pdf-purchase.previewError|js}}')}</p>`);
+        showPreview(`<p class="preview-status">${previewEsc(PREVIEW_ERRORS[data.error] || (data.error ? '{{t.pdf-purchase.previewError|js}}' : '{{t.pdf-purchase.previewTimeout|js}}'))}</p>`);
       } catch (err) {
         console.error('preview failed', err);
-        showPreview('<p class="preview-status">{{t.pdf-purchase.previewError|js}}</p>');
+        showPreview('<p class="preview-status">{{t.pdf-purchase.previewTimeout|js}}</p>');
       } finally {
         btn.disabled = false;
       }
