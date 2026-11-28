@@ -17,7 +17,8 @@
     daily_limit: '本日の無料プレビューの受付は終了しました。明日またお試しください。',
     email_limit: 'このメールアドレスでの本日の無料プレビューは上限に達しました。明日またお試しください。',
     unknown_birthplace: '出生地が見つかりませんでした。市区町村名まで入力してください。',
-    other: 'ただいま混み合っています。少し時間をおいてお試しください。'
+    other: 'ただいま混み合っています。少し時間をおいてお試しください。',
+    network: '読み解きの途中で接続が切れました。もう一度ボタンを押してください。'
   };
 
   function esc(v) {
@@ -159,9 +160,9 @@
           box.scrollIntoView({ behavior: 'smooth', block: 'start' });
           return;
         }
-        show('<p class="preview-status">' + esc(ERR[res.j.error] || ERR.other) + '</p>');
+        show('<p class="preview-status">' + esc(ERR[res.j.error] || (res.j.error ? ERR.other : ERR.network)) + '</p>');
       })
-      .catch(function () { show('<p class="preview-status">' + esc(ERR.other) + '</p>'); })
+      .catch(function () { show('<p class="preview-status">' + esc(ERR.network) + '</p>'); })
       .then(function () { btn.disabled = false; });
   }
 

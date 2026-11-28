@@ -571,10 +571,10 @@ window.LJ_I18N = {
           box.scrollIntoView({ behavior: 'smooth', block: 'start' });
           return;
         }
-        showPreview(`<p class="preview-status">${previewEsc(PREVIEW_ERRORS[data.error] || 'ただいま混み合っています。少し時間をおいてお試しください。')}</p>`);
+        showPreview(`<p class="preview-status">${previewEsc(PREVIEW_ERRORS[data.error] || (data.error ? 'ただいま混み合っています。少し時間をおいてお試しください。' : '読み解きの途中で接続が切れました。もう一度ボタンを押してください。'))}</p>`);
       } catch (err) {
         console.error('preview failed', err);
-        showPreview('<p class="preview-status">ただいま混み合っています。少し時間をおいてお試しください。</p>');
+        showPreview('<p class="preview-status">読み解きの途中で接続が切れました。もう一度ボタンを押してください。</p>');
       } finally {
         btn.disabled = false;
       }
