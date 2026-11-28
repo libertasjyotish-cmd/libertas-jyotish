@@ -52,6 +52,21 @@ async function findSheetWithMemberHeaders(sheets) {
   return null;
 }
 
+// 同じシートの複数行を 1 回の API 呼び出しで保存する（row.save() と同じ書き方）。
+// 同じメールの行が重複していても、行数ぶん往復して実行時間の上限に触れないようにする。
+async function saveRows(rows) {
+  if (!rows.length) return;
+  const sheet = rows[0]._worksheet;
+  await sheet._spreadsheet.sheetsApi.request({
+    method: 'post',
+    url: '/values:batchUpdate',
+    data: {
+      valueInputOption: 'USER_ENTERED',
+      data: rows.map((row) => ({ range: row.a1Range, majorDimension: 'ROWS', values: [row._rawData] }))
+    }
+  });
+}
+
 async function getSpreadsheet() {
   const sheetId = process.env.GOOGLE_SHEETS_ID;
   const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
@@ -745,6 +760,7 @@ async function prunePreviewSheet(sheet, keepDays) {
 }
 
 module.exports = {
+  saveRows,
   reservePdfPreview,
   reserveReportPreview,
   saveReportPreview,

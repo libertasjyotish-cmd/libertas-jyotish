@@ -4,6 +4,7 @@
 const crypto = require('crypto');
 // シート・Resend は使う時に読み込む（npm install 無しの CI でも検査できるように）
 const getMemberSheet = (...a) => require('./_sheets').getMemberSheet(...a);
+const saveRows = (...a) => require('./_sheets').saveRows(...a);
 const send = (...a) => require('./_etsy-mail').send(...a);
 const { normalizeLang } = require('./_terms');
 
@@ -121,8 +122,8 @@ async function setOptIn(email, optIn) {
   for (const row of rows) {
     row.set('newsletter_opt_in', optIn ? 'yes' : 'no');
     row.set('newsletter_updated_at', now);
-    await row.save();
   }
+  await saveRows(rows);
   return true;
 }
 
