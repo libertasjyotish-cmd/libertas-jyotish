@@ -97,6 +97,9 @@
 
     table { width: 100%; border-collapse: collapse; font-size: 0.95rem; margin: 12px 0; }
     th, td { border: 1px solid rgba(139, 107, 27, 0.3); padding: 7px 9px; text-align: left; }
+    /* 年間運勢の月別表は 12 か月×8 列を A5 の 1 ページに収める */
+    .transit-table { font-size: 0.7rem; line-height: 1.25; margin: 6px 0; }
+    .transit-table th, .transit-table td { padding: 2px 4px; white-space: nowrap; }
     th { background: rgba(212, 175, 55, 0.14); color: var(--color-gold-dark); font-weight: 600; }
 
     .bar-row { display: grid; grid-template-columns: 7em 1fr 3.4em; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 0.95rem; }
@@ -655,12 +658,12 @@ const CAREER_LABELS = {
     }
 
     function yearlyDataPage(a) {
-      const rows = (a.months || []).map((m) => `<tr><td>${esc(m.month)}</td>${m.planets.filter((p) => ['Sun', 'Mars', 'Jupiter', 'Saturn', 'Rahu', 'Ketu', 'Venus'].includes(p.key)).map((p) => `<td>${esc(p.sign)}${p.houseFromMoon ? ` (${esc(p.houseFromMoon)})` : ''}${p.retrograde ? '{{t.pdf-report.js35|js}}' : ''}</td>`).join('')}</tr>`).join('');
+      const rows = (a.months || []).map((m) => `<tr><td>${esc(m.month)}</td>${m.planets.filter((p) => ['Sun', 'Mars', 'Jupiter', 'Saturn', 'Rahu', 'Ketu', 'Venus'].includes(p.key)).map((p) => `<td>${esc(p.sign)}<br>${p.houseFromMoon ? `(${esc(p.houseFromMoon)})` : ''}${p.retrograde ? '{{t.pdf-report.js35|js}}' : ''}</td>`).join('')}</tr>`).join('');
       const first = (a.months || [])[0];
       const heads = first ? first.planets.filter((p) => ['Sun', 'Mars', 'Jupiter', 'Saturn', 'Rahu', 'Ketu', 'Venus'].includes(p.key)).map((p) => `<th>${esc(p.name)}</th>`).join('') : '';
       return page(`<h2 class="chapter-title">{{t.pdf-report.prodMonthly|tpl}}</h2>
-        <table><thead><tr><th>{{t.pdf-report.prodMonth|tpl}}</th>${heads}</tr></thead><tbody>${rows}</tbody></table>
-        <p class="disclaimer">{{t.pdf-report.prodHouseNote|tpl}}</p>`);
+        <p class="disclaimer">{{t.pdf-report.prodHouseNote|tpl}}</p>
+        <table class="transit-table"><thead><tr><th>{{t.pdf-report.prodMonth|tpl}}</th>${heads}</tr></thead><tbody>${rows}</tbody></table>`);
     }
 
     function compatDataPage(a) {

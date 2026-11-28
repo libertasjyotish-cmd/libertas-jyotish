@@ -32,6 +32,16 @@ const natalCompact = (a) => {
   }));
 };
 
+// 年間運勢の室はすべて月から数える。出生データの house（ラグナから数えた室）をそのまま渡すと、同じ冊子に「月は 9 室」と「月は 1 室」が並ぶ
+const moonFrame = (a, p) => {
+  if (!p) return p;
+  const { house, ...rest } = p;
+  const signKey = p.signKey || (a?.planets || []).find((n) => n.key === p.key)?.signKey;
+  return { ...rest, houseFromMoon: houseFromKeys(a?.moon?.signKey, signKey) };
+};
+const yearlyMoon = (a) => moonFrame(a, a.moon);
+const yearlyStrength = (a) => (a.strength || []).slice(0, 3).map((p) => moonFrame(a, p));
+
 // 読者が 1 年以内に「実行したい」行動の種類。判定するのは心の中の決断ではなく、退職を告げる・開業する・契約する・引っ越す・別れを告げる、という実行の月。
 // 各月の通過惑星（月からの室）から「実行／避ける」を機械的に判定し、根拠を添えて渡す。
 // 木星は在住室と 5・7・9 番目のアスペクト先を照らす。土星は始める行動には時間をかけさせ、終える行動には形を与える。
@@ -116,10 +126,17 @@ const monthsCompact = (months, a) => {
   const natal = (a?.planets || []).filter((p) => p.key !== 'Ascendant');
   const moonKey = a?.moon?.signKey || natal.find((p) => p.key === 'Moon')?.signKey;
   const calendar = decisionCalendar(a);
+  const all = a?.months || [];
+  // entered: その月にサインへ入った（前月と違うサイン）。最初の月は遅い星だけ「いま」の位置と比べる。不明なら付けない
+  const enteredOf = (month, p) => {
+    const i = all.findIndex((x) => x.month === month);
+    const before = i > 0 ? all[i - 1].planets.find((q) => q.key === p.key) : (a?.slowPlanetsNow || []).find((q) => q.key === p.key);
+    return before ? before.signKey !== p.signKey : undefined;
+  };
   return months.map((m) => {
     const momentum = (a?.turningPoints?.monthlyMomentum || []).find((x) => x.month === m.month);
     const planets = m.planets.map((p) => ({
-      key: p.key, planet: p.name, brings: PLANET_BRINGS[p.key], sign: p.sign, house: p.houseFromMoon, area: p.houseFromMoonLabel, retrograde: p.retrograde,
+      key: p.key, planet: p.name, brings: PLANET_BRINGS[p.key], sign: p.sign, house: p.houseFromMoon, area: p.houseFromMoonLabel, retrograde: p.retrograde, entered: enteredOf(m.month, p),
       overNatal: natal.filter((n) => n.signKey === p.signKey).map((n) => `${n.name}(出生でも月から${houseFromKeys(moonKey, n.signKey)}室)`),
       signLordNatal: (() => { const l = natal.find((n) => n.key === SIGN_LORD[p.signKey]); return l ? `${l.name}は出生で月から${houseFromKeys(moonKey, l.signKey)}室` : undefined; })()
     }));
@@ -128,7 +145,7 @@ const monthsCompact = (months, a) => {
       month: m.month,
       momentum: momentum ? momentum.score : undefined,
       dashaChange: dashaChangeOf(a, m.month),
-      focus: { planet: f.planet, brings: f.brings, house: f.house, area: f.area, overNatal: f.overNatal, signLordNatal: f.signLordNatal, retrograde: f.retrograde },
+      focus: { planet: f.planet, brings: f.brings, house: f.house, area: f.area, overNatal: f.overNatal, signLordNatal: f.signLordNatal, retrograde: f.retrograde, entered: f.entered },
       decisions: decisionsForMonth(calendar, m.month),
       planets: planets.map(({ key, ...rest }) => rest)
     };
@@ -164,7 +181,7 @@ const YEARLY_VOICE = {
 8. 読者の職業・雇用・婚姻・子ども・年齢・健康状態を仮定しない。相手を上司・同僚・部下・家族・子どもと固定しない。
 9. 生活態度の助言（片づける・言葉に気をつける・体調を整える・見直す・意識する・心がける・慎重に・待つだけ）は禁止。
 10. 「でしょう」「可能性があります」を乱用しない。断定を避けるのは健康・寿命・医療・法律・投資・具体的な出来事の成否のみ。
-11. 【確定データ】にない惑星・月・配置を発明しない。内部名（momentum・overNatal・focus・strength・score・decisions・actMonth・avoidMonth）や数値を本文に出さない。根拠は惑星名・室・領域の言葉に言い換える。
+11. 【確定データ】にない惑星・月・配置を発明しない。室はすべて月から数えた室で書く（ラグナから数えた室は書かない）。「入る」「移る」と書けるのは entered が true の配置と keyShifts の月だけで、それ以外は「続く」「留まる」と書く。内部名（momentum・overNatal・focus・strength・score・decisions・actMonth・avoidMonth・entered）や数値を本文に出さない。根拠は惑星名・室・領域の言葉に言い換える。
 12. momentum が高い月は強く、低い月は静かに。overNatal に出生惑星がある月は、その惑星の領域が個人的に強く動く月として必ず取り上げる。
 13. 月の一覧は複数の章に出る（見取り図＝節目と今年の決断、第 1 章＝周期の切替、第 2 章＝大きな星のサイン移動、第 3〜6 章＝毎月の運と一手、第 8 章＝決断カレンダー、第 9 章＝追い風・慎重）。heading にはその一覧の内容を表す見出し（20 文字以内）、lead にはその一覧が他の章の月別と何が違うかを一文で書く。
 14. 語りは古い寺院の占星術師が一人に語りかけるように、品格とです・ます調を維持。命令形は使わない。文字数の目安は下限。要約で埋めず、読者が翌月から使える具体を書く。`,
@@ -180,7 +197,7 @@ This is not an almanac but a one-year reading addressed to one person. People bu
 8. Never assume the reader's occupation, employment, marriage, children, age or health. Do not fix the counterpart as boss, colleague, subordinate, family or child.
 9. Lifestyle advice is banned: tidy up, mind your words, look after your health, review, be aware, be careful, just wait.
 10. Do not hedge everything with "may" and "possibly". Reserve caution for health, lifespan, medical, legal, financial matters and the outcome of specific events.
-11. Never invent a planet, month or placement absent from the confirmed data. Never expose internal names or numbers (momentum, overNatal, focus, strength, score, decisions, actMonth, avoidMonth); translate evidence into planet, house and life-area words.
+11. Never invent a planet, month or placement absent from the confirmed data. Count every house from the Moon (never from the ascendant). Write that a planet "enters" or "moves" only when its entered is true or in a keyShifts month; otherwise it "continues" or "stays". Never expose internal names or numbers (momentum, overNatal, focus, strength, score, decisions, actMonth, avoidMonth, entered); translate evidence into planet, house and life-area words.
 12. High-momentum months are written strongly, low-momentum months quietly. When overNatal lists a natal planet, that month stirs that planet's domain personally; say so.
 13. Month lists appear in several chapters (overview = turning points and this year's decisions, ch.1 = cycle changes, ch.2 = sign changes of slow planets, ch.3-6 = monthly luck and moves, ch.8 = decision calendar, ch.9 = tailwind/caution). In "heading" name the list (under 6 words); in "lead" say in one sentence how it differs from the other monthly lists.
 14. Speak as an old temple astrologer addressing one person, dignified and polite, no imperatives. Character counts are minimums; write specifics the reader can use next month.`
@@ -192,7 +209,7 @@ const YEARLY_CHAPTERS = [
     id: 'summary',
     title: 'この 1 年の見取り図',
     pick: (a) => ({
-      period: a.period, moon: a.moon, ascendant: a.ascendant, currentDasha: a.dasha?.current,
+      period: a.period, moon: yearlyMoon(a), ascendant: a.ascendant, currentDasha: a.dasha?.current,
       dashaChanges: a.dashaChanges, slowPlanetsNow: a.slowPlanetsNow, keyShifts: a.keyShifts, sadeSati: a.sadeSati,
       decisionCalendar: decisionCalendar(a)
     }),
@@ -209,7 +226,7 @@ const YEARLY_CHAPTERS = [
   {
     id: 'ch1',
     title: '第1章 いま流れている周期',
-    pick: (a) => ({ currentDasha: a.dasha?.current, upcoming: a.dasha?.upcoming, dashaChanges: a.dashaChanges, strength: a.strength?.slice(0, 3) }),
+    pick: (a) => ({ currentDasha: a.dasha?.current, upcoming: a.dasha?.upcoming, dashaChanges: a.dashaChanges, strength: yearlyStrength(a) }),
     schema: `{
       "intro": "ダシャー（運気の周期）の考え方と、今年の周期の位置づけ（250文字程度）",
       "current": "現在の大周期・中周期が今年にもたらす主題（400文字程度）",
@@ -220,7 +237,7 @@ const YEARLY_CHAPTERS = [
   {
     id: 'ch2',
     title: '第2章 今年の大きな星の動き',
-    pick: (a) => ({ slowPlanetsNow: a.slowPlanetsNow, keyShifts: a.keyShifts, sadeSati: a.sadeSati, moon: a.moon }),
+    pick: (a) => ({ slowPlanetsNow: a.slowPlanetsNow, keyShifts: a.keyShifts, sadeSati: a.sadeSati, moon: yearlyMoon(a) }),
     schema: `{
       "intro": "木星・土星・ラーフ・ケートゥの位置が 1 年の背景を作るという説明（200文字程度）",
       "jupiter": "木星の位置（月から見たハウス）が広げてくれる領域（300文字程度）",
@@ -232,25 +249,25 @@ const YEARLY_CHAPTERS = [
   {
     id: 'ch3',
     title: '第3章 第1四半期（最初の 3 か月）',
-    pick: (a) => ({ months: monthsCompact(a.quarters[0].months, a), natalChart: natalCompact(a), moon: a.moon, currentDasha: a.dasha?.current, strength: a.strength?.slice(0, 3) }),
+    pick: (a) => ({ months: monthsCompact(a.quarters[0].months, a), natalChart: natalCompact(a), moon: yearlyMoon(a), currentDasha: a.dasha?.current, strength: yearlyStrength(a) }),
     schema: MONTH_SCHEMA
   },
   {
     id: 'ch4',
     title: '第4章 第2四半期',
-    pick: (a) => ({ months: monthsCompact(a.quarters[1].months, a), natalChart: natalCompact(a), moon: a.moon, currentDasha: a.dasha?.current, strength: a.strength?.slice(0, 3) }),
+    pick: (a) => ({ months: monthsCompact(a.quarters[1].months, a), natalChart: natalCompact(a), moon: yearlyMoon(a), currentDasha: a.dasha?.current, strength: yearlyStrength(a) }),
     schema: MONTH_SCHEMA
   },
   {
     id: 'ch5',
     title: '第5章 第3四半期',
-    pick: (a) => ({ months: monthsCompact(a.quarters[2].months, a), natalChart: natalCompact(a), moon: a.moon, currentDasha: a.dasha?.current, strength: a.strength?.slice(0, 3) }),
+    pick: (a) => ({ months: monthsCompact(a.quarters[2].months, a), natalChart: natalCompact(a), moon: yearlyMoon(a), currentDasha: a.dasha?.current, strength: yearlyStrength(a) }),
     schema: MONTH_SCHEMA
   },
   {
     id: 'ch6',
     title: '第6章 第4四半期',
-    pick: (a) => ({ months: monthsCompact(a.quarters[3].months, a), natalChart: natalCompact(a), moon: a.moon, currentDasha: a.dasha?.current, strength: a.strength?.slice(0, 3) }),
+    pick: (a) => ({ months: monthsCompact(a.quarters[3].months, a), natalChart: natalCompact(a), moon: yearlyMoon(a), currentDasha: a.dasha?.current, strength: yearlyStrength(a) }),
     schema: MONTH_SCHEMA
   },
   {
@@ -275,7 +292,7 @@ const YEARLY_CHAPTERS = [
       period: a.period, currentDasha: a.dasha?.current, sadeSati: a.sadeSati,
       scale: a.turningPoints?.scale, turningEvents: a.turningPoints?.events,
       decisionCalendar: decisionCalendar(a), natalChart: natalCompact(a),
-      strength: a.strength?.slice(0, 3)
+      strength: yearlyStrength(a)
     }),
     schema: `{
       "verdict": "scale が major なら「動く年」、moderate なら「一部の領域で動く年」、preparation なら「次の転機に向けて仕込む年」と確定データのまま判定し、根拠の配置（惑星名・月から何室・切替のダシャー）を名指しする（250文字程度）",
@@ -286,7 +303,7 @@ const YEARLY_CHAPTERS = [
   {
     id: 'ch9',
     title: '第9章 この 1 年を最大限に活かすために',
-    pick: (a) => ({ keyShifts: a.keyShifts, dashaChanges: a.dashaChanges, strength: a.strength?.slice(0, 3), period: a.period }),
+    pick: (a) => ({ keyShifts: a.keyShifts, dashaChanges: a.dashaChanges, strength: yearlyStrength(a), period: a.period }),
     schema: `{
       "bestMonths": { "heading": "見出し（例: 追い風の月。20文字以内）", "lead": "この一覧は 1 年を通して最も動きやすい月を 2〜3 つに絞ったものだと伝える（60文字以内）", "items": [{ "month": "確定データの YYYY-MM をそのまま", "text": "追い風になる理由と使い方（100文字以内）" }] },
       "careMonths": { "heading": "見出し（例: 慎重に進めたい月。20文字以内）", "lead": "この一覧は止まる月ではなく整える月だと伝える（60文字以内）", "items": [{ "month": "確定データの YYYY-MM をそのまま", "text": "慎重に進めたい理由と整え方（100文字以内）" }] },
