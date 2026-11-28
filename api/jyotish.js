@@ -1,6 +1,6 @@
 // Vercel Serverless Function 統合API: /api/jyotish.js (CommonJS 完全自律救済版)
 const crypto = require('crypto');
-const { getMemberSheet, getLastSheetIssue, getMemberRecord } = require('./_sheets');
+const { getMemberSheet, getLastSheetIssue, getMemberRecord, saveRows } = require('./_sheets');
 const { listGeminiModels, generateWithGemini } = require('./_gemini');
 const { findViolations } = require('./_report');
 const { auditReading, stripFabricated, SIGN_LORD_JA } = require('./_reading-facts');
@@ -1470,8 +1470,8 @@ async function saveSurveyToSheets(email, picks, optIn) {
     }
     for (const row of matched) {
       for (const [k, v] of Object.entries(values)) row.set(k, v);
-      await row.save();
     }
+    await saveRows(matched);
     return true;
   } catch (err) {
     console.error('Survey save error:', err);
